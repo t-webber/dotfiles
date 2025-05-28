@@ -1,0 +1,148 @@
+#################
+# restart/close #
+#################
+
+super + Escape
+	pkill -USR1 -x sxhkd
+
+# quit/restart bspwm
+super + alt + {q,r}
+	bspc {quit,wm -r}
+
+# close/kill
+super + {_,shift + }w
+	bspc node -{c,k}
+
+##########
+# layout #
+##########
+
+# alternate tiled/monocle layout
+super + m
+	bspc desktop -l next
+
+# send the newest marked node to the newest preselected node
+super + y
+	bspc node newest.marked.local -n newest.!automatic.local
+
+###############
+# state/flags #
+###############
+
+# window state
+super + {alt + t,shift + t,s,f}
+	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
+
+# node flags
+super + ctrl + {m,x,y,z}
+	bspc node -g {marked,locked,sticky,private}
+
+##############
+# focus/swap #
+##############
+
+#super + g
+#	bspc node -s biggest.window
+
+# focus/swap node in given direction
+super + {_,shift + }{h,j,k,l}
+	bspc node -{f,s} {west,south,north,east}
+
+# focus older/newer node
+super + {i,o}
+	bspc wm -h off; \
+	bspc node {older,newer} -f; \
+	bspc wm -h on
+
+################
+# preselection #
+################
+
+# preselect the direction
+super + ctrl + {h,j,k,l}
+	bspc node -p {west,south,north,east}
+
+# cancel the preselection for the focused node
+super + ctrl + space
+	bspc node -p cancel
+
+###############
+# move/resize #
+###############
+
+# expand window
+super + alt + {h,j,k,l}
+	bspc node -z {left -50 0,bottom 0 50,top 0 -50,right 50 0}
+
+# contract window 
+super + alt + shift + {h,j,k,l}
+	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+
+# move floating window
+super + {Left,Down,Up,Right}
+	bspc node -v {-50 0,0 50,0 -50,50 0}
+
+###########
+# fn keys #
+###########
+
+XF86MonBrightness{Up,Down}  
+	brightnessctl s 10{+,-}; \
+	dunstify -t 500 " $(brightnessctl g)%" -a stacked -h "string:x-dunst-stack-tag:stacked" 
+ 
+XF86Audio{Raise,Lower}Volume  
+	pactl set-sink-volume @DEFAULT_SINK@ {+,-}10%; \
+	dunstify -t 500 " $(volume_level)" -a stacked -h "string:x-dunst-stack-tag:stacked" 
+
+XF86AudioMute
+	pactl set-sink-mute @DEFAULT_SINK@ toggle
+
+Print
+	maim -s | xclip -selection clipboard -t image/png
+
+#####################
+# software/desktops #
+#####################
+
+super + {t,n,v,p}
+	bspc desktop -f {terminal,neovim,brave,beeper}
+
+super + ctrl + {t,n,v,p}
+	bspc node -d {terminal,neovim,brave,beeper} && \ 
+	bspc desktop -f {terminal,neovim,brave,beeper}
+
+super + shift + e
+	dunstify "use super + p"
+
+super + e
+	bspc desktop -f beeper && beeper
+
+super + d
+	bspc desktop -f beeper && discord
+
+super + a
+	alacritty
+
+super + r
+	brave 
+
+super + shift + y 
+	kitty
+
+#########
+# other #
+#########
+
+super + ctrl + Escape
+       alock
+
+#############
+# clipboard #
+#############
+
+super + c; g
+	echo " site:github.com" | xclip -selection c
+
+super + c; t
+        echo " site:telecom-paris.fr" | xclip -selection c
+

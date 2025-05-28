@@ -1,0 +1,6 @@
+#!/bin/sh
+
+xrandr --output DP-0 --scale 1.5x1.5
+sxhkd &
+dunst &
+clipcatd &
