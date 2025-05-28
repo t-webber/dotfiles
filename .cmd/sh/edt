@@ -1,0 +1,23 @@
+#!/bin/sh
+
+filename="$(fd $1 $FILES/dotfiles -t f --hidden | awk -F/ '{print length($NF), $0}' | sort -n | awk 'NR==1 {print $NF}')"
+
+if [[ -z $filename ]]; then
+	echo "Found none."
+	exit
+fi
+
+folder=$(echo $filename | rev | sed 's/\// /' | rev | awk '{print $1}')
+file=$(echo $filename | awk -F/ '{print $NF}')
+
+pushd "$folder"
+
+$EDITOR $file
+ 
+git add $FILES/dotfiles
+echo -n "Commit message"
+read commit
+git commit -m "($filename) $message" 
+git push
+
+popd

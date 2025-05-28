@@ -1,0 +1,3 @@
+clear
+cargo clean
+cargo build --test $1 && path=$(find . | grep deps/$1 | grep -v '\.d$') &&rust-gdb $path
