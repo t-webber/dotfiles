@@ -1,0 +1,33 @@
+#!/bin/sh
+
+sleep 5
+dtl "starting..."
+
+taiw
+if [ "$DEVICE" = "acer" ]; then
+	mountpoint -q /boot || mboot
+fi
+lsblk
+
+sd rmm -rf "$FILES/.waste"
+mkdir -p "$FILES/.waste"
+
+"$ETC/link.sh"
+
+while ! ping -c1 -W1 1.1.1.1; do
+	sleep 1
+done
+
+bur | gv Downloading &
+
+C &
+U &
+Fy &
+M &
+
+ru &
+sd pkgfile --update &
+
+wait
+
+dtl "finished!"

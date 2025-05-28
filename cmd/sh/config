@@ -1,0 +1,42 @@
+#!/bin/sh
+
+printf 'Name: '
+read -r DEVICE </dev/tty
+
+printf 'Files location (absolute path, ~ for $HOME): '
+read -r FILES </dev/tty
+
+if [ "$(echo "$FILES" | cut -c1-1)" = "~" ]; then
+	FILES="$(echo "$FILES" | cut -c2-)"
+	FILES="$HOME$FILES"
+fi
+
+mkdir -p "$FILES"
+cd "$FILES" || (
+	printf "Access denied: failed to creates FILES folder\n"
+	exit
+)
+
+git clone https://github.com/t-webber/dotfiles || (
+	printf "Failed to clone dotfiles\n"
+	exit
+)
+cd dotfiles
+
+. cmd/sh/shellrc
+
+/bin/git submodule update --init --recursive
+curl https://bun.sh/install | bash 2>/dev/null >&2 &
+/bin/make release -C "$CMD/src" >/dev/null &
+
+curl https://sh.rustup.rs | sh -s -- --no-modify-path --profile minimal -y
+
+export ETC="$FILES/dotfiles/etc"
+./etc/link.sh !
+
+eval "cat /etc/bash.bashrc | sed 's|^export FILES=.*|export FILES=$FILES|' | sudo tee /etc/bash.bashrc >/dev/null"
+eval "cat /etc/bash.bashrc | sed 's|^export DEVICE=.*|export DEVICE=$DEVICE|' | sudo tee /etc/bash.bashrc >/dev/null"
+
+"$CARGO_HOME/bin/cargo" install cargo-binstall
+"$CARGO_HOME/bin/cargo" binstall $(<$ETC/cargo)
+"$CARGO_HOME/bin/cargo" install $(<$ETC/cargo)
