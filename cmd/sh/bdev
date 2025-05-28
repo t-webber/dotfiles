@@ -1,0 +1,17 @@
+#!/bin/sh
+
+clear
+
+bun i
+
+if [ -z "$1" ]; then
+	bun run dev
+else
+	if [ -z "$2" ]; then
+		brave --app="http://localhost:$1" >/dev/null 2>&1
+		bun run dev -- -p "$1"
+	else
+		brave --app="http://$2:$1" >/dev/null 2>&1
+		bun run dev -- -p "$1" -h "$2"
+	fi
+fi
