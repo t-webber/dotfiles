@@ -1,0 +1,396 @@
+#!/bin/sh
+
+###########
+### BUN ###
+###########
+
+b="$BUN_INSTALL/bin/bun"
+alias bun="use b"
+alias b="use alias for b"
+alias ba="$b add"
+alias br="$b run"
+alias bb="$b run build"
+alias bd="$b run dev"
+alias bf="$b run fmt"
+alias bi="$b i"
+alias bu="$b update"
+alias bug="$b update -g"
+alias big="$b i -g"
+alias bid="$b i -D"
+alias binit="$b init"
+alias bc="rms *lock* && rms .next && rms node_modules && bi"
+
+alias nextjs="$b x create-next-app@latest --typescript --eslint --tailwind --app --turbopack  --src-dir --use-bun"
+
+alias bx="use alias for bx"
+alias bunx="bx"
+alias knip="$b x knip"
+alias lint="$b x eslint"
+alias pret="$b x prettier"
+alias cn="$b x shadcn@latest add"
+
+##############
+### PRISMA ###
+##############
+
+pam() {
+	alias zwx="$b x prisma migrate"
+ 	case "$1" in 
+		r|reset) 	zwx reset 	"${@:2}" ;;
+		v|resolve)	zwx resolve 	"${@:2}" ;;
+		s|status) 	zwx status 	"${@:2}" ;; 
+		d|deploy) 	zwx deploy 	"${@:2}" ;;
+		+) 		zwx dev --name $1 "${@:2}";;
+		*) printf "pam r: reset\npam s: status\npam d: deploy\npam <name> dev --name <name>\n";;
+	esac
+}
+
+pa() {
+	alias zw="$b x prisma"
+	case "$1" in
+		o|studio)	zw studio 	"${@:2}";;
+		i|init)		zw init 	"${@:2}";;
+		g|gen|generate)	zw generate 	"${@:2}";;
+		pl|pull)	zw db pull 	"${@:2}";;
+		s|seed)		zw db seed 	"${@:2}";;
+		ph|push)	zw db push 	"${@:2}";;
+		v|validate) 	zw validate 	"${@:2}";;
+		m|migrate)	printf "use pam";;
+		*) printf "pa o: studio\npa i: init\npa g: generate\npa pl: db pull\npa psh: db push\npa s: db seed\npa v: validate\n";;
+	esac
+}
+
+############
+### RUST ###
+############
+
+c="$CARGO_HOME/bin/cargo"
+alias cargo="use c"
+alias cn="$c +nightly"
+alias cb="$c build"
+alias cbr="$c build --release"
+alias cr="$c run"
+alias crr="$c run --release"
+alias cc="$c clean"
+alias cdoc="$c doc"
+alias cdocall="$c doc --document-private-items --all"
+alias cinit="$c init"
+alias cnew="$c new"
+alias ca="$c add"
+alias crm="$c remove"
+alias cu="$c uninstall"
+alias cf="cn fmt --all -- --unstable-features --error-on-unformatted"
+alias cfmt="use cf"
+alias cy="$c clippy --all"
+alias ciu="$c install-update -a -g"
+
+alias cw=" watchexec -e rs -r cargo run"
+
+alias crd="$c run --features debug"
+
+alias gy='echo -e "\n#![warn(missing_docs,warnings,deprecated_safe,future_incompatible,keyword_idents,let_underscore,nonstandard_style,refining_impl_trait,rust_2018_compatibility,rust_2018_idioms,rust_2021_compatibility,rust_2024_compatibility,unused,clippy::all,clippy::pedantic,clippy::style,clippy::perf,clippy::complexity,clippy::correctness,clippy::restriction,clippy::nursery,clippy::cargo)]\n#![allow(clippy::single_call_fn,clippy::implicit_return,clippy::pattern_type_mismatch,clippy::blanket_clippy_restriction_lints,clippy::missing_trait_methods,clippy::question_mark_used,clippy::mod_module_files,clippy::module_name_repetitions,clippy::pub_with_shorthand,clippy::unseparated_literal_suffix,clippy::else_if_without_else)]\n" | x'
+
+alias chk="clearr && rms Cargo.lock && export RUSTDOCFLAGS='-D warnings' && cargo +nightly clippy --all -- --verbose -D warnings && cargo +nightly build --release --verbose && cargo +nightly test && cargo +nightly doc --document-private-items --all && cargo +nightly fmt --all -- --unstable-features --error-on-unformatted && cargo +nightly tarpaulin --fail-under 100"
+
+alias gcio='echo -n $(catt $CMD/secret/cratesio.txt) | xclip'
+
+
+rp="$CARGO_HOME/bin/rustup"
+alias rustup="use rp"
+alias rp="use alias for rp"
+alias rpt="$rp toolchain"
+alias rpd="$rp default"
+alias rpu="$rp update"
+alias rpv="$rp --version"
+alias rpc="$rp component"
+alias rpca="$rp component add"
+
+alias rnone="export RUST_BACKTRACE=0"
+alias rtr="export RUST_BACKTRACE=1"
+
+##############
+### TERMUX ###
+##############
+
+alias tmux="use t0 or tx"
+alias tx="/usr/bin/tmux"
+alias t0='tx a -t 0 || tmux new -s 0'
+alias t1='tx a -t 1 || tmux new -s 1'
+alias t2='tx a -t 2 || tmux new -s 2'
+
+###########
+### IWD ###
+###########
+
+alias iw="sudo iwctl"
+alias iw0="iw station wlan0"
+alias iwc="sudo iwctl station wlan0 connect"
+alias iwd="sudo iwctl station wlan0 disconnect"
+alias iwgh="iws; while :; do clearr; iwg; sleep 1; done"
+alias iwg="iw0 get-networks"
+alias iws="iw0 scan"
+
+###########
+### GIT ###
+###########
+
+alias idd="/usr/bin/id"
+
+i="/usr/bin/git"
+alias i="use i command i"
+alias iv="$i --version"
+alias ic="$i commit -m"
+alias id="$i diff"
+alias ii="$i init"
+alias is="$i status"
+alias ia="$i add"
+alias iam="$i commit --amend"
+alias ibr="$i branch"
+alias il="$i log"
+alias ilo="$i log --oneline"
+alias ils="$i ls-files"
+alias iph="$i push"
+alias ifh="$i push --force"
+alias ipl="$i pull"
+alias irb="$i rebase"
+alias irs="$i reset"
+alias irt="$i remote"
+alias ish="$i stash"
+alias icfg="$i config"
+alias icfgg="$i config -global"
+
+alias checks="gh pr checks"
+alias ghs="gh search"
+alias w="gh repo view -w"
+
+##############
+### PYTHON ###
+##############
+
+alias python="use py"
+alias py="/usr/bin/python"
+alias serve="py -m http.server"
+
+###############
+### SYSTEMD ###
+###############
+
+alias ctl="sudo systemctl"
+alias ctlu="ctl list-unit-files"
+
+alias restart="ctl restart"
+alias start="ctl start"
+alias status="ctl status"
+alias stop="ctl stop"
+
+alias sd="sudo shutdown -P now"
+alias slp='ctl suspend'
+alias ssql="start postgresql"
+
+###########
+### SEE ###
+###########
+
+alias l="use s"
+alias ls="l"
+alias la="l"
+alias ll="use sv"
+alias lla="ll"
+alias eza="ll"
+alias llag="ll"
+alias cat="use s"
+alias bat="use sv"
+
+alias sb="s $HOME/.bashrc"
+
+
+alias ggcode="use gc"
+alias gcode="use gc"
+alias gcv="gc v"
+alias ga="gc aliases"
+
+alias pwdf="use pf"
+alias pf="readlink -f"
+alias px='echo -n $(pwd) | x'
+
+############
+### GUI ####
+############
+
+alias xdg-open="use o"
+alias br="brave-browser && exit"
+alias ws='open https://synapses.telecom-paris.fr/login?type=Shib'
+alias we='open https://ecampus.paris-saclay.fr/my/'
+
+###############
+### NETWORK ###
+###############
+
+alias get="curl -X GET"
+alias post="curl -X POST"
+alias pi="ping std.rs"
+
+s="/usr/bin/ssh"
+alias ssh="use aliases for ssh"
+alias rpi="$s uname@$RPIIP"
+alias mssh="$s mad@mad-ssh.rezel.net -J twebber-23@ssh.enst.fr"
+alias tessh="use tesh"
+alias tesh="$s root@telecom-etude.rezel.net -J twebber-23@ssh.enst.fr"
+alias pssh='$s twebber-23@perso-twebber-23.lxc.enst.fr -J twebber-23@ssh.enst.fr'
+alias gssh="s $FILES/.ssh/id_ed25519.pub | x && s $FILES/.ssh/id_ed25519.pub"
+alias enst='ssh twebber-23@ssh.enst.fr'
+
+#############
+### PUSHD ###
+#############
+
+alias p="pushd >/dev/null"
+alias pp="popd >/dev/null"
+alias push="use p"
+alias pop="use pp"
+alias j="pp"
+alias k="p .."
+
+alias cd="use p"
+alias src="p src"
+
+alias 2a="p $FILES/2a"
+alias a8="p $FILES/2a/a8"
+alias s1="p $FILES/2a/s1"
+alias s2="p $FILES/2a/s2"
+alias s4="p $FILES/2a/s4"
+alias s5="p $FILES/2a/s5"
+alias s6="p $FILES/2a/s6"
+alias ces="p $FILES/2a/cesure"
+alias inf="p $FILES/2a/inf224"
+
+alias apps="p $APPS"
+alias del="p $FILES/.waste"
+alias cache="p $HOME/.cache"
+alias d="p $DEV"
+alias f="p $FILES"
+alias h="p $HOME"
+alias cf="p $CONFIG"
+alias cmd="p $CMD"
+
+alias comp="p $DEV/compiler"
+alias emailrs="p $DEV/email"
+alias dev="p $DEV"
+alias en="p $FILES/2a/en"
+alias perso="p $DEV/personal-website"
+alias html="p $DEV/html-parser"
+alias jc="p $DEV/jc"
+alias md="cd $DEV/md-viewer"
+alias sw="p $DEV/sw"
+alias vsh="p $DEV/vimsh"
+alias mail="p $DEV/mailbox"
+alias words="p $DEV/words"
+alias pdelc="p $DEV/.c/"
+alias pdelr="p $DEV/.r/"
+
+############
+### EDIT ###
+############
+
+alias hx="helix"
+
+alias delc="v $DEV/.c/"
+alias delr="v $DEV/.r/"
+alias n="use e"
+alias vi="use e"
+alias vim="vi"
+alias nvim="vi"
+
+alias bashrc="use eb"
+alias eb="v $HOME/.bashrc"
+alias bspwmrc="use bsp"
+alias bsp="v $CONFIG/bspwm/bspwmrc"
+alias sxhkdrc="use sx"
+alias se="sudo $EDITOR"
+alias sx="v $CONFIG/sxhkd/sxhkdrc"
+
+alias rm='use rms'
+alias rmm="/usr/bin/rm"
+alias rms=". rms"
+alias save="savecmd"
+alias gsaved="sv $CMD/data/saved.txt"
+
+alias nix=". nix"
+alias touch="use t" 
+alias t="/usr/bin/touch"
+
+alias ep="edt profile"
+alias ea="edt aliases"
+alias ce="cmd && e src && pp"
+alias nf="cf && e nvim && pp"
+
+#############
+### CLANG ###
+#############
+
+alias gcc="use cc"
+alias gccw="cc -Wall -Wextra -Wpedantic -Werror -Wconversion -Wuninitialized -Wundef -Wshadow -Wvla -Wcast-align -Wstrict-prototypes -Wmissing-declarations -Wstrict-overflow=5 -Wnull-dereference -Wlogical-op -Wpacked -Wpointer-arith -Wcast-qual -Wswitch-default -Wmissing-noreturn -Wredundant-decls -Wno-unused -Wno-unused-variable -Wno-unused-function -Wno-unused-parameter -Wno-sign-compare -Wno-format -Wno-type-limits -Wno-deprecated-declarations -Wfatal-errors "
+alias clw='clang -Werror -Wextra -Wconversion -Wuninitialized -Wundef -Wshadow -Wvla -Wcast-align -Wstrict-prototypes -Wmissing-declarations -Wstrict-overflow -Wnull-dereference -Wpacked -Wpointer-arith -Wcast-qual -Wswitch-default -Wmissing-noreturn -Wredundant-decls -Wno-unused -Wno-unused-variable -Wno-unused-function -Wno-unused-parameter -Wno-sign-compare -Wno-format -Wno-type-limits -Wno-deprecated-declarations'
+alias clang="use cl"
+alias cl="/usr/bin/clang"
+alias cinit="cp $CMD/data/.clang* ."
+
+##########################
+### CONFIG INDEPENDANT ###
+##########################
+
+alias dt="date"
+alias ChkTeX='chktex'
+alias qr="qrencode"
+alias notif="dunstify"
+alias dockerc="docker-compose"
+alias wi="whereis"
+alias xo="xournalpp"
+alias y="yes"
+alias fr="setxkbmap fr"
+alias chmd="sudo chmod"
+alias chw="sudo chown"
+alias gpg-list="gpg --list-secret-keys --keyid-format=long"
+alias cols="tput cols"
+alias gpt="PS1='$ ' && PROMPT_COMMAND=''"
+alias hd="head"
+alias hour="date '+%H:%M:%S'"
+alias dt="date"
+alias use="echo use"
+alias rand="openssl rand -base64 255"
+alias path="echo $PATH"
+alias cnt="wc -l"
+alias xcnt="xargs cnt"
+alias u="bspc desktop -f neovim && codium ."
+alias codex="code --install-extension"
+alias lock="vlock --all"
+
+#####################################
+#####################################
+#####################################
+
+alias clear="use ctrl+l"
+alias cls="/usr/bin/clear"
+
+alias xclip="use x"
+alias x='/usr/bin/xclip -selection c'
+
+alias grep="use g"
+alias ripgrep="use g"
+alias rg="use g"
+alias g="$CARGO_HOME/bin/rg"
+
+alias vg="DEBUGINFOD_URLS='https://debuginfod.archlinux.org/' valgrind"
+alias bp="s /sys/class/power_supply/BAT1/capacity"
+alias mitapache="cp $CMD/data/LICENSE-MIT . && cp $CMD/data/LICENSE-APACHE ."
+alias mit="cp $CMD/data/LICENSE-MIT ."
+alias mvg="make valgrind"
+alias vimsh="$DEV/vsh/main.out"
+alias :wq="echo '🚬'"
+alias :q="echo '🚬'"
+alias q="echo '🚬'"
+alias wq="echo '🚬'"
+alias secret=". $FILES/.secret/vars"
+alias r=". $HOME/.bashrc"
+alias cup="cmd && src && m release && pp && pp"
+alias clearr="clear"

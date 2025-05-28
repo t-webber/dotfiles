@@ -1,0 +1,1 @@
+clear && g++ -Wall  -Wextra  -Werror  -Wpedantic  -Wshadow  -Weffc++ -Wconversion -Wformat=2 $1 -o .del && ./.del

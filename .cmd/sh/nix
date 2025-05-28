@@ -1,0 +1,13 @@
+#!/bin/sh
+
+cmd
+p sh
+
+echo "#!/bin/sh
+
+" >> $1
+chmod +x $1
+e $1
+
+pp
+pp

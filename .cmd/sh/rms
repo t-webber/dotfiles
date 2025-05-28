@@ -1,0 +1,6 @@
+#!/bin/sh
+
+time=$(date '+%s')
+echo "path: $FILES/.waste/$time/" 
+mkdir "$FILES/.waste/$time/" -p
+mv "$@" "$FILES/.waste/$time/" -f
