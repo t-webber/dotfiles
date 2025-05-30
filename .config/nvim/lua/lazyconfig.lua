@@ -28,7 +28,12 @@ local spec = {
 		config = true,
 	},
 	{
-		"tpope/vim-fugitive",
+		"NeogitOrg/neogit",
+		config = function()
+			require("neogit").setup({
+				integrations = { diffview = true },
+			})
+		end,
 	},
 	{
 		"nvim-telescope/telescope.nvim",
