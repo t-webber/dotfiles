@@ -270,8 +270,6 @@ alias cache="p $HOME/.cache"
 alias d="p $DEV"
 alias f="p $FILES"
 alias h="p $HOME"
-alias cf="p $CONFIG"
-alias cmd="p $CMD"
 
 alias comp="p $DEV/compiler"
 alias emailrs="p $DEV/email"
