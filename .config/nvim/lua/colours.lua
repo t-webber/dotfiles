@@ -67,9 +67,9 @@ local colours = {
 	["@string.documentation"] = c(grey), -- docstrings
 	["@string.regexp"] = none, -- regular expressions
 	["@string.escape"] = c(orange), -- escape sequences
-	["@string.special"] = none, -- other special strings (e.g. dates)
-	["@string.special.symbol"] = none, -- symbols or atoms
-	["@string.special.path"] = none, -- filenames
+	["@string.special"] = none, -- none special strings (e.g. dates)
+	["@string.special.symbol"] = c(blue), -- symbols or atoms (e.g., Makefile variables)
+	["@string.special.path"] = none, -- filename
 	["@string.special.url"] = none, -- URIs (e.g. hyperlinks)
 	["@character"] = c(orange), -- character literals
 	["@character.special"] = c(orange), -- special characters (e.g. wildcards)
@@ -104,7 +104,7 @@ local colours = {
 	["@keyword.operator"] = c(red), -- operators that are English words (e.g. and, or)
 	["@keyword.import"] = c(magenta), -- keywords for including or exporting modules (e.g. import, from in Python)
 	["@keyword.type"] = c(red), -- keywords describing namespaces and composite types (e.g. struct, enum)
-	["@keyword.modifier"] = c(red), -- keywords modifying other constructs (e.g. const, static, public)
+	["@keyword.modifier"] = c(red), -- keywords modifying none constructs (e.g. const, static, public)
 	["@keyword.repeat"] = c(red), -- keywords related to loops (e.g. for, while)
 	["@keyword.return"] = c(red), -- keywords like return and yield
 	["@keyword.debug"] = c(red), -- keywords related to debugging
@@ -167,10 +167,6 @@ local colours = {
 	GitSignsAdd = c(darkgreen),
 	GitSignsChange = c(darkyellow),
 	GitSignsDelete = c(darkred),
-
-	-----------------------
-	--- Mini Statusline ---
-	-----------------------
 
 	-----------
 	--- Oil ---
