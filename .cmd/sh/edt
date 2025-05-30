@@ -15,9 +15,9 @@ pushd "$folder"
 $EDITOR $file
  
 git add $FILES/dotfiles
-echo -n "Commit message"
+echo -n "Commit message: "
 read commit
-git commit -m "($filename) $message" 
+git commit -m "$commit" 
 git push
 
 popd
