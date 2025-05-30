@@ -53,15 +53,11 @@ local sections = {
 	lualine_a = { mode },
 	lualine_b = {
 		time,
-	},
-	lualine_c = {
 		{ "filename", color = dark },
 	},
-	lualine_x = {
-		{ "filetype", icon_only = false, colored = true, color = dark },
-		battery,
-	},
-	lualine_y = { position },
+	lualine_c = {},
+	lualine_x = {},
+	lualine_y = { position, { "filetype", icon_only = false, colored = true, color = dark }, battery },
 	lualine_z = {},
 }
 
