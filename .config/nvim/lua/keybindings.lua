@@ -53,6 +53,7 @@ set(n, " gb", ":Gitsigns toggle_current_line_blame<CR>")
 set(n, " tf", ":Telescope find_files<CR>")
 set(n, " tg", ":Telescope git_files<CR>")
 set(n, " tz", ":Telescope grep_string<CR>")
+set(n, " td", ":Telescope git_status<CR>")
 
 -----------
 --- Oil ---
