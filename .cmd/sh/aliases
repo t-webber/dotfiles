@@ -321,8 +321,8 @@ alias t="/usr/bin/touch"
 
 alias ep="edt profile"
 alias ea="edt aliases"
-alias ce="cmd && e src && pp"
-alias nf="cf && e nvim && pp"
+alias ce="use edt"
+alias nf="use edt"
 
 #############
 ### CLANG ###
