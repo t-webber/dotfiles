@@ -5,19 +5,24 @@ if [[ -z $1 ]]; then
 	exit	
 fi
 
+alias p="pushd >/dev/null"
+alias pp="popd >/dev/null"
+
 p $CMD
 
 ext="$(echo $1 | rev | cut -c1-2 | rev)"
 
 if [[ $ext == ".c" ]]; then 
 	p src
-	e $1
-	pp
+	$EDITOR $1
+	giti $1
+	pp	
 else 
 	p sh
 	echo -e "#!/bin/sh\n\n" >> $1
 	chmod +x $1
-	e $1
+	$EDITOR $1
+	giti $1
 	pp
 fi
 

@@ -1,0 +1,9 @@
+#!/bin/sh
+
+git add $1
+git status
+echo -n "Commit message: "
+read commit
+git commit -m "$commit"
+git push
+
