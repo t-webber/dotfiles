@@ -1,13 +1,24 @@
 #!/bin/sh
 
-cmd
-p sh
+if [[ -z $1 ]]; then
+	echo "Usage: nix file[.c]"
+	exit	
+fi
 
-echo "#!/bin/sh
+p $CMD
 
-" >> $1
-chmod +x $1
-e $1
+ext="$(echo $1 | rev | cut -c1-2 | rev)"
 
-pp
+if [[ $ext == ".c" ]]; then 
+	p src
+	e $1
+	pp
+else 
+	p sh
+	echo -e "#!/bin/sh\n\n" >> $1
+	chmod +x $1
+	e $1
+	pp
+fi
+
 pp
