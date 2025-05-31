@@ -4,11 +4,11 @@
 
 [[ -z $FILES ]] && export FILES="$HOME/.files";
 
-export CMD="$FILES/dotfiles/.cmd"
+export CMD="$FILES/dotfiles/cmd"
 export APPS="$FILES/.apps"
 export DATA="$FILES/.data"
 export DEV="$FILES/.dev"
-export CONFIG="$FILES/dotfiles/.config"
+export CONFIG="$FILES/dotfiles/config"
 export LOGS="$DATA/logs"
 
 export EDITOR="/usr/bin/nvim"
