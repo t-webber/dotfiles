@@ -29,9 +29,16 @@ local spec = {
 	},
 	{
 		"NeogitOrg/neogit",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"sindrets/diffview.nvim",
+		},
 		config = function()
 			require("neogit").setup({
-				integrations = { diffview = true },
+				integrations = {
+					diffview = true,
+					disable_relative_line_numbers = false,
+				},
 			})
 		end,
 	},
