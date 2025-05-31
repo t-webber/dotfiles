@@ -34,6 +34,8 @@ local spec = {
 		},
 		config = function()
 			require("neogit").setup({
+				graph_style = "ascii",
+				status = { recent_commit_count = 100 },
 				integrations = {
 					diffview = true,
 					disable_relative_line_numbers = false,
