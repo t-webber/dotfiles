@@ -16,7 +16,6 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 
 -- Add lazypath to nvim runtime path. Needed to call require("lazy")
--- Don't call the file lazy.lua otherwise... conflict!
 vim.opt.runtimepath:prepend(lazypath)
 
 local spec = {
@@ -133,6 +132,7 @@ local spec = {
 	{ import = "plugins" },
 }
 
+-- Don't call the file lazy.lua otherwise... conflict!
 require("lazy").setup({
 	spec = spec,
 	rocks = { enabled = false },
