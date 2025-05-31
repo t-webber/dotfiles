@@ -164,9 +164,9 @@ local colours = {
 	------------------
 	---- Git Signs ---
 	------------------
-	GitSignsAdd = c(darkgreen),
-	GitSignsChange = c(darkyellow),
-	GitSignsDelete = c(darkred),
+	GitSignsAdd = c("#66cc66"),
+	GitSignsChange = c("#cccc66"),
+	GitSignsDelete = c("#cc6666"),
 
 	-----------
 	--- Oil ---
@@ -194,8 +194,8 @@ local colours = {
 	OilGitStatusWorkingTreeModified = c(yellow),
 	OilGitStatusIndexRenamed = c(cyan),
 	OilGitStatusWorkingTreeRenamed = c(cyan),
-	OilGitStatusIndexTypeChanged = c("#ff0000"),
-	OilGitStatusWorkingTreeTypeChanged = c("#ff0000"),
+	OilGitStatusIndexTypeChanged = none,
+	OilGitStatusWorkingTreeTypeChanged = none,
 	OilGitStatusIndexUnmerged = c(darkred),
 	OilGitStatusWorkingTreeUnmerged = c(darkred),
 }
