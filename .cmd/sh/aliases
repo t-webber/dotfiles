@@ -167,7 +167,7 @@ alias irs="$i reset"
 alias irt="$i remote"
 alias ish="$i stash"
 alias icfg="$i config"
-alias icfgg="$i config -global"
+alias icfgg="$i config --global"
 
 alias checks="gh pr checks"
 alias ghs="gh search"
