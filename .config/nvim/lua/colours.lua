@@ -22,7 +22,8 @@ local c = function(fg, bg)
 	return { fg = fg, bg = bg }
 end
 
-local none = c("#00ff00")
+local none = c("#ff0000")
+
 local title = { fg = magenta, bold = true }
 
 local colours = {
@@ -67,9 +68,9 @@ local colours = {
 	["@string.documentation"] = c(grey), -- docstrings
 	["@string.regexp"] = none, -- regular expressions
 	["@string.escape"] = c(orange), -- escape sequences
-	["@string.special"] = none, -- none special strings (e.g. dates)
+	["@string.special"] = none, -- other special strings (e.g. dates)
 	["@string.special.symbol"] = c(blue), -- symbols or atoms (e.g., Makefile variables)
-	["@string.special.path"] = none, -- filename
+	["@string.special.path"] = c(yellow), -- filename, e.g. in git commit files
 	["@string.special.url"] = none, -- URIs (e.g. hyperlinks)
 	["@character"] = c(orange), -- character literals
 	["@character.special"] = c(orange), -- special characters (e.g. wildcards)
