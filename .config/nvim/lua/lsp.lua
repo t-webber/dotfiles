@@ -5,6 +5,10 @@ vim.filetype.add({
 })
 
 local lsps = {
+	Prettier = {
+		cmd = { "prettier" },
+		filetypes = { "ts", "js", "tsx", "jsx" },
+	},
 	Lua = {
 		cmd = { "lua-language-server" },
 		filetypes = { "lua" },
