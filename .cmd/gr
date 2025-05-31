@@ -1,1 +1,0 @@
-clear && gcc -Wall  -Wextra  -Werror  -Wpedantic  -Wshadow  -Wconversion -Wformat=2 $1 -o .del && ./.del

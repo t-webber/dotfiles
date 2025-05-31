@@ -1,4 +1,0 @@
-cols=$(tput cols)
-ps1r=$(ps1r | wc -c)
-cols=$((cols-ps1r+3*3-1))
-echo $cols

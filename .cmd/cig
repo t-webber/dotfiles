@@ -1,1 +1,0 @@
-cargo install --git https://github.com/${2:-t-webber}/$1
