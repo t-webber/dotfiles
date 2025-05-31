@@ -218,6 +218,7 @@ alias ggcode="use gc"
 alias gcode="use gc"
 alias gcv="gc v"
 alias ga="gc aliases"
+alias gk="gc keymaps.lua"
 
 alias pwdf="use pf"
 alias pf="readlink -f"
