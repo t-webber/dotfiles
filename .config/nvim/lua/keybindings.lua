@@ -42,25 +42,27 @@ set(n, "<C-l>", "<C-w>l")
 --- Git ---
 -----------
 
-set(n, " gh", ":Gitsigns preview_hunk<CR>")
-set(n, " gi", ":Gitsigns preview_hunk_inline<CR>")
-set(n, " gb", ":Gitsigns toggle_current_line_blame<CR>")
+set(n, ",gh", ":Gitsigns preview_hunk<CR>")
+set(n, ",gi", ":Gitsigns preview_hunk_inline<CR>")
+set(n, ",gb", ":Gitsigns toggle_current_line_blame<CR>")
+set(n, ",ga", ":term git add -p<CR>")
+set(n, ",gg", ":Neogit<CR>")
 
 -----------------
 --- Telescope ---
 -----------------
 
-set(n, " tf", ":Telescope find_files<CR>")
-set(n, " tg", ":Telescope git_files<CR>")
-set(n, " tz", ":Telescope grep_string<CR>")
-set(n, " td", ":Telescope git_status<CR>")
+set(n, ",tf", ":Telescope find_files<CR>")
+set(n, ",tg", ":Telescope git_files<CR>")
+set(n, ",tz", ":Telescope grep_string<CR>")
+set(n, ",td", ":Telescope git_status<CR>")
 
 -----------
 --- Oil ---
 -----------
 
-set(n, " oh", ":Oil<CR>")
-set(n, " ol", ":Oil ..<CR>")
+set(n, ",oh", ":Oil<CR>")
+set(n, ",ol", ":Oil ..<CR>")
 
 -----------
 --- LSP ---
@@ -68,10 +70,10 @@ set(n, " ol", ":Oil ..<CR>")
 
 --> errors <--
 
-set(n, "gw", function()
+set(n, ",lw", function()
 	vim.diagnostic.open_float()
 end)
-set(n, "gf", function()
+set(n, ",lf", function()
 	vim.lsp.buf.code_action()
 end)
 
@@ -85,14 +87,14 @@ local move_and_open = function(action)
 	end
 end
 
-set(n, "gl", move_and_open("cnext"))
-set(n, "gh", move_and_open("cprev"))
-set(n, "gk", ":cclose<CR>")
-set(n, "gj", ":copen<CR>")
+set(n, ",ll", move_and_open("cnext"))
+set(n, ",lh", move_and_open("cprev"))
+set(n, ",lk", ":cclose<CR>")
+set(n, ",lj", ":copen<CR>")
 
 --> motion <--
 
-set(n, "gd", function()
+set(n, ",ld", function()
 	vim.lsp.buf.definition({})
 end)
 
@@ -101,14 +103,18 @@ end)
 ------------
 
 -- press ~ to toggle a letter between lower case and capitals
-setm({ n, v }, "cc", ":TtCamel<CR>")
-setm({ n, v }, "cp", ":TtPascal<CR>")
-setm({ n, v }, "ck", ":TtKebab<CR>")
-setm({ n, v }, "cs", ":TtSnake<CR>")
-setm({ n, v }, "co", ":TtConst<CR>")
-setm({ n, v }, "cd", ":TtDot<CR>")
-setm({ n, v }, "ct", ":TtTitle<CR>")
+setm({ n, v }, ",cc", ":TtCamel<CR>")
+setm({ n, v }, ",cp", ":TtPascal<CR>")
+setm({ n, v }, ",ck", ":TtKebab<CR>")
+setm({ n, v }, ",cs", ":TtSnake<CR>")
+setm({ n, v }, ",co", ":TtConst<CR>")
+setm({ n, v }, ",cd", ":TtDot<CR>")
+setm({ n, v }, ",ct", ":TtTitle<CR>")
 set(v, "c", "<Nop>")
+
+-------------------------
+--- Comment/Uncomment ---
+-------------------------
 
 set(n, "<C-!>", function()
 	print("xxx")
