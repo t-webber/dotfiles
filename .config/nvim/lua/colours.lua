@@ -67,7 +67,7 @@ local colours = {
 	--- Strs ---
 	["@string"] = c(yellow),
 	["@string.documentation"] = c(grey), -- docstrings
-	["@string.regexp"] = none, -- regular expressions
+	["@string.regexp"] = c(orange), -- regular expressions
 	["@string.escape"] = c(orange), -- escape sequences
 	["@string.special"] = none, -- other special strings (e.g. dates)
 	["@string.special.symbol"] = c(blue), -- symbols or atoms (e.g., Makefile variables)
