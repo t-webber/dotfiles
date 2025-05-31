@@ -17,6 +17,7 @@ local darkcyan = "#558899"
 local dark = "#111111"
 local white = "#aaaaaa"
 local black = "#000000"
+local purple = "#553355"
 
 local c = function(fg, bg)
 	return { fg = fg, bg = bg }
@@ -211,8 +212,12 @@ return {
 	Background = black,
 	Normal = darkblue,
 	Insert = darkgreen,
+	Select = purple,
+	SelectLine = purple,
+	SelectBlock = purple,
 	Visual = darkred,
 	VisualLine = darkred,
+	VisualBlock = darkred,
 	Command = darkmagenta,
 	Replace = darkcyan,
 	Terminal = brown,
