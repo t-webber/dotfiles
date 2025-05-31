@@ -68,7 +68,7 @@ sets(n, "gp", ":Gitsigns preview_hunk<CR>")
 sets(n, "gi", ":Gitsigns preview_hunk_inline<CR>")
 sets(n, "gb", ":Gitsigns toggle_current_line_blame<CR>")
 sets(n, "ga", ":term git add -p<CR>")
-sets(n, "gg", ":Neogit<CR>")
+sets(n, "go", ":Neogit<CR>")
 
 -----------------
 --- Telescope ---
