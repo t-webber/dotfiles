@@ -39,11 +39,6 @@ local lsps = {
 			},
 		},
 	},
-
-	-- 	{
-	-- 		cmd = { "ruff", "server" },
-	-- 		filetypes = { "py", "python", "sage" },
-	-- 	},
 }
 
 for name, config in pairs(lsps) do

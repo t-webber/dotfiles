@@ -93,6 +93,12 @@ local spec = {
 	-- Editor --
 	------------
 	{
+		"ms-jpq/coq_nvim",
+		config = function()
+			vim.cmd("COQnow")
+		end,
+	},
+	{
 		"ggandor/leap.nvim",
 		dependencies = {
 			"tpope/vim-repeat",
