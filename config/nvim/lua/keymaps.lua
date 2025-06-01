@@ -79,6 +79,7 @@ sets(n, "èg", ":Telescope git_files<CR>")
 sets(n, "èz", ":Telescope grep_string<CR>")
 sets(n, "èd", ":Telescope git_status<CR>")
 sets(n, "èh", ":Telescope highlights<CR>")
+sets(n, "èr", ":Telescope live_grep<CR>")
 
 -----------
 --- Oil ---
@@ -129,13 +130,13 @@ end, "Go to definition")
 ------------
 
 -- press ~ to toggle a letter between lower case and capitals
-setm({ n, v }, "cc", ":TtCamel<CR>")
-setm({ n, v }, "cp", ":TtPascal<CR>")
-setm({ n, v }, "ck", ":TtKebab<CR>")
-setm({ n, v }, "cs", ":TtSnake<CR>")
-setm({ n, v }, "co", ":TtConst<CR>")
-setm({ n, v }, "cd", ":TtDot<CR>")
-setm({ n, v }, "ct", ":TtTitle<CR>")
+setm(nv, "cc", ":TtCamel<CR>")
+setm(nv, "cp", ":TtPascal<CR>")
+setm(nv, "ck", ":TtKebab<CR>")
+setm(nv, "cs", ":TtSnake<CR>")
+setm(nv, "co", ":TtConst<CR>")
+setm(nv, "cd", ":TtDot<CR>")
+setm(nv, "ct", ":TtTitle<CR>")
 vim.keymap.set(v, "c", "<Nop>")
 
 -------------------------
