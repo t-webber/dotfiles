@@ -2,7 +2,7 @@
 
 filename="$(fd $1 $FILES/dotfiles -t f --hidden | awk -F/ '{print length($NF), $0}' | sort -n | awk 'NR==1 {print $NF}')"
 
-if [[ -z $filename ]]; then
+if [ -z "$filename" ]; then
 	echo "Found none."
 	exit
 fi
@@ -10,10 +10,10 @@ fi
 folder=$(echo $filename | rev | sed 's/\// /' | rev | awk '{print $1}')
 file=$(echo $filename | awk -F/ '{print $NF}')
 
-pushd "$folder"
+cd "$folder"
 
 $EDITOR $file
- 
-giti $FILES/dotfiles 
 
-popd
+giti $FILES/dotfiles
+
+cd -

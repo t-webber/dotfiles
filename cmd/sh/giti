@@ -6,7 +6,7 @@ git status
 echo -n "Commit message: "
 read commit
 
-if [[ -z $commit ]]; then 
+if [ -z "$commit" ]; then 
 	exit 1
 fi
 

@@ -1,4 +1,4 @@
 #!/bin/sh
 
-echo -e "$@\n" >> $CMD/data/saved.txt
+printf "%s\n" "$@" >> $CMD/data/saved.txt
 

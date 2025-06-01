@@ -44,29 +44,31 @@ alias cn="$b x shadcn@latest add"
 ##############
 
 pam() {
-	alias zwx="$b x prisma migrate"
- 	case "$1" in 
-		r|reset) 	zwx reset 	"${@:2}" ;;
-		v|resolve)	zwx resolve 	"${@:2}" ;;
-		s|status) 	zwx status 	"${@:2}" ;; 
-		d|deploy) 	zwx deploy 	"${@:2}" ;;
-		+) 		zwx dev --name $1 "${@:2}";;
-		*) printf "pam r: reset\npam s: status\npam d: deploy\npam <name> dev --name <name>\n";;
+	zwx="$b x prisma migrate"
+	shift
+	case "$1" in
+	r | reset) $zwx reset "$@" ;;
+	v | resolve) $zwx resolve "$@" ;;
+	s | status) $zwx status "$@" ;;
+	d | deploy) $zwx deploy "$@" ;;
+	+) $zwx dev --name $1 "$@" ;;
+	*) printf "pam r: reset\npam s: status\npam d: deploy\npam <name> dev --name <name>\n" ;;
 	esac
 }
 
 pa() {
-	alias zw="$b x prisma"
+	zw="$b x prisma"
+	shift
 	case "$1" in
-		o|studio)	zw studio 	"${@:2}";;
-		i|init)		zw init 	"${@:2}";;
-		g|gen|generate)	zw generate 	"${@:2}";;
-		pl|pull)	zw db pull 	"${@:2}";;
-		s|seed)		zw db seed 	"${@:2}";;
-		ph|push)	zw db push 	"${@:2}";;
-		v|validate) 	zw validate 	"${@:2}";;
-		m|migrate)	printf "use pam";;
-		*) printf "pa o: studio\npa i: init\npa g: generate\npa pl: db pull\npa psh: db push\npa s: db seed\npa v: validate\n";;
+	o | studio) $zw studio "$@" ;;
+	i | init) $zw init "$@" ;;
+	g | gen | generate) $zw generate "$@" ;;
+	pl | pull) $zw db pull "$@" ;;
+	s | seed) $zw db seed "$@" ;;
+	ph | push) $zw db push "$@" ;;
+	v | validate) $zw validate "$@" ;;
+	m | migrate) printf "use pam" ;;
+	*) printf "pa o: studio\npa i: init\npa g: generate\npa pl: db pull\npa psh: db push\npa s: db seed\npa v: validate\n" ;;
 	esac
 }
 
@@ -103,7 +105,6 @@ alias gy='echo -e "\n#![warn(missing_docs,warnings,deprecated_safe,future_incomp
 alias chk="clearr && rms Cargo.lock && export RUSTDOCFLAGS='-D warnings' && cargo +nightly clippy --all -- --verbose -D warnings && cargo +nightly build --release --verbose && cargo +nightly test && cargo +nightly doc --document-private-items --all && cargo +nightly fmt --all -- --unstable-features --error-on-unformatted && cargo +nightly tarpaulin --fail-under 100"
 
 alias gcio='echo -n $(catt $CMD/secret/cratesio.txt) | xclip'
-
 
 rp="$CARGO_HOME/bin/rustup"
 alias rustup="use rp"
@@ -214,7 +215,6 @@ alias cat="use s"
 alias bat="use sv"
 
 alias sb="s $HOME/.bashrc"
-
 
 alias ggcode="use gc"
 alias gcode="use gc"
@@ -327,7 +327,7 @@ alias save="savecmd"
 alias gsaved="sv $CMD/data/saved.txt"
 alias esaved="edt saved.txt"
 
-alias touch="use t" 
+alias touch="use t"
 alias t="/usr/bin/touch"
 
 alias ep="edt profile"

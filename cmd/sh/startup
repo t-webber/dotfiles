@@ -16,7 +16,7 @@ mkdir -p "$FILES/.waste"
 mkdir -p "$LOGS"
 echo "$(date '+%d/%m/%y | %H:%M')" > "$LOGS/startup.txt"
 
-while [[ -z "$(sudo iwctl station wlan0 show | grep ' connected')" ]]; do
+while [ -z "$(sudo iwctl station wlan0 show | grep ' connected')" ]; do
 	sleep 10
 done
 

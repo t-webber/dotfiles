@@ -1,1 +1,3 @@
+#!/bin/sh
+
 scp -o ProxyCommand="ssh -W %h:%p twebber-23@ssh.enst.fr" $1 twebber-23@perso-twebber-23.lxc.enst.fr:/srv/www/twebber-23 

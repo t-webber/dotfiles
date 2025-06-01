@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [[ -z $1 ]]; then
+if [ -z "$1" ]; then
 	echo "Usage: nix file[.c]"
 	exit	
 fi
@@ -12,14 +12,14 @@ p $CMD
 
 ext="$(echo $1 | rev | cut -c1-2 | rev)"
 
-if [[ $ext == ".c" ]]; then 
+if [ "$ext" = ".c" ]; then 
 	p src
 	$EDITOR $1
 	giti $1
 	pp	
 else 
 	p sh
-	echo -e "#!/bin/sh\n\n" >> $1
+	printf "#!/bin/sh\n\n" >> $1
 	chmod +x $1
 	$EDITOR $1
 	giti $1

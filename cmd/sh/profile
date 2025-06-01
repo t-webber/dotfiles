@@ -1,8 +1,10 @@
 #!/bin/sh
 
-[[ -f "$FILES/.secret/vars" ]] && . "$FILES/.secret/vars" >/dev/null
+[ -z "$FILES" ] && export FILES="$HOME/.files"
 
-[[ -z $FILES ]] && export FILES="$HOME/.files";
+[ -f "$FILES/.secret/vars" ] && . "$FILES/.secret/vars" >/dev/null
+
+ezrge
 
 export DOT="$FILES/dotfiles"
 export CMD="$DOT/cmd"
@@ -30,16 +32,9 @@ export NVM_DIR="$DATA/nvm"
 
 export XDG_DATA_HOME="$DATA/share"
 
-PATH=""
-PATH+=":/usr/bin"
-PATH+=":$CMD/sh"
-PATH+=":$CMD/bin"
-PATH+=":$CARGO_HOME/bin"
-PATH+=":$BUN_INSTALL/bin"
-export PATH
+export PATH="/usr/bin:$CMD/sh:$CMD/bin:$CARGO_HOME/bin:$BUN_INSTALL/bin"
 
-
-[[ -z "$LAST_LOCATION_FILE" ]] && echo "failed to load last location: /etc/bash.bashrc not set";
+[ -z "$LAST_LOCATION_FILE" ] && echo "failed to load last location: /etc/bash.bashrc not set"
 
 . aliases
 
@@ -47,37 +42,39 @@ export RIGHT_PS1_FILE="$LOGS/right_ps1.state.txt"
 
 mkdir -p "$LOGS"
 
-function prompt () {
-    echo $(pwd) > $LAST_LOCATION_FILE
+prompt() {
+	echo $(pwd) >$LAST_LOCATION_FILE
 }
 
 export PROMPT_COMMAND=prompt
 
 export PS1='\[\e[38;5;51m\]$DEVICE\[\e[0m\] \[\e[93m\]\W\[\e[0m\]\[\e[92m\] $(git branch --show-current 2>/dev/null)\[\e[0m\] '
 
-if [[ $DEVICE == "acer" ]]; then
+if [ "$DEVICE" = "acer" ]; then
 	export PS1='$(ps1)'
 else
 	export PS1='\[\e[38;5;51m\]$DEVICE\[\e[0m\] \[\e[93m\]\W\[\e[0m\]\[\e[92m\] $(git branch --show-current 2>/dev/null)\[\e[0m\] '
 fi
 
 export GPG_TTY=$(tty)
-export VCPKG_ROOT="/home/b/.files/.apps/vcpkg"
+export VCPKG_ROOT="$APPS/vcpkg"
 
 export HISTSIZE=100010
 export HISTFILESIZE=100020
 
 export LS_COLORS=$LS_COLORS:'di=0;35:'
 
-export LESS_TERMCAP_mb=$'\E[01;31m'      # begin blink (red)
-export LESS_TERMCAP_md=$'\E[01;36m'      # begin bold (cyan)
-export LESS_TERMCAP_me=$'\E[0m'          # end mode
-export LESS_TERMCAP_se=$'\E[0m'          # end standout-mode
-export LESS_TERMCAP_ue=$'\E[0m'          # end underline
-export LESS_TERMCAP_us=$'\E[01;32m'      # begin underline (green)
-export LESS_TERMCAP_so=$'\E[01;37;40m'   # "standout-mode" (white text over dark grey)
+LESS_TERMCAP_mb=$(printf '\033[01;31m')    # begin blink (red)
+LESS_TERMCAP_md=$(printf '\033[01;36m')    # begin bold (cyan)
+LESS_TERMCAP_me=$(printf '\033[0m')        # end mode
+LESS_TERMCAP_se=$(printf '\033[0m')        # end standout-mode
+LESS_TERMCAP_ue=$(printf '\033[0m')        # end underline
+LESS_TERMCAP_us=$(printf '\033[01;32m')    # begin underline (green)
+LESS_TERMCAP_so=$(printf '\033[01;37;40m') # standout-mode (white text over dark grey)
 
-export LC_ALL=en_GB.UTF-8  
+export LESS_TERMCAP_mb LESS_TERMCAP_md LESS_TERMCAP_me LESS_TERMCAP_se LESS_TERMCAP_ue LESS_TERMCAP_us LESS_TERMCAP_so
+
+export LC_ALL=en_GB.UTF-8
 export LANG=en_GB.UTF-8
 
 export ALREADY8LOADED8ONCE="haha"
