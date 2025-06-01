@@ -55,7 +55,11 @@ export PROMPT_COMMAND=prompt
 
 export PS1='\[\e[38;5;51m\]$DEVICE\[\e[0m\] \[\e[93m\]\W\[\e[0m\]\[\e[92m\] $(git branch --show-current 2>/dev/null)\[\e[0m\] '
 
-[[ $DEVICE == "acer" ]] && export PS1='$(ps1)';
+if [[ $DEVICE == "acer" ]]; then
+	export PS1='$(ps1)'
+else
+	export PS1='\[\e[38;5;51m\]$DEVICE\[\e[0m\] \[\e[93m\]\W\[\e[0m\]\[\e[92m\] $(git branch --show-current 2>/dev/null)\[\e[0m\] '
+fi
 
 export GPG_TTY=$(tty)
 export VCPKG_ROOT="/home/b/.files/.apps/vcpkg"
