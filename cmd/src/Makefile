@@ -21,4 +21,5 @@ release: clean
 clean:
 	@$(foreach f, $(SRCS), rm -f $(OUT_FOLDER)/$(f:.c=); )
 	@rm -f $(OUT_FOLDER)/sv
+	@touch $(OUT_FOLDER)/.gitkeep
 

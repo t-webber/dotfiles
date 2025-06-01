@@ -1,0 +1,30 @@
+#!/bin/sh
+
+echo -n 'Name: '
+read DEVICE < /dev/tty
+
+echo -n 'Files location (absolute path, ~ for $HOME): '
+read FILES < /dev/tty
+
+if [[ "$(echo $FILES | cut -c1-1)" == "~" ]]; then
+	FILES=$(echo $FILES | cut -c2-)
+	FILES="$HOME$FILES"
+fi
+
+mv ~/.bashrc ~/.bashrc.old
+
+echo "#!/bin/sh
+
+export DEVICE=$DEVICE
+export FILES=$FILES
+
+. $FILES/dotfiles/cmd/sh/profile
+
+" > ~/.bashrc
+
+mkdir -p $FILES 
+cd $FILES 
+git clone https://github.com/t-webber/dotfiles 
+./dotfiles/etc/link.sh
+
+source ~/.bashrc
