@@ -25,8 +25,7 @@ end
 
 local none = c("#ff0000")
 
-local title = { fg = magenta, bold = true }
-local hunk_header = c(magenta, black, { bold = true })
+local title = { fg = magenta, bg = black, bold = true }
 
 local colours = {
 	--------------
@@ -46,6 +45,7 @@ local colours = {
 	--------------
 	Include = c(magenta),
 	cIncluded = c(magenta),
+	String = c(yellow),
 
 	--> cf. https://neovim.io/doc/user/treesitter.html#treesitter-highlight-groups
 
@@ -215,6 +215,7 @@ local colours = {
 	NeogitRemote = c(cyan),
 	NeogitBranch = c(blue),
 	NeogitBranchHead = c(blue),
+	NeogitCommitViewHeader = title,
 
 	--> Hunk preview page <--
 
@@ -226,9 +227,17 @@ local colours = {
 	NeogitDiffDeleteCursor = c(nil, "#440000"),
 	NeogitDiffContextHighlight = c(nil, black),
 	NeogitDiffContextCursor = c(nil, dark),
-	NeogitHunkHeader = hunk_header,
-	NeogitHunkHeaderCursor = hunk_header,
-	NeogitHunkHeaderHighlight = hunk_header,
+	NeogitHunkHeader = title,
+	NeogitHunkHeaderCursor = title,
+	NeogitHunkHeaderHighlight = title,
+	NeogitHunkMergeHeader = title,
+	NeogitHunkMergeHeaderCursor = title,
+	NeogitHunkMergeHeaderHighlight = title,
+	NeogitDiffAdditions = c(green),
+	NeogitDiffDeletions = c(red),
+	NeogitFilePath = c(orange),
+	NeogitDiffHeader = c(red, black, { bold = true }),
+	NeogitDiffHeaderHighlight = c(red, black, { bold = true }),
 
 	--> Graph <--
 
@@ -237,6 +246,7 @@ local colours = {
 	NeogitChangeNewFile = c(green),
 	NeogitChangeRenamed = c(magenta),
 	NeogitChangeDeleted = c(red),
+	NeogitActiveItem = c(magenta, dark),
 }
 
 for name, options in pairs(colours) do
