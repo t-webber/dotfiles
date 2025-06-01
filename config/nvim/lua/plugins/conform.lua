@@ -10,6 +10,13 @@ local formatters = {
 	python = { "ruff" },
 	toml = { "taplo" },
 
+	-------------
+	--- Shell ---
+	-------------
+
+	sh = { "shfmt" },
+	bash = { "shfmt" },
+
 	----------------
 	--- Prettier ---
 	----------------

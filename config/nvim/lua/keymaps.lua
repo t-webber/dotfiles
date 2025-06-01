@@ -51,6 +51,15 @@ sets(n, "gh", function()
 	print(vim.fn.synIDattr(vim.fn.synID(vim.fn.line("."), vim.fn.col("."), 1), "name"))
 end, "Current highlight group")
 
+sets(
+	n,
+	"<C-n>",
+	":enew | setlocal buftype=nofile bufhidden=wipe noswapfile nomodifiable<CR>",
+	"Open empty immuable buffer"
+)
+
+sets(n, "è ", ":noh<CR>")
+
 ---------------
 --- Windows ---
 ---------------
@@ -67,7 +76,7 @@ sets(n, "<C-l>", "<C-w>l")
 sets(n, "gp", ":Gitsigns preview_hunk<CR>")
 sets(n, "gi", ":Gitsigns preview_hunk_inline<CR>")
 sets(n, "gb", ":Gitsigns toggle_current_line_blame<CR>")
-sets(n, "ga", ":term git add -p<CR>")
+sets(n, "ga", ":te git add -p<CR>")
 sets(n, "go", ":Neogit<CR>")
 
 -----------------
@@ -189,7 +198,7 @@ local load_lines = function(width)
 	for _, key in ipairs(keys) do
 		local modes = table.concat(keymaps[key].modes)
 		local description = keymaps[key].description or "nil"
-		local line = key .. " \t" .. modes .. "\t " .. description
+		local line = key:gsub(" ", "␣") .. " \t" .. modes .. "\t " .. description
 		table.insert(lines, line)
 	end
 
