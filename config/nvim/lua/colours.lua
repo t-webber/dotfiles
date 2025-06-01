@@ -19,23 +19,27 @@ local white = "#aaaaaa"
 local black = "#000000"
 local purple = "#553355"
 
-local c = function(fg, bg)
-	return { fg = fg, bg = bg }
+local c = function(fg, bg, opts)
+	return { fg = fg, bg = bg, bold = opts and opts.bold or nil }
 end
 
 local none = c("#ff0000")
 
 local title = { fg = magenta, bold = true }
+local hunk_header = c(magenta, black, { bold = true })
 
 local colours = {
 	--------------
 	--- Window ---
 	--------------
-	Normal = c("#aaaaaa", "#000000"),
+	Normal = c(white, black),
 	CursorLineNr = c(red),
 	CursorLine = c(nil, dark),
 	StatusLine = c(nil, dark),
 	Directory = c(red),
+	TabLine = c(nil, black),
+	TabLineSel = c(nil, dark),
+	TabLineFill = c(nil, black),
 
 	--------------
 	--- Syntax ---
@@ -200,6 +204,39 @@ local colours = {
 	OilGitStatusWorkingTreeTypeChanged = none,
 	OilGitStatusIndexUnmerged = c(darkred),
 	OilGitStatusWorkingTreeUnmerged = c(darkred),
+
+	--------------
+	--- Neogit ---
+	--------------
+
+	--> Main page <--
+
+	NeogitSectionHeader = c(red),
+	NeogitRemote = c(cyan),
+	NeogitBranch = c(blue),
+	NeogitBranchHead = c(blue),
+
+	--> Hunk preview page <--
+
+	NeogitDiffAdd = c(nil, "#002200"),
+	NeogitDiffDelete = c(nil, "#220000"),
+	NeogitDiffAddHighlight = c(nil, "#003300"),
+	NeogitDiffDeleteHighlight = c(nil, "#330000"),
+	NeogitDiffAddCursor = c(nil, "#004400"),
+	NeogitDiffDeleteCursor = c(nil, "#440000"),
+	NeogitDiffContextHighlight = c(nil, black),
+	NeogitDiffContextCursor = c(nil, dark),
+	NeogitHunkHeader = hunk_header,
+	NeogitHunkHeaderCursor = hunk_header,
+	NeogitHunkHeaderHighlight = hunk_header,
+
+	--> Graph <--
+
+	NeogitObjectId = c(green),
+	NeogitChangeModified = c(yellow),
+	NeogitChangeNewFile = c(green),
+	NeogitChangeRenamed = c(magenta),
+	NeogitChangeDeleted = c(red),
 }
 
 for name, options in pairs(colours) do

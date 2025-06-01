@@ -78,13 +78,14 @@ sets(n, "èf", ":Telescope find_files<CR>")
 sets(n, "èg", ":Telescope git_files<CR>")
 sets(n, "èz", ":Telescope grep_string<CR>")
 sets(n, "èd", ":Telescope git_status<CR>")
+sets(n, "èh", ":Telescope highlights<CR>")
 
 -----------
 --- Oil ---
 -----------
 
-sets(n, "èh", ":Oil<CR>")
-sets(n, "èl", function()
+sets(n, "èk", ":Oil<CR>")
+sets(n, "èj", function()
 	local path = vim.fn.expand("<cfile>")
 	require("oil").open(path)
 end, "Opens the file")
