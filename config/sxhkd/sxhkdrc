@@ -107,6 +107,10 @@ Print
 super + {t,n,v,p}
 	bspc desktop -f {terminal,neovim,brave,beeper}
 
+super + ctrl + {t,n,v,p}
+	bspc node -d {terminal,neovim,brave,beeper} && \ 
+	bspc desktop -f {terminal,neovim,brave,beeper}
+
 super + shift + e
 	dunstify "use super + p"
 
