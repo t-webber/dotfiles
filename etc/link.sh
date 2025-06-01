@@ -13,7 +13,7 @@ link() {
 		file="$2"
 	fi
 
-	sudo rm -f "$path"
+	sudo rm -rf "$path"
 	sudo ln -s "$ETC/$file" "$path"
 }
 
@@ -28,12 +28,10 @@ link "/etc/locale.conf"
 link "/etc/inputrc"
 
 link "/etc/resolv.conf"
-link "/etc/iwd/main.conf" "iwd.conf"
+link "/etc/iwd" 
 
 link "/etc/pacman.conf"
 link "/etc/pacman.d/mirrorlist" 
-link "/etc/makepkg.conf"
-link "/etc/makepkg.conf.d/rust.conf" "makepkg-rust.conf"
 
 link "/etc/X11/xorg.conf.d/50-libinput.conf" 
 

@@ -323,6 +323,7 @@ alias rmm="/usr/bin/rm"
 alias rms=". rms"
 alias save="savecmd"
 alias gsaved="sv $CMD/data/saved.txt"
+alias esaved="edt saved.txt"
 
 alias touch="use t" 
 alias t="/usr/bin/touch"
