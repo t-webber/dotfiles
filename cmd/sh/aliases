@@ -4,10 +4,10 @@
 ### PACMAN ###
 ##############
 
-alias S="paru -S"
-alias R="paru -R"
-alias Q="paru -Q"
-alias U="paru -Syyu"
+alias S='paru -S'
+alias R='paru -R'
+alias Q='paru -Q'
+alias U='paru -Syyu'
 alias C='paru -Rcns $(paru -Qdtq) --noconfirm && yes | paru -Scc'
 
 ###########

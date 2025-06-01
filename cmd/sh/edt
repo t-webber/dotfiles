@@ -1,19 +1,25 @@
 #!/bin/sh
 
-filename="$(fd $1 $FILES/dotfiles -t f --hidden | awk -F/ '{print length($NF), $0}' | sort -n | awk 'NR==1 {print $NF}')"
+filename="$(fd "$1" "$FILES/dotfiles" -t f --hidden | awk -F/ '{print length($NF), $0}' | sort -n | awk 'NR==1 {print $NF}')"
 
 if [ -z "$filename" ]; then
 	echo "Found none."
 	exit
 fi
 
-folder=$(echo $filename | rev | sed 's/\// /' | rev | awk '{print $1}')
-file=$(echo $filename | awk -F/ '{print $NF}')
+folder=$(echo "$filename" | rev | sed 's/\// /' | rev | awk '{print $1}')
+file=$(echo "$filename" | awk -F/ '{print $NF}')
 
-cd "$folder"
+cd "$folder" || (
+	printf "Access to folder %s denied\n" "$folder"
+	exit
+)
 
-$EDITOR $file
+$EDITOR "$file"
 
-giti $FILES/dotfiles
+giti "$FILES/dotfiles"
 
-cd -
+cd - || (
+	printf "Access to OLDPWD denied\n"
+	exit
+)

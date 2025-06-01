@@ -4,8 +4,6 @@
 
 [ -f "$FILES/.secret/vars" ] && . "$FILES/.secret/vars" >/dev/null
 
-ezrge
-
 export DOT="$FILES/dotfiles"
 export CMD="$DOT/cmd"
 export CONFIG="$DOT/config"
@@ -43,7 +41,7 @@ export RIGHT_PS1_FILE="$LOGS/right_ps1.state.txt"
 mkdir -p "$LOGS"
 
 prompt() {
-	echo $(pwd) >$LAST_LOCATION_FILE
+	pwd >"$LAST_LOCATION_FILE"
 }
 
 export PROMPT_COMMAND=prompt
@@ -56,13 +54,14 @@ else
 	export PS1='\[\e[38;5;51m\]$DEVICE\[\e[0m\] \[\e[93m\]\W\[\e[0m\]\[\e[92m\] $(git branch --show-current 2>/dev/null)\[\e[0m\] '
 fi
 
-export GPG_TTY=$(tty)
+GPG_TTY="$(tty)"
+export GPG_TTY
 export VCPKG_ROOT="$APPS/vcpkg"
 
 export HISTSIZE=100010
 export HISTFILESIZE=100020
 
-export LS_COLORS=$LS_COLORS:'di=0;35:'
+export LS_COLORS="$LS_COLORS:'di=0;35:'"
 
 LESS_TERMCAP_mb=$(printf '\033[01;31m')    # begin blink (red)
 LESS_TERMCAP_md=$(printf '\033[01;36m')    # begin bold (cyan)

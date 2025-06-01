@@ -14,9 +14,9 @@ alacritty &
 mkdir -p "$FILES/.waste"
 
 mkdir -p "$LOGS"
-echo "$(date '+%d/%m/%y | %H:%M')" > "$LOGS/startup.txt"
+date '+%d/%m/%y | %H:%M' >"$LOGS/startup.txt"
 
-while [ -z "$(sudo iwctl station wlan0 show | grep ' connected')" ]; do
+while ! sudo iwctl station wlan0 show | grep -q ' connected'; do
 	sleep 10
 done
 

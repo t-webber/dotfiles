@@ -2,27 +2,27 @@
 
 if [ -z "$1" ]; then
 	echo "Usage: nix file[.c]"
-	exit	
+	exit
 fi
 
 alias p="pushd >/dev/null"
 alias pp="popd >/dev/null"
 
-p $CMD
+p "$CMD"
 
-ext="$(echo $1 | rev | cut -c1-2 | rev)"
+ext="$(echo "$1" | rev | cut -c1-2 | rev)"
 
-if [ "$ext" = ".c" ]; then 
+if [ "$ext" = ".c" ]; then
 	p src
-	$EDITOR $1
-	giti $1
-	pp	
-else 
+	$EDITOR "$1"
+	giti "$1"
+	pp
+else
 	p sh
-	printf "#!/bin/sh\n\n" >> $1
-	chmod +x $1
-	$EDITOR $1
-	giti $1
+	printf "#!/bin/sh\n\n" >>"$1"
+	chmod +x "$1"
+	$EDITOR "$1"
+	giti "$1"
 	pp
 fi
 

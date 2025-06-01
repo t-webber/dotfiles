@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo '
+printf '
 # Inline edition
 
 Ctrl+w          delete last word

@@ -1,13 +1,13 @@
 #!/bin/sh
 
-echo -n 'Name: '
-read DEVICE </dev/tty
+printf 'Name: '
+read -r DEVICE </dev/tty
 
-echo -n 'Files location (absolute path, ~ for $HOME): '
-read FILES </dev/tty
+printf 'Files location (absolute path, ~ for $HOME): '
+read -r FILES </dev/tty
 
-if [ "$(echo $FILES | cut -c1-1)" = "~" ]; then
-	FILES=$(echo $FILES | cut -c2-)
+if [ "$(echo "$FILES" | cut -c1-1)" = "~" ]; then
+	FILES="$(echo "$FILES" | cut -c2-)"
 	FILES="$HOME$FILES"
 fi
 
@@ -20,9 +20,12 @@ export FILES=%s
 . $FILES/dotfiles/cmd/sh/profile
 ' "$DEVICE" "$FILES" >~/.bashrc
 
-mkdir -p $FILES
-cd $FILES
+mkdir -p "$FILES"
+cd "$FILES" || (
+	printf "Access denied: failed to creates FILES folder"
+	exit
+)
 git clone https://github.com/t-webber/dotfiles
 ./dotfiles/etc/link.sh
 
-. ~/.bashrc
+. "$HOME/.bashrc"
