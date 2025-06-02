@@ -6,6 +6,7 @@ o.cursorline = true -- needed to customise even only cursorlinenr
 o.cmdheight = 0 -- hide command line
 o.mouse = "" -- disable mouse
 o.showmode = false -- hide `--INSERT--` in command line
+o.fillchars = { eob = " " }
 
 local g = vim.g
 
