@@ -1,3 +1,4 @@
+local api = vim.api
 local keymaps = {}
 
 local describe = function(description, action)
@@ -55,14 +56,34 @@ sets(n, "<C-n>", ":enew | setlocal nonu nornu nomodifiable<CR>", "Open empty imm
 
 sets(n, "è ", ":noh<CR>")
 
+-----------------
+--- Iron REPL ---
+-----------------
+
+sets(n, "è:", ":IronAttach<CR>")
+sets(n, "è!", ":IronHide<CR>")
+sets(n, "<C-è>", function()
+	local line = api.nvim_get_current_line()
+	print(line)
+	if line == "" then
+		line = " "
+	end
+	api.nvim_command("IronSend " .. line:gsub(" ", "\\ "))
+
+	api.nvim_command("normal! j")
+end)
+
 ---------------
---- Windows ---
+--- Buffers ---
 ---------------
 
-sets(n, "<C-h>", "<C-w>h")
-sets(n, "<C-j>", "<C-w>j")
-sets(n, "<C-k>", "<C-w>k")
-sets(n, "<C-l>", "<C-w>l")
+sets(n, "bh", "<C-w>h")
+sets(n, "bj", "<C-w>j")
+sets(n, "bk", "<C-w>k")
+sets(n, "bl", "<C-w>l")
+
+sets(n, "b*", ":vsplit | term<CR>")
+sets(n, "bù", ":split | term<CR>")
 
 -----------
 --- Git ---
@@ -78,17 +99,18 @@ sets(n, "go", ":Neogit<CR>")
 --- Telescope ---
 -----------------
 
-sets(n, "èf", ":Telescope find_files<CR>")
-sets(n, "èg", ":Telescope git_files<CR>")
-sets(n, "èz", ":Telescope grep_string<CR>")
-sets(n, "èd", ":Telescope git_status<CR>")
-sets(n, "èh", ":Telescope highlights<CR>")
-sets(n, "èr", ":Telescope live_grep<CR>")
+sets(n, "éf", ":Telescope find_files<CR>")
+sets(n, "ég", ":Telescope git_files<CR>")
+sets(n, "és", ":Telescope git_status<CR>")
+sets(n, "éh", ":Telescope highlights<CR>")
+sets(n, "ée", ":Telescope live_grep<CR>")
 
 -----------
 --- Oil ---
 -----------
 
+sets(n, "èd", ":Oil " .. (os.getenv("DEV") or "") .. "<CR>")
+sets(n, "èc", ":Oil " .. (os.getenv("CMD") or "") .. "<CR>")
 sets(n, "èk", ":Oil<CR>")
 sets(n, "èj", function()
 	local path = vim.fn.expand("<cfile>")
@@ -111,7 +133,7 @@ end, "Code action")
 local move_and_open = function(action)
 	return function()
 		vim.diagnostic.setqflist({ open = false })
-		vim.cmd(action)
+		api.nvil_command(action)
 		vim.defer_fn(function()
 			vim.diagnostic.open_float(nil, { focus = false })
 		end, 50)
@@ -135,7 +157,7 @@ sets(n, "às", ":checkhealth lsp<CR>")
 
 sets(n, "àp", function()
 	local clients = vim.lsp.get_clients()
-	local buf = vim.api.nvim_get_current_buf()
+	local buf = api.nvim_get_current_buf()
 	for _, client in ipairs(clients) do
 		if vim.lsp.get_client_by_id(client.id) and vim.lsp.buf_is_attached(buf, client.id) then
 			print("Active LSP client:", client.name)
@@ -166,7 +188,7 @@ sets(n, "<C-!>", function()
 	local comment = comments:match("([^:]+)$")
 	local pattern = "^%s*(" .. vim.pesc(comment) .. "+)%s*"
 
-	local line = vim.api.nvim_get_current_line()
+	local line = api.nvim_get_current_line()
 
 	local _, _, match = line:find(pattern)
 
@@ -176,7 +198,7 @@ sets(n, "<C-!>", function()
 		line = comment .. " " .. line
 	end
 
-	vim.api.nvim_set_current_line(line)
+	api.nvim_set_current_line(line)
 	vim.cmd("normal! j")
 end, "Comment/Uncomment line")
 
@@ -204,9 +226,9 @@ local load_lines = function(width)
 	return lines
 end
 
-vim.api.nvim_set_keymap(n, "g?", "<Nop>", {
+api.nvim_set_keymap(n, "g?", "<Nop>", {
 	callback = function()
-		local ui = vim.api.nvim_list_uis()[1]
+		local ui = api.nvim_list_uis()[1]
 		local width = 60
 
 		local lines = load_lines(width)
@@ -215,8 +237,8 @@ vim.api.nvim_set_keymap(n, "g?", "<Nop>", {
 		local col = math.floor((ui.width - width) / 2)
 		local row = math.floor((ui.height - height) / 2)
 
-		local buf = vim.api.nvim_create_buf(false, true)
-		vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+		local buf = api.nvim_create_buf(false, true)
+		api.nvim_buf_set_lines(buf, 0, -1, false, lines)
 
 		local opts = {
 			style = "minimal",
@@ -228,9 +250,9 @@ vim.api.nvim_set_keymap(n, "g?", "<Nop>", {
 			border = "rounded",
 		}
 
-		local win = vim.api.nvim_open_win(buf, true, opts)
-		vim.api.nvim_win_set_option(win, "winhl", "Normal:Normal")
+		local win = api.nvim_open_win(buf, true, opts)
+		api.nvim_win_set_option(win, "winhl", "Normal:Normal")
 
-		vim.api.nvim_buf_set_keymap(buf, "n", "q", ":close<CR>", { noremap = true, silent = true })
+		api.nvim_buf_set_keymap(buf, "n", "q", ":close<CR>", { noremap = true, silent = true })
 	end,
 })
