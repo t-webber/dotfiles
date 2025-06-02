@@ -198,9 +198,10 @@ alias start="ctl start"
 alias status="ctl status"
 alias stop="ctl stop"
 
-alias sd="sudo shutdown -P now"
 alias slp='ctl suspend'
 alias ssql="start postgresql"
+alias reboot="reboot --force"
+alias sd="shutdown -P now --force"
 
 ###########
 ### SEE ###
