@@ -19,9 +19,9 @@ end
 vim.opt.runtimepath:prepend(lazypath)
 
 local spec = {
-	------------
-	-- Window --
-	------------
+	-----------
+	--- Git ---
+	-----------
 	{
 		"lewis6991/gitsigns.nvim",
 		config = true,
@@ -43,6 +43,38 @@ local spec = {
 			})
 		end,
 	},
+	---------------------
+	--- File explorer ---
+	---------------------
+	{
+		"stevearc/oil.nvim",
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+		config = function()
+			require("oil").setup({
+				columns = { "icon" },
+				delete_to_trash = true,
+				win_options = {
+					signcolumn = "auto:2",
+				},
+				view_options = {
+					show_hidden = true,
+					is_always_hidden = function(name)
+						return (name == "..")
+					end,
+				},
+			})
+		end,
+	},
+	{
+		"refractalize/oil-git-status.nvim",
+		dependencies = {
+			"stevearc/oil.nvim",
+		},
+		config = true,
+	},
+	---------------
+	--- Finders ---
+	---------------
 	{
 		"t-webber/telescope.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
@@ -70,51 +102,13 @@ local spec = {
 			})
 		end,
 	},
-	-------------------
-	-- File explorer --
-	-------------------
-	{
-		"stevearc/oil.nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-		config = function()
-			require("oil").setup({
-				columns = { "icon" },
-				delete_to_trash = true,
-				win_options = {
-					signcolumn = "auto:2",
-				},
-				view_options = {
-					show_hidden = true,
-					is_always_hidden = function(name)
-						return (name == "..")
-					end,
-				},
-			})
-		end,
-	},
-	{
-		"refractalize/oil-git-status.nvim",
-		dependencies = {
-			"stevearc/oil.nvim",
-		},
-		config = true,
-	},
-	------------
-	-- Editor --
-	------------
+	------------------------
+	--- Language support ---
+	------------------------
 	{
 		"ms-jpq/coq_nvim",
 		config = function()
 			vim.cmd("COQnow")
-		end,
-	},
-	{
-		"ggandor/leap.nvim",
-		dependencies = {
-			"tpope/vim-repeat",
-		},
-		config = function()
-			require("leap").set_default_mappings()
 		end,
 	},
 	{
@@ -130,11 +124,23 @@ local spec = {
 		end,
 	},
 	{
-		"chenasraf/text-transform.nvim",
+		"Vigemus/iron.nvim",
 		config = true,
 	},
+	--------------
+	--- Editor ---
+	--------------
 	{
-		"Vigemus/iron.nvim",
+		"ggandor/leap.nvim",
+		dependencies = {
+			"tpope/vim-repeat",
+		},
+		config = function()
+			require("leap").set_default_mappings()
+		end,
+	},
+	{
+		"chenasraf/text-transform.nvim",
 		config = true,
 	},
 	-------------------
