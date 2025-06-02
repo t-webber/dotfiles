@@ -228,7 +228,8 @@ vim.api.nvim_set_keymap(n, "g?", "<Nop>", {
 			border = "rounded",
 		}
 
-		vim.api.nvim_open_win(buf, true, opts)
+		local win = vim.api.nvim_open_win(buf, true, opts)
+		vim.api.nvim_win_set_option(win, "winhl", "Normal:Normal")
 
 		vim.api.nvim_buf_set_keymap(buf, "n", "q", ":close<CR>", { noremap = true, silent = true })
 	end,
