@@ -77,6 +77,7 @@ local colours = {
 	["@string.special.symbol"] = c(blue), -- symbols or atoms (e.g., Makefile variables)
 	["@string.special.path"] = c(yellow), -- filename, e.g. in git commit files
 	["@string.special.url"] = none, -- URIs (e.g. hyperlinks)
+	["@string.special.vimdoc"] = c(red), -- <thing> in vimdoc
 	["@character"] = c(orange), -- character literals
 	["@character.special"] = c(orange), -- special characters (e.g. wildcards)
 

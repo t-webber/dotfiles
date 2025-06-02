@@ -134,6 +134,20 @@ sets(n, "àd", function()
 	vim.lsp.buf.definition({})
 end, "Go to definition")
 
+--> lsp status <--
+
+sets(n, "às", ":checkhealth lsp<CR>")
+
+sets(n, "àp", function()
+	local clients = vim.lsp.get_clients()
+	local buf = vim.api.nvim_get_current_buf()
+	for _, client in ipairs(clients) do
+		if vim.lsp.get_client_by_id(client.id) and vim.lsp.buf_is_attached(buf, client.id) then
+			print("Active LSP client:", client.name)
+		end
+	end
+end, "Print active lsp clients")
+
 ------------
 --- Case ---
 ------------
@@ -170,16 +184,6 @@ sets(n, "<C-!>", function()
 	vim.api.nvim_set_current_line(line)
 	vim.cmd("normal! j")
 end, "Comment/Uncomment line")
-
-sets(n, "àp", function()
-	local clients = vim.lsp.get_clients()
-	local buf = vim.api.nvim_get_current_buf()
-	for _, client in ipairs(clients) do
-		if vim.lsp.get_client_by_id(client.id) and vim.lsp.buf_is_attached(buf, client.id) then
-			print("Active LSP client:", client.name)
-		end
-	end
-end, "Print active lsp clients")
 
 ---------------------
 --- Custom helper ---
