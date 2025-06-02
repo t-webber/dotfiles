@@ -190,18 +190,33 @@ alias serve="py -m http.server"
 ### SYSTEMD ###
 ###############
 
-alias ctl="sudo systemctl"
+alias systemctl="use ctl or ctll"
+
+alias ctl="sudo /usr/bin/systemctl"
+alias ctll="/usr/bin/systemctl"
 alias ctlu="ctl list-unit-files"
 
-alias restart="ctl restart"
-alias start="ctl start"
-alias status="ctl status"
-alias stop="ctl stop"
+alias restart="use ts"
+alias start="use ta"
+alias status="use tt"
+alias stop="use to"
 
-alias slp='ctl suspend'
-alias ssql="start postgresql"
-alias reboot="reboot --force"
-alias sd="shutdown -P now --force"
+alias ts="ctl restart"
+alias ta="ctl start"
+alias tt="ctl status"
+alias to="ctl stop"
+
+alias reboot="use tb"
+alias sd="use td"
+alias slp="use tl"
+
+alias tp='ctl suspend'
+alias tsql="start postgresql"
+alias tb="/usr/bin/reboot --force"
+alias td="shutdown -P now --force"
+
+alias tiwd="tt iwd"
+alias trd="tt systemd-resolved"
 
 ###########
 ### SEE ###
