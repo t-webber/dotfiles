@@ -49,6 +49,18 @@ local spec = {
 		config = function()
 			local rg = { "rg", "--files", "--sortr=modified", "--hidden" }
 			require("telescope").setup({
+				defaults = {
+					border = true,
+					borderchars = {
+						prompt = { "─", "│", " ", "│", "┌", "┐", "│", "│" },
+						results = { "─", "│", "─", "│", "├", "┤", "┘", "└" },
+						preview = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+					},
+					padding = 0,
+					results_title = false,
+					prompt_title = false,
+					preview_title = false,
+				},
 				picker = {
 					find_files = {
 						hidden = true,
@@ -76,9 +88,6 @@ local spec = {
 					is_always_hidden = function(name)
 						return (name == "..")
 					end,
-				},
-				keymaps = {
-					["el"] = { "actions.select" },
 				},
 			})
 		end,

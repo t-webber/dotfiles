@@ -88,11 +88,11 @@ super + {Left,Down,Up,Right}
 
 XF86MonBrightness{Up,Down}  
     brightnessctl s 10{+,-}; \
-    dunstify -t 500 "$(brightnessctl g)%" -a stacked -h "string:x-dunst-stack-tag:stacked" 
+    dunstify -t 500 " $(brightnessctl g)%" -a stacked -h "string:x-dunst-stack-tag:stacked" 
  
 XF86Audio{Raise,Lower}Volume  
     pactl set-sink-volume @DEFAULT_SINK@ {+,-}10%; \
-    dunstify -t 500 "$(volume_level)" -a stacked -h "string:x-dunst-stack-tag:stacked" 
+    dunstify -t 500 " $(volume_level)" -a stacked -h "string:x-dunst-stack-tag:stacked" 
 
 XF86AudioMute  
     pactl set-sink-volume @DEFAULT_SINK@ 0 
