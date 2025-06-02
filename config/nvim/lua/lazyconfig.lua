@@ -44,7 +44,7 @@ local spec = {
 		end,
 	},
 	{
-		"nvim-telescope/telescope.nvim",
+		"t-webber/telescope.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		config = function()
 			local rg = { "rg", "--files", "--sortr=modified", "--hidden" }
