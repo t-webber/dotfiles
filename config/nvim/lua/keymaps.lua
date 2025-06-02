@@ -51,12 +51,7 @@ sets(n, "gh", function()
 	print(vim.fn.synIDattr(vim.fn.synID(vim.fn.line("."), vim.fn.col("."), 1), "name"))
 end, "Current highlight group")
 
-sets(
-	n,
-	"<C-n>",
-	":enew | setlocal buftype=nofile bufhidden=wipe noswapfile nomodifiable<CR>",
-	"Open empty immuable buffer"
-)
+sets(n, "<C-n>", ":enew | setlocal nonu nornu nomodifiable<CR>", "Open empty immuable buffer")
 
 sets(n, "è ", ":noh<CR>")
 
