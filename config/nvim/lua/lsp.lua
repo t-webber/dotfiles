@@ -19,7 +19,7 @@ local lsps = {
 			},
 		},
 	},
-	Rust = { cmd = { "rust-analyzer" }, filestypes = "rs" },
+	Rust = { cmd = { "rust-analyzer" }, filetypes = { "rs" } },
 	Clang = {
 		cmd = { "clangd" },
 		filetypes = { "c", "cpp", "h", "hpp" },
