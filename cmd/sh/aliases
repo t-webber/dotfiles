@@ -4,11 +4,13 @@
 ### PACMAN ###
 ##############
 
-alias S='paru -S'
-alias R='paru -R'
-alias Q='paru -Q'
-alias U='paru -Syyu'
-alias C='paru -Rcns $(paru -Qdtq) --noconfirm && yes | paru -Scc'
+if [ -f "/etc/arch-release" ]; then
+	alias S='paru -S'
+	alias R='paru -R'
+	alias Q='paru -Q'
+	alias U='yes | paru -Scc && paru -Syyuu'
+	alias C='paru -Rcns $(paru -Qdtq) --noconfirm && yes | paru -Scc'
+fi
 
 ###########
 ### BUN ###
