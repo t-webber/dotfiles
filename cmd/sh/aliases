@@ -81,6 +81,7 @@ pa() {
 c="$CARGO_HOME/bin/cargo"
 alias cargo="use c"
 alias cn="$c +nightly"
+alias ct="$c test"
 alias cb="$c build"
 alias cbr="$c build --release"
 alias cr="$c run"
@@ -210,10 +211,10 @@ alias reboot="use tb"
 alias sd="use td"
 alias slp="use tl"
 
-alias tp='ctl suspend'
+alias tl='ctl suspend'
 alias tsql="start postgresql"
-alias tb="/usr/bin/reboot --force"
-alias td="shutdown -P now --force"
+alias tb="sudo /usr/bin/reboot --force"
+alias td="shutdown -P now -h"
 
 alias tiwd="tt iwd"
 alias trd="tt systemd-resolved"
