@@ -27,8 +27,6 @@ link "/etc/locale.gen"
 link "/etc/locale.conf"
 link "/etc/inputrc"
 
-link "/etc/iwd"
-
 link "/etc/pacman.conf"
 link "/etc/pacman.d/mirrorlist"
 
