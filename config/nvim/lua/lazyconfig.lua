@@ -121,6 +121,8 @@ local spec = {
 					enable = true,
 				},
 			})
+
+			vim.treesitter.language.register("python", "sage")
 		end,
 	},
 	{

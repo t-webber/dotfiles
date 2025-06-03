@@ -110,6 +110,7 @@ sets(n, "ée", ":Telescope live_grep<CR>")
 -----------
 
 sets(n, "èd", ":Oil " .. (os.getenv("DEV") or "") .. "<CR>")
+sets(n, "èf", ":Oil " .. (os.getenv("CONFIG") or "") .. "<CR>")
 sets(n, "èc", ":Oil " .. (os.getenv("CMD") or "") .. "<CR>")
 sets(n, "èk", ":Oil<CR>")
 sets(n, "èj", function()

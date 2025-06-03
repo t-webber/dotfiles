@@ -1,8 +1,8 @@
 {
-  "conform.nvim": { "branch": "master", "commit": "6feb2f28f9a9385e401857b21eeac3c1b66dd628" },
+  "conform.nvim": { "branch": "master", "commit": "f643d1b51d1d3d14c8641a46ce44f6bce73c2697" },
   "coq_nvim": { "branch": "coq", "commit": "6f1be2ea45ee8c94599432cc6f97654ce49f6153" },
   "diffview.nvim": { "branch": "main", "commit": "4516612fe98ff56ae0415a259ff6361a89419b0a" },
-  "gitsigns.nvim": { "branch": "main", "commit": "8bdaccdb897945a3c99c1ad8df94db0ddf5c8790" },
+  "gitsigns.nvim": { "branch": "main", "commit": "5f1b1e25373cd589ecf418ced8c2ece28229dd83" },
   "iron.nvim": { "branch": "master", "commit": "c005b01b779f1b6c038e11248db403bb3df6a7f3" },
   "leap.nvim": { "branch": "main", "commit": "08ca7ec9e859856251d56c22ea107f82f563ff3c" },
   "lualine.nvim": { "branch": "master", "commit": "0c6cca9f2c63dadeb9225c45bc92bb95a151d4af" },

@@ -1,9 +1,3 @@
-vim.filetype.add({
-	extension = {
-		sage = "python",
-	},
-})
-
 local lsps = {
 	Prettier = {
 		cmd = { "prettier" },
