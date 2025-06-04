@@ -198,6 +198,10 @@ alias ctl="sudo /usr/bin/systemctl"
 alias ctll="/usr/bin/systemctl"
 alias ctlu="ctl list-unit-files"
 
+alias journalctl="use jctl or jctll"
+alias jctl="sudo /usr/bin/journalctl"
+alias jctll="/usr/bin/journalctl"
+
 alias restart="use ts"
 alias start="use ta"
 alias status="use tt"
