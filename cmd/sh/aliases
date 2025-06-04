@@ -143,6 +143,7 @@ alias iwd="sudo iwctl station wlan0 disconnect"
 alias iwgh="iws; while :; do cls; iwg; sleep 1; done"
 alias iwg="iw0 get-networks"
 alias iws="iw0 scan"
+alias iwr="ts iwd && ts systemd-resolved"
 
 ###########
 ### GIT ###
