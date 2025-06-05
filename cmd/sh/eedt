@@ -1,6 +1,6 @@
 #!/bin/sh
 
-filename="$(fd "$1" "$FILES/dotfiles" --hidden | awk -F/ '{print length($NF), $0}' | sort -n | awk 'NR==1 {print $NF}')"
+filename="$(fd "$1" /etc --hidden | awk -F/ '{print length($NF), $0}' | sort -n | awk 'NR==1 {print $NF}')"
 
 if [ -z "$filename" ]; then
     echo "Found none."
@@ -16,8 +16,6 @@ cd "$folder" || (
 )
 
 $EDITOR "$file"
-
-giti "$FILES/dotfiles"
 
 cd - || (
     printf "Access to OLDPWD denied\n"
