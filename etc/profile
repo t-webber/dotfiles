@@ -1,5 +1,0 @@
-#!/bin/sh
-
-clear
-
-. /etc/bash.bashrc

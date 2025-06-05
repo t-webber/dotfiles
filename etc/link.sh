@@ -1,20 +1,17 @@
 #!/bin/sh
 
-if [[ -z $ETC ]]; then
-	echo "ETC var not configured"
-	exit 1
+if [ -z "$FILES" ]; then
+    echo "FILES var not configured"
+    exit 1
 fi
 
 link() {
-	path="$1"
-	if [[ -z $2 ]]; then
-		file="$(echo $path | awk -F/ '{print $NF}')"
-	else
-		file="$2"
-	fi
+    root_path="$1"
+    link_path="$FILES$1"
 
-	sudo rm -rf "$path"
-	sudo ln -s "$ETC/$file" "$path"
+    sudo mv "$root_path" "$link_path"
+    ln -s "$link_path" "$root_path"
+
 }
 
 link "/etc/profile"
@@ -27,7 +24,10 @@ link "/etc/locale.gen"
 link "/etc/locale.conf"
 link "/etc/inputrc"
 
-link "/etc/pacman.conf"
-link "/etc/pacman.d/mirrorlist"
+link "/etc/X11/xorg.conf.d"
+link "/etc/iwd"
 
-link "/etc/X11/xorg.conf.d/50-libinput.conf"
+link "/etc/pacman.conf"
+link "/etc/pacman.d"
+link "/etc/makepkg.conf"
+link "/etc/makepkg.conf.d"
