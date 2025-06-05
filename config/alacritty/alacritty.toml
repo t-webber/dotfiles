@@ -1,7 +1,3 @@
-[window]
-opacity = 0.9
-decorations = "None"
-
 [colors.primary]
 foreground = "#ffffff"
 background = "#000000"
@@ -9,6 +5,9 @@ background = "#000000"
 [font]
 normal.family = "Hack Nerd Font"
 size = 6
+
+[scrolling]
+history = 100000
 
 [cursor]
 style.shape = "Beam"
