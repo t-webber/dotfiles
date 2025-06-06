@@ -1,4 +1,5 @@
 local api = vim.api
+local fn = vim.fn
 local keymaps = {}
 
 local describe = function(description, action)
@@ -12,10 +13,10 @@ local describe = function(description, action)
 	if type(action) == "string" then
 		return action:gsub("%<CR>", "󰌑 "):gsub("%<Esc>", "󱊷 ")
 	end
-	return ""
+	return "?"
 end
 
-local setm = function(modes, keymap, action, description)
+local setk = function(modes, keymap, action, description)
 	for _, mode in ipairs(modes) do
 		vim.keymap.set(mode, keymap, action, {})
 	end
@@ -24,45 +25,52 @@ local setm = function(modes, keymap, action, description)
 	end
 	keymaps[keymap] = { description = describe(description, action), modes = modes }
 end
-local sets = function(mode, keymap, action, description)
-	setm({ mode }, keymap, action, description)
+
+local uset = function(modes, keymap)
+	for _, mode in ipairs(modes) do
+		vim.keymap.set(mode, keymap, "<Nop>")
+	end
 end
 
-local n = "n"
-local v = "v"
-local i = "i"
-local t = "t"
+local n = { "n" }
+local i = { "i" }
+local v = { "v" }
+local t = { "t" }
 local ni = { n, i }
 local nv = { n, v }
+local niv = { n, v }
 
 --------------
 --- Global ---
 --------------
 
-setm(nv, "<C-y>", '"+y')
-sets(n, "<C-a>", "gg^vG$<CR>")
-setm(ni, "<C-S>", "<Esc>:w<CR>")
-setm(ni, "<C-x>", "<Esc>:w<CR>:so<CR>")
+setk(nv, "<C-y>", '"+y')
+setk(n, "<C-a>", "gg^vG$<CR>")
+setk(ni, "<C-s>", "<Esc>:w<CR>")
+setk(ni, "<C-x>", "<Esc>:w<CR>:so<CR>")
 
-sets(n, "gu", "1G^")
-sets(n, "gd", "G$")
-sets(t, "<Esc>", [[<C-\><C-n>]])
+setk(t, "<Esc>", [[<C-\><C-n>]])
 
-sets(n, "gh", function()
-	print(vim.fn.synIDattr(vim.fn.synID(vim.fn.line("."), vim.fn.col("."), 1), "name"))
+setk(n, "gh", function()
+	print(fn.synIDattr(fn.synID(fn.line("."), fn.col("."), 1), "name"))
 end, "Current highlight group")
 
-sets(n, "<C-n>", ":enew | setlocal nonu nornu nomodifiable<CR>", "Open empty immuable buffer")
+setk(n, "<C-n>", ":enew | setlocal nonu nornu nomodifiable<CR>", "Open empty immuable buffer")
 
-sets(n, "è ", ":noh<CR>")
+setk(n, "è ", ":noh<CR>")
+
+uset(niv, "<Left>")
+uset(niv, "<Right>")
+uset(niv, "<Down>")
+uset(niv, "<Up>")
 
 -----------------
 --- Iron REPL ---
 -----------------
 
-sets(n, "è:", ":IronAttach<CR>")
-sets(n, "è!", ":IronHide<CR>")
-sets(n, "<C-è>", function()
+setk(n, "è:", ":IronAttach<CR>")
+setk(n, "è!", ":IronHide<CR>")
+setk(n, "<C-è>", function()
 	local line = api.nvim_get_current_line()
 	print(line)
 	if line == "" then
@@ -77,44 +85,39 @@ end)
 --- Buffers ---
 ---------------
 
-sets(n, "bh", "<C-w>h")
-sets(n, "bj", "<C-w>j")
-sets(n, "bk", "<C-w>k")
-sets(n, "bl", "<C-w>l")
-
-sets(n, "b*", ":vsplit | term<CR>")
-sets(n, "bù", ":split | term<CR>")
+setk(n, "<C-*>", ":vsplit | term<CR>")
+setk(n, "<C-ù>", ":split | term<CR>")
 
 -----------
 --- Git ---
 -----------
 
-sets(n, "gp", ":Gitsigns preview_hunk<CR>")
-sets(n, "gi", ":Gitsigns preview_hunk_inline<CR>")
-sets(n, "gb", ":Gitsigns toggle_current_line_blame<CR>")
-sets(n, "ga", ":te git add -p<CR>")
-sets(n, "go", ":Neogit<CR>")
+setk(n, "gp", ":Gitsigns preview_hunk<CR>")
+setk(n, "gi", ":Gitsigns preview_hunk_inline<CR>")
+setk(n, "gb", ":Gitsigns toggle_current_line_blame<CR>")
+setk(n, "ga", ":te git add -p<CR>")
+setk(n, "go", ":Neogit<CR>")
 
 -----------------
 --- Telescope ---
 -----------------
 
-sets(n, "éf", ":Telescope find_files<CR>")
-sets(n, "ég", ":Telescope git_files<CR>")
-sets(n, "és", ":Telescope git_status<CR>")
-sets(n, "éh", ":Telescope highlights<CR>")
-sets(n, "ée", ":Telescope live_grep<CR>")
+setk(n, "éf", ":Telescope find_files<CR>")
+setk(n, "ég", ":Telescope git_files<CR>")
+setk(n, "és", ":Telescope git_status<CR>")
+setk(n, "éh", ":Telescope highlights<CR>")
+setk(n, "ée", ":Telescope live_grep<CR>")
 
 -----------
 --- Oil ---
 -----------
 
-sets(n, "èd", ":Oil " .. (os.getenv("DEV") or "") .. "<CR>")
-sets(n, "èf", ":Oil " .. (os.getenv("CONFIG") or "") .. "<CR>")
-sets(n, "èc", ":Oil " .. (os.getenv("CMD") or "") .. "<CR>")
-sets(n, "èk", ":Oil<CR>")
-sets(n, "èj", function()
-	local path = vim.fn.expand("<cfile>")
+setk(n, "èd", ":Oil " .. (os.getenv("DEV") or "") .. "<CR>")
+setk(n, "èf", ":Oil " .. (os.getenv("CONFIG") or "") .. "<CR>")
+setk(n, "èc", ":Oil " .. (os.getenv("CMD") or "") .. "<CR>")
+setk(n, "èk", ":Oil<CR>")
+setk(n, "èj", function()
+	local path = fn.expand("<cfile>")
 	require("oil").open(path)
 end, "Opens the file")
 
@@ -124,10 +127,10 @@ end, "Opens the file")
 
 --> errors <--
 
-sets(n, "àw", function()
+setk(n, "àw", function()
 	vim.diagnostic.open_float()
 end, "Open float")
-sets(n, "àf", function()
+setk(n, "àf", function()
 	vim.lsp.buf.code_action()
 end, "Code action")
 
@@ -141,22 +144,22 @@ local move_and_open = function(action)
 	end
 end
 
-sets(n, "àl", move_and_open("cnext"), "cnext")
-sets(n, "àh", move_and_open("cprev"), "cprev")
-sets(n, "àk", ":cclose<CR>", "cclose")
-sets(n, "àj", ":copen<CR>", "copen")
+setk(n, "àl", move_and_open("cnext"), "cnext")
+setk(n, "àh", move_and_open("cprev"), "cprev")
+setk(n, "àk", ":cclose<CR>", "cclose")
+setk(n, "àj", ":copen<CR>", "copen")
 
 --> motion <--
 
-sets(n, "àd", function()
+setk(n, "àd", function()
 	vim.lsp.buf.definition({})
 end, "Go to definition")
 
 --> lsp status <--
 
-sets(n, "às", ":checkhealth lsp<CR>")
+setk(n, "às", ":checkhealth lsp<CR>")
 
-sets(n, "àp", function()
+setk(n, "àp", function()
 	local clients = vim.lsp.get_clients()
 	local buf = api.nvim_get_current_buf()
 	for _, client in ipairs(clients) do
@@ -171,20 +174,21 @@ end, "Print active lsp clients")
 ------------
 
 -- press ~ to toggle a letter between lower case and capitals
-setm(nv, "cc", ":TtCamel<CR>")
-setm(nv, "cp", ":TtPascal<CR>")
-setm(nv, "ck", ":TtKebab<CR>")
-setm(nv, "cs", ":TtSnake<CR>")
-setm(nv, "co", ":TtConst<CR>")
-setm(nv, "cd", ":TtDot<CR>")
-setm(nv, "ct", ":TtTitle<CR>")
-vim.keymap.set(v, "c", "<Nop>")
+setk(nv, "cc", ":TtCamel<CR>")
+setk(nv, "cp", ":TtPascal<CR>")
+setk(nv, "ck", ":TtKebab<CR>")
+setk(nv, "cs", ":TtSnake<CR>")
+setk(nv, "co", ":TtConst<CR>")
+setk(nv, "cd", ":TtDot<CR>")
+setk(nv, "ct", ":TtTitle<CR>")
+
+uset(nv, "c")
 
 -------------------------
 --- Comment/Uncomment ---
 -------------------------
 
-sets(n, "<C-!>", function()
+setk(n, "<C-!>", function()
 	local comments = vim.bo.comments
 	local comment = comments:match("([^:]+)$")
 	local pattern = "^%s*(" .. vim.pesc(comment) .. "+)%s*"
@@ -227,7 +231,7 @@ local load_lines = function(width)
 	return lines
 end
 
-api.nvim_set_keymap(n, "g?", "<Nop>", {
+api.nvim_set_keymap("n", "g?", "<Nop>", {
 	callback = function()
 		local ui = api.nvim_list_uis()[1]
 		local width = 60
