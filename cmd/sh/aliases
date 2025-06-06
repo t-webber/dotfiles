@@ -5,11 +5,11 @@
 ##############
 
 if [ -f "/etc/arch-release" ]; then
-    alias S='paru -S'
-    alias R='paru -R'
-    alias Q='paru -Q'
-    alias U='yes | paru -Scc && paru -Syyuu'
-    alias C='paru -Rcns $(paru -Qdtq) --noconfirm && yes | paru -Scc'
+	alias S='paru -S'
+	alias R='paru -R'
+	alias Q='paru -Q'
+	alias U='yes | paru -Scc && paru -Syyuu'
+	alias C='paru -Rcns $(paru -Qdtq) --noconfirm && yes | paru -Scc'
 fi
 
 ###########
@@ -46,32 +46,34 @@ alias cn="$b x shadcn@latest add"
 ##############
 
 pam() {
-    zwx="$b x prisma migrate"
-    shift
-    case "$1" in
-    r | reset) $zwx reset "$@" ;;
-    v | resolve) $zwx resolve "$@" ;;
-    s | status) $zwx status "$@" ;;
-    d | deploy) $zwx deploy "$@" ;;
-    +) $zwx dev --name $1 "$@" ;;
-    *) printf "pam r: reset\npam s: status\npam d: deploy\npam <name> dev --name <name>\n" ;;
-    esac
+	zwx="$b x prisma migrate"
+	arg="$1"
+	shift
+	case "$arg" in
+	r | reset) $zwx reset "$@" ;;
+	v | resolve) $zwx resolve "$@" ;;
+	s | status) $zwx status "$@" ;;
+	d | deploy) $zwx deploy "$@" ;;
+	+) $zwx dev --name $arg "$@" ;;
+	*) printf "pam r: reset\npam s: status\npam d: deploy\npam <name> dev --name <name>\n" ;;
+	esac
 }
 
 pa() {
-    zw="$b x prisma"
-    shift
-    case "$1" in
-    o | studio) $zw studio "$@" ;;
-    i | init) $zw init "$@" ;;
-    g | gen | generate) $zw generate "$@" ;;
-    pl | pull) $zw db pull "$@" ;;
-    s | seed) $zw db seed "$@" ;;
-    ph | push) $zw db push "$@" ;;
-    v | validate) $zw validate "$@" ;;
-    m | migrate) printf "use pam" ;;
-    *) printf "pa o: studio\npa i: init\npa g: generate\npa pl: db pull\npa psh: db push\npa s: db seed\npa v: validate\n" ;;
-    esac
+	zw="$b x prisma"
+	arg="$1"
+	shift
+	case "$arg" in
+	o | studio) $zw studio "$@" ;;
+	i | init) $zw init "$@" ;;
+	g | gen | generate) $zw generate "$@" ;;
+	pl | pull) $zw db pull "$@" ;;
+	s | seed) $zw db seed "$@" ;;
+	ph | push) $zw db push "$@" ;;
+	v | validate) $zw validate "$@" ;;
+	m | migrate) printf "use pam\n" ;;
+	*) printf "pa o: studio\npa i: init\npa g: generate\npa pl: db pull\npa psh: db push\npa s: db seed\npa v: validate\n" ;;
+	esac
 }
 
 ############
