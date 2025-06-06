@@ -3,21 +3,21 @@
 filename="$(fd "$1" /etc --hidden | awk -F/ '{print length($NF), $0}' | sort -n | awk 'NR==1 {print $NF}')"
 
 if [ -z "$filename" ]; then
-    echo "Found none."
-    exit
+	echo "Found none."
+	exit
 fi
 
 folder=$(echo "$filename" | rev | sed 's/\// /' | rev | awk '{print $1}')
 file=$(echo "$filename" | awk -F/ '{print $NF}')
 
 cd "$folder" || (
-    printf "Access to folder %s denied\n" "$folder"
-    exit
+	printf "Access to folder %s denied\n" "$folder"
+	exit
 )
 
 $EDITOR "$file"
 
 cd - || (
-    printf "Access to OLDPWD denied\n"
-    exit
+	printf "Access to OLDPWD denied\n"
+	exit
 )

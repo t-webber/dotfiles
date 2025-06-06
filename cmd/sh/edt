@@ -3,27 +3,27 @@
 filename="$(fd "$1" "$FILES/dotfiles" -t f --hidden | awk -F/ '{print length($NF), $0}' | sort -n | awk 'NR==1 {print $NF}')"
 
 if [ -z "$filename" ]; then
-    filename="$(fd "$1" "$FILES/dotfiles" --hidden | awk -F/ '{print length($NF), $0}' | sort -n | awk 'NR==1 {print $NF}')"
+	filename="$(fd "$1" "$FILES/dotfiles" --hidden | awk -F/ '{print length($NF), $0}' | sort -n | awk 'NR==1 {print $NF}')"
 fi
 
 if [ -z "$filename" ]; then
-    echo "Found none."
-    exit
+	echo "Found none."
+	exit
 fi
 
 folder=$(echo "$filename" | rev | sed 's/\// /' | rev | awk '{print $1}')
 file=$(echo "$filename" | awk -F/ '{print $NF}')
 
 cd "$folder" || (
-    printf "Access to folder %s denied\n" "$folder"
-    exit
+	printf "Access to folder %s denied\n" "$folder"
+	exit
 )
 
 $EDITOR "$file"
 
-giti "$FILES/dotfiles"
+git status
 
-cd - || (
-    printf "Access to OLDPWD denied\n"
-    exit
+cd - >/dev/null || (
+	printf "Access to OLDPWD denied\n"
+	exit
 )
