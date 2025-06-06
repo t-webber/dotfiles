@@ -64,6 +64,15 @@ uset(niv, "<Right>")
 uset(niv, "<Down>")
 uset(niv, "<Up>")
 
+----------------
+--- Windows ---
+----------------
+
+setk(n, "<C-h>", "<C-w>h")
+setk(n, "<C-j>", "<C-w>j")
+setk(n, "<C-k>", "<C-w>k")
+setk(n, "<C-l>", "<C-w>l")
+
 -----------------
 --- Iron REPL ---
 -----------------
@@ -107,6 +116,7 @@ setk(n, "ég", ":Telescope git_files<CR>")
 setk(n, "és", ":Telescope git_status<CR>")
 setk(n, "éh", ":Telescope highlights<CR>")
 setk(n, "ée", ":Telescope live_grep<CR>")
+setk(n, "ér", ":Telescope registers<CR>")
 
 -----------
 --- Oil ---
