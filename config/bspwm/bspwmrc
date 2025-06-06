@@ -2,8 +2,7 @@
 
 alacritty &
 
-sxhkd &
-/home/b/.files/dotfiles/cmd/sh/startup &
+/home/b/.files/dotfiles/cmd/sh/gui_startup &
 
 bspc monitor -d terminal neovim brave beeper
 

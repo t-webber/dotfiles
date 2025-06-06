@@ -1,0 +1,87 @@
+#!/bin/sh
+
+[ -z "$FILES" ] && export FILES="$HOME/.files"
+
+[ -f "$FILES/.secret/vars" ] && . "$FILES/.secret/vars" >/dev/null
+
+export CC="cc"
+export DOT="$FILES/dotfiles"
+export CMD="$DOT/cmd"
+export CONFIG="$DOT/config"
+export ETC="$DOT/etc"
+export APPS="$FILES/.apps"
+export DATA="$FILES/.data"
+export DEV="$FILES/.dev"
+export LOGS="$DATA/logs"
+
+export EDITOR="/usr/bin/nvim"
+
+export XDG_CONFIG_HOME="$CONFIG"
+
+export NODE_REPL_HISTORY="$DATA/repl/node_repl_history"
+export TS_NODE_HISTORY="$DATA/repl/ts_node_repl_history"
+export PYTHON_HISTORY="$DATA/repl/python_history"
+
+export NPM_CONFIG_USERCONFIG="$CONFIG/npmrc"
+
+export BUN_INSTALL="$DATA/bun"
+export CARGO_HOME="$DATA/cargo"
+export RUSTUP_HOME="$DATA/rustup"
+export NVM_DIR="$DATA/nvm"
+
+export XDG_DATA_HOME="$DATA/share"
+
+export PATH="/usr/bin:$CMD/sh:$CMD/bin:$CARGO_HOME/bin:$BUN_INSTALL/bin"
+
+[ -z "$LAST_LOCATION_FILE" ] && echo "failed to load last location: /etc/bash.bashrc not set"
+
+. aliases
+
+export RIGHT_PS1_FILE="$LOGS/right_ps1.state.txt"
+
+mkdir -p "$LOGS"
+
+prompt() {
+    pwd >"$LAST_LOCATION_FILE"
+}
+
+export PROMPT_COMMAND=prompt
+
+export PS1='\[\e[38;5;51m\]$DEVICE\[\e[0m\] \[\e[93m\]\W\[\e[0m\]\[\e[92m\] $(git branch --show-current 2>/dev/null)\[\e[0m\] '
+
+if [ "$DEVICE" = "acer" ]; then
+    if [ "$(whoami)" = "root" ]; then
+        export PS1='#$(ps1)'
+    else
+
+        export PS1='$(ps1)'
+    fi
+else
+    export PS1='\[\e[38;5;51m\]$DEVICE\[\e[0m\] \[\e[93m\]\W\[\e[0m\]\[\e[92m\] $(git branch --show-current 2>/dev/null)\[\e[0m\] '
+fi
+
+GPG_TTY="$(tty)"
+export GPG_TTY
+export VCPKG_ROOT="$APPS/vcpkg"
+
+export HISTSIZE=100010
+export HISTFILESIZE=100020
+
+export LS_COLORS="$LS_COLORS:'di=0;35:'"
+
+LESS_TERMCAP_mb=$(printf '\033[01;31m')    # begin blink (red)
+LESS_TERMCAP_md=$(printf '\033[01;36m')    # begin bold (cyan)
+LESS_TERMCAP_me=$(printf '\033[0m')        # end mode
+LESS_TERMCAP_se=$(printf '\033[0m')        # end standout-mode
+LESS_TERMCAP_ue=$(printf '\033[0m')        # end underline
+LESS_TERMCAP_us=$(printf '\033[01;32m')    # begin underline (green)
+LESS_TERMCAP_so=$(printf '\033[01;37;40m') # standout-mode (white text over dark grey)
+
+export LESS_TERMCAP_mb LESS_TERMCAP_md LESS_TERMCAP_me LESS_TERMCAP_se LESS_TERMCAP_ue LESS_TERMCAP_us LESS_TERMCAP_so
+
+export LC_ALL=en_GB.UTF-8
+export LANG=en_GB.UTF-8
+
+export ALREADY8LOADED8ONCE="haha"
+
+export MANSECT=3:2:1:8:5:4:9

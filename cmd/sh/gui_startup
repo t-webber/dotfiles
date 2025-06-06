@@ -1,0 +1,21 @@
+#!/bin/sh
+
+xrandr --output DP-0 --scale 1.5x1.5
+
+sxhkd &
+dunst &
+alacritty &
+
+. "/home/b/.bashrc"
+
+mkdir -p "$LOGS"
+date '+%d/%m/%y | %H:%M' >"$LOGS/gui_startup.txt"
+
+while ! sudo iwctl station wlan0 show | g -q ' connected'; do
+    sleep 10
+done
+
+alacritty --hold -e bun update -g &
+# alacritty -e paru -Syyu --noconfirm &
+alacritty --hold -e ru &
+alacritty --hold -e informant check &

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+sudo systemctl start iwd systemd-resolved
+systemctl --user start pipewire.socket wireplumber pipewire-pulse.socket
+
+/usr/bin/rm -rf "$FILES/.waste"
+mkdir -p "$FILES/.waste"
+
+mkdir -p "$LOGS"
+date '+%d/%m/%y | %H:%M' >"$LOGS/sh_startup.txt"
