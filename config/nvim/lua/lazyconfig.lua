@@ -102,6 +102,23 @@ local spec = {
 			})
 		end,
 	},
+	{
+		"folke/which-key.nvim",
+		event = "VeryLazy",
+		opts = {
+			-- your configuration comes here
+			-- or leave it empty to use the default settings
+			-- refer to the configuration section below
+		},
+		keys = {
+			{
+				",?",
+				function()
+					require("which-key").show({})
+				end,
+			},
+		},
+	},
 	------------------------
 	--- Language support ---
 	------------------------
@@ -132,6 +149,7 @@ local spec = {
 	--------------
 	--- Editor ---
 	--------------
+	{ "kylechui/nvim-surround", config = true },
 	{
 		"ggandor/leap.nvim",
 		dependencies = {
@@ -143,6 +161,14 @@ local spec = {
 	},
 	{
 		"chenasraf/text-transform.nvim",
+		config = true,
+	},
+	{
+		"tris203/precognition.nvim",
+		config = true,
+	},
+	{
+		"karb94/neoscroll.nvim",
 		config = true,
 	},
 	-------------------
