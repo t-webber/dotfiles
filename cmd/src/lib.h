@@ -1,4 +1,4 @@
-/// Contains the common code for multiple programs.
+#pragma once
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -27,8 +27,5 @@ const char *argv_one_filename(const int argc, const char *const *const argv);
 
 const char *get_filename_extension(const char *const filename,
                                    const size_t len);
-
-bool has_timg_support(const char *const extension);
-bool has_brave_support(const char *const extension);
 
 bool has_slash(const char *const arg, size_t *len, const char **const position);

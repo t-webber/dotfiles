@@ -38,7 +38,6 @@ local v = { "v" }
 local t = { "t" }
 local ni = { n, i }
 local nv = { n, v }
-local niv = { n, v }
 
 --------------
 --- Global ---
@@ -58,11 +57,6 @@ end, "Current highlight group")
 setk(n, "<C-n>", ":enew | setlocal nonu nornu nomodifiable<CR>", "Open empty immuable buffer")
 
 setk(n, "è ", ":noh<CR>")
-
-uset(niv, "<Left>")
-uset(niv, "<Right>")
-uset(niv, "<Down>")
-uset(niv, "<Up>")
 
 ----------------
 --- Windows ---

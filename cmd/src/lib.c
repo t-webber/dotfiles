@@ -26,46 +26,6 @@ bool is_verbose(const char *const program_name, const char *const normal_name,
                       normal_name, verbose_name);
 }
 
-const char *get_filename_extension(const char *const filename,
-                                   const size_t len) {
-        const char *end = filename + len;
-        while (end != filename && *end != '.')
-                --end;
-        if (*end == '.')
-                return ++end;
-        return end;
-}
-
-static bool is_valid_extension(const char *const *const supported,
-                               const char *const extension,
-                               const size_t nb_extensions) {
-        for (size_t i = 0; i < nb_extensions; ++i)
-                if (strcmp(extension, supported[i]) == 0)
-                        return true;
-
-        return false;
-}
-
-#define extensions(name, ...)                                                  \
-        static const char *const name[] = {__VA_ARGS__};                       \
-        static const size_t name##_LEN = sizeof(name) / sizeof(name[0])
-
-extensions(TIMG_EXTENSIONS, "jpg", "jpeg", "png", "gif", "tiff", "tif", "bmp",
-           "webp", "jp2", "jpx", "heif", "heic", "avif", "svg", "mp4", "webm",
-           "mp3", "wav", );
-
-bool has_timg_support(const char *const extension) {
-        return is_valid_extension(TIMG_EXTENSIONS, extension,
-                                  TIMG_EXTENSIONS_LEN);
-}
-
-extensions(BRAVE_EXTENSIONS, "pdf", "html");
-
-bool has_brave_support(const char *const extension) {
-        return is_valid_extension(BRAVE_EXTENSIONS, extension,
-                                  BRAVE_EXTENSIONS_LEN);
-}
-
 const char *argv_one_filename(const int argc, const char *const *const argv) {
 
         if (argc == 1)

@@ -1,4 +1,5 @@
 #include "lib.h"
+#include "libfiles.h"
 #include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -38,18 +39,8 @@ static int display_file(const char *const filename, const bool is_verbose) {
         const char *const extension = get_filename_extension(filename, len);
         const bool is_not_alacrity = strcmp(getenv("TERM"), "alacritty");
 
-        if (has_timg_support(extension)) {
-                if (is_not_alacrity)
-                        return execlp("timg", "timg", filename, NULL);
-                panic("Use o %s.\n", filename);
-        }
-
-        if (!strcmp(extension, "pdf"))
-                if (is_not_alacrity)
-                        return execlp("tdf", "tdf", filename, NULL);
-
-        const char *const program = is_verbose ? "bat" : "cat";
-        return execlp(program, program, filename, NULL);
+        return exec_open_file(filename, extension, false, is_not_alacrity,
+                              is_verbose);
 }
 
 static int display(const char *const filename, const bool is_verbose,

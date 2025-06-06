@@ -7,6 +7,7 @@ o.cmdheight = 0 -- hide command line
 o.mouse = "" -- disable mouse
 o.showmode = false -- hide `--INSERT--` in command line
 o.fillchars = { eob = " " }
+o.clipboard:append("unnamedplus")
 
 local g = vim.g
 
