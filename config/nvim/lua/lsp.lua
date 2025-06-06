@@ -1,7 +1,8 @@
 local lsps = {
-	Prettier = {
-		cmd = { "prettier" },
-		filetypes = { "ts", "js", "tsx", "jsx" },
+	Typescript = {
+		cmd = { "typescript-language-server", "--stdio" },
+		filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
+		root_dir = vim.fs.dirname(vim.fs.find({ "package.json" }, { upward = true })[1]),
 	},
 	Lua = {
 		cmd = { "lua-language-server" },
