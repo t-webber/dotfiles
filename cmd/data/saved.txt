@@ -51,3 +51,4 @@ faillock --user b --reset
 
 sudo reflector --latest 30 --sort rate --save /etc/pacman.d/mirrorlist --connection-timeout 20 --number 15
 
+sudo timedatectl set-ntp true
