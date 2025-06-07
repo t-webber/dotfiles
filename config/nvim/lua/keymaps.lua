@@ -211,6 +211,26 @@ setk(n, "<C-!>", function()
 	vim.cmd("normal! j")
 end, "Comment/Uncomment line")
 
+setk(n, ",r", function()
+	local charset = {}
+	for c = 48, 57 do
+		table.insert(charset, string.char(c))
+	end -- 0-9
+	for c = 65, 90 do
+		table.insert(charset, string.char(c))
+	end -- A-Z
+	for c = 97, 122 do
+		table.insert(charset, string.char(c))
+	end -- a-z
+
+	math.randomseed(os.time() + math.floor(math.random() * 10000))
+	local s = {}
+	for j = 1, 10 do
+		s[j] = charset[math.random(#charset)]
+	end
+	api.nvim_put({ table.concat(s) }, "c", true, true)
+end, "Generate a random string")
+
 ---------------------
 --- Custom helper ---
 ---------------------
