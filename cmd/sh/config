@@ -8,17 +8,33 @@ read -r FILES </dev/tty
 
 if [ "$(echo "$FILES" | cut -c1-1)" = "~" ]; then
 	FILES="$(echo "$FILES" | cut -c2-)"
-	FILES="$HOME$FILES"
+	FILES="$HOME/$FILES"
 fi
+
+mv ~/.vars ~/.vars.old
+
+printf '
+export DEVICE=%s
+export FILES=%s
+' "$DEVICE" "$FILES" >~/.vars
 
 mv ~/.bashrc ~/.bashrc.old
 
 printf '#!/bin/sh
-export DEVICE=%s
-export FILES=%s
 
-. $FILES/dotfiles/cmd/sh/profile
-' "$DEVICE" "$FILES" >~/.bashrc
+. "$HOME/.vars"
+
+. "$FILES/dotfiles/cmd/sh/shellrc"
+' >~/.bashrc
+
+mv ~/.profile ~/.profile.old
+
+printf '#!/bin/sh
+
+. "$HOME/vars"
+
+. "$FILES/dotfiles/cmd/sh/profile"
+' >~/.profile
 
 mkdir -p "$FILES"
 cd "$FILES" || (
