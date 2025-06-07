@@ -47,7 +47,7 @@ export RIGHT_PS1_FILE="$LOGS/right_ps1.state.txt"
 mkdir -p "$LOGS"
 
 prompt() {
-	pwd >"$LAST_LOCATION_FILE"
+	[ -f "$LAST_LOCATION_FILE" ] && pwd >"$LAST_LOCATION_FILE"
 }
 
 export PROMPT_COMMAND=prompt
