@@ -2,6 +2,17 @@ local c = require("colours")
 local fg = c.Foreground
 local dark = { fg = fg, bg = c.dark }
 
+local register = {
+	function()
+		local reg = vim.fn.reg_recording()
+		if reg == "" then
+			return ""
+		end
+		return "recording @" .. reg
+	end,
+	color = dark,
+}
+
 local mode = {
 	"mode",
 	color = function()
@@ -58,6 +69,7 @@ local sections = {
 	lualine_b = {
 		time,
 		{ "filename", color = dark },
+		register,
 	},
 	lualine_c = {},
 	lualine_x = {},
