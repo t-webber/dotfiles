@@ -1,7 +1,12 @@
 #include "libfiles.h"
 #include "lib.h"
+#include <errno.h>
+#include <fcntl.h>
+#include <signal.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
 const char *get_filename_extension(const char *const filename,
@@ -52,9 +57,85 @@ extensions(timg, "jpg", "jpeg", "png", "gif", "tiff", "tif", "bmp", "webp",
                    "xpm", "pcx", "tga", "pbm", "pgm", "ppm", "webp", "ico",
                    "heif", "heic", "psd", "hdr", "exr")
 
-            int exec_open_file(const char *const filename,
-                               const char *const extension, const bool is_open,
-                               const bool is_kitty, const bool is_verbose) {
+            static void set_alacritty_zoom(const char *const config_path,
+                                           const char zoom) {
+        FILE *fd = fopen(config_path, "r");
+        if (!fd)
+                panic("No config found at %s. Please create an alacritty "
+                      "config with default font size.\n",
+                      config_path);
+
+        char buffer[1024];
+        size_t n = fread(buffer, 1, sizeof(buffer) - 1, fd);
+        fclose(fd);
+
+        buffer[n] = '\0';
+
+        char *const pos = strstr(buffer, "size");
+        if (!pos)
+                panic("Missing size parameter in alacritty config.\n");
+
+        *(pos + 4) = '=';
+        *(pos + 5) = zoom;
+        for (int i = 6; *(pos + i) != '\0' && *(pos + i) != '\n'; ++i)
+                *(pos + i) = ' ';
+
+        fd = fopen(config_path, "w");
+        fprintf(fd, "%s", buffer);
+        fclose(fd);
+}
+
+static sig_atomic_t sigflag = 0;
+
+static void sighandler(void) {
+        printf("pressed ctrl+c\n");
+        sigflag = 1;
+}
+
+static int dezoom_and_run_alacritty(const char *const filename,
+                                    const bool is_mpv) {
+        signal(SIGINT, (void (*)(int))sighandler);
+        char *const config_path = malloc(128);
+        stpcpy(stpcpy(config_path, getenv("XDG_CONFIG_HOME")),
+               "/alacritty/alacritty.toml");
+        set_alacritty_zoom(config_path, '1');
+        pid_t pid = fork();
+        if (pid < 0)
+                panic("Failed to fork.\n");
+        if (pid == 0) {
+                int res;
+                if (is_mpv) {
+                        int null = open("/dev/null", O_WRONLY);
+                        dup2(null, 2);
+                        close(null);
+                        res = execlp("mpv", "mpv", "--vo=tct", "2>/dev/null",
+                                     filename, NULL);
+                } else {
+                        res = execlp("timg", "timg", filename, NULL);
+                }
+                panic("Failed to execute: exit code %d: %d.\n", res, errno)
+        }
+        int stat;
+        waitpid(pid, &stat, 0);
+        if (!WIFEXITED(stat))
+                panic("Failed to execute.\n");
+
+        printf("here\n");
+
+        if (!is_mpv)
+                while (sigflag == 0)
+                        pause();
+
+        set_alacritty_zoom(config_path, '6');
+        printf("\033[2J\033[H");
+        fflush(stdout);
+
+        exit(0);
+}
+
+int exec_open_file(const char *const filename, const char *const extension,
+                   const bool is_open, const bool is_kitty,
+                   const bool is_verbose) {
         if (is_kitty) {
                 if (timg_supported(extension))
                         return execlp("timg", "timg", filename, NULL);
@@ -82,8 +163,12 @@ extensions(timg, "jpg", "jpeg", "png", "gif", "tiff", "tif", "bmp", "webp",
 
                 return execlp("nvim", "nvim", filename, NULL);
         }
+
+        if (mpv_supported(extension))
+                dezoom_and_run_alacritty(filename, true);
+
         if (timg_supported(extension))
-                panic("Use o %s.\n", filename);
+                dezoom_and_run_alacritty(filename, false);
 
         const char *const program = is_verbose ? "bat" : "cat";
         return execlp(program, program, filename, NULL);
