@@ -171,6 +171,14 @@ local spec = {
 		"karb94/neoscroll.nvim",
 		config = true,
 	},
+	{ "m4xshen/hardtime.nvim", config = true },
+	{
+		"tversteeg/registers.nvim",
+		dependencies = { "MunifTanjim/nui.nvim" },
+		config = function()
+			require("registers").setup({ window = { winblend = 0 } })
+		end,
+	},
 	-------------------
 	-- Other plugins --
 	-------------------

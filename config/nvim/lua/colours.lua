@@ -248,6 +248,12 @@ local colours = {
 	NeogitChangeRenamed = c(magenta),
 	NeogitChangeDeleted = c(red),
 	NeogitActiveItem = c(magenta, dark),
+
+	-----------------
+	--- Registers ---
+	-----------------
+
+	NormalFloat = c(cyan, dark),
 }
 
 for name, options in pairs(colours) do
