@@ -15,13 +15,16 @@ LIBS = lib.c libfiles.c
 debug: clean 
 	@$(foreach f, $(SRCS), gcc $(CFLAGS) -g $(LIBS) $(f) -o $(OUT_FOLDER)/$(f:.c=); )
 	@ln -s $(OUT_FOLDER)/s $(OUT_FOLDER)/sv
+	@ln -s $(OUT_FOLDER)/r $(OUT_FOLDER)/rv
 
 release: clean
 	@$(foreach f, $(SRCS), gcc $(CFLAGS) -O3 $(LIBS) $(f) -o $(OUT_FOLDER)/$(f:.c=) ; )
 	@ln -s $(OUT_FOLDER)/s $(OUT_FOLDER)/sv
+	@ln -s $(OUT_FOLDER)/r $(OUT_FOLDER)/rv
 
 clean:
 	@$(foreach f, $(SRCS), rm -f $(OUT_FOLDER)/$(f:.c=); )
 	@rm -f $(OUT_FOLDER)/sv
+	@rm -f $(OUT_FOLDER)/rv
 	@touch $(OUT_FOLDER)/.gitkeep
 

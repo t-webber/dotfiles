@@ -13,7 +13,7 @@ static void try_run_ext(const char *const file, const char *const file_ext,
                         const char *const goal_ext,
                         const char *const goal_cmd) {
         if (!strcmp(file_ext, goal_ext))
-                exl(goal_cmd, file)
+                exl(goal_cmd, goal_cmd, file)
 }
 
 static int exv(const char *const *const argv) {
@@ -39,28 +39,69 @@ static int run_successive(const char *const *const args) {
 }
 
 static int run_file(const char *const file, const char *const ext,
-                    const char *const *const argv, const int argv_len) {
+                    const char *const *const argv, const int argv_len,
+                    const bool is_verbose) {
 
         if (!strcmp(ext, "c") || !strcmp(ext, "cc") || !strcmp(ext, "cpp")) {
-                const char **const args = malloc(sizeof(char *) * (10));
-                args[0] = "cc";
-                args[1] = file;
-                args[2] = "-o";
-                args[3] = "a.out";
-                args[4] = NULL;
-                args[5] = "./a.out";
+                const size_t len = 8 + (size_t)argv_len;
+                const char **const args = malloc(sizeof(char *) * len);
+                size_t index = 0;
+
+                args[index++] = strcmp(ext, "c") == 0 ? "cc" : "c++";
+                args[index++] = is_verbose ? "-g" : "-O3";
+                args[index++] = file;
+                args[index++] = "-o";
+                args[index++] = "a.out";
+                args[index++] = NULL;
+                args[index++] = "./a.out";
 
                 for (int i = 0; i < argv_len; ++i)
-                        args[6 + i] = argv[i];
+                        args[index++] = argv[i];
 
-                args[6 + argv_len] = NULL;
+                args[index++] = NULL;
 
                 run_successive(args);
         }
 
-        if (!strcmp(ext, "rs"))
-                run_successive((const char *const[]){
-                    "rustc", file, "-o", "a.out", NULL, "./a.out", NULL});
+        if (!strcmp(ext, "rs")) {
+                const size_t len = (size_t)argv_len + 7 + (is_verbose ? 0 : 2);
+                const char **const args = malloc(sizeof(char *) * len);
+                size_t index = 0;
+
+                args[index++] = "rustc";
+                if (!is_verbose) {
+                        args[index++] = "-C";
+                        args[index++] = "opt-level=3";
+                }
+                args[index++] = file;
+                args[index++] = "-o";
+                args[index++] = "a.out";
+                args[index++] = NULL;
+                args[index++] = "./a.out";
+
+                for (int i = 0; i < argv_len; ++i)
+                        args[index++] = argv[i];
+
+                args[index++] = NULL;
+
+                run_successive(args);
+        }
+
+        if (!strcmp(ext, "py")) {
+                const size_t len = (size_t)argv_len + 3;
+                const char **const args = malloc(sizeof(char *) * len);
+                size_t index = 0;
+
+                args[index++] = "python3";
+                args[index++] = file;
+
+                for (int i = 0; i < argv_len; ++i)
+                        args[index++] = argv[i];
+
+                args[index++] = NULL;
+
+                run_successive(args);
+        }
 
         try_run_ext(file, ext, "py", "python");
         try_run_ext(file, ext, "sage", "sage");
@@ -101,10 +142,13 @@ static int run_folder(void) {
                         exl("make", "make");
         }
 
-        panic("Found no runner in the current folder");
+        panic("Found no runner in the current folder.\n");
 }
 
 int main(const int argc, const char *const *const argv) {
+
+        const bool verbose = is_verbose(argv[0], "r", "rv");
+
         if (argc == 1)
                 return run_folder();
 
@@ -115,5 +159,5 @@ int main(const int argc, const char *const *const argv) {
                 if (*ptr == '.')
                         extension = ptr + 1;
 
-        return run_file(file, extension, argv + 2, argc - 2);
+        return run_file(file, extension, argv + 2, argc - 2, verbose);
 }
