@@ -38,12 +38,25 @@ static int run_successive(const char *const *const args) {
         panic("Unexpected panic on pid %d and status %d.\n", pid, status);
 }
 
-static int run_file(const char *const file, const char *const ext) {
+static int run_file(const char *const file, const char *const ext,
+                    const char *const *const argv, const int argv_len) {
 
-        if (!strcmp(ext, "c") || !strcmp(ext, "cc") || !strcmp(ext, "cpp"))
+        if (!strcmp(ext, "c") || !strcmp(ext, "cc") || !strcmp(ext, "cpp")) {
+                const char **const args = malloc(sizeof(char *) * (10));
+                args[0] = "cc";
+                args[1] = file;
+                args[2] = "-o";
+                args[3] = "a.out";
+                args[4] = NULL;
+                args[5] = "./a.out";
 
-                run_successive((const char *const[]){"cc", file, "-o", "a.out",
-                                                     NULL, "./a.out", NULL});
+                for (int i = 0; i < argv_len; ++i)
+                        args[6 + i] = argv[i];
+
+                args[6 + argv_len] = NULL;
+
+                run_successive(args);
+        }
 
         if (!strcmp(ext, "rs"))
                 run_successive((const char *const[]){
@@ -92,9 +105,6 @@ static int run_folder(void) {
 }
 
 int main(const int argc, const char *const *const argv) {
-        if (argc > 2)
-                panic("Usage: %s [<filename>]\n", argv[0]);
-
         if (argc == 1)
                 return run_folder();
 
@@ -105,5 +115,5 @@ int main(const int argc, const char *const *const argv) {
                 if (*ptr == '.')
                         extension = ptr + 1;
 
-        return run_file(file, extension);
+        return run_file(file, extension, argv + 2, argc - 2);
 }

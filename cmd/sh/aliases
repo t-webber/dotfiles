@@ -403,10 +403,11 @@ alias cnt="wc -l"
 alias xcnt="xargs cnt"
 alias codex="code --install-extension"
 alias lock="vlock --all"
-alias vg="valgrind"
+alias vg="valgrind --track-origins=yes --show-error-list=yes --show-leak-kinds=all --leak-check=full"
 alias cls="clear"
 alias fix="stty sane"
-alias dezoom="xrandr --output DP-0 --scale 0.8x0.8"
+alias zoom="xrandr --output DP-0 --scale 0.8x0.8"
+alias dezoom="xrandr --output DP-0 --scale 1.5x1.5"
 
 #####################################
 #####################################

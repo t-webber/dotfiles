@@ -1,5 +1,3 @@
-/// Computes the PS1 variable for the shell prompt
-
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -36,7 +36,7 @@ export NVM_DIR="$DATA/nvm"
 
 export XDG_DATA_HOME="$DATA/share"
 
-export PATH="/usr/bin:$CMD/sh:$CMD/bin:$CARGO_HOME/bin:$BUN_INSTALL/bin"
+export PATH=":/usr/bin:$CMD/sh:$CMD/bin:$CARGO_HOME/bin:$BUN_INSTALL/bin"
 
 [ -z "$LAST_LOCATION_FILE" ] && echo "failed to load last location: /etc/bash.bashrc not set"
 
