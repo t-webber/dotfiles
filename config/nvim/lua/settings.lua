@@ -19,3 +19,20 @@ g.loaded_ruby_provider = 0
 
 -- show inline errors
 vim.diagnostic.config({ virtual_text = true })
+
+vim.g.lualine_notification = ""
+
+local core_notify = vim.notify
+vim.notify = function(msg, ...)
+	if type(msg) ~= "string" then
+		error("found non string notification")
+	end
+	local key = msg:match("^You pressed the (.+) key too soon!")
+	if key then
+		vim.g.lualine_notification = "You pressed " .. key .. " to many times!"
+	elseif msg:match("instead of") then
+		vim.g.lualine_notification = msg
+	else
+		core_notify(msg, ...)
+	end
+end

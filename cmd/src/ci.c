@@ -8,7 +8,9 @@
 
 static int install_git(const char *const repo, const char *const name) {
         printf("Installing repo %s with name %s...\n", repo, name);
-        return execlp("cargo", "cargo", "install", "--git", repo, name, NULL);
+        int res =
+            execlp("cargo", "cargo", "install", "--git", repo, name, NULL);
+        panic("Failed to execute: exit code %d.\n", res);
 }
 
 int main(const int argc, const char *const *const argv) {
@@ -39,5 +41,6 @@ int main(const int argc, const char *const *const argv) {
                 return install_git(repo, slash_position);
         }
 
-        return execlp("cargo", "cargo", "binstall", "-y", arg, NULL);
+        int res = execlp("cargo", "cargo", "binstall", "-y", arg, NULL);
+        panic("Failed to execute: exit code %d.\n", res);
 }

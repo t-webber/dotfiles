@@ -70,6 +70,12 @@ local sections = {
 		time,
 		{ "filename", color = dark },
 		register,
+		{
+			function()
+				return vim.g.lualine_notification or "!"
+			end,
+			color = dark,
+		},
 	},
 	lualine_c = {},
 	lualine_x = {},

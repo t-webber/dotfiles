@@ -257,7 +257,6 @@ alias px='echo -n $(pwd) | x'
 ############
 
 alias xdg-open="use o"
-alias br="brave-browser && exit"
 alias ws='open https://synapses.telecom-paris.fr/login?type=Shib'
 alias we='open https://ecampus.paris-saclay.fr/my/'
 
