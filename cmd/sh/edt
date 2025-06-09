@@ -1,14 +1,20 @@
 #!/bin/sh
 
-filename="$(fd "$1" "$FILES/dotfiles" -t f --hidden | awk -F/ '{print length($NF), $0}' | sort -n | awk 'NR==1 {print $NF}')"
+if [ -z "$2" ]; then
+	search_folder="$DOT"
+else
+	search_folder="$2"
+fi
+
+filename="$(fd "$1" "$search_folder" -t f --hidden | awk -F/ '{print length($NF), $0}' | sort -n | awk 'NR==1 {print $NF}')"
 
 if [ -z "$filename" ]; then
-	filename="$(fd "$1" "$FILES/dotfiles" --hidden | awk -F/ '{print length($NF), $0}' | sort -n | awk 'NR==1 {print $NF}')"
+	filename="$(fd "$1" "$search_folder" --hidden | awk -F/ '{print length($NF), $0}' | sort -n | awk 'NR==1 {print $NF}')"
 fi
 
 if [ -z "$filename" ]; then
 	echo "Found none."
-	exit
+	exit 9
 fi
 
 folder=$(echo "$filename" | rev | sed 's/\// /' | rev | awk '{print $1}')
@@ -16,14 +22,18 @@ file=$(echo "$filename" | awk -F/ '{print $NF}')
 
 cd "$folder" || (
 	printf "Access to folder %s denied\n" "$folder"
-	exit
+	exit 9
 )
 
-$EDITOR "$file"
+if [ -z "$3" ]; then
+	$EDITOR "$file"
+else
+	sudo bash -c "source ~/.bashrc; nvim $file"
+fi
 
 git status
 
 cd - >/dev/null || (
 	printf "Access to OLDPWD denied\n"
-	exit
+	exit 9
 )
