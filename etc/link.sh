@@ -1,16 +1,22 @@
 #!/bin/sh
 
-if [ -z "$FILES" ]; then
-    echo "FILES var not configured"
-    exit 1
+if [ -z "$ETC" ]; then
+	echo "ETC var not configured"
+	exit 1
 fi
 
-link() {
-    root_path="$1"
-    link_path="$FILES$1"
+rm -rf "$ETC/etc"
 
-    sudo mv "$root_path" "$link_path"
-    ln -s "$link_path" "$root_path"
+link() {
+	root_path="$1"
+	link_path="$ETC$1"
+	echo "$link_path"
+	link_folder="$(echo "$link_path" | awk -F/ '{OFS=FS; $NF=""; print}')"
+
+	mkdir -p "$link_folder"
+	sudo cp -r "$root_path" "$link_path"
+	sudo chown "$USER:$USER" "$link_path" -R
+	sudo chmod a+rwx "$link_path" -R
 
 }
 
@@ -28,6 +34,6 @@ link "/etc/X11/xorg.conf.d"
 link "/etc/iwd"
 
 link "/etc/pacman.conf"
-link "/etc/pacman.d"
+link "/etc/pacman.d/mirrorlist"
 link "/etc/makepkg.conf"
 link "/etc/makepkg.conf.d"
