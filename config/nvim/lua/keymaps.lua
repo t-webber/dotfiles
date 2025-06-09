@@ -36,8 +36,8 @@ local n = { "n" }
 local i = { "i" }
 local v = { "v" }
 local t = { "t" }
-local ni = { n, i }
-local nv = { n, v }
+local ni = { "n", "i" }
+local nv = { "n", "v" }
 
 --------------
 --- Global ---
@@ -49,10 +49,6 @@ setk(ni, "<C-s>", "<Esc>:w<CR>")
 setk(ni, "<C-x>", "<Esc>:w<CR>:so<CR>")
 
 setk(t, "<Esc>", [[<C-\><C-n>]])
-
-setk(n, "gh", function()
-	print(fn.synIDattr(fn.synID(fn.line("."), fn.col("."), 1), "name"))
-end, "Current highlight group")
 
 setk(n, "<C-n>", ":enew | setlocal nonu nornu nomodifiable<CR>", "Open empty immuable buffer")
 
@@ -95,7 +91,7 @@ setk(n, "<C-ù>", ":split | term<CR>")
 --- Git ---
 -----------
 
-setk(n, "gp", ":Gitsigns preview_hunk<CR>")
+setk(n, "gh", ":Gitsigns preview_hunk<CR>")
 setk(n, "gi", ":Gitsigns preview_hunk_inline<CR>")
 setk(n, "gb", ":Gitsigns toggle_current_line_blame<CR>")
 setk(n, "ga", ":te git add -p<CR>")
@@ -178,15 +174,13 @@ end, "Print active lsp clients")
 ------------
 
 -- press ~ to toggle a letter between lower case and capitals
-setk(nv, "cc", ":TtCamel<CR>")
-setk(nv, "cp", ":TtPascal<CR>")
-setk(nv, "ck", ":TtKebab<CR>")
-setk(nv, "cs", ":TtSnake<CR>")
-setk(nv, "co", ":TtConst<CR>")
-setk(nv, "cd", ":TtDot<CR>")
-setk(nv, "ct", ":TtTitle<CR>")
-
-uset(nv, "c")
+setk(nv, ",cc", ":TtCamel<CR>")
+setk(nv, ",cp", ":TtPascal<CR>")
+setk(nv, ",ck", ":TtKebab<CR>")
+setk(nv, ",cs", ":TtSnake<CR>")
+setk(nv, ",cn", ":TtConst<CR>")
+setk(nv, ",cd", ":TtDot<CR>")
+setk(nv, ",ct", ":TtTitle<CR>")
 
 -------------------------
 --- Comment/Uncomment ---
@@ -246,8 +240,9 @@ local load_lines = function(width)
 	local lines = { "Custom keymaps (q to exit)", string.rep("-", width) }
 
 	for _, key in ipairs(keys) do
-		local modes = table.concat(keymaps[key].modes)
-		local description = keymaps[key].description or "nil"
+		local keymap = keymaps[key]
+		local modes = table.concat(keymap.modes)
+		local description = keymap.description or "nil"
 		local line = key:gsub(" ", "␣") .. " \t" .. modes .. "\t " .. description
 		table.insert(lines, line)
 	end
