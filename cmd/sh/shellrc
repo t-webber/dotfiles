@@ -18,23 +18,35 @@ export APPS="$FILES/.apps"
 export DATA="$FILES/.data"
 export DEV="$FILES/.dev"
 export LOGS="$DATA/logs"
+export SECRET="$FILES/.secret"
 
 export EDITOR="/usr/bin/nvim"
 
 export XDG_CONFIG_HOME="$CONFIG"
+export XDG_DATA_HOME="$DATA/local/share"
+export XDG_CACHE_HOME="$DATA/local/cache"
+export XDG_STATE_HOME="$DATA/local/state"
 
+export HISTFILE="$SECRET/bash_history"
+
+export NPM_CONFIG_USERCONFIG="$CONFIG/npm/config"
+export NPM_CONFIG_CACHE="$CONFIG/npm/cache"
+export INPUTRC="$CONFIG/inputrc"
+
+export IPYTHONDIR="$DATA/ipython"
+export SAGE_ROOT="$DATA/sage_root"
+export WGETRC="$DATA/wget-hsts"
+export XAUTHORITY="$DATA/Xauthority"
+export DOT_SAGE="$DATA/sage_dot"
+export GNUPGHOME="$DATA/gnupg"
 export NODE_REPL_HISTORY="$DATA/repl/node_repl_history"
 export TS_NODE_HISTORY="$DATA/repl/ts_node_repl_history"
 export PYTHON_HISTORY="$DATA/repl/python_history"
-
-export NPM_CONFIG_USERCONFIG="$CONFIG/npmrc"
-
 export BUN_INSTALL="$DATA/bun"
 export CARGO_HOME="$DATA/cargo"
 export RUSTUP_HOME="$DATA/rustup"
 export NVM_DIR="$DATA/nvm"
-
-export XDG_DATA_HOME="$DATA/share"
+export GH_BINPATH="$DATA/git/gh"
 
 export PATH=":/usr/bin:$CMD/sh:$CMD/bin:$CARGO_HOME/bin:$BUN_INSTALL/bin"
 
