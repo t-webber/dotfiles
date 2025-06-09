@@ -1,9 +1,9 @@
 #!/bin/sh
 
-sudo systemctl start iwd systemd-resolved
-systemctl --user start pipewire.socket wireplumber pipewire-pulse.socket
+ta iwd systemd-resolved
+ctll --user start pipewire.socket wireplumber pipewire-pulse.socket
 
-/usr/bin/rm -rf "$FILES/.waste"
+sudo rm -rf "$FILES/.waste"
 mkdir -p "$FILES/.waste"
 
 mkdir -p "$LOGS"
