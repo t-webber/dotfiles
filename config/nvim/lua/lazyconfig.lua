@@ -125,7 +125,7 @@ local spec = {
 	{
 		"ms-jpq/coq_nvim",
 		config = function()
-			vim.cmd("COQnow")
+			vim.cmd("COQnow --shut-up")
 		end,
 	},
 	{
