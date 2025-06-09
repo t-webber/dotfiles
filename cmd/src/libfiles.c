@@ -51,7 +51,7 @@ extensions(timg, "jpg", "jpeg", "png", "gif", "tiff", "tif", "bmp", "webp",
                "ac3", "eac3", "dts", "dtsma", "truehd", "amr", "ra", "ape",
 
                // Subtitles
-               "srt", "ass", "ssa", "vtt", "sub", "idx", "mpl", "txt")
+               "srt", "ass", "ssa", "vtt", "sub", "idx", "mpl")
 
         extensions(sxiv, "bmp", "jpg", "jpeg", "png", "gif", "tiff", "tif",
                    "xpm", "pcx", "tga", "pbm", "pgm", "ppm", "webp", "ico",
