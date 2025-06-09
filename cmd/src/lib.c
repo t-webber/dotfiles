@@ -7,7 +7,7 @@ String get_env_subpath(const String subpath, const char *const var) {
         const size_t cmd_path_len = strlen(cmd_path);
         const size_t fullpath_len = cmd_path_len + subpath.length;
 
-        char *const fullpath = (char *)malloc(sizeof(char) * fullpath_len);
+        char *const fullpath = malloc(sizeof(char) * fullpath_len);
         char *end = stpcpy(fullpath, cmd_path);
         strcpy(end, subpath.value);
 
