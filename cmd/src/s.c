@@ -77,7 +77,7 @@ int main(const int argc, const char *const *const argv) {
                         panic("Failed to fork the %d-th time.\n", file_nb);
 
                 if (pid == 0) {
-                        int res = display(argv[file_nb], verbose, true);
+                        int res = display(argv[file_nb], verbose, argc > 2);
                         panic("Failed to read %s: exec exited with code %d: "
                               "%s.\n",
                               argv[file_nb], res, strerror(errno));
