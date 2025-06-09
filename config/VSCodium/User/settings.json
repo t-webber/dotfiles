@@ -144,7 +144,7 @@
     "workbench.editor.editorActionsLocation": "hidden",
     "workbench.editor.empty.hint": "hidden",
     "workbench.editor.showTabs": "none",
-    "workbench.iconTheme": "material-icon-theme",
+    "workbench.iconTheme": "vscode-great-icons",
     "workbench.layoutControl.enabled": false,
     "workbench.panel.defaultLocation": "left",
     "workbench.panel.showLabels": false,
