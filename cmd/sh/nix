@@ -22,7 +22,6 @@ else
 	printf "#!/bin/sh\n\n" >>"$1"
 	chmod +x "$1"
 	$EDITOR "$1"
-	giti "$1"
 	pp
 fi
 
