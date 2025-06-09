@@ -1,5 +1,3 @@
-/// Eithers makes or opens the manual for the given argument
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -72,6 +70,6 @@ int main(const int argc, char *const *const argv) {
         try_make(arg);
 
         char command[32];
-        sprintf(command, "man %s", arg);
+        sprintf(command, "man -a %s\n", arg);
         system(command);
 }
