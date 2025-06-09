@@ -53,7 +53,7 @@ local colours = {
 	["@variable"] = c(cyan), -- idents
 	["@variable.builtin"] = c(darkcyan), -- this, self
 	["@variable.parameter"] = c(cyan), -- params of functions, objects
-	["@variable.parameter.builtin"] = none, -- special parameters (e.g. _, it)
+	["@variable.parameter.builtin"] = c(darkcyan), -- special parameters (e.g. _, it, ..., this)
 	["@variable.member"] = c(darkcyan), -- object and struct fields
 
 	--- Consts ---
