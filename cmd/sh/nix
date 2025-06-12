@@ -5,24 +5,21 @@ if [ -z "$1" ]; then
 	exit
 fi
 
-alias p="pushd >/dev/null"
-alias pp="popd >/dev/null"
-
-p "$CMD"
+cwd="$(pwd)"
 
 ext="$(echo "$1" | rev | cut -c1-2 | rev)"
 
+cd "$CMD"
+
 if [ "$ext" = ".c" ]; then
-	p src
+	cd src
+	printf "int main(int argc, const char *const *const argv) {}" >>"$1"
 	$EDITOR "$1"
-	giti "$1"
-	pp
 else
-	p sh
+	cd sh
 	printf "#!/bin/sh\n\n" >>"$1"
 	chmod +x "$1"
 	$EDITOR "$1"
-	pp
 fi
 
-pp
+cd "$cwd"
