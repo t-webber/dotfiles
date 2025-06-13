@@ -28,8 +28,6 @@ export XDG_DATA_HOME="$DATA/local/share"
 export XDG_CACHE_HOME="$DATA/local/cache"
 export XDG_STATE_HOME="$DATA/local/state"
 
-export HISTFILE="$SECRET/bash_history"
-
 export NPM_CONFIG_USERCONFIG="$CONFIG/npm/config"
 export NPM_CONFIG_CACHE="$CONFIG/npm/cache"
 export INPUTRC="$CONFIG/inputrc"
@@ -85,8 +83,12 @@ GPG_TTY="$(tty)"
 export GPG_TTY
 export VCPKG_ROOT="$APPS/vcpkg"
 
-export HISTSIZE=100010
-export HISTFILESIZE=100020
+export HISTSIZE=4294967295
+export HISTFILESIZE=4294967295
+export HISTFILE="$SECRET/bash_history"
+export HISTTIMEFORMAT='%F-%H-%M-%S '
+
+
 
 export LS_COLORS="$LS_COLORS:'di=0;35:'"
 
