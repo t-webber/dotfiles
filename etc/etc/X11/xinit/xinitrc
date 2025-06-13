@@ -1,0 +1,3 @@
+export GTK_THEME=Adwaita:dark
+setxkbmap fr
+exec bspwm 

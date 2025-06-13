@@ -10,7 +10,6 @@ rm -rf "$ETC/etc"
 link() {
 	root_path="$1"
 	link_path="$ETC$1"
-	echo "$link_path"
 	link_folder="$(echo "$link_path" | awk -F/ '{OFS=FS; $NF=""; print}')"
 
 	mkdir -p "$link_folder"
@@ -31,6 +30,7 @@ link "/etc/locale.conf"
 link "/etc/inputrc"
 
 link "/etc/X11/xorg.conf.d"
+link "/etc/X11/xinit/xinitrc"
 link "/etc/iwd"
 
 link "/etc/pacman.conf"

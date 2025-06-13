@@ -1,9 +1,11 @@
-#!/bin/bash
+#!/bin/sh
 
-export LAST_LOCATION_FILE="/home/b/.files/.data/logs/last_location.state.txt"
-
-cd "$(<$LAST_LOCATION_FILE)"
+export DEVICE=acer
+export FILES=/home/b/.files
 
 f="/usr/share/bash-completion/bash_completion"
 
-[[ -r "$f" ]] && . "$f"
+[ -r "$f" ] && . "$f"
+
+. "$FILES/dotfiles/cmd/sh/shellrc"
+
