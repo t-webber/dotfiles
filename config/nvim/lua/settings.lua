@@ -30,7 +30,7 @@ vim.notify = function(msg, ...)
 	local key = msg:match("^You pressed the (.+) key too soon!")
 	if key then
 		vim.g.lualine_notification = "You pressed " .. key .. " to many times!"
-	elseif msg:match("instead of") then
+	elseif msg:match("instead of") or msg:match("key is disabled!") then
 		vim.g.lualine_notification = msg
 	else
 		core_notify(msg, ...)

@@ -25,6 +25,7 @@ local spec = {
 	{
 		"lewis6991/gitsigns.nvim",
 		config = true,
+		event = "VeryLazy",
 	},
 	{
 		"NeogitOrg/neogit",
@@ -42,6 +43,7 @@ local spec = {
 				},
 			})
 		end,
+		cmd = "Neogit",
 	},
 	---------------------
 	--- File explorer ---
@@ -64,6 +66,7 @@ local spec = {
 				},
 			})
 		end,
+		cmd = "Oil",
 	},
 	{
 		"refractalize/oil-git-status.nvim",
@@ -71,6 +74,7 @@ local spec = {
 			"stevearc/oil.nvim",
 		},
 		config = true,
+		cmd = "Oil",
 	},
 	---------------
 	--- Finders ---
@@ -78,6 +82,7 @@ local spec = {
 	{
 		"t-webber/telescope.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
+		cmd = "Telescope",
 		config = function()
 			local rg = { "rg", "--files", "--sortr=modified", "--hidden" }
 			require("telescope").setup({
@@ -104,12 +109,6 @@ local spec = {
 	},
 	{
 		"folke/which-key.nvim",
-		event = "VeryLazy",
-		opts = {
-			-- your configuration comes here
-			-- or leave it empty to use the default settings
-			-- refer to the configuration section below
-		},
 		keys = {
 			{
 				",?",
@@ -142,19 +141,16 @@ local spec = {
 			vim.treesitter.language.register("python", "sage")
 		end,
 	},
-	{
-		"Vigemus/iron.nvim",
-		config = true,
-	},
 	--------------
 	--- Editor ---
 	--------------
-	{ "kylechui/nvim-surround", config = true },
+	{ "kylechui/nvim-surround", config = true, event = "VeryLazy" },
 	{
 		"ggandor/leap.nvim",
 		dependencies = {
 			"tpope/vim-repeat",
 		},
+		keys = { { "s", mode = "n" } },
 		config = function()
 			require("leap").set_default_mappings()
 		end,
@@ -162,29 +158,40 @@ local spec = {
 	{
 		"chenasraf/text-transform.nvim",
 		config = true,
+		cmd = {
+			"TtCamel",
+			"TtPascal",
+			"TtKebab",
+			"TtSnake",
+			"TtConst",
+			"TtDot",
+			"TtTitle",
+		},
 	},
 	{
 		"tris203/precognition.nvim",
 		config = true,
+		event = "VeryLazy",
 	},
 	{
 		"karb94/neoscroll.nvim",
 		config = true,
+		event = "VeryLazy",
 	},
-	{ "m4xshen/hardtime.nvim", config = true },
+	{ "m4xshen/hardtime.nvim", config = true, event = "VeryLazy" },
 	{
 		"tversteeg/registers.nvim",
 		dependencies = { "MunifTanjim/nui.nvim" },
 		config = function()
-			require("registers").setup({ window = { winblend = 0 } })
+			require("registers").setup()
 		end,
+		event = "VeryLazy",
 	},
 	-------------------
 	-- Other plugins --
 	-------------------
 	{ import = "plugins" },
 }
-
 -- Don't call the file lazy.lua otherwise... conflict!
 require("lazy").setup({
 	spec = spec,

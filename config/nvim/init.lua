@@ -12,9 +12,5 @@ end
 
 --- TODO ---
 
--- Comment out code
--- LSP
 -- Embedded terminal: support for vim bindings in terminal, colours, etc.
--- Better git
 -- Clipboard history
--- Keybind list popup
