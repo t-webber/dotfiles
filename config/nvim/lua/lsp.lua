@@ -14,7 +14,7 @@ local lsps = {
 			},
 		},
 	},
-	Rust = { cmd = { "rust-analyzer" }, filetypes = { "rs" } },
+	Rust = { cmd = { "rust-analyzer" }, filetypes = { "rust" } },
 	Clang = {
 		cmd = { "clangd" },
 		filetypes = { "c", "cpp", "h", "hpp" },
@@ -45,3 +45,5 @@ for name, config in pairs(lsps) do
 	vim.lsp.enable(name)
 	vim.lsp.config(name, config)
 end
+
+vim.lsp.inlay_hint.enable(true)
