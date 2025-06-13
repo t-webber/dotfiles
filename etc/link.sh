@@ -34,6 +34,5 @@ link "/etc/X11/xinit/xinitrc"
 link "/etc/iwd"
 
 link "/etc/pacman.conf"
-link "/etc/pacman.d/mirrorlist"
 link "/etc/makepkg.conf"
 link "/etc/makepkg.conf.d"
