@@ -19,6 +19,7 @@ export DATA="$FILES/.data"
 export DEV="$FILES/.dev"
 export LOGS="$DATA/logs"
 export SECRET="$FILES/.secret"
+export CODE_EXTS_PATH="$DATA/code-extensions"
 
 export EDITOR="/usr/bin/nvim"
 
@@ -50,16 +51,19 @@ export GH_BINPATH="$DATA/git/gh"
 
 export PATH=":/usr/bin:$CMD/sh:$CMD/bin:$CARGO_HOME/bin:$BUN_INSTALL/bin"
 
-[ -z "$LAST_LOCATION_FILE" ] && echo "failed to load last location: /etc/bash.bashrc not set"
+export LAST_LOCATION_FILE="$LOGS/last_location.txt"
 
 . aliases
+
+p "$(<$LAST_LOCATION_FILE)"
 
 export RIGHT_PS1_FILE="$LOGS/right_ps1.state.txt"
 
 mkdir -p "$LOGS"
 
 prompt() {
-	[ -f "$LAST_LOCATION_FILE" ] && pwd >"$LAST_LOCATION_FILE"
+	sudo rm -rf "$HOME/.vscode-oss/"
+	pwd >"$LAST_LOCATION_FILE"
 }
 
 export PROMPT_COMMAND=prompt

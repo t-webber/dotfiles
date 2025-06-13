@@ -1,5 +1,7 @@
 #!/bin/sh
 
+unalias -a
+
 ##############
 ### PACMAN ###
 ##############
@@ -83,6 +85,7 @@ pa() {
 c="$CARGO_HOME/bin/cargo"
 alias cargo="use c"
 alias cn="$c +nightly"
+alias cii="$c init"
 alias ct="$c test"
 alias cb="$c build"
 alias cbr="$c build --release"
@@ -91,7 +94,6 @@ alias crr="$c run --release"
 alias ccl="$c clean"
 alias cdoc="$c doc"
 alias cdocall="$c doc --document-private-items --all"
-alias cinit="$c init"
 alias cnew="$c new"
 alias ca="$c add"
 alias crm="$c remove"
@@ -104,6 +106,7 @@ alias ciu="$c install-update -a -g"
 alias cw=" watchexec -e rs -r cargo run"
 
 alias crd="$c run --features debug"
+
 
 alias gy='echo -e "\n#![warn(missing_docs,warnings,deprecated_safe,future_incompatible,keyword_idents,let_underscore,nonstandard_style,refining_impl_trait,rust_2018_compatibility,rust_2018_idioms,rust_2021_compatibility,rust_2024_compatibility,unused,clippy::all,clippy::pedantic,clippy::style,clippy::perf,clippy::complexity,clippy::correctness,clippy::restriction,clippy::nursery,clippy::cargo)]\n#![allow(clippy::single_call_fn,clippy::implicit_return,clippy::pattern_type_mismatch,clippy::blanket_clippy_restriction_lints,clippy::missing_trait_methods,clippy::question_mark_used,clippy::mod_module_files,clippy::module_name_repetitions,clippy::pub_with_shorthand,clippy::unseparated_literal_suffix,clippy::else_if_without_else)]\n" | x'
 
@@ -123,6 +126,7 @@ alias rpca="$rp component add"
 
 alias rnone="export RUST_BACKTRACE=0"
 alias rtr="export RUST_BACKTRACE=1"
+
 
 ##############
 ### TERMUX ###
@@ -154,7 +158,7 @@ alias iwr="ts iwd && ts systemd-resolved"
 alias idd="/usr/bin/id"
 
 i="/usr/bin/git"
-alias i="use i command i"
+alias git="use i"
 alias iv="$i --version"
 alias ic="$i commit -m"
 alias id="$i diff"
@@ -168,6 +172,8 @@ alias ilo="$i log --oneline"
 alias ils="$i ls-files"
 alias iph="$i push"
 alias ifh="$i push --force"
+alias irt="$i remote"
+alias irta="$i remote add"
 alias ipl="$i pull"
 alias irb="$i rebase"
 alias iro="$i restore"
@@ -180,6 +186,7 @@ alias icfgg="$i config --global"
 
 alias checks="gh pr checks"
 alias ghs="gh search"
+alias repo="gh search repos"
 alias w="gh repo view -w"
 
 ##############
@@ -219,12 +226,18 @@ alias sd="use td"
 alias slp="use tl"
 
 alias tl='ctl suspend'
-alias tsql="start postgresql"
 alias tb="sudo /usr/bin/reboot --force"
 alias td="shutdown -P now -h"
 
-alias tiwd="tt iwd"
-alias trd="tt systemd-resolved"
+alias ttiwd="tt iwd"
+alias tsiwd="ts iwd"
+
+alias ttrd="tt systemd-resolved"
+alias tsrd="ts systemd-resolved"
+
+alias tssql="ts postgresql"
+alias tosql="to postgresql"
+alias ttsql="tt postgresql"
 
 ###########
 ### SEE ###
@@ -239,8 +252,6 @@ alias eza="ll"
 alias llag="ll"
 alias cat="use s"
 alias bat="use sv"
-
-alias sb="s $HOME/.bashrc"
 
 alias ggcode="use gc"
 alias gcode="use gc"
@@ -292,40 +303,54 @@ alias k="p .."
 alias cd="use p"
 alias src="p src"
 
-alias 2a="p $FILES/2a"
-alias a8="p $FILES/2a/a8"
-alias s1="p $FILES/2a/s1"
-alias s2="p $FILES/2a/s2"
-alias s4="p $FILES/2a/s4"
-alias s5="p $FILES/2a/s5"
-alias s6="p $FILES/2a/s6"
-alias ces="p $FILES/2a/cesure"
-alias inf="p $FILES/2a/inf224"
+gt() {
+	alias "$1"="cls && p $2 && sv"
+}
 
-alias apps="p $APPS"
-alias del="p $FILES/.waste"
-alias cache="p $HOME/.cache"
-alias d="p $DEV"
-alias f="p $FILES"
-alias h="p $HOME"
-alias dot="p $DOT"
-alias cmd="p $CMD"
-alias cf="p $CONFIG"
-
-alias pars="p $DEV/c-parser"
-alias emailrs="p $DEV/email"
-alias dev="p $DEV"
-alias en="p $FILES/2a/en"
-alias perso="p $DEV/personal-website"
-alias html="p $DEV/html-filter"
-alias jc="p $DEV/jc"
-alias md="cd $DEV/md-viewer"
-alias sw="p $DEV/sw"
-alias vsh="p $DEV/vimsh"
-alias mail="p $DEV/mailbox"
-alias words="p $DEV/words"
-alias pdelc="p $DEV/.c/"
-alias pdelr="p $DEV/.r/"
+gt 2a "$FILES/2a"
+gt a7 "$FILES/2a/a7"
+gt a8 "$FILES/2a/a8"
+gt a8 "$FILES/2a/a8"
+gt apps "$APPS"
+gt cache "$HOME/.cache"
+gt ces "$FILES/2a/cesure"
+gt cf "$CONFIG"
+gt cmd "$CMD"
+gt d "$DEV"
+gt data "$DATA"
+gt db "$FILES/2a/db"
+gt del "$FILES/.waste"
+gt dev "$DEV"
+gt dot "$DOT"
+gt emailrs "$DEV/email"
+gt en "$FILES/2a/en"
+gt en "$FILES/2a/en"
+gt etc "$ETC"
+gt f "$FILES"
+gt h "$HOME"
+gt html "$DEV/html-filter"
+gt inf "$FILES/2a/inf224"
+gt jc "$DEV/jc"
+gt mail "$DEV/mailbox"
+gt md "$DEV/md-viewer"
+gt ml "$FILES/2a/ml"
+gt pars "$DEV/c-parser"
+gt pdelc "$DEV/.c/"
+gt pdelr "$DEV/.r/"
+gt perso "$DEV/personal-website"
+gt s1 "$FILES/2a/s1"
+gt s2 "$FILES/2a/s2"
+gt s4 "$FILES/2a/s4"
+gt s5 "$FILES/2a/s5"
+gt s5 "$FILES/2a/s5"
+gt s6 "$FILES/2a/s6"
+gt s8 "$FILES/2a/s8"
+gt s8 "$FILES/2a/s8/hb_detector"
+gt sp "$FILES/2a/sp"
+gt sw "$DEV/sw"
+gt tp3 "$FILES/2a/s5/git/td3"
+gt vsh "$DEV/vimsh"
+gt words "$DEV/words"
 
 ############
 ### EDIT ###
@@ -333,15 +358,12 @@ alias pdelr="p $DEV/.r/"
 
 alias hx="helix"
 
-alias delc="v $DEV/.c/"
-alias delr="v $DEV/.r/"
-alias n="use e"
+alias delc="e $DEV/.c/"
+alias delr="e $DEV/.r/"
 alias vi="use e"
 alias vim="vi"
 alias nvim="vi"
 
-alias bashrc="use eb"
-alias eb="e $HOME/.bashrc"
 alias bspwmrc="use bsp"
 alias bsp="e $CONFIG/bspwm/bspwmrc"
 alias sxhkdrc="use sx"
@@ -355,13 +377,31 @@ alias save="savecmd"
 alias gsaved="sv $CMD/data/saved.txt"
 alias esaved="edt saved.txt"
 
-alias touch="use t"
-alias t="/usr/bin/touch"
+alias touch="use n"
+alias n="/usr/bin/touch"
 
 alias ep="edt profile"
 alias ea="edt aliases"
 alias ce="use edt"
 alias nf="use edt"
+
+###############
+### HELPERS ###
+###############
+
+eb=$(echo $b | sed -E 's/([\/.])/\\\1/g')
+alias b="alias | g 'bun ' | sed -E 's/^alias |$eb //g;s/=/\t/' | tr -d \' | g -v 'b\t'"
+
+ecg=$(echo $c | sed -E 's/([\/.])/\\\1/g')
+alias c="alias | g 'cargo ' | sed -E 's/^alias |$ecg //g;s/=/\t/' | tr -d \' | g -v 'c\t'"
+
+erp=$(echo $rp | sed -E 's/([\/.])/\\\1/g')
+alias rp="alias | g 'rustup ' | sed -E 's/^alias |$erp //g;s/=/\t/' | tr -d \' | g -v 'rp\t'"
+
+egit="$(echo $i | sed 's/\//\\\//g')"
+alias i="alias | sed -E 's/^alias |$egit //g;s/=/\t/' |  g '^i[^\tw]' | tr -d \'"
+
+alias t="alias | sed -E 's/^alias |\/usr\/bin\/|ctl //g;s/=/\t/' | g ^t | g -v 'tmux|touch|ssh|home' | tr -d \'"
 
 #############
 ### CLANG ###
@@ -420,6 +460,12 @@ alias ripgrep="use g"
 alias rg="use g"
 alias g="$CARGO_HOME/bin/rg"
 
+alias codium="use uu"
+alias vscodium="echo what is the difference with codium?"
+alias uu="/usr/bin/codium --extensions-dir='$CODE_EXTS_PATH'"
+alias code="/usr/bin/code --extensions-dir='$CODE_EXTS_PATH'"
+alias u="bspc desktop -f neovim && uu ."
+
 alias :wq="echo '🚬'"
 alias :q="echo '🚬'"
 alias q="echo '🚬'"
@@ -431,28 +477,16 @@ alias mit="cp $CMD/data/LICENSE-MIT ."
 alias mvg="make valgrind"
 alias vimsh="$DEV/vsh/main.out"
 alias secret=". $FILES/.secret/vars"
-alias b=". $HOME/.bashrc"
-alias cup="p $CMD/src && make release && pp"
-alias cupd="p $CMD/src && make clean && make debug && pp"
-alias tp3="p /home/b/.files/2a/s5/git/td3"
-alias s8="p /home/b/.files/2a/s8/hb_detector"
+alias z=". $CMD/sh/shellrc"
 alias fda="fd --hidden --no-ignore"
-alias u="bspc desktop -f neovim && codium ."
 alias ap="apps"
-alias etc="p $ETC"
 alias gv="g -v"
 alias ge="g -e"
-alias data="p $DATA"
 alias jql="jq -C  | less -R"
 alias sr="sv README.md || sv docs/README.md"
-alias cours="s /home/b/.files/2a"
-alias a7="cls && p /home/b/.files/2a/a7 && sv"
-alias a8="cls && p /home/b/.files/2a/a8 && sv"
-alias db="cls && p /home/b/.files/2a/db && sv"
-alias en="cls && p /home/b/.files/2a/en && sv"
-alias ml="cls && p /home/b/.files/2a/ml && sv"
-alias s5="cls && p /home/b/.files/2a/s5 && sv"
-alias s8="cls && p /home/b/.files/2a/s8 && sv"
-alias sp="cls && p /home/b/.files/2a/sp && sv"
+alias cours="s $FILES/2a"
 alias gr="setxkbmap gr"
 alias ok=". ok"
+
+alias cup "p $CMD/src && make release && pp"
+alias cupd "p $CMD/src && make clean && make debug && pp"
