@@ -23,8 +23,7 @@ release: clean
 	@ln -s $(OUT_FOLDER)/r $(OUT_FOLDER)/rv
 
 clean:
-	@$(foreach f, $(SRCS), rm -f $(OUT_FOLDER)/$(f:.c=); )
-	@rm -f $(OUT_FOLDER)/sv
-	@rm -f $(OUT_FOLDER)/rv
+	@rm -rf $(OUT_FOLDER)
+	@mkdir $(OUT_FOLDER)
 	@touch $(OUT_FOLDER)/.gitkeep
 

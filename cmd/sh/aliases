@@ -41,7 +41,7 @@ alias bunx="bx"
 alias knip="$b x knip"
 alias lint="$b x eslint"
 alias pret="$b x prettier"
-alias cn="$b x shadcn@latest add"
+alias bcn="$b x shadcn@latest add"
 
 ##############
 ### PRISMA ###
@@ -116,7 +116,6 @@ alias gcio='echo -n $(catt $CMD/secret/cratesio.txt) | xclip'
 
 rp="$CARGO_HOME/bin/rustup"
 alias rustup="use rp"
-alias rp="use alias for rp"
 alias rpt="$rp toolchain"
 alias rpd="$rp default"
 alias rpu="$rp update"
@@ -488,5 +487,5 @@ alias cours="s $FILES/2a"
 alias gr="setxkbmap gr"
 alias ok=". ok"
 
-alias cup "p $CMD/src && make release && pp"
-alias cupd "p $CMD/src && make clean && make debug && pp"
+alias cup="p $CMD/src && make clean && make release && pp"
+alias cupd="p $CMD/src && make clean && make debug && pp"
