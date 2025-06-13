@@ -46,4 +46,9 @@ for name, config in pairs(lsps) do
 	vim.lsp.config(name, config)
 end
 
-vim.lsp.inlay_hint.enable(true)
+vim.api.nvim_create_autocmd("LspAttach", {
+	callback = function()
+		vim.lsp.inlay_hint.enable()
+		-- This will only work once you change file.
+	end,
+})
