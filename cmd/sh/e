@@ -2,8 +2,4 @@
 
 file="${1:-.}"
 
-if [ -f "$file" ]; then
-	"$EDITOR" "${1:-.}"
-else
-	edt $1
-fi
+"$EDITOR" "${1:-.}"
