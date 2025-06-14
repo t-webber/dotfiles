@@ -3,7 +3,6 @@
 sleep 5
 
 ta iwd systemd-resolved
-ctll --user start pipewire.socket wireplumber pipewire-pulse.socket
 
 sudo rm -rf "$FILES/.waste"
 mkdir -p "$FILES/.waste"
@@ -13,13 +12,10 @@ while ! sudo iwctl station wlan0 show | g -q ' connected'; do
 done
 
 sudo reflector --latest 30 --sort rate --save /etc/pacman.d/mirrorlist --connection-timeout 20 --number 15 &
-pid_reflector=$!
 
 bur & 
-paru -Syyu --noconfirm &
+paru -Syu --devel --needed --noconfirm &
+paru -Fy &
 ru & 
 sudo pkgfile --update &
-
-wait $pid_reflector
-
 "$ETC/link.sh"
