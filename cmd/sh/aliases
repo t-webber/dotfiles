@@ -22,6 +22,7 @@ b="$BUN_INSTALL/bin/bun"
 alias bun="use b"
 alias ba="$b add"
 alias br="$b run"
+alias bs="$b run start"
 alias bb="$b run build"
 alias bd="$b run dev"
 alias bf="$b run fmt"
@@ -148,7 +149,6 @@ alias iwd="sudo iwctl station wlan0 disconnect"
 alias iwgh="iws; while :; do cls; iwg; sleep 1; done"
 alias iwg="iw0 get-networks"
 alias iws="iw0 scan"
-alias iwr="ts iwd && ts systemd-resolved"
 
 ###########
 ### GIT ###
@@ -216,28 +216,34 @@ alias start="use ta"
 alias status="use tt"
 alias stop="use to"
 
-alias ts="ctl restart"
-alias ta="ctl start"
-alias tt="ctl status"
-alias to="ctl stop"
-
 alias reboot="use tb"
 alias sd="use td"
 alias slp="use tl"
 
 alias tu='ctl suspend'
-alias tb="sudo /usr/bin/reboot --force"
+alias tb="sudo /usr/bin/reboot"
+alias tbf="sudo /usr/bin/reboot --force"
 alias td="shutdown -P now -h"
 
-alias ttiwd="tt iwd"
-alias tsiwd="ts iwd"
+_ctl_def() {
+	if [ -z "$3" ]; then
+		p="ctl"
+	else
+		p="$3"
+	fi
 
-alias ttrd="tt systemd-resolved"
-alias tsrd="ts systemd-resolved"
+	alias "ta$1"="$p start $2"
+	alias "ts$1"="$p restart $2"
+	alias "tt$1"="$p status $2"
+	alias "to$1"="$p stop $2"
+}
 
-alias tssql="ts postgresql"
-alias tosql="to postgresql"
-alias ttsql="tt postgresql"
+_ctl_def
+_ctl_def "iw" "iwd"
+_ctl_def "rd" "systemd-resolved"
+_ctl_def "net" "iwd systemd-resolved"
+_ctl_def "sql" "postgresql"
+_ctl_def "au" "--user pipewire.socket wireplumber pipewire-pulse.socket" "ctll"
 
 ###########
 ### SEE ###
@@ -303,54 +309,54 @@ alias k="p .."
 alias cd="use p"
 alias src="p src"
 
-gt() {
+_gt() {
 	alias "$1"="cls && p $2 && sv"
 }
 
-gt 2a "$FILES/2a"
-gt a7 "$FILES/2a/a7"
-gt a8 "$FILES/2a/a8"
-gt a8 "$FILES/2a/a8"
-gt apps "$APPS"
-gt cache "$HOME/.cache"
-gt ces "$FILES/2a/cesure"
-gt cf "$CONFIG"
-gt cmd "$CMD"
-gt d "$DEV"
-gt data "$DATA"
-gt db "$FILES/2a/db"
-gt del "$FILES/.waste"
-gt dev "$DEV"
-gt dot "$DOT"
-gt emailrs "$DEV/email"
-gt en "$FILES/2a/en"
-gt en "$FILES/2a/en"
-gt etc "$ETC"
-gt f "$FILES"
-gt h "$HOME"
-gt html "$DEV/html-filter"
-gt inf "$FILES/2a/inf224"
-gt jc "$DEV/jc"
-gt mail "$DEV/mailbox"
-gt md "$DEV/md-viewer"
-gt ml "$FILES/2a/ml"
-gt pars "$DEV/c-parser"
-gt pdelc "$DEV/.c/"
-gt pdelr "$DEV/.r/"
-gt perso "$DEV/personal-website"
-gt s1 "$FILES/2a/s1"
-gt s2 "$FILES/2a/s2"
-gt s4 "$FILES/2a/s4"
-gt s5 "$FILES/2a/s5"
-gt s5 "$FILES/2a/s5"
-gt s6 "$FILES/2a/s6"
-gt s8 "$FILES/2a/s8"
-gt s8 "$FILES/2a/s8/hb_detector"
-gt sp "$FILES/2a/sp"
-gt sw "$DEV/sw"
-gt tp3 "$FILES/2a/s5/git/td3"
-gt vsh "$DEV/vimsh"
-gt words "$DEV/words"
+_gt 2a "$FILES/2a"
+_gt a7 "$FILES/2a/a7"
+_gt a8 "$FILES/2a/a8"
+_gt a8 "$FILES/2a/a8"
+_gt apps "$APPS"
+_gt cache "$HOME/.cache"
+_gt ces "$FILES/2a/cesure"
+_gt cf "$CONFIG"
+_gt cmd "$CMD"
+_gt d "$DEV"
+_gt data "$DATA"
+_gt db "$FILES/2a/db"
+_gt del "$FILES/.waste"
+_gt dev "$DEV"
+_gt dot "$DOT"
+_gt emailrs "$DEV/email"
+_gt en "$FILES/2a/en"
+_gt en "$FILES/2a/en"
+_gt etc "$ETC"
+_gt f "$FILES"
+_gt h "$HOME"
+_gt html "$DEV/html-filter"
+_gt inf "$FILES/2a/inf224"
+_gt jc "$DEV/jc"
+_gt mail "$DEV/mailbox"
+_gt md "$DEV/md-viewer"
+_gt ml "$FILES/2a/ml"
+_gt pars "$DEV/c-parser"
+_gt pdelc "$DEV/.c/"
+_gt pdelr "$DEV/.r/"
+_gt perso "$DEV/personal-website"
+_gt s1 "$FILES/2a/s1"
+_gt s2 "$FILES/2a/s2"
+_gt s4 "$FILES/2a/s4"
+_gt s5 "$FILES/2a/s5"
+_gt s5 "$FILES/2a/s5"
+_gt s6 "$FILES/2a/s6"
+_gt s8 "$FILES/2a/s8"
+_gt s8 "$FILES/2a/s8/hb_detector"
+_gt sp "$FILES/2a/sp"
+_gt sw "$DEV/sw"
+_gt tp3 "$FILES/2a/s5/git/td3"
+_gt vsh "$DEV/vimsh"
+_gt words "$DEV/words"
 
 ############
 ### EDIT ###
@@ -401,7 +407,15 @@ alias rp="alias | g 'rustup ' | sed -E 's/^alias |$erp //g;s/=/\t/' | tr -d \' |
 egit="$(echo $i | sed 's/\//\\\//g')"
 alias i="alias | sed -E 's/^alias |$egit //g;s/=/\t/' |  g '^i[^\tw]' | tr -d \'"
 
-alias t="alias | sed -E 's/^alias |\/usr\/bin\/|ctl //g;s/=/\t/' | g ^t | g -v 'tmux|touch|ssh|home' | tr -d \'"
+t() {
+  alias | sed -E 's/^alias |\/usr\/bin\/|ctl //g;s/=/\t/' |
+  rg ^t | rg -v 'tmux|touch|ssh|home' |
+  tr -d \' |
+  awk '{print substr($0,3,1) substr($0,1,2) substr($0,4)}' |
+  sort |
+  awk '{print substr($0,2,2) substr($0,1,1) substr($0,4)}'
+}
+
 
 #############
 ### CLANG ###
