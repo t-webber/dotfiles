@@ -1,4 +1,7 @@
 {
+    "[c]": {
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+    },
     "[prisma]": {
         "editor.defaultFormatter": "Prisma.prisma"
     },
@@ -15,12 +18,7 @@
     },
     "censitive.defaultCensoring": [
         {
-            "censor": [
-                ".*password.*",
-                ".*token.*",
-                ".*secret.*",
-                ".*auth.*"
-            ],
+            "censor": [".*password.*", ".*token.*", ".*secret.*", ".*auth.*"],
             "match": "**/{.env,.env.*}"
         }
     ],
@@ -140,7 +138,6 @@
         "sideBarSectionHeader.background": "#000",
         "terminal.background": "#000"
     },
-    "workbench.colorTheme": "One Dark Pro Monokai Darker",
     "workbench.editor.editorActionsLocation": "hidden",
     "workbench.editor.empty.hint": "hidden",
     "workbench.editor.showTabs": "none",

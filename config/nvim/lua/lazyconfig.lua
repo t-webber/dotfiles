@@ -66,7 +66,6 @@ local spec = {
 				},
 			})
 		end,
-		cmd = "Oil",
 	},
 	{
 		"refractalize/oil-git-status.nvim",

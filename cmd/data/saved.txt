@@ -54,3 +54,4 @@ sudo reflector --latest 30 --sort rate --save /etc/pacman.d/mirrorlist --connect
 sudo timedatectl set-ntp true
 
 alias | awk -F '[ =]' '{print $2}' | g -x '.{0,2}'
+man -O width=120

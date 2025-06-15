@@ -30,8 +30,8 @@ static int ls(const char *const filename, const bool is_verbose,
                 puts("\033[0m");
         }
 
-        return execlp("eza", "eza", "-Z@lA", "--icons=always", "--git",
-                      filename, NULL);
+        return execlp("eza", "eza", "-lA", "--icons=always", "--git",
+                      "--no-time", filename, NULL);
 }
 
 static int display_file(const char *const filename, const bool is_verbose) {
