@@ -31,6 +31,7 @@ $(OUT_FOLDER)/rv: r.c
 	ln -sf $(OUT_FOLDER)/r $@
 
 $(OUT_FOLDER)/mc: m.c
+	ln -sf $(OUT_FOLDER)/m $@
 
 $(OUT_FOLDER)/m: CFLAGS += -lz
 
