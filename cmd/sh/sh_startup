@@ -14,8 +14,12 @@ done
 sudo reflector --latest 30 --sort rate --save /etc/pacman.d/mirrorlist --connection-timeout 20 --number 15 &
 
 bur & 
+
+if [ -f /etc/arch-release ]; then
 paru -Syu --devel --needed --noconfirm &
 paru -Fy &
+paru -Rcns $(paru -Qtdq) &
+fi
 ru & 
 sudo pkgfile --update &
 "$ETC/link.sh"
