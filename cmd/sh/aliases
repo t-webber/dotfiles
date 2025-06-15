@@ -379,9 +379,8 @@ alias sx="e $CONFIG/sxhkd/sxhkdrc"
 alias rm='use rms'
 alias rmm="/usr/bin/rm"
 alias rms=". rms"
-alias save="savecmd"
-alias gsaved="sv $CMD/data/saved.txt"
-alias esaved="edt saved.txt"
+alias gsaved="s $CMD/data/saved.txt"
+alias esaved="e $CMD/data/saved.txt"
 
 alias touch="use n"
 alias n="/usr/bin/touch"
@@ -476,7 +475,15 @@ alias g="$CARGO_HOME/bin/rg"
 alias gv="g -v"
 alias ge="g -e"
 alias gve="g -ve"
+alias gg="g --hidden"
+
 alias sede="sed -E"
+
+alias duf="du -h .  | g -ve '/.*/'"
+alias duff="du -h .  | g -ve '/.*/.*/'"
+alias dufff="du -h .  | g -ve '/.*/.*/.*/'"
+alias duffff="du -h .  | g -ve '/.*/.*/.*/.*/'"
+alias dufffff="du -h .  | g -ve '/.*/.*/.*/.*/.*/'"
 
 alias codium="use uu"
 alias vscodium="echo what is the difference with codium?"
@@ -489,12 +496,11 @@ alias :q="echo '🚬'"
 alias q="echo '🚬'"
 alias wq="echo '🚬'"
 
-alias cup="p $CMD/src && make clean && make release && pp"
-alias cupd="p $CMD/src && make clean && make debug && pp"
+alias cup="p $CMD/src && mk release && pp"
+alias cupd="p $CMD/src && mk debug && pp"
 
 alias mk="/usr/bin/make"
 alias make="use mk"
-alias m="use mn"
 alias mn="/usr/bin/man"
 alias man="use mn"
 
