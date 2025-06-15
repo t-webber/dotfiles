@@ -1,3 +1,2 @@
-*.state.txt
-logs/
 bin/
+*.o

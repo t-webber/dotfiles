@@ -1,29 +1,46 @@
+LIBS := lib.c libfiles.c
+LIB_OBJS := $(LIBS:.c=.o)
+
+SRCS := $(filter-out $(LIBS), $(wildcard *.c))
+
+
+OUT_FOLDER := $(CMD)/bin
+
+CFLAGS := -Wall -Wextra -Werror -Wpedantic -Wshadow -Wconversion -Wformat=2
+
+BINARIES := $(patsubst %.c, $(OUT_FOLDER)/%, $(SRCS))
+LINKS := $(OUT_FOLDER)/sv $(OUT_FOLDER)/rv $(OUT_FOLDER)/mc
+
+# .SILENT:
 .PHONY: debug clean release
 
-SRCS = $(shell ls . | grep "\.c" | grep -v lib )
+all: release 
 
-OUT = main.out
+debug: CFLAGS += -g
+debug: clean build
 
-OUT_FOLDER = $(CMD)/bin
+release: CFLAGS += -O3
+release: build
 
-TESTS := src/history.h src/str.h 
+build: $(BINARIES) $(LINKS)
 
-CFLAGS = -g -Wall -Wextra -Werror -Wpedantic -Wshadow -Wconversion -Wformat=2
+$(OUT_FOLDER)/sv: s.c
+	ln -sf $(OUT_FOLDER)/s $@
 
-LIBS = lib.c libfiles.c
+$(OUT_FOLDER)/rv: r.c
+	ln -sf $(OUT_FOLDER)/r $@
 
-debug: clean 
-	@$(foreach f, $(SRCS), gcc $(CFLAGS) -g $(LIBS) $(f) -o $(OUT_FOLDER)/$(f:.c=); )
-	@ln -s $(OUT_FOLDER)/s $(OUT_FOLDER)/sv
-	@ln -s $(OUT_FOLDER)/r $(OUT_FOLDER)/rv
+$(OUT_FOLDER)/mc: m.c
 
-release: clean
-	@$(foreach f, $(SRCS), gcc $(CFLAGS) -O3 $(LIBS) $(f) -o $(OUT_FOLDER)/$(f:.c=) ; )
-	@ln -s $(OUT_FOLDER)/s $(OUT_FOLDER)/sv
-	@ln -s $(OUT_FOLDER)/r $(OUT_FOLDER)/rv
+$(OUT_FOLDER)/m: CFLAGS += -lz
 
-clean:
-	@rm -rf $(OUT_FOLDER)
-	@mkdir $(OUT_FOLDER)
-	@touch $(OUT_FOLDER)/.gitkeep
+$(OUT_FOLDER)/%: $(LIB_OBJS) %.c 
+	mkdir -p $(OUT_FOLDER)
+	gcc $(CFLAGS) $^ -o $@
+
+clean: 
+	rm $(LIB_OBJS)
+	rm -rf $(OUT_FOLDER)
+	mkdir -p $(OUT_FOLDER)
+	touch $(OUT_FOLDER)/.gitkeep
 
