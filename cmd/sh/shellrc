@@ -60,13 +60,13 @@ export RIGHT_PS1_FILE="$LOGS/right_ps1.state.txt"
 mkdir -p "$LOGS"
 
 prompt() {
-	sudo rm -rf "$HOME/.vscode-oss/"
+	[ "$DEVICE" = "acer" ] && sudo rm -rf "$HOME/.vscode-oss/"
 	pwd >"$LAST_LOCATION_FILE"
 }
 
 export PROMPT_COMMAND=prompt
 
-export PS1='\[\e[38;5;51m\]$DEVICE\[\e[0m\] \[\e[93m\]\W\[\e[0m\]\[\e[92m\] $(git branch --show-current 2>/dev/null)\[\e[0m\] '
+export PS1='\[\e[38;5;51m\]$DEVICE\[\e[0m\] \[\e[93m\]\W\[\e[0m\]\[\e[92m\] $(ibr --show-current 2>/dev/null)\[\e[0m\] '
 
 if [ "$DEVICE" = "acer" ]; then
 	if [ "$(whoami)" = "root" ]; then

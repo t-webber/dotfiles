@@ -25,6 +25,7 @@ link "/etc/bash.bashrc"
 link "/etc/hostname"
 
 link "/etc/vconsole.conf"
+link "/etc/mkinitcpio.conf"
 link "/etc/locale.gen"
 link "/etc/locale.conf"
 link "/etc/inputrc"

@@ -11,7 +11,7 @@ CFLAGS := -Wall -Wextra -Werror -Wpedantic -Wshadow -Wconversion -Wformat=2
 BINARIES := $(patsubst %.c, $(OUT_FOLDER)/%, $(SRCS))
 LINKS := $(OUT_FOLDER)/sv $(OUT_FOLDER)/rv $(OUT_FOLDER)/mc
 
-.SILENT:
+# .SILENT:
 .PHONY: debug clean release
 
 all: release 

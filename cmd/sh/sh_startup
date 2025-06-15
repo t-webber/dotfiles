@@ -18,8 +18,9 @@ bur &
 if [ -f /etc/arch-release ]; then
 paru -Syu --devel --needed --noconfirm &
 paru -Fy &
-paru -Rcns $(paru -Qtdq) &
+paru -Rcns $(paru -Qtdq) --noconfirm & 
 fi
+
 ru & 
 sudo pkgfile --update &
 "$ETC/link.sh"
