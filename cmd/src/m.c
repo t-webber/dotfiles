@@ -33,19 +33,38 @@ static bool line_has_target(const char *const line, const char *const target,
         return false;
 }
 
+#define ALIASES_LEN 5
+const char *const *const ALIASES[ALIASES_LEN] = {
+    (const char *const[2]){"c", "clean"},
+    (const char *const[2]){"rl", "release"},
+    (const char *const[2]){"d", "debug"},
+    (const char *const[2]){"g", "debug"},
+    (const char *const[2]){"r", "run"},
+};
+
 static void try_make(const char *const target, const char *const makefile) {
+        const char *expanded_target = target;
+
+        for (size_t i = 0; i < ALIASES_LEN; ++i)
+                if (!strcmp(ALIASES[i][0], expanded_target)) {
+                        expanded_target = ALIASES[i][1];
+                        break;
+                }
+
+        printf("target = %s\n", expanded_target);
+
         FILE *fd = fopen(makefile, "r");
         if (fd == NULL)
                 return;
 
-        const size_t target_len = strlen(target);
+        const size_t target_len = strlen(expanded_target);
         char line[128];
 
         while (fgets(line, 128, fd))
-                if (line_has_target(line, target, target_len)) {
+                if (line_has_target(line, expanded_target, target_len)) {
                         fclose(fd);
                         int res = execl("/usr/bin/make", "make", "-f", makefile,
-                                        target, NULL);
+                                        expanded_target, NULL);
                         panic("Make panicked with code %d.\n", res);
                 }
 
@@ -177,10 +196,9 @@ static size_t get_man_pages(bool only_c_pages, const char *const page_name) {
         return len;
 }
 
-static void parse_argv(const int argc, const char *const *const argv,
-                       bool *const c_man, bool *const file_make) {
+static void parse_argv(int *const argc, const char *const *const argv,
+                       bool *const c_man) {
         *c_man = !strcmp(argv[0], "mc");
-        *file_make = !strcmp(argv[0], "mf");
 
         if (!c_man && strcmp(argv[0], "m"))
                 panic("Erroneous program name. Should be either m or "
@@ -188,24 +206,48 @@ static void parse_argv(const int argc, const char *const *const argv,
                       "%s was found.\n",
                       argv[0]);
 
-        if (*file_make && argc != 3)
-                panic("Usage: %s <Makefile> [<make-target>]\n", argv[0]);
-        if (!*file_make && argc > 2)
-                panic("Usage: %s [<make-target|man-page>]\n", argv[0]);
+        bool no_clear = !strcmp(argv[*argc - 1], "!");
+
+        if (no_clear)
+                --*argc;
+
+        bool invalid_args = (*argc == 2 && !strcmp(argv[1], "?")) ||
+                            (*argc > 3) || (*c_man && *argc != 2);
+        if (invalid_args) {
+                printf("Usage: %s (? | [(<target>|<alias>) [<Makefile>]] | "
+                       "<page-name> | "
+                       "(<device> <path>)) [!]\n\nValid aliases:\n",
+                       argv[0]);
+                for (int i = 0; i < ALIASES_LEN; ++i)
+                        printf("  %s\t-> %s\n", ALIASES[i][0], ALIASES[i][1]);
+                exit(1);
+        }
+
+        if (!no_clear)
+                system("clear");
+}
+
+static int mount(const int argc, const char *const *const argv) {
+
+        if (argc != 3)
+                panic("Usage: %s %s <destination>\n", argv[0], argv[1]);
+
+        return execl("/usr/bin/sudo", "sudo", "mount", argv[1], argv[2], NULL);
 }
 
 int main(const int argc, const char *const *const argv) {
-        printf("\033[2J\033[H");
-        fflush(stdout);
+        bool c_man;
+        int normalised_argc = argc;
+        parse_argv(&normalised_argc, argv, &c_man);
 
-        bool c_man, file_make;
-        parse_argv(argc, argv, &c_man, &file_make);
-
-        if (argc == 1)
+        if (normalised_argc == 1)
                 return make();
 
-        if (file_make)
-                try_make(argv[2], argv[1]);
+        if (argv[1][0] == '/')
+                return mount(normalised_argc, argv);
+
+        if (normalised_argc == 3)
+                try_make(argv[1], argv[2]);
         else
                 try_make(argv[1], "Makefile");
 
