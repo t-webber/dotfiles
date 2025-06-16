@@ -66,8 +66,6 @@ prompt() {
 
 export PROMPT_COMMAND=prompt
 
-export PS1='\[\e[38;5;51m\]$DEVICE\[\e[0m\] \[\e[93m\]\W\[\e[0m\]\[\e[92m\] $(ibr --show-current 2>/dev/null)\[\e[0m\] '
-
 if [ "$DEVICE" = "acer" ]; then
 	if [ "$(whoami)" = "root" ]; then
 		export PS1='#$(ps1)'
@@ -76,7 +74,7 @@ if [ "$DEVICE" = "acer" ]; then
 		export PS1='$(ps1)'
 	fi
 else
-	export PS1='\[\e[38;5;51m\]$DEVICE\[\e[0m\] \[\e[93m\]\W\[\e[0m\]\[\e[92m\] $(git branch --show-current 2>/dev/null)\[\e[0m\] '
+	export PS1='\[\e[38;5;51m\]$DEVICE\[\e[0m\] \[\e[93m\]\W\[\e[0m\]\[\e[92m\] $(ibr --show-current 2>/dev/null)\[\e[0m\] '
 fi
 
 GPG_TTY="$(tty)"
