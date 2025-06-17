@@ -2,6 +2,8 @@
 
 # One needs to gitallow the folder to gitallow it's content. 
 
+!inputrc
+
 !alacritty/
 !alacritty/**
 
