@@ -146,6 +146,7 @@ static int run_folder(void) {
 }
 
 int main(const int argc, const char *const *const argv) {
+        store_usage(argv);
 
         const bool verbose = is_verbose(argv[0], "r", "rv");
 

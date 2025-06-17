@@ -9,6 +9,7 @@
 #include <unistd.h>
 
 int main(const int argc, const char *const *const argv) {
+        store_usage(argv);
         const char *filename = argv_one_filename(argc, argv);
 
         struct stat st;

@@ -29,3 +29,5 @@ const char *get_filename_extension(const char *const filename,
                                    const size_t len);
 
 bool has_slash(const char *const arg, size_t *len, const char **const position);
+
+void store_usage(const char *const *const argv);

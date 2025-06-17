@@ -62,6 +62,7 @@ static int display(const char *const filename, const bool is_verbose,
 }
 
 int main(const int argc, const char *const *const argv) {
+        store_usage(argv);
         bool verbose = is_verbose(argv[0], "s", "sv");
 
         if (argc == 1) {

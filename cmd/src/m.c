@@ -236,6 +236,7 @@ static int mount(const int argc, const char *const *const argv) {
 }
 
 int main(const int argc, const char *const *const argv) {
+        store_usage(argv);
         bool c_man;
         int normalised_argc = argc;
         parse_argv(&normalised_argc, argv, &c_man);

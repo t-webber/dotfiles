@@ -25,6 +25,7 @@ static void rm_file(const char *const filename) {
 }
 
 int main(int argc, const char *const *const argv) {
+        store_usage(argv);
         if (argc == 1)
                 panic("Missing arguments...\n");
 

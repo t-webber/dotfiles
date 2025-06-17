@@ -24,6 +24,7 @@ static FILE *get_aliases_file(void) {
 }
 
 int main(const int argc, const char *const *const argv) {
+        store_usage(argv);
         if (argc != 3) {
                 fprintf(stderr, "You must provide two arguments, found %d.\n",
                         argc - 1);
@@ -31,6 +32,6 @@ int main(const int argc, const char *const *const argv) {
         }
 
         FILE *aliases = get_aliases_file();
-        fprintf(aliases, "alias %s=\"%s\"\n", argv[1], argv[2]);
+        fprintf(aliases, "al %s \"%s\"\n", argv[1], argv[2]);
         fclose(aliases);
 }
