@@ -19,6 +19,8 @@ export DATA="$FILES/.data"
 export DEV="$FILES/.dev"
 export LOGS="$DATA/logs"
 export SECRET="$FILES/.secret"
+export WASTE="$FILES/.waste"
+
 export CODE_EXTS_PATH="$DATA/code-extensions"
 
 export EDITOR="/usr/bin/nvim"
@@ -60,7 +62,7 @@ export RIGHT_PS1_FILE="$LOGS/right_ps1.state.txt"
 mkdir -p "$LOGS"
 
 prompt() {
-	[ "$DEVICE" = "acer" ] && sudo rm -rf "$HOME/.vscode-oss/"
+	[ "$DEVICE" = "acer" ] && [ -d "$HOME/.vscode-oss" ] && rmm -rf "$HOME/.vscode-oss"
 	pwd >"$LAST_LOCATION_FILE"
 }
 
@@ -85,8 +87,6 @@ export HISTSIZE=4294967295
 export HISTFILESIZE=4294967295
 export HISTFILE="$SECRET/bash_history"
 export HISTTIMEFORMAT='%F-%H-%M-%S '
-
-
 
 export LS_COLORS="$LS_COLORS:'di=0;35:'"
 
