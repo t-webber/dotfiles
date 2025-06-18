@@ -2,7 +2,8 @@
 
 sleep 5
 
-ta iwd systemd-resolved
+tanet
+taau
 
 sudo rm -rf "$FILES/.waste"
 mkdir -p "$FILES/.waste"
@@ -13,14 +14,14 @@ done
 
 sudo reflector --latest 30 --sort rate --save /etc/pacman.d/mirrorlist --connection-timeout 20 --number 15 &
 
-bur & 
+bur &
 
 if [ -f /etc/arch-release ]; then
-paru -Syu --devel --needed --noconfirm &
-paru -Fy &
-paru -Rcns $(paru -Qtdq) --noconfirm & 
+	paru -Syu --devel --needed --noconfirm &
+	paru -Fy &
+	paru -Rcns $(paru -Qtdq) --noconfirm &
 fi
 
-ru & 
+ru &
 sudo pkgfile --update &
 "$ETC/link.sh"

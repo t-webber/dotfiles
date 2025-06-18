@@ -1,0 +1,6 @@
+*.json linguist-vendored=false
+*.json linguist-generated=false
+*.json linguist-language=JSON
+*.css linguist-vendored=true
+*.css linguist-language=Ignore
+

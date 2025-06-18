@@ -1,4 +1,6 @@
+#include "lib.h"
 #include <assert.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -22,7 +24,7 @@ static char *exec(const char *const command) {
         return output;
 }
 
-static void pwd(char *path) {
+static void pwd(char *const path, const bool is_full) {
         char *pwd = exec("pwd");
         const size_t len = strlen(pwd);
         assert(len > 1);
@@ -32,13 +34,17 @@ static void pwd(char *path) {
         assert(*end == '\n');
         *end = '\0';
 
-        SHORT(path, "/", strcmp(pwd, "/") == 0);
-        SHORTP(path, pwd, "HOME", "~");
-        SHORTP(path, pwd, "FILES", "f");
-        SHORTP(path, pwd, "CMD", "c");
-        SHORTP(path, pwd, "APPS", "a");
-        SHORTP(path, pwd, "DEV", "d");
-        SHORTP(path, pwd, "DATA", "t");
+        if (is_full) {
+                SHORT(path, "/", strcmp(pwd, "/") == 0);
+                SHORTP(path, pwd, "HOME", "~");
+                SHORTP(path, pwd, "FILES", "f");
+                SHORTP(path, pwd, "CMD", "c");
+                SHORTP(path, pwd, "APPS", "a");
+                SHORTP(path, pwd, "DEV", "d");
+                SHORTP(path, pwd, "DATA", "t");
+                SHORTP(path, pwd, "DOT", ".");
+                SHORTP(path, pwd, "DOT", ".");
+        }
 
         while (*end != '/' && *end != '.')
                 --end;
@@ -59,10 +65,18 @@ static int get_battery_level(void) {
 }
 
 int main(void) {
-        char path[50];
-        pwd(path);
+        const char *device_name = getenv("DEVICE");
+        if (device_name == NULL)
+                device_name = "";
 
-        int battery_level = get_battery_level();
+        bool is_full = !strcmp(device_name, "acer");
+        if (is_full)
+                device_name = "";
+
+        char path[50];
+        pwd(path, is_full);
+
+        const int battery_level = is_full ? get_battery_level() : 50;
         char battery[3] = "";
         if (battery_level < 30) {
                 stpcpy(battery, "!");
@@ -80,10 +94,12 @@ int main(void) {
         if (strcmp(branch, "master ") == 0)
                 stpcpy(branch, ":");
 
-        printf("\001\x1b[31m\002%s\001\x1b[33m\002%d%d"
-               "\001\x1b[36m\002%s\001\x1b[0m\002"
+        printf("\001\x1b[35m\002%s"
+               "\001\x1b[31m\002%s"
+               "\001\x1b[33m\002%d%d"
+               "\001\x1b[36m\002%s"
                "\001\x1b[32m\002%s\001\x1b[39m\002",
-               battery, tm.tm_hour % 12, tm.tm_min, path, branch);
+               device_name, battery, tm.tm_hour % 12, tm.tm_min, path, branch);
 
         return 0;
 }
