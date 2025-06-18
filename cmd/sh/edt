@@ -20,18 +20,18 @@ fi
 folder=$(echo "$filename" | rev | sed 's/\// /' | rev | awk '{print $1}')
 file=$(echo "$filename" | awk -F/ '{print $NF}')
 
-cd "$folder" || (
-	printf "Access to folder %s denied\n" "$folder"
-	exit 9
-)
-
 if [ -z "$3" ]; then
-	$EDITOR "$file"
-else
-	sudo bash -c "source ~/.bashrc; nvim $file"
-fi
 
-git status
+	cd "$folder" || (
+		printf "Access to folder %s denied\n" "$folder"
+		exit 9
+	)
+
+	$EDITOR "$file"
+	git status
+else
+	sudo bash -ic "p $folder && e $file"
+fi
 
 cd - >/dev/null || (
 	printf "Access to OLDPWD denied\n"
