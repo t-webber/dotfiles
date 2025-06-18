@@ -9,6 +9,8 @@
 
 static bool line_has_target(const char *const line, const char *const target,
                             const size_t target_len) {
+        if (!strncmp(line, "%:", 2))
+                return true;
 
         if (line[0] == '\0' || line[0] == '\t' || line[0] == ' ' ||
             !strchr(line, ':'))
@@ -33,13 +35,14 @@ static bool line_has_target(const char *const line, const char *const target,
         return false;
 }
 
-#define ALIASES_LEN 5
+#define ALIASES_LEN 6
 const char *const *const ALIASES[ALIASES_LEN] = {
     (const char *const[2]){"c", "clean"},
     (const char *const[2]){"rl", "release"},
     (const char *const[2]){"d", "debug"},
     (const char *const[2]){"g", "debug"},
     (const char *const[2]){"r", "run"},
+    (const char *const[2]){"i", "install"},
 };
 
 static void try_make(const char *const target, const char *const makefile) {
