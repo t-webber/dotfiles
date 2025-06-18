@@ -32,6 +32,7 @@
         "elts",
         "idents",
         "Linkedin",
+        "mtxprintf",
         "nonstandard",
         "repr",
         "splitn",
@@ -39,6 +40,7 @@
         "unwritable",
         "usize"
     ],
+
     "diffEditor.ignoreTrimWhitespace": false,
     "editor.cursorBlinking": "solid",
     "editor.cursorSmoothCaretAnimation": "on",
@@ -50,7 +52,7 @@
     "editor.formatOnSave": true,
     "editor.glyphMargin": false,
     "editor.guides.indentation": false,
-    "editor.lineNumbers": "on",
+    "editor.lineNumbers": "off",
     "editor.minimap.enabled": false,
     "editor.mouseWheelZoom": true,
     "editor.occurrencesHighlight": "off",
@@ -62,7 +64,8 @@
     "editor.selectionHighlight": false,
     "editor.showFoldingControls": "never",
     "editor.stickyScroll.enabled": false,
-    "editor.tabSize": 4,
+    "editor.tabSize": 8,
+
     "editor.wordWrap": "on",
     "emojisense.languages": {
         "*": true
@@ -84,6 +87,7 @@
         "sync": false
     },
     "javascript.updateImportsOnFileMove.enabled": "always",
+    "makefile.configureOnOpen": false,
     "material-icon-theme.hidesExplorerArrows": true,
     "material-icon-theme.opacity": 0.6,
     "notebook.breadcrumbs.showCodeCells": false,
@@ -138,6 +142,7 @@
         "sideBarSectionHeader.background": "#000",
         "terminal.background": "#000"
     },
+    "workbench.colorTheme": "One Dark Pro Monokai Darker Reloaded",
     "workbench.editor.editorActionsLocation": "hidden",
     "workbench.editor.empty.hint": "hidden",
     "workbench.editor.showTabs": "none",
