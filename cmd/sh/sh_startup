@@ -5,23 +5,25 @@ sleep 5
 tanet
 taau
 
-sudo rm -rf "$FILES/.waste"
+sd rmm "$FILES/.waste"
 mkdir -p "$FILES/.waste"
 
-while ! sudo iwctl station wlan0 show | g -q ' connected'; do
+while ! sd iwctl station wlan0 show | g -q ' connected'; do
 	sleep 10
 done
 
-sudo reflector --latest 30 --sort rate --save /etc/pacman.d/mirrorlist --connection-timeout 20 --number 15 &
+sd reflector --latest 30 --sort rate --save /etc/pacman.d/mirrorlist --connection-timeout 20 --number 15 &
 
 bur &
 
-if [ -f /etc/arch-release ]; then
-	paru -Syu --devel --needed --noconfirm &
-	paru -Fy &
-	paru -Rcns $(paru -Qtdq) --noconfirm &
+if [ -f "/etc/arch-release" ]; then
+	U &
+	Fy &
+	C &
 fi
 
 ru &
-sudo pkgfile --update &
+sd pkgfile --update &
 "$ETC/link.sh"
+
+wait

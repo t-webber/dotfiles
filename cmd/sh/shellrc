@@ -23,7 +23,8 @@ export WASTE="$FILES/.waste"
 
 export CODE_EXTS_PATH="$DATA/code-extensions"
 
-export EDITOR="/usr/bin/nvim"
+[ -z "$EDITOR" ] && EDITOR="/bin/nvim"
+export EDITOR
 
 export XDG_CONFIG_HOME="$CONFIG"
 export XDG_DATA_HOME="$DATA/local/share"

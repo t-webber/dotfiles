@@ -1,8 +1,6 @@
 #!/bin/sh
 
-. "$HOME/.bashrc"
-
 if [ "$XDG_VTNR" = "1" ]; then
-	. sh_startup &
+	. sh_startup >/dev/null 2>&1 &
 	startx
 fi
