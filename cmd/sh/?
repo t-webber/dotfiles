@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if [ -z "$1" ]; then
+	pwd
+else
+	if [ -e "$1" ]; then
+		readlink -f "$1"
+	else
+		which "$1"
+	fi
+fi
