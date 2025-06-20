@@ -17,8 +17,11 @@ static void try_run_ext(const char *const file, const char *const file_ext,
 }
 
 static int exv(const char *const *const argv) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
         execvp(argv[0], (char *const *const)argv);
         panic("Failed to execute %s\n", argv[0]);
+#pragma GCC diagnostic pop
 }
 
 static int run_successive(const char *const *const args) {

@@ -10,16 +10,19 @@ static bool is_valid_file(FILE *file) {
 }
 
 static FILE *get_aliases_file(void) {
-        const String aliases_path = get_env_subpath(ALIASES_FILE_NAME, "CMD");
-        FILE *aliases_file = fopen(aliases_path.value, "a");
+        const char *const CMD = getenv("CMD");
+        const size_t len = strlen(CMD) + ALIASES_FILE_NAME.length;
+        char *aliases_path = malloc(sizeof(char) * (len + 1));
+
+        FILE *aliases_file = fopen(aliases_path, "a");
 
         if (!is_valid_file(aliases_file)) {
                 fprintf(stderr, "Failed to open file at path %s.",
-                        aliases_path.value);
+                        aliases_path);
                 exit(2);
         }
 
-        free((char *)aliases_path.value);
+        free(aliases_path);
         return aliases_file;
 }
 

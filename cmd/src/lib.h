@@ -25,9 +25,6 @@ bool is_verbose(const char *const program_name, const char *const normal_name,
 
 const char *argv_one_filename(const int argc, const char *const *const argv);
 
-const char *get_filename_extension(const char *const filename,
-                                   const size_t len);
-
 bool has_slash(const char *const arg, size_t *len, const char **const position);
 
 void store_usage(const char *const *const argv);

@@ -3,16 +3,19 @@ LIB_OBJS := $(LIBS:.c=.o)
 
 SRCS := $(filter-out $(LIBS), $(wildcard *.c))
 
+BIN := $(CMD)/bin
 
-OUT_FOLDER := $(CMD)/bin
+CFLAGS += -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wformat=2 -Werror
+CFLAGS += -Wfloat-equal -Wcast-align -Wcast-qual -Wmissing-prototypes -Wstrict-prototypes
+CFLAGS += -Wold-style-definition -Wmissing-declarations -Wnested-externs -Wredundant-decls
+CFLAGS += -Wstrict-aliasing=2 -Wswitch-default -Wswitch-enum -Wpointer-arith
+CFLAGS += -Wwrite-strings -Wunreachable-code -Wlogical-op -Wno-unused-parameter
 
-CFLAGS := -Wall -Wextra -Werror -Wpedantic -Wshadow -Wconversion -Wformat=2
-
-BINARIES := $(patsubst %.c, $(OUT_FOLDER)/%, $(SRCS))
-LINKS := $(OUT_FOLDER)/sv $(OUT_FOLDER)/rv $(OUT_FOLDER)/mc
+BINARIES := $(patsubst %.c, $(BIN)/%, $(SRCS))
+LINKS := $(BIN)/sv $(BIN)/rv $(BIN)/mc
 
 .SILENT:
-.PHONY: debug clean release
+.PHONY: debug clean release out_folder build
 
 all: release 
 
@@ -22,26 +25,29 @@ debug: clean build
 release: CFLAGS += -O3
 release: build
 
-build: $(BINARIES) $(LINKS)
+build: out_folder $(BINARIES) $(LINKS) 
 
-$(OUT_FOLDER)/sv: s.c
-	ln -sf $(OUT_FOLDER)/s $@
+out_folder:
+	mkdir -p $(BIN)
 
-$(OUT_FOLDER)/rv: r.c
-	ln -sf $(OUT_FOLDER)/r $@
+$(BIN)/sv: $(BIN)/s
+	ln -sf $< $@
 
-$(OUT_FOLDER)/mc: m.c
-	ln -sf $(OUT_FOLDER)/m $@
+$(BIN)/rv: $(BIN)/r
+	ln -sf $< $@
 
-$(OUT_FOLDER)/m: CFLAGS += -lz
+$(BIN)/mc: $(BIN)/m
+	ln -sf $< $@
 
-$(OUT_FOLDER)/%: $(LIB_OBJS) %.c 
-	mkdir -p $(OUT_FOLDER)
-	gcc $(CFLAGS) $^ -o $@
+$(BIN)/m: m.o $(LIB_OBJS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -Izlib/include $^ zlib/lib/libz.a -o $@
+
+$(BIN)/%: %.o $(LIB_OBJS)
+	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
 
 clean: 
-	rm $(LIB_OBJS)
-	rm -rf $(OUT_FOLDER)
-	mkdir -p $(OUT_FOLDER)
-	touch $(OUT_FOLDER)/.gitkeep
+	rm -f $(LIB_OBJS)
+	rm -rf $(BIN)
+	mkdir -p $(BIN)
+	touch $(BIN)/.gitkeep
 

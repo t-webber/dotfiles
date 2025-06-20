@@ -2,10 +2,6 @@
 #include <assert.h>
 #include <unistd.h>
 
-// ci email
-// ci eza
-// ci repo
-
 static int install_git(const char *const repo, const char *const name) {
         printf("Installing repo %s with name %s...\n", repo, name);
         int res =
@@ -14,11 +10,23 @@ static int install_git(const char *const repo, const char *const name) {
 }
 
 int main(const int argc, const char *const *const argv) {
+        store_usage(argv);
 
         if (argc <= 1)
                 panic("Missing argument.\n");
 
-        if (argc == 3) {
+        bool fast = !strcmp(argv[1], "-F");
+        if (!fast && argc >= 3)
+                fast = !strcmp(argv[2], "-F");
+        if (!fast && argc >= 4)
+                fast = !strcmp(argv[3], "-F");
+
+        const int limit = fast ? 4 : 3;
+        if (argc > limit)
+                panic("Too many arguments.\nUsage: %s [-F] [[owner] repo]\n",
+                      argv[0]);
+
+        if (argc == limit) {
                 char repo[100];
                 sprintf(repo, "https://github.com/%s/%s", argv[1], argv[2]);
                 const size_t len = strlen(repo);
