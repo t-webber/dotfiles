@@ -1,4 +1,3 @@
-#include "lib.h"
 #include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -96,7 +95,7 @@ int main(void) {
 
         printf("\001\x1b[35m\002%s"
                "\001\x1b[31m\002%s"
-               "\001\x1b[33m\002%d%d"
+               "\001\x1b[33m\002%x%d"
                "\001\x1b[36m\002%s"
                "\001\x1b[32m\002%s\001\x1b[39m\002",
                device_name, battery, tm.tm_hour % 12, tm.tm_min, path, branch);

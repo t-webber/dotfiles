@@ -46,14 +46,14 @@ al unalias "use ua"
 ##############
 
 if [ -f "/etc/arch-release" ]; then
-	p="$(wi paru)"
+	p="$(/bin/which paru)"
 	al paru "use aliases"
 	al S "$p -S"
 	al R "$p -R"
 	al Q "$p -Q"
 	al U "$p -Syyuu --devel --noconfirm"
 	al FY "$p -Fy"
-	al C "paru -Rcns \$(paru -Qdtq) --noconfirm && yes | paru -Scc"
+	al C "$p -Rcns \$($p -Qdtq) --noconfirm && yes | $p -Scc"
 fi
 
 ###########
