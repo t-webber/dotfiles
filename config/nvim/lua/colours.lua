@@ -46,6 +46,7 @@ local colours = {
 	Include = c(magenta),
 	cIncluded = c(magenta),
 	String = c(yellow),
+	Folded = c(green),
 
 	--> cf. https://neovim.io/doc/user/treesitter.html#treesitter-highlight-groups
 

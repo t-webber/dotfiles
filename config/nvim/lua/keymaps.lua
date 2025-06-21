@@ -16,11 +16,11 @@ local describe = function(description, action)
 	return "?"
 end
 
-local setk = function(modes, keymap, action, description)
+local setk = function(modes, keymap, action, description, ignore)
 	for _, mode in ipairs(modes) do
 		vim.keymap.set(mode, keymap, action, {})
 	end
-	if keymaps[keymap] ~= nil then
+	if ignore == nil and keymaps[keymap] ~= nil then
 		error("multiple keymaps for " .. keymap)
 	end
 	keymaps[keymap] = { description = describe(description, action), modes = modes }
@@ -33,6 +33,7 @@ local uset = function(modes, keymap)
 end
 
 local n = { "n" }
+local ti = { "t", "i" }
 local i = { "i" }
 local v = { "v" }
 local t = { "t" }
@@ -58,11 +59,15 @@ setk(n, "è ", ":noh<CR>")
 --- Windows ---
 ----------------
 
-setk(n, "<C-h>", "<C-w>h")
-setk(n, "<C-j>", "<C-w>j")
-setk(n, "<C-k>", "<C-w>k")
-setk(n, "<C-l>", "<C-w>l")
+setk(n, "<A-h>", "<C-w>h")
+setk(n, "<A-j>", "<C-w>j")
+setk(n, "<A-k>", "<C-w>k")
+setk(n, "<A-l>", "<C-w>l")
 
+setk(ti, "<A-h>", "<C-\\><C-n><C-w>h", nil, 1)
+setk(ti, "<A-j>", "<C-\\><C-n><C-w>j", nil, 1)
+setk(ti, "<A-k>", "<C-\\><C-n><C-w>k", nil, 1)
+setk(ti, "<A-l>", "<C-\\><C-n><C-w>l", nil, 1)
 -----------------
 --- Iron REPL ---
 -----------------

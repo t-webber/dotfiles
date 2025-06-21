@@ -1,38 +1,40 @@
-local o = vim.opt
-
-o.relativenumber = true
-o.number = true -- absolute nb for current line
-o.cursorline = true -- needed to customise even only cursorlinenr
-o.cmdheight = 0 -- hide command line
-o.mouse = "" -- disable mouse
-o.showmode = false -- hide `--INSERT--` in command line
-o.fillchars = { eob = " " }
-o.clipboard:append("unnamedplus")
-
-local g = vim.g
-
-g.c_syntax_for_h = 1 -- consider .h files as .c files
-g.loaded_node_provider = 0
-g.loaded_perl_provider = 0
-g.loaded_python3_provider = 0
-g.loaded_ruby_provider = 0
+vim.opt.clipboard:append("unnamedplus")
 
 -- show inline errors
 vim.diagnostic.config({ virtual_text = true })
 
-vim.g.lualine_notification = ""
+local options = {
+	relativenumber = true,
+	number = true, -- absolute nb for current line
+	cursorline = true, -- needed to customise even only cursorlinenr
+	cmdheight = 0, -- hide command line
+	mouse = "", -- disable mouse
+	showmode = false, -- hide `--INSERT--` in command line
+	fillchars = { eob = " " },
+	ignorecase = true, -- ignore case in search...
+	smartcase = true, -- ... except if \C or capitals present
+	list = true, -- show Tab and trailing spaces
+	swapfile = false,
+	termguicolors = true,
+	completeopt = { "menuone", "noselect" },
+	splitbelow = true, -- move cursor down on split
+	splitright = true, -- move cursor to right on vsplit
+	breakindent = true, -- ident after line wrap
+	-- ,foldmethod = "expr" -- all functions are folded by default
+	undofile = true,
+}
 
-local core_notify = vim.notify
-vim.notify = function(msg, ...)
-	if type(msg) ~= "string" then
-		error("found non string notification")
-	end
-	local key = msg:match("^You pressed the (.+) key too soon!")
-	if key then
-		vim.g.lualine_notification = "You pressed " .. key .. " to many times!"
-	elseif msg:match("instead of") or msg:match("key is disabled!") then
-		vim.g.lualine_notification = msg
-	else
-		core_notify(msg, ...)
-	end
+local globals = {
+	c_syntax_for_h = 1, -- consider .h files as .c files
+	loaded_node_provider = 0,
+	loaded_perl_provider = 0,
+	loaded_python3_provider = 0,
+	loaded_ruby_provider = 0,
+}
+
+for k, v in pairs(options) do
+	vim.opt[k] = v
+end
+for k, v in pairs(globals) do
+	vim.g[k] = v
 end

@@ -1,6 +1,7 @@
 local files = {
-	"colours",
 	"settings",
+	"functions",
+	"colours",
 	"keymaps",
 	"lsp",
 	"lazyconfig",
