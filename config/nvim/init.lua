@@ -1,9 +1,9 @@
 local files = {
+	"keymaps",
+	"colours",
+	"lsp",
 	"settings",
 	"functions",
-	"colours",
-	"keymaps",
-	"lsp",
 	"lazyconfig",
 }
 

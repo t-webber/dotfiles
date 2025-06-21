@@ -1,17 +1,10 @@
 local c = require("colours")
+local v = require("globals")
+local lualine_notif = v.lualine_notif
+local lualine_reg = v.lualine_reg
+
 local fg = c.Foreground
 local dark = { fg = fg, bg = c.dark }
-
-local register = {
-	function()
-		local reg = vim.fn.reg_recording()
-		if reg == "" then
-			return ""
-		end
-		return "recording @" .. reg
-	end,
-	color = dark,
-}
 
 local mode = {
 	"mode",
@@ -69,10 +62,15 @@ local sections = {
 	lualine_b = {
 		time,
 		{ "filename", color = dark },
-		register,
 		{
 			function()
-				return vim.g.lualine_notification or "!"
+				return vim.g[lualine_reg]
+			end,
+			color = dark,
+		},
+		{
+			function()
+				return vim.g[lualine_notif]
 			end,
 			color = dark,
 		},
@@ -91,6 +89,11 @@ return {
 				theme = "auto",
 				component_separators = "|",
 				section_separators = "",
+				refresh = {
+					statusline = 10000, -- refresh every 100 ms
+					tabline = 10000,
+					winbar = 10000,
+				},
 			},
 			sections = sections,
 		})
