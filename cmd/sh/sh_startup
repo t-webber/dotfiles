@@ -12,14 +12,13 @@ while ! sd iwctl station wlan0 show | g -q ' connected'; do
 	sleep 10
 done
 
-sd reflector --latest 30 --sort rate --save /etc/pacman.d/mirrorlist --connection-timeout 20 --number 15 &
-
 bur &
 
 if [ -f "/etc/arch-release" ]; then
+	C &
 	U &
 	Fy &
-	C &
+	M &
 fi
 
 ru &

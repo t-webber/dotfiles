@@ -35,7 +35,7 @@ static bool line_has_target(const char *const line, const char *const target,
         return false;
 }
 
-#define ALIASES_LEN 6
+#define ALIASES_LEN 7
 const char *const *const ALIASES[ALIASES_LEN] = {
     (const char *const[2]){"c", "clean"},
     (const char *const[2]){"rl", "release"},
@@ -43,6 +43,7 @@ const char *const *const ALIASES[ALIASES_LEN] = {
     (const char *const[2]){"g", "debug"},
     (const char *const[2]){"r", "run"},
     (const char *const[2]){"i", "install"},
+    (const char *const[2]){"v", "valgrind"},
 };
 
 static void try_make(const char *const target, const char *const makefile) {
@@ -53,8 +54,6 @@ static void try_make(const char *const target, const char *const makefile) {
                         expanded_target = ALIASES[i][1];
                         break;
                 }
-
-        printf("target = %s\n", expanded_target);
 
         FILE *fd = fopen(makefile, "r");
         if (fd == NULL)

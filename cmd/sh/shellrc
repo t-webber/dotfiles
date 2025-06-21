@@ -56,6 +56,8 @@ export LAST_LOCATION_FILE="$LOGS/last_location.txt"
 
 . aliases
 
+cup
+
 p "$(<$LAST_LOCATION_FILE)"
 
 export RIGHT_PS1_FILE="$LOGS/right_ps1.state.txt"

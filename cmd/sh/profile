@@ -2,5 +2,5 @@
 
 if [ "$XDG_VTNR" = "1" ]; then
 	. sh_startup >/dev/null 2>&1 &
-	exec startx
+	startx
 fi

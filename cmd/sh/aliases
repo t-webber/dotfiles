@@ -6,85 +6,134 @@
 
 builtin unalias -a
 
-al() {
-	if [ -z "$1" ]; then
-		/bin/echo "Missing 1!."
-		return 1
-	fi
-	if [ -z "$2" ]; then
-		/bin/echo "Missing 2!."
-		return 2
-	fi
+_buff=""
 
-	local l="$LOGS/aliases"
-	local name=$1
-	shift
-	eval "$name() { 
-		/bin/echo $name >> $l
-		$* \$@
-	}"
+_flush() {
+	_buff=""
+
 }
 
-al ad "builtin unalias -a"
-al add "unal"
-al aa "de -F | awk -F '[ =]' '{print \$NF}'"
+_sep() {
+	_buff="$_buff\n"
+}
 
-al wi "which"
-al echo "use eh"
+_print() {
+	al "$1" "ehen '$_buff'"
+}
+
+al() {
+	local dest=""
+	local comment=""
+
+	if [ "$2" = "-p" ]; then
+		dest="$3$4"
+		if [ -z "$5" ]; then
+			comment="$4"
+		else if [ "$5" != "!" ]; then
+			comment="> $5"
+		fi; fi
+
+	else
+		dest="$2"
+		if [ -z "$3" ]; then
+			comment="$2"
+		else if [ "$3" != "!" ]; then
+			comment="> $3"
+		fi; fi
+	fi
+
+	builtin alias "$1"="$dest"
+
+	if [ -z "$comment" ]; then
+		:
+	else
+		_buff="$_buff$1\t$comment\n"
+	fi
+}
+
+_ual() {
+	builtin alias "$1"="eh use $2"
+}
+
+_uall() {
+	builtin alias "$1"="eh use alias for $1"
+}
+
+_ual alias al
+_ual unalias ua
+
+al all "builtin alias"
+al ad "builtin unalias -a"
+al add "builtin unalias"
+
+al aa "all | sed \"s/^alias //;s/='/\t/;s/'$//\""
+
+############
+### ECHO ###
+############
+
+_ual echo eh
+
 al eh "/bin/echo"
-al use "/bin/echo use"
 al ehe "eh -e"
 al ehn "eh -n"
 al ehen "eh -en"
-
-al alias "use al"
-al all "builtin alias"
-al unalias "use ua"
 
 ##############
 ### PACMAN ###
 ##############
 
 if [ -f "/etc/arch-release" ]; then
-	p="$(/bin/which paru)"
-	al paru "use aliases"
+	p="$CARGO_HOME/bin/paru"
+	_uall paru
 	al S "$p -S"
 	al R "$p -R"
 	al Q "$p -Q"
 	al U "$p -Syyuu --devel --noconfirm"
 	al FY "$p -Fy"
 	al C "$p -Rcns \$($p -Qdtq) --noconfirm && yes | $p -Scc"
+	al M "sd reflector --latest 30 --sort rate --save /etc/pacman.d/mirrorlist --connection-timeout 20 --number 15 &"
 fi
 
 ###########
 ### BUN ###
 ###########
 
+_flush
+
 b="$BUN_INSTALL/bin/bun"
-al bun "use b"
-al ba "$b add"
-al br "$b run"
+_ual bun b
+al ba -p "$b" "add"
+al bi -p "$b" "i"
+al bu -p "$b" "update"
+al bug -p "$b" "update -g"
+al bur -p "$b" "upgrade && $b update -g"
+al big -p "$b" "i -g"
+al bid -p "$b" "i -D"
+al binit -p "$b" "init"
+al bc "rn *lock* && rn .next && rn node_modules && bi"
+
+_sep
+
+al br -p "$b" "run"
 al bs "br start"
 al bb "br build"
 al bd "br dev"
 al bf "br fmt"
-al bi "$b i"
-al bu "$b update"
-al bug "$b update -g"
-al bur "$b upgrade && $b update -g"
-al big "$b i -g"
-al bid "$b i -D"
-al binit "$b init"
-al bc "rn *lock* && rn .next && rn node_modules && bi"
+_sep
 
-al nextjs "$b x create-next-app@latest --typescript --eslint --tailwind --app --turbopack  --src-dir --use-bun"
+al nextjs -p "$b" "x create-next-app@latest --typescript --eslint --tailwind --app --turbopack  --src-dir --use-bun"
 
-al bx "use al for bx"
-al bunx "bx"
-al knip "$b x knip"
-al lint "$b x eslint"
-al pret "$b x prettier"
-al bcn "$b x shadcn@latest add"
+_sep
+
+_uall bunx
+_uall bx
+al knip -p "$b" "x knip"
+al lint -p "$b" "x eslint"
+al pret -p "$b" "x prettier"
+al bcn -p "$b" "x shadcn@latest add"
+
+_print b
 
 ##############
 ### PRISMA ###
@@ -121,59 +170,83 @@ pa() {
 	esac
 }
 
-############
-### RUST ###
-############
+#############
+### CARGO ###
+#############
+
+_flush
 
 c="$CARGO_HOME/bin/cargo"
-al cargo "use c"
-al cn "$c +nightly"
-al cii "$c init"
-al cs "$c search"
-al ct "$c test"
-al cb "$c build"
-al cbr "$c build --release"
-al cr "$c run"
-al crr "$c run --release"
-al ccl "$c clean"
-al cdoc "$c doc"
-al cdocall "$c doc --document-private-items --all"
-al cnew "$c new"
-al ca "$c add"
-al crm "$c remove"
-al cu "$c uninstall"
-al cf "cn fmt --all -- --unstable-features --error-on-unformatted"
-al cfmt "use cf"
-al cy "$c clippy --all"
-al ciu "$c install-update -a -g"
 
-al cw " watchexec -e rs -r cargo run"
+_uall cargo
+al cnw -p "$c" "new"
+al cii -p "$c" "init"
+al ca -p "$c" "add"
+al crm -p "$c" "remove"
 
-al crd "$c run --features debug"
+_sep
 
-al gy 'eh -e "\n#![warn(missing_docs,warnings,deprecated_safe,future_incompatible,keyword_idents,let_underscore,nonstandard_style,refining_impl_trait,rust_2018_compatibility,rust_2018_idioms,rust_2021_compatibility,rust_2024_compatibility,unused,clippy::all,clippy::pedantic,clippy::style,clippy::perf,clippy::complexity,clippy::correctness,clippy::restriction,clippy::nursery,clippy::cargo)]\n#![allow(clippy::single_call_fn,clippy::implicit_return,clippy::pattern_type_mismatch,clippy::blanket_clippy_restriction_lints,clippy::missing_trait_methods,clippy::question_mark_used,clippy::mod_module_files,clippy::module_name_repetitions,clippy::pub_with_shorthand,clippy::unseparated_literal_suffix,clippy::else_if_without_else)]\n" | x'
+al ccl -p "$c" "clean"
+al cb -p "$c" "build"
+al cbr -p "$c" "build --release"
+al cr -p "$c" "run"
+al crr -p "$c" "run --release"
+al crd -p "$c" "run --features debug"
 
-al chk "cls && rn Cargo.lock && export RUSTDOCFLAGS='-D warnings' && cargo +nightly clippy --all -- --verbose -D warnings && cargo +nightly build --release --verbose && cargo +nightly test && cargo +nightly doc --document-private-items --all && cargo +nightly fmt --all -- --unstable-features --error-on-unformatted && cargo +nightly tarpaulin --fail-under 100"
+_sep
 
-al gcio 'eh -n $(catt $CMD/secret/cratesio.txt) | xclip'
+al cdoc -p "$c" "doc --document-private-items --all"
+al cdocc -p "$c" "doc"
+al ct -p "$c" "test"
+al cf -p "$c" "+nightly fmt --all -- --unstable-features --error-on-unformatted"
+_ual cfmt cf
+al cy -p "$c" "clippy --all"
+
+_sep
+
+al cu -p "$c" "uninstall"
+al ciu -p "$c" "install-update -a -g"
+
+al cn -p "$c" "+nightly"
+al cs -p "$c" "search"
+al cw "watchexec -e rs -r cargo run"
+
+al gy 'eh -e "\n#![warn(missing_docs,warnings,deprecated_safe,future_incompatible,keyword_idents,let_underscore,nonstandard_style,refining_impl_trait,rust_2018_compatibility,rust_2018_idioms,rust_2021_compatibility,rust_2024_compatibility,unused,clippy::all,clippy::pedantic,clippy::style,clippy::perf,clippy::complexity,clippy::correctness,clippy::restriction,clippy::nursery,clippy::cargo)]\n#![allow(clippy::single_call_fn,clippy::implicit_return,clippy::pattern_type_mismatch,clippy::blanket_clippy_restriction_lints,clippy::missing_trait_methods,clippy::question_mark_used,clippy::mod_module_files,clippy::module_name_repetitions,clippy::pub_with_shorthand,clippy::unseparated_literal_suffix,clippy::else_if_without_else)]\n" | x' "all warnings for lib.rs"
+
+al chk "cls && rn Cargo.lock && export RUSTDOCFLAGS='-D warnings' && cargo +nightly clippy --all -- --verbose -D warnings && cargo +nightly build --release --verbose && cargo +nightly test && cargo +nightly doc --document-private-items --all && cargo +nightly fmt --all -- --unstable-features --error-on-unformatted && cargo +nightly tarpaulin --fail-under 100" "all checks for ci"
+
+al gcio 'ehn $(s $CMD/secret/cratesio.txt) | x'
+
+_print c
+
+##############
+### RUSTUP ###
+##############
+
+_flush
 
 rp="$CARGO_HOME/bin/rustup"
-al rustup "use rp"
-al rpt "$rp toolchain"
-al rpd "$rp default"
-al rpu "$rp update"
-al rpv "$rp --version"
-al rpc "$rp component"
-al rpca "$rp component add"
+_ual rustup rp
+al rpt -p "$rp" "toolchain"
+al rpd -p "$rp" "default"
+al rpu -p "$rp" "update"
+al rpv -p "$rp" "--version"
+al rpc -p "$rp" "component"
+al rpca -p "$rp" "component add"
 
-al rnone "export RUST_BACKTRACE=0"
+_sep
+
+_ual rnone r0
+al r0 "export RUST_BACKTRACE=0"
 al rtr "export RUST_BACKTRACE=1"
+
+_print rp
 
 ##############
 ### TERMUX ###
 ##############
 
-al tmux "use t0 or tx"
+_ual tmux "t0 or tx"
 al tx "/bin/tmux"
 al t0 'tx a -t 0 || tx new -s 0'
 al t1 'tx a -t 1 || tx new -s 1'
@@ -189,7 +262,8 @@ al iwc "iw0 connect"
 al iwd "iw0 disconnect"
 al iwg "iw0 get-networks"
 al iws "iw0 scan"
-# al iwgh "iws; while :; do cls; iwg; sleep 1; done"
+al iwr "iws; while :; do cls; iwg; sleep 1; done"
+_ual iwgh iwr
 
 ###########
 ### GIT ###
@@ -197,68 +271,79 @@ al iws "iw0 scan"
 
 al idd "/bin/id"
 
-_iinfo=""
-_ial() {
-	_iinfo="$_iinfo$1\t$2\n"
-	al "$1" "/bin/git $2"
-}
+_flush
 
-al git "use i"
+_ual git i
 
-_ial ii "init"
-_ial is "status"
-_ial id "diff"
-_ial ia "add"
+al ii -p "$i" "init"
+al is -p "$i" "status"
+al id -p "$i" "diff"
+al ia -p "$i" "add"
 
-_ial ic "commit -m"
-_ial iam "commit --amend"
+_sep
 
-_ial ipl "pull"
-_ial ick "checkout"
-_ial ickt "checkout --track"
-_ial iph "push"
-_ial ifh "push --force"
+al ic -p "$i" "commit -m"
+al iam -p "$i" "commit --amend"
 
-_ial irt "remote"
-_ial irta "remote add"
-_ial irb "rebase"
-_ial iro "restore"
-_ial iros "restore --staged"
-_ial isec "secrets"
-_ial irs "reset"
-_ial irsf "reset --hard origin/main"
-_ial irsh "reset --hard"
-_ial irt "remote"
+_sep
 
-_ial il "log"
-_ial ilo "log --oneline"
+al ipl -p "$i" "pull"
+al ick -p "$i" "checkout"
+al ickt -p "$i" "checkout --track"
+al iph -p "$i" "push"
+al ifh -p "$i" "push --force"
 
-_ial ibr "branch"
-_ial isw "switch"
-_ial iswc "switch -C"
+_sep
 
-_ial iv "--version"
-_ial ils "ls-files"
-_ial ish "stash"
-_ial icfg "config"
-_ial icfgg "config --global"
+al irt -p "$i" "remote"
+al irta -p "$i" "remote add"
+al irb -p "$i" "rebase"
+al iro -p "$i" "restore"
+al iros -p "$i" "restore --staged"
+al isec -p "$i" "secrets"
+al irs -p "$i" "reset"
+al irsf -p "$i" "reset --hard origin/main"
+al irsh -p "$i" "reset --hard"
+al irt -p "$i" "remote"
+
+_sep
+
+al il -p "$i" "log"
+al ilo -p "$i" "log --oneline"
+
+_sep
+
+al ibr -p "$i" "branch"
+al isw -p "$i" "switch"
+al iswc -p "$i" "switch -C"
+
+_sep
+
+al iv -p "$i" "--version"
+al ils -p "$i" "ls-files"
+al ish -p "$i" "stash"
+al icfg -p "$i" "config"
+al icfgg -p "$i" "config --global"
+
+_sep
 
 al ig "git-graph"
-_iinfo+="ig\tgit-graph"
 
-al i "ehe \"$_iinfo\""
+_sep
 
 al checks "gh pr checks"
 al ghs "gh search"
 al repo "gh search repos"
 al ghw "gh repo view -w"
 
+_print i
+
 ##############
 ### PYTHON ###
 ##############
 
-al python "use py"
-al python3 "use py"
+_ual python "py"
+_ual python3 "py"
 al py "/bin/python"
 al serve "py -m http.server"
 
@@ -266,49 +351,39 @@ al serve "py -m http.server"
 ### SYSTEMD ###
 ###############
 
-_tinfo=""
+_flush
 
-_tsep() {
-	_tinfo="$_tinfo\n"
-}
+_ual systemctl "ctl or ctll"
+al ctl "sd /bin/systemctl"
+al ctll "/bin/systemctl"
+al ctlu "ctl list-unit-files"
 
-_tal() {
-	al "$1" "$2"
-	_tinfo="$_tinfo\n$1\t$2"
-}
+_ual journalctl "jctl or jctll"
+al jctl "sd /bin/journalctl"
+al jctll "/bin/journalctl"
 
-al systemctl "use ctl or ctll"
+_sep
 
-_tal ctl "sd /bin/systemctl"
-_tal ctll "/bin/systemctl"
-_tal ctlu "ctl list-unit-files"
+_ual systemd-analyze "tz"
+al tz "/bin/systemd-analyze"
+al tzb "tz blame"
+al tzp "tz plot > del.svg"
+al tzc "tz critical-chain"
 
-al journalctl "use jctl or jctll"
-_tal jctl "sd /bin/journalctl"
-_tal jctll "/bin/journalctl"
+_sep
 
-_tsep
+_ual reboot "tb"
+_ual slp "tl"
 
-al systemd-analyze "use tz"
-_tal tz "/bin/systemd-analyze"
-_tal tzb "tz blame"
-_tal tzp "tz plot > del.svg"
-_tal tzc "tz critical-chain"
+al tu 'ctl suspend'
+al td "shutdown -P now -h"
+al tb "sd /bin/reboot"
+al tbf "sd /bin/reboot --force"
 
-_tsep
-
-al restart "use ts"
-al start "use ta"
-al status "use tt"
-al stop "use to"
-
-al reboot "use tb"
-al slp "use tl"
-
-_tal tu 'ctl suspend'
-_tal td "shutdown -P now -h"
-_tal tb "sd /bin/reboot"
-_tal tbf "sd /bin/reboot --force"
+_ual restart "ts"
+_ual start "ta"
+_ual status "tt"
+_ual stop "to"
 
 _ctl_def() {
 	if [ -z "$3" ]; then
@@ -316,54 +391,102 @@ _ctl_def() {
 	else
 		p="$3"
 	fi
+	if [ -z "$1" ]; then
+		end=""
+	else
+		_buff="$_buff$1\t$2\n"
+		end="!"
+	fi
 
-	_tsep
-	_tal "ta$1" "$p start $2"
-	_tal "ts$1" "$p restart $2"
-	_tal "tt$1" "$p status $2"
-	_tal "to$1" "$p stop $2"
+	al "ta$1" "$p start $2" "$end"
+	al "ts$1" "$p restart $2" "$end"
+	al "tt$1" "$p status $2" "$end"
+	al "to$1" "$p stop $2" "$end"
 }
 
 _ctl_def
+
+_sep
+
 _ctl_def "iw" "iwd"
 _ctl_def "rd" "systemd-resolved"
 _ctl_def "net" "iwd systemd-resolved"
 _ctl_def "sql" "postgresql"
-_ctl_def "au" "--user pipewire.socket wireplumber pipewire-pulse.socket" "ctll"
+_ctl_def "au" "pipewire.socket wireplumber pipewire-pulse.socket" "ctll --user"
 
-al t "ehe '$_tinfo'"
+_print t
 
 ###########
 ### SEE ###
 ###########
 
-al l "use s"
+_ual l s
+_ual cat s
+
+_ual ll sv
+_ual bat sv
+_ual eza sv
+
 al ls "l"
 al la "l"
-al ll "use sv"
 al lla "ll"
 al eza "ll"
 al llag "ll"
-al cat "use s"
-al bat "use sv"
 
-al ggcode "use gc"
-al gcode "use gc"
+al sr "sv README.md || sv docs/README.md"
+
 al gcv "gc v"
 al ga "gc aliases"
 al gk "gc keymaps.lua"
 
-al pwdf "use pf"
+_ual pwdf pf
+_ual readlink pf
 al pf "readlink -f"
 al px 'eh -n $(pwd) | x'
+
+al duf "du -h .  | g -ve '/.*/'"
+al duff "du -h .  | g -ve '/.*/.*/'"
+al dufff "du -h .  | g -ve '/.*/.*/.*/'"
+al duffff "du -h .  | g -ve '/.*/.*/.*/.*/'"
+al dufffff "du -h .  | g -ve '/.*/.*/.*/.*/.*/'"
 
 ############
 ### GUI ####
 ############
 
-al xdg-open "use o"
-al ws 'open https://synapses.telecom-paris.fr/login?type=Shib'
-al we 'open https://ecampus.paris-saclay.fr/my/'
+al alcg "alacritty msg config"
+# open
+
+_ual xdg-open o
+_ual open o
+
+# clipboard
+
+_ual xclip x
+al x '/bin/xclip -selection c'
+al xl 'clipcat-menu'
+
+# web
+
+al ch "o https://www.chatgpt.com"
+al ws 'o https://synapses.telecom-paris.fr/login?type=Shib'
+al we 'o https://ecampus.paris-saclay.fr/my/'
+al ok ". ok"
+al ducl "dunstctl close-all"
+
+# code
+
+_ual codium "uu"
+al vscodium "eh what is the difference with codium?"
+al uu "/bin/codium --extensions-dir='$CODE_EXTS_PATH'"
+al code "/bin/code --extensions-dir='$CODE_EXTS_PATH'"
+al u "bspc desktop -f neovim && uu ."
+
+# xrandr
+_ual xrandr xr
+al xr "/bin/xrandr"
+al zoom "xrandr --output DP-0 --scale 0.8x0.8"
+al dezoom "xrandr --output DP-0 --scale 1.5x1.5"
 
 ###############
 ### NETWORK ###
@@ -374,14 +497,17 @@ al post "curl -X POST"
 al pi "ping std.rs"
 
 s="/bin/ssh"
-al ssh "use alias for ssh"
+_uall ssh
 al rpi "$s uname@$RPIIP"
 al mssh "$s mad@mad-ssh.rezel.net -J twebber-23@ssh.enst.fr"
-al tessh "use tesh"
+_ual tessh "tesh"
 al tesh "$s jet@137.194.13.203 -J twebber-23@ssh.enst.fr"
 al pssh '$s twebber-23@perso-twebber-23.lxc.enst.fr -J twebber-23@ssh.enst.fr'
 al gssh "s $FILES/.ssh/id_ed25519.pub | x && s $FILES/.ssh/id_ed25519.pub"
 al enst 'ssh twebber-23@ssh.enst.fr'
+
+al ud "curl -LO"
+al ui "curl -i"
 
 #############
 ### PUSHD ###
@@ -389,13 +515,12 @@ al enst 'ssh twebber-23@ssh.enst.fr'
 
 al p "pushd >/dev/null"
 al pp "popd >/dev/null"
-al push "use p"
-al pop "use pp"
 al j "pp"
 al k "p .."
 
-al cd "use p"
+_ual cd "p"
 al src "p src"
+al cours "s $FILES/2a"
 
 _gt() {
 	al "$1" "cls && p $2 && sv"
@@ -405,7 +530,7 @@ _gt 2a "$FILES/2a"
 _gt a7 "$FILES/2a/a7"
 _gt a8 "$FILES/2a/a8"
 _gt a8 "$FILES/2a/a8"
-_gt apps "$APPS"
+_gt ap "$APPS"
 _gt cache "$HOME/.cache"
 _gt ces "$FILES/2a/cesure"
 _gt cf "$CONFIG"
@@ -454,13 +579,13 @@ al hx "helix"
 
 al delc "e $DEV/.c/"
 al delr "e $DEV/.r/"
-al vi "use e"
+_ual vi "e"
 al vim "vi"
 al nvim "vi"
 
-al bspwmrc "use bsp"
+_ual bspwmrc "bsp"
 al bsp "e $CONFIG/bspwm/bspwmrc"
-al sxhkdrc "use sx"
+_ual sxhkdrc "sx"
 al se "sd $EDITOR"
 al sx "e $CONFIG/sxhkd/sxhkdrc"
 
@@ -470,68 +595,108 @@ al rmm "/bin/rm"
 al gsaved "s $CMD/data/saved.txt"
 al esaved "e $CMD/data/saved.txt"
 
-al touch "use n"
+_ual touch "n"
 al n "/bin/touch"
 
 al ep "edt profile"
 al ea "edt aliases"
-al ce "use edt"
-al nf "use edt"
-
-###############
-### HELPERS ###
-###############
-
-# eb=$(echo $b | sed -E 's/([\/.])/\\\1/g')
-# al b "builtin alias | g 'bun ' | sed -E 's/^alias |$eb //g;s/=/\t/' | tr -d \' | g -v 'b\t'"
-#
-# ecg=$(echo $c | sed -E 's/([\/.])/\\\1/g')
-# al c "builtin alias | g 'cargo ' | sed -E 's/^alias |$ecg //g;s/=/\t/' | tr -d \' | g -v 'c\t'"
-#
-# erp=$(echo $rp | sed -E 's/([\/.])/\\\1/g')
-# al rp "builtin alias | g 'rustup ' | sed -E 's/^alias |$erp //g;s/=/\t/' | tr -d \' | g -v 'rp\t'"
-#
-# egit="$(echo $i | sed 's/\//\\\//g')"
-# al i "builtin alias | sed -E 's/^alias |$egit //g;s/=/\t/' |  g '^i[^\tw]' | tr -d \'"
+_ual ce "edt"
+_ual nf "edt"
 
 #############
 ### CLANG ###
 #############
 
-al gcc "use cc"
+_ual gcc "cc"
 al gccw "cc -Wall -Wextra -Wpedantic -Werror -Wconversion -Wuninitialized -Wundef -Wshadow -Wvla -Wcast-align -Wstrict-prototypes -Wmissing-declarations -Wstrict-overflow=5 -Wnull-dereference -Wlogical-op -Wpacked -Wpointer-arith -Wcast-qual -Wswitch-default -Wmissing-noreturn -Wredundant-decls -Wno-unused -Wno-unused-variable -Wno-unused-function -Wno-unused-parameter -Wno-sign-compare -Wno-format -Wno-type-limits -Wno-deprecated-declarations -Wfatal-errors "
 al clw 'clang -Werror -Wextra -Wconversion -Wuninitialized -Wundef -Wshadow -Wvla -Wcast-align -Wstrict-prototypes -Wmissing-declarations -Wstrict-overflow -Wnull-dereference -Wpacked -Wpointer-arith -Wcast-qual -Wswitch-default -Wmissing-noreturn -Wredundant-decls -Wno-unused -Wno-unused-variable -Wno-unused-function -Wno-unused-parameter -Wno-sign-compare -Wno-format -Wno-type-limits -Wno-deprecated-declarations'
-al clang "use cl"
+_ual clang "cl"
 al cl "/bin/clang"
 al cinit "cp $CMD/data/.clang* ."
 
-##########################
-### CONFIG INDEPENDANT ###
-##########################
+################
+### KEYBOARD ###
+################
 
-al fr "setxkbmap fr"
-al gr "setxkbmap gr"
+_ual setxkbmap "fr"
+_ual loadkeys "frr"
+s="/bin/setxkbmap"
+al fr "$s fr"
+al gr "$s gr && sleep 20 && $s fr"
+al frr "sd loadkeys fr-latin1"
 
-al zoom "xrandr --output DP-0 --scale 0.8x0.8"
-al dezoom "xrandr --output DP-0 --scale 1.5x1.5"
+##############
+### RIGHTS ###
+##############
+
+_ual chmod "chda or chdx"
+_ual chown "chwr or chrwb"
 
 al chdx "/bin/chmod +x"
 al chda "/bin/chmod a+rwx"
-al chmod "use chda or chdx"
-al chown "use chwr or chrwb"
 al chwr "sd /bin/chown root:root -R"
 al chwb "sd /bin/chown b:b -R"
 
+_ual sudo "sd"
+
+sd() {
+	:
+	/bin/sudo bash -ic "$*"
+}
+
+al sds "/bin/sudo -s"
+
+#############
+### PIPES ###
+#############
+
+_ual xargs xa
+al xa "/bin/xargs"
 al cnt "wc -l"
-al xcnt "xargs cnt"
+al xcnt "xargs wc -l"
+
+_ual head "hd"
+al hd "/bin/head"
+al hdn "hd -n"
+al h1 "hd -1"
+
+_ual tail tl
+al tl "/bin/tail"
+
+al sn "/bin/sort -n"
+_ual sort sn
+al uc "/bin/uniq -c"
+_ual uniq uc
+al w "/bin/awk"
+_ual awk w
+
+_ual rg g
+_ual grep g
+_ual ripgrep g
+
+al g "$CARGO_HOME/bin/rg"
+al gv "g -v"
+al ge "g -e"
+al gve "g -ve"
+al gg "g --hidden"
+
+al sede "sed -E"
+al fda "fd --hidden --no-ignore"
+al jql "jq -C  | less -R"
+
+_ual yes y
+al y "/bin/yes"
+
+########
+########
+########
+########
+########
 
 al dt "date"
 al ChkTeX 'chktex'
 al qr "qrencode"
 al notif "dunstify"
-al dockerc "docker-compose"
-al xo "xournalpp"
-al y "yes"
 al gpg-list "gpg --list-secret-keys --keyid-format=long"
 al cols "tput cols"
 al gpt "PS1='$ ' && PROMPT_COMMAND=''"
@@ -544,59 +709,20 @@ al vg "valgrind --track-origins=yes --show-error-list=yes --show-leak-kinds=all 
 al cls "clear"
 al fix "stty sane"
 al nt "numbat"
-al tl "tail"
 
-#####################################
-#####################################
-#####################################
+#############
+### POWER ###
+#############
 
-al xclip "use x"
-al x '/bin/xclip -selection c'
+_ual bp wl
+al wl "s /sys/class/power_supply/BAT1/capacity"
+al ws "sd cpupower frequency-set -g powersave"
+al wp "sd cpupower frequency-set -g performance"
+al ww "s /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor"
 
-al rg "use g"
-al grep "rg"
-al ripgrep "rg"
-al g "$CARGO_HOME/bin/rg"
-al gv "g -v"
-al ge "g -e"
-al gve "g -ve"
-al gg "g --hidden"
-
-al sede "sed -E"
-al fda "fd --hidden --no-ignore"
-
-al duf "du -h .  | g -ve '/.*/'"
-al duff "du -h .  | g -ve '/.*/.*/'"
-al dufff "du -h .  | g -ve '/.*/.*/.*/'"
-al duffff "du -h .  | g -ve '/.*/.*/.*/.*/'"
-al dufffff "du -h .  | g -ve '/.*/.*/.*/.*/.*/'"
-
-al codium "use uu"
-al vscodium "eh what is the difference with codium?"
-al uu "/bin/codium --extensions-dir='$CODE_EXTS_PATH'"
-al code "/bin/code --extensions-dir='$CODE_EXTS_PATH'"
-al u "bspc desktop -f neovim && uu ."
-
-al :wq "eh '🚬'"
-al :q "eh '🚬'"
-al q "eh '🚬'"
-al wq "eh '🚬'"
-
-al z ". $CMD/sh/shellrc && cup"
-al cup "p $CMD/src && /bin/make release && pp"
-al cupd "p $CMD/src && /bin/make debug && pp"
-
-al mk "make"
-al make "use m"
-al mn "man"
-al man "use m"
-
-al hi "time"
-al hf '$(wi hyperfine)'
-al hyperfine "use hf"
-
-al ok ". ok"
-al zen "ok zen-browser"
+#################
+### processes ###
+#################
 
 al kp "killapp beeper"
 al kv "killapp brave"
@@ -604,55 +730,45 @@ al kc "killapp code"
 al ku "killapp codium"
 al kd "killapp dunst"
 
-al hd "/bin/head"
-al head "use hd"
-al hdn "hd -n"
-al h1 "hd -1"
+_ual btop bt
+al bt "/bin/btop"
 
-al wl "s /sys/class/power_supply/BAT1/capacity"
-al ws "sd cpupower frequency-set -g powersave"
-al wp "sd cpupower frequency-set -g performance"
-al ww "s /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor"
-al bp "use pwl"
+#####################################
+#####################################
+#####################################
+
+al :wq "eh '🚬'"
+al :q "eh '🚬'"
+al q "eh '🚬'"
+al wq "eh '🚬'"
+
+al z ". $CMD/sh/shellrc"
+al cup "p $CMD/src && m release ! && pp"
+al cupd "p $CMD/src && m debug  ! && pp"
+
+_ual make m
+_ual mk m
+_ual man m
+_ual mn m
+
+al ti time
+al hf "$CARGO_HOME/bin/hyperfine"
+_ual hyperfine "hf"
 
 al mitapache "cp $CMD/data/LICENSE-MIT . && cp $CMD/data/LICENSE-APACHE ."
 al mit "cp $CMD/data/LICENSE-MIT ."
-al mvg "make valgrind"
 al vimsh "$DEV/vsh/main.out"
 al secret ". $FILES/.secret/vars"
-al ap "apps"
-al jql "jq -C  | less -R"
-al sr "sv README.md || sv docs/README.md"
-al cours "s $FILES/2a"
 al ling "/home/b/.files/.data/local/share/gem/ruby/3.4.0/bin/github-linguist"
 al scope "/home/b/.files/.apps/telescope.nvim"
-al ch "brave www.chatgpt.com"
 al psg "pgrep"
-al ducl "dunstctl close-all"
 al mkcp "sd mkinitcpio -P"
-
-al sudo "use sd"
-
-sd() {
-	:
-	/bin/sudo bash -ic "$*"
-}
-
-al sds "/bin/sudo -s"
-
 al zh "s $SECRET/bash_history"
 al path 'eh $PATH'
-al alcg "alacritty msg config"
-al sn "sort -n"
-al uc "uniq -c"
-al w "awk"
+_ual wi "?"
 al de "declare -f"
-al da ". da"
-al za "sv $LOGS/aliases"
-al frr "sd loadkeys fr-latin1"
-al zav "za | sn | uc | sn"
-al da "de  | g -v '^[{}]' | awk 'NR%3!=1' | awk 'ORS=NR%2?\"\n\":\" \"' | sed 's/\$\@$//'"
-al wi "use ?"
-al da "declare -F | awk '{print \$NF}' | g -v '[_-]' | while read fn; do declare -f \"\$fn\"; done | g -v '^[{}]' | awk 'NR%3!=1' | awk 'ORS=NR%2?\"\n\":\" \"' | sed 's/ ()      /\t/;s/\$\@$//'"
-al rd "curl -LO"
-al ri "curl -i"
+
+al mnt "/bin/mount"
+_ual mount mnt
+al mboot "sd mnt /dev/nvme0n1p1 /boot"
+al cpr "cp -r"
