@@ -25,19 +25,20 @@ al() {
 	}"
 }
 
-al ua "builtin unalias -a"
-al uaa "unal"
-al aa "al | awk -F '[ =]' '{print \$2}'"
+al ad "builtin unalias -a"
+al add "unal"
+al aa "de -F | awk -F '[ =]' '{print \$NF}'"
 
 al wi "which"
 al echo "use eh"
 al eh "/bin/echo"
-al use "eh use"
+al use "/bin/echo use"
 al ehe "eh -e"
 al ehn "eh -n"
 al ehen "eh -en"
 
 al alias "use al"
+al all "builtin alias"
 al unalias "use ua"
 
 ##############
@@ -50,7 +51,8 @@ if [ -f "/etc/arch-release" ]; then
 	al S "$p -S"
 	al R "$p -R"
 	al Q "$p -Q"
-	al U "yes | $p -Scc && $p -Syyuu"
+	al U "$p -Syyuu --devel --noconfirm"
+	al FY "$p -Fy"
 	al C "paru -Rcns \$(paru -Qdtq) --noconfirm && yes | paru -Scc"
 fi
 
@@ -127,6 +129,7 @@ c="$CARGO_HOME/bin/cargo"
 al cargo "use c"
 al cn "$c +nightly"
 al cii "$c init"
+al cs "$c search"
 al ct "$c test"
 al cb "$c build"
 al cbr "$c build --release"
@@ -211,6 +214,8 @@ _ial ic "commit -m"
 _ial iam "commit --amend"
 
 _ial ipl "pull"
+_ial ick "checkout"
+_ial ickt "checkout --track"
 _ial iph "push"
 _ial ifh "push --force"
 
@@ -221,6 +226,8 @@ _ial iro "restore"
 _ial iros "restore --staged"
 _ial isec "secrets"
 _ial irs "reset"
+_ial irsf "reset --hard origin/main"
+_ial irsh "reset --hard"
 _ial irt "remote"
 
 _ial il "log"
@@ -371,7 +378,7 @@ al ssh "use alias for ssh"
 al rpi "$s uname@$RPIIP"
 al mssh "$s mad@mad-ssh.rezel.net -J twebber-23@ssh.enst.fr"
 al tessh "use tesh"
-al tesh "$s root@telecom-etude.rezel.net -J twebber-23@ssh.enst.fr"
+al tesh "$s jet@137.194.13.203 -J twebber-23@ssh.enst.fr"
 al pssh '$s twebber-23@perso-twebber-23.lxc.enst.fr -J twebber-23@ssh.enst.fr'
 al gssh "s $FILES/.ssh/id_ed25519.pub | x && s $FILES/.ssh/id_ed25519.pub"
 al enst 'ssh twebber-23@ssh.enst.fr'
@@ -508,10 +515,12 @@ al gr "setxkbmap gr"
 al zoom "xrandr --output DP-0 --scale 0.8x0.8"
 al dezoom "xrandr --output DP-0 --scale 1.5x1.5"
 
-al chmd "sd /bin/chmod"
-al chmod "use chmd"
-al chown "use chown"
-al chw "sd /bin/chown"
+al chdx "/bin/chmod +x"
+al chda "/bin/chmod a+rwx"
+al chmod "use chda or chdx"
+al chown "use chwr or chrwb"
+al chwr "sd /bin/chown root:root -R"
+al chwb "sd /bin/chown b:b -R"
 
 al cnt "wc -l"
 al xcnt "xargs cnt"
@@ -526,7 +535,6 @@ al y "yes"
 al gpg-list "gpg --list-secret-keys --keyid-format=long"
 al cols "tput cols"
 al gpt "PS1='$ ' && PROMPT_COMMAND=''"
-al hd "head"
 al hour "date '+%H:%M:%S'"
 al dt "date"
 al rand "openssl rand -base64 255"
@@ -598,9 +606,15 @@ al kd "killapp dunst"
 
 al hd "/bin/head"
 al head "use hd"
+al hdn "hd -n"
 al h1 "hd -1"
 
-al bp "s /sys/class/power_supply/BAT1/capacity"
+al wl "s /sys/class/power_supply/BAT1/capacity"
+al ws "sd cpupower frequency-set -g powersave"
+al wp "sd cpupower frequency-set -g performance"
+al ww "s /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor"
+al bp "use pwl"
+
 al mitapache "cp $CMD/data/LICENSE-MIT . && cp $CMD/data/LICENSE-APACHE ."
 al mit "cp $CMD/data/LICENSE-MIT ."
 al mvg "make valgrind"
@@ -620,8 +634,11 @@ al mkcp "sd mkinitcpio -P"
 al sudo "use sd"
 
 sd() {
+	:
 	/bin/sudo bash -ic "$*"
 }
+
+al sds "/bin/sudo -s"
 
 al zh "s $SECRET/bash_history"
 al path 'eh $PATH'
@@ -630,9 +647,12 @@ al sn "sort -n"
 al uc "uniq -c"
 al w "awk"
 al de "declare -f"
-al da "zh | awk 'NR > 3' | hdn 1"
-al hdn "hd -n"
 al da ". da"
 al za "sv $LOGS/aliases"
 al frr "sd loadkeys fr-latin1"
 al zav "za | sn | uc | sn"
+al da "de  | g -v '^[{}]' | awk 'NR%3!=1' | awk 'ORS=NR%2?\"\n\":\" \"' | sed 's/\$\@$//'"
+al wi "use ?"
+al da "declare -F | awk '{print \$NF}' | g -v '[_-]' | while read fn; do declare -f \"\$fn\"; done | g -v '^[{}]' | awk 'NR%3!=1' | awk 'ORS=NR%2?\"\n\":\" \"' | sed 's/ ()      /\t/;s/\$\@$//'"
+al rd "curl -LO"
+al ri "curl -i"
