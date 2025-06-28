@@ -2,7 +2,14 @@ local lazypath = os.getenv("DATA") .. "/lazy/lazy.nvim"
 
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
 	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-	local gitclone = { "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath }
+	local gitclone = {
+		"git",
+		"clone",
+		"--filter=blob:none",
+		"--branch=stable",
+		lazyrepo,
+		lazypath,
+	}
 	local out = vim.fn.system(gitclone)
 	if vim.v.shell_error ~= 0 then
 		vim.api.nvim_echo({
@@ -79,34 +86,6 @@ local spec = {
 	--- Finders ---
 	---------------
 	{
-		"t-webber/telescope.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
-		cmd = "Telescope",
-		config = function()
-			local rg = { "rg", "--files", "--sortr=modified", "--hidden" }
-			require("telescope").setup({
-				defaults = {
-					border = true,
-					borderchars = {
-						prompt = { "─", "│", " ", "│", "┌", "┐", "│", "│" },
-						results = { "─", "│", "─", "│", "├", "┤", "┘", "└" },
-						preview = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
-					},
-					padding = 0,
-					results_title = false,
-					prompt_title = false,
-					preview_title = false,
-				},
-				picker = {
-					find_files = {
-						hidden = true,
-						find_command = rg,
-					},
-				},
-			})
-		end,
-	},
-	{
 		"folke/which-key.nvim",
 		keys = {
 			{
@@ -114,6 +93,21 @@ local spec = {
 				function()
 					require("which-key").show({})
 				end,
+			},
+		},
+	},
+	{
+		"folke/trouble.nvim",
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+		config = true,
+	},
+	{
+		"nvim-pack/nvim-spectre",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		default = {
+			find = {
+				cmd = "rg",
+				options = { "ignore-case", "multiline" },
 			},
 		},
 	},
