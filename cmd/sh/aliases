@@ -199,8 +199,7 @@ _sep
 al cdoc -p "$c" doc
 al cdoca 'cdoc --document-private-items --all'
 al ct -p "$c" test
-al cf -p "$c" '+nightly fmt --all -- --unstable-features --error-on-unformatted'
-_ual cfmt cf
+al cfmt -p "$c" '+nightly fmt --all -- --unstable-features --error-on-unformatted'
 al cy -p "$c" 'clippy --all'
 
 _sep

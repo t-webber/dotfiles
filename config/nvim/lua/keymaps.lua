@@ -23,13 +23,8 @@ local setk = function(modes, keymap, action, description, ignore)
 	if ignore == nil and keymaps[keymap] ~= nil then
 		error("multiple keymaps for " .. keymap)
 	end
-	keymaps[keymap] = { description = describe(description, action), modes = modes }
-end
-
-local uset = function(modes, keymap)
-	for _, mode in ipairs(modes) do
-		vim.keymap.set(mode, keymap, "<Nop>")
-	end
+	keymaps[keymap] =
+		{ description = describe(description, action), modes = modes }
 end
 
 local n = { "n" }
@@ -51,7 +46,12 @@ setk(ni, "<C-x>", "<Esc>:w<CR>:so<CR>")
 
 setk(t, "<Esc>", [[<C-\><C-n>]])
 
-setk(n, "<C-n>", ":enew | setlocal nonu nornu nomodifiable<CR>", "Open empty immuable buffer")
+setk(
+	n,
+	"<C-n>",
+	":enew | setlocal nonu nornu nomodifiable<CR>",
+	"Open empty immuable buffer"
+)
 
 setk(n, "è ", ":noh<CR>")
 
@@ -63,11 +63,16 @@ setk(n, "<A-h>", "<C-w>h")
 setk(n, "<A-j>", "<C-w>j")
 setk(n, "<A-k>", "<C-w>k")
 setk(n, "<A-l>", "<C-w>l")
+setk(n, "<A-g>", ":vertical resize+20<CR>")
+setk(n, "<A-m>", ":vertical resize-20<CR>")
 
 setk(ti, "<A-h>", "<C-\\><C-n><C-w>h", nil, 1)
 setk(ti, "<A-j>", "<C-\\><C-n><C-w>j", nil, 1)
 setk(ti, "<A-k>", "<C-\\><C-n><C-w>k", nil, 1)
 setk(ti, "<A-l>", "<C-\\><C-n><C-w>l", nil, 1)
+setk(ti, "<A-g>", "<C-\\><C-n>:vertical resize+20<CR>", nil, 1)
+setk(ti, "<A-m>", "<C-\\><C-n>:vertical resize-20<CR>", nil, 1)
+
 -----------------
 --- Iron REPL ---
 -----------------
@@ -135,9 +140,17 @@ end, "Opens the file")
 setk(n, "àw", function()
 	vim.diagnostic.open_float()
 end, "Open float")
+
 setk(n, "àf", function()
 	vim.lsp.buf.code_action()
 end, "Code action")
+
+setk(n, "àa", ":Trouble diagnostics<CR>")
+setk(
+	n,
+	"àv",
+	":Trouble diagnostics win.type=split win.position=right win.width=120<CR>"
+)
 
 local move_and_open = function(action)
 	return function()
@@ -168,7 +181,10 @@ setk(n, "àp", function()
 	local clients = vim.lsp.get_clients()
 	local buf = api.nvim_get_current_buf()
 	for _, client in ipairs(clients) do
-		if vim.lsp.get_client_by_id(client.id) and vim.lsp.buf_is_attached(buf, client.id) then
+		if
+			vim.lsp.get_client_by_id(client.id)
+			and vim.lsp.buf_is_attached(buf, client.id)
+		then
 			print("Active LSP client:", client.name)
 		end
 	end
@@ -248,7 +264,11 @@ local load_lines = function(width)
 		local keymap = keymaps[key]
 		local modes = table.concat(keymap.modes)
 		local description = keymap.description or "nil"
-		local line = key:gsub(" ", "␣") .. " \t" .. modes .. "\t " .. description
+		local line = key:gsub(" ", "␣")
+			.. " \t"
+			.. modes
+			.. "\t "
+			.. description
 		table.insert(lines, line)
 	end
 
@@ -282,6 +302,12 @@ api.nvim_set_keymap("n", "g?", "<Nop>", {
 		local win = api.nvim_open_win(buf, true, opts)
 		api.nvim_win_set_option(win, "winhl", "Normal:Normal")
 
-		api.nvim_buf_set_keymap(buf, "n", "q", ":close<CR>", { noremap = true, silent = true })
+		api.nvim_buf_set_keymap(
+			buf,
+			"n",
+			"q",
+			":close<CR>",
+			{ noremap = true, silent = true }
+		)
 	end,
 })
