@@ -234,11 +234,13 @@ _flush
 rp="$CARGO_HOME/bin/rustup"
 _ual rustup rp
 al rpt -p "$rp" toolchain
+al rptl "rpt list"
 al rpd -p "$rp" default
 al rpu -p "$rp" update
 al rpv -p "$rp" --version
 al rpc -p "$rp" component
-al rpca -p "$rp" 'component add'
+al rpca "rpc add"
+al rpcl "rpc list"
 
 _sep
 

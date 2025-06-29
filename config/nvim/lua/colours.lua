@@ -39,6 +39,8 @@ local colours = {
 	TabLine = c(nil, black),
 	TabLineSel = c(nil, dark),
 	TabLineFill = c(nil, black),
+	NormalFloat = c(magenta, black), -- registers and trouble windows
+	WinSeparator = c(dark, dark), -- separator between buffers and borders around floating buffers
 
 	--------------
 	--- Syntax ---
@@ -169,6 +171,9 @@ local colours = {
 	["@tag.attribute"] = c(blue), -- XML-style tag attributes
 	["@tag.delimiter"] = c(magenta), -- XML-style tag delimiters
 
+	--- LSP ---
+	["@lsp.type.enumMember.rust"] = c(cyan),
+
 	------------------
 	---- Git Signs ---
 	------------------
@@ -249,12 +254,6 @@ local colours = {
 	NeogitChangeRenamed = c(magenta),
 	NeogitChangeDeleted = c(red),
 	NeogitActiveItem = c(magenta, dark),
-
-	-----------------
-	--- Registers ---
-	-----------------
-
-	NormalFloat = c(cyan, dark),
 }
 
 for name, options in pairs(colours) do
