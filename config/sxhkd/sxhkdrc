@@ -2,16 +2,19 @@
 # restart/close #
 #################
 
-super + Escape
+super + ctrl + Escape
 	pkill -USR1 -x sxhkd
 
 # quit/restart bspwm
-super + alt + {q,r}
+super + ctrl + {q,r}
 	bspc {quit,wm -r}
 
 # close/kill
-super + {_,shift + }w
+super + {_,ctrl + }w
 	bspc node -{c,k}
+
+super + ctrl + Escape
+	alock
 
 ################
 # layout/flags #
@@ -22,8 +25,9 @@ super + m
 	bspc desktop -l next
 
 # window state
-super + y; {t,p,s,f}
+super + s; {t,p,s,f}
 	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
+
 
 # node flags
 super + f; {m,l,s,p}
@@ -48,11 +52,11 @@ super + {i,o}
 ################
 
 # preselect the direction
-super + ctrl + {h,j,k,l}
+super + ISO_Level3_Shift + {h,j,k,l}
 	bspc node -p {west,south,north,east}
 
 # cancel the preselection for the focused node
-super + ctrl + space
+super + ISO_Level3_Shift + space
 	bspc node -p cancel
 
 ###############
@@ -75,36 +79,32 @@ super + {Left,Down,Up,Right}
 # functions keys #
 ##################
 
-XF86MonBrightness{Up,Down}  
-	brightnessctl s 10{+,-}; \
-	dunstify -t 500 " $(brightnessctl g)%" -a stacked -h "string:x-dunst-stack-tag:stacked" 
- 
-XF86Audio{Raise,Lower}Volume  
-	pactl set-sink-volume @DEFAULT_SINK@ {+,-}10%; \
-	dunstify -t 500 " $(volume_level)" -a stacked -h "string:x-dunst-stack-tag:stacked" 
+XF86MonBrightness{Up,Down}
+	brightness {up, down}
+
+XF86Audio{Raise,Lower}Volume
+	vol {up, down}
 
 XF86AudioMute
-	pactl set-sink-mute @DEFAULT_SINK@ toggle
+	vol mute
 
 Print
 	maim -s | xclip -selection clipboard -t image/png
 
-#####################
-# software/desktops #
-#####################
+############
+# desktops #
+############
 
-super + {t,n,v,p}
-	bspc desktop -f {terminal,neovim,brave,beeper}
+super + {t,n,v,c}
+	bspc desktop -f {term,edit,browser,com}
 
-super + ctrl + {t,n,v,p}
-	bspc node -d {terminal,neovim,brave,beeper} && \ 
-	bspc desktop -f {terminal,neovim,brave,beeper}
+super + ctrl + {t,n,v,c}
+	bspc node -d {term,edit,browser,com} && \
+	bspc desktop -f {term,edit,browser,com}
 
-super + e
-	bspc desktop -f beeper && beeper
-
-super + d
-	bspc desktop -f beeper && discord
+############
+# software #
+############
 
 super + a
 	alacritty
@@ -115,26 +115,34 @@ super + r
 super + shift + y 
 	kitty
 
+super + b
+	bspc desktop -f terminal && alacritty -e btop
+
+# com
+
+super + p
+	bspc desktop -f com && beeper
+
+super + d
+	bspc desktop -f com && discord
+
 super + z
-	alacritty -e btop
-
-#########
-# other #
-#########
-
-super + ctrl + Escape
-       alock
+	bspc desktop -f com && brave --app=https://z.imt.fr
 
 #############
 # clipboard #
 #############
 
-super + c; g
-	echo " site:github.com" | xclip -selection c
+super + y; g
+	echo " site:github.com " | xclip -selection c
 
-super + c; t
-        echo " site:telecom-paris.fr" | xclip -selection c
+super + y; t
+	echo " site:telecom-paris.fr " | xclip -selection c
 
-super + c; r
-        echo " site:reddit.com" | xclip -selection c
+super + y; r
+	echo " site:reddit.com " | xclip -selection c
+
+super + y; question
+	floaterm -e "$CARGO_HOME/bin/clipcat-menu"
+
 

@@ -3,7 +3,7 @@
 gui_startup >"$LOGS/gui_startup.log" 2>&1 &
 alacritty &
 
-bspc monitor -d terminal neovim brave beeper
+bspc monitor -d term edit browser com
 
 bspc config border_width 1
 bspc config window_gap 0

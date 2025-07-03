@@ -13,7 +13,7 @@ cd "$CMD"
 
 if [ "$ext" = ".c" ]; then
 	cd src
-	printf "int main(int argc, const char *const *const argv) {}" >>"$1"
+	printf "#include \"lib.h\"\n\nint main(int argc, Argv argv) {\n\t\n}\n" >>"$1"
 	$EDITOR "$1"
 else
 	cd sh
