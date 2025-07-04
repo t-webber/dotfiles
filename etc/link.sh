@@ -31,6 +31,7 @@ link() {
 	else
 		mkdir -p "$save_folder"
 		copy "$root_path" "$save_path"
+		sudo rm -rf "$root_path"
 		copy "$link_path" "$root_path"
 		sudo chown "root:root" "$root_path" -R
 	fi
