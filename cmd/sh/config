@@ -13,10 +13,14 @@ fi
 
 mkdir -p "$FILES"
 cd "$FILES" || (
-	printf "Access denied: failed to creates FILES folder"
+	printf "Access denied: failed to creates FILES folder\n"
 	exit
 )
-git clone https://github.com/t-webber/dotfiles
+
+git clone https://github.com/t-webber/dotfiles || (
+	printf "Failed to clone dotfiles\n"
+	exit
+)
 
 export ETC="$FILES/dotfiles/etc"
 . ./dotfiles/etc/link.sh !
