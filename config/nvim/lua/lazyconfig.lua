@@ -148,13 +148,13 @@ local spec = {
 			vim.treesitter.language.register("python", "sage")
 		end,
 	},
-	{
-		"andythigpen/nvim-coverage",
-		requires = { "nvim-lua/plenary.nvim" },
-		config = function()
-			require("coverage").setup({})
-		end,
-	},
+	-- 	{
+	-- 		"andythigpen/nvim-coverage",
+	-- 		requires = { "nvim-lua/plenary.nvim" },
+	-- 		config = function()
+	-- 			require("coverage").setup({})
+	-- 		end,
+	-- 	},
 	--------------
 	--- Editor ---
 	--------------
@@ -182,11 +182,11 @@ local spec = {
 			"TtTitle",
 		},
 	},
-	{
-		"tris203/precognition.nvim",
-		config = true,
-		event = "VeryLazy",
-	},
+	-- 	{
+	-- 		"tris203/precognition.nvim",
+	-- 		config = true,
+	-- 		event = "VeryLazy",
+	-- 	},
 	{
 		"karb94/neoscroll.nvim",
 		config = true,

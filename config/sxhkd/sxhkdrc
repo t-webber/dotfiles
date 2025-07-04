@@ -52,11 +52,11 @@ super + {i,o}
 ################
 
 # preselect the direction
-super + ISO_Level3_Shift + {h,j,k,l}
+super + mod3 + {h,j,k,l}
 	bspc node -p {west,south,north,east}
 
 # cancel the preselection for the focused node
-super + ISO_Level3_Shift + space
+super + mod3 + space
 	bspc node -p cancel
 
 ###############
@@ -116,7 +116,7 @@ super + shift + y
 	kitty
 
 super + b
-	bspc desktop -f terminal && alacritty -e btop
+	bspc desktop -f term && alacritty -e btop
 
 # com
 

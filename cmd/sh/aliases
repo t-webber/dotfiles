@@ -85,8 +85,8 @@ if [ -f '/etc/arch-release' ]; then
 	_uall paru
 
 	al paruu "$p" paru
-	al S -p "$p" -S
-	al R -p "$p" -R
+	al S -p "$p" '-S --noconfirm'
+	al R -p "$p" '-R --noconfirm'
 	al Q -p "$p" -Q
 	al Qd -p "$p" -Qd
 	al Qt -p "$p" -Qt
@@ -118,7 +118,7 @@ al bur -p "$b" "upgrade && $b update -g"
 al big 'bi -g'
 al bid 'bi -D'
 al binit -p "$b" init
-al bc 'rn *lock* && rn .next && rn node_modules && bi'
+al bc "rn *lock* && rn .next && rn node_modules && $b i && $b run build"
 
 _sep
 
@@ -134,11 +134,15 @@ al nextjs -p "$b" 'x create-next-app@latest --typescript --eslint --tailwind --a
 _sep
 
 _uall bunx
-_uall bx
-al knip -p "$b" 'x knip'
-al lint -p "$b" 'x eslint'
-al pret -p "$b" 'x prettier'
-al bcn -p "$b" 'x shadcn@latest add'
+al bx -p "$b" x
+_ual knip bk
+_ual lint bl
+_ual prettier bp
+al bk 'bx knip'
+al bl 'bx eslint'
+al bp 'bx prettier -cw .'
+al bpp 'bx pretier'
+al bcn 'bx shadcn@latest add'
 
 _print b bun
 
@@ -313,9 +317,14 @@ al iam -p "$i" 'commit --amend'
 _sep
 
 al ipl -p "$i" pull
+al ie -p "$i" fetch
+al ieu 'ie --unshallow'
 al ick -p "$i" checkout
 al ickt -p "$i" 'checkout --track'
 al iph -p "$i" push
+al iphu 'iph -u'
+al iphuo 'iphu origin'
+al iphum 'iphuo main'
 al ifh -p "$i" 'push --force'
 
 _sep
@@ -399,6 +408,7 @@ _sep
 _ual reboot tb
 _ual slp tl
 
+al tk alock
 al tu 'ctl suspend'
 al td 'shutdown -P now -h'
 al tb 'sd /bin/reboot'
@@ -440,7 +450,7 @@ _ctl_def iw iwd
 _ctl_def rd systemd-resolved
 _ctl_def net 'iwd systemd-resolved'
 _ctl_def sql postgresql
-_ctl_def au 'pipewire.socket wireplumber pipewire-pulse.socket' 'ctll --user'
+_ctl_def au 'pipewire.socket pipewire-media-session pipewire-pulse.socket' 'ctll --user'
 
 _print t systemd
 
@@ -529,7 +539,7 @@ al u 'bspc desktop -f neovim && uu .'
 
 _ual xrandr xr
 al xr /bin/xrandr
-al xr0 'xr --output DP-0'
+al xr0 'xr --output eDP-1'
 al zoom 'xr0 --scale 0.8x0.8'
 al dezoom 'xr0 --scale 1.5x1.5'
 
@@ -565,6 +575,8 @@ al ui 'curl -i'
 
 al p 'pushd >/dev/null'
 al pp 'popd >/dev/null'
+al pc 'dirs -c'
+al pl 'dirs -v'
 al j pp
 al k 'p ..'
 
@@ -581,7 +593,7 @@ _gt a7 "$FILES/2a/a7"
 _gt a8 "$FILES/2a/a8"
 _gt a8 "$FILES/2a/a8"
 _gt ap "$APPS"
-_gt bl "$FILES/blob"
+_gt blob "$FILES/blob"
 _gt sav "$FILES/blob/save"
 _gt cache "$HOME/.cache"
 _gt ces "$FILES/2a/cesure"
@@ -604,7 +616,7 @@ _gt html "$DEV/html-filter"
 _gt inf "$FILES/2a/inf224"
 _gt jc "$DEV/jc"
 _gt mail "$DEV/mailbox"
-_gt md "$DEV/md-viewer"
+_gt mdw "$DEV/md-viewer"
 _gt ml "$FILES/2a/ml"
 _gt pars "$DEV/c-parser"
 _gt pdelc "$DEV/.c/"
@@ -653,6 +665,7 @@ al n /bin/touch
 
 al ep 'edt profile'
 al ea 'edt aliases'
+al ex 'edt sxhkd'
 _ual ce edt
 _ual nf edt
 
@@ -738,6 +751,8 @@ _ual ripgrep g
 
 al g "$CARGO_HOME/bin/rg"
 al gv 'g -v'
+al gi 'g -i'
+al gw 'g -w'
 al ge 'g -e'
 al gve 'g -ve'
 al gg 'g --hidden'
@@ -755,8 +770,8 @@ al cpr 'cp -r'
 ### POWER ###
 #############
 
-_ual bp wl
 al wl 's /sys/class/power_supply/BAT1/capacity'
+al wt 's /sys/class/power_supply/BAT1/status'
 al ws 'sd cpupower frequency-set -g powersave'
 al wp 'sd cpupower frequency-set -g performance'
 al ww 's /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor'
@@ -805,7 +820,7 @@ al mnt /bin/mount
 _ual mount mnt
 al mboot 'sd mnt /dev/nvme0n1p1 /boot'
 _ual mkinitcpio mkcp
-al mkcp 'sd mkinitcpio -P'
+al mkcp 'sd /bin/mkinitcpio -P'
 
 _ual make m
 _ual mk m
@@ -843,6 +858,9 @@ al lock 'vlock --all'
 al cls clear
 al fix 'stty sane'
 al nt numbat
+al gx2 "gx | uc | gv '^\s*1'"
+al md 'gh markdown-preview'
+al tf trufflehog
 
 ################
 

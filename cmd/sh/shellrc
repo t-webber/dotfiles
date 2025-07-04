@@ -1,14 +1,12 @@
 #!/bin/sh
 
+#########################
+# load custom variables #
+#########################
+
 [ -z "$FILES" ] && export FILES="$HOME/.files"
 
 [ -f "$FILES/.secret/vars" ] && . "$FILES/.secret/vars" >/dev/null
-
-export CC="cc"
-
-if [ -f "/etc/arch-release" ]; then
-	export DEBUGINFOD_URLS='https://debuginfod.archlinux.org/'
-fi
 
 export DOT="$FILES/dotfiles"
 export CMD="$DOT/cmd"
@@ -21,20 +19,22 @@ export LOGS="$DATA/logs"
 export SECRET="$FILES/.secret"
 export WASTE="$FILES/.waste"
 
-export CODE_EXTS_PATH="$DATA/code-extensions"
-
-[ -z "$EDITOR" ] && EDITOR="/bin/nvim"
-export EDITOR
+#############################
+# global location variables #
+#############################
 
 export XDG_CONFIG_HOME="$CONFIG"
 export XDG_DATA_HOME="$DATA/local/share"
 export XDG_CACHE_HOME="$DATA/local/cache"
 export XDG_STATE_HOME="$DATA/local/state"
 
+#############################
+# custom location variables #
+#############################
+
 export NPM_CONFIG_USERCONFIG="$CONFIG/npm/config"
 export NPM_CONFIG_CACHE="$CONFIG/npm/cache"
 export INPUTRC="$CONFIG/inputrc"
-
 export IPYTHONDIR="$DATA/ipython"
 export SAGE_ROOT="$DATA/sage_root"
 export WGETRC="$DATA/wget-hsts"
@@ -49,35 +49,24 @@ export CARGO_HOME="$DATA/cargo"
 export RUSTUP_HOME="$DATA/rustup"
 export NVM_DIR="$DATA/nvm"
 export GH_BINPATH="$DATA/git/gh"
+export GEM_HOME="$DATA/gem/install"
+export GEM_PATH="$DATA/gem/install"
+export GEM_SPEC_CACHE="$DATA/gem/specs"
+export CODE_EXTS_PATH="$DATA/code-extensions"
 
-export PATH=":/usr/bin:$CMD/sh:$CMD/bin:$CARGO_HOME/bin:$BUN_INSTALL/bin"
+####################
+# global variables #
+####################
 
-export LAST_LOCATION_FILE="$LOGS/last_location.log"
+export CC="cc"
 
-. "$CMD/sh/aliases"
-
-cup
-
-p "$(<$LAST_LOCATION_FILE)"
-
-export RIGHT_PS1_FILE="$LOGS/right_ps1.state.txt"
-
-mkdir -p "$LOGS"
-
-prompt() {
-	[ "$DEVICE" = "acer" ] && [ -d "$HOME/.vscode-oss" ] && rmm -rf "$HOME/.vscode-oss"
-	pwd >"$LAST_LOCATION_FILE"
-}
-
-export PROMPT_COMMAND=prompt
-
-if [ "$(whoami)" = "root" ]; then
-	export PS1='#$(ps1)'
-else
-	export PS1='$(ps1)'
+if [ -f "/etc/arch-release" ]; then
+	export DEBUGINFOD_URLS='https://debuginfod.archlinux.org/'
 fi
 
-GPG_TTY="$(tty)"
+[ -z "$EDITOR" ] && export EDITOR="/bin/nvim"
+
+export GPG_TTY="$(tty)"
 export GPG_TTY
 export VCPKG_ROOT="$APPS/vcpkg"
 
@@ -88,19 +77,48 @@ export HISTTIMEFORMAT='%F-%H-%M-%S '
 
 export LS_COLORS="$LS_COLORS:'di=0;35:'"
 
-LESS_TERMCAP_mb=$(printf '\033[01;31m')    # begin blink (red)
-LESS_TERMCAP_md=$(printf '\033[01;36m')    # begin bold (cyan)
-LESS_TERMCAP_me=$(printf '\033[0m')        # end mode
-LESS_TERMCAP_se=$(printf '\033[0m')        # end standout-mode
-LESS_TERMCAP_ue=$(printf '\033[0m')        # end underline
-LESS_TERMCAP_us=$(printf '\033[01;32m')    # begin underline (green)
-LESS_TERMCAP_so=$(printf '\033[01;37;40m') # standout-mode (white text over dark grey)
-
-export LESS_TERMCAP_mb LESS_TERMCAP_md LESS_TERMCAP_me LESS_TERMCAP_se LESS_TERMCAP_ue LESS_TERMCAP_us LESS_TERMCAP_so
+export MANSECT=3:2:1:8:5:4:9
 
 export LC_ALL=en_GB.UTF-8
 export LANG=en_GB.UTF-8
 
-export ALREADY8LOADED8ONCE="haha"
+export PATH=":/usr/bin:$CMD/sh:$CMD/bin:$CARGO_HOME/bin:$BUN_INSTALL/bin:/home/b/.files/.data/local/share/gem/ruby/3.4.0/bin"
 
-export MANSECT=3:2:1:8:5:4:9
+################
+# load aliases #
+################
+
+. "$CMD/sh/aliases"
+
+#########################
+# rebuild changed utils #
+#########################
+
+cup &
+disown
+
+########################
+# reload last location #
+########################
+
+export LAST_LOCATION_FILE="$LOGS/last_location.log"
+p "$(<$LAST_LOCATION_FILE)"
+
+prompt() {
+	[ "$DEVICE" = "acer" ] && [ -d "$HOME/.vscode-oss" ] && rmm -rf "$HOME/.vscode-oss"
+	pwd >"$LAST_LOCATION_FILE"
+}
+
+export PROMPT_COMMAND=prompt
+
+#######
+# PS1 #
+#######
+
+if [ "$(whoami)" = "root" ]; then
+	export PS1='#$(ps1)'
+else
+	export PS1='$(ps1)'
+fi
+
+command_not_found_handle() { eh "Command not found: '$1'."; }

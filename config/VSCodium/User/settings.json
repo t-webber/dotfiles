@@ -154,5 +154,8 @@
     "workbench.startupEditor": "none",
     "workbench.tips.enabled": false,
     "workbench.tree.indent": 12,
-    "workbench.tree.renderIndentGuides": "none"
+    "workbench.tree.renderIndentGuides": "none",
+    "[markdown]": {
+        "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+    }
 }

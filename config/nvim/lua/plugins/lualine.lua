@@ -33,6 +33,21 @@ local battery = {
 		if file then
 			local content = file:read("*l")
 			file:close()
+			local level = tonumber(content)
+			if level < 5 then
+				local b = vim.api.nvim_create_buf(false, true)
+				vim.api.nvim_buf_set_lines(b, 0, -1, false, { "Hi" })
+				vim.api.nvim_buf_set_option(b, "modifiable", false)
+				vim.api.nvim_open_win(b, true, {
+					relative = "editor",
+					width = 2,
+					height = 1,
+					row = 10,
+					col = 10,
+					style = "minimal",
+					border = "single",
+				})
+			end
 			return string.format("%s%%%%", content)
 		else
 			return "!"
@@ -77,7 +92,11 @@ local sections = {
 	},
 	lualine_c = {},
 	lualine_x = {},
-	lualine_y = { position, { "filetype", icon_only = false, colored = true, color = dark }, battery },
+	lualine_y = {
+		position,
+		{ "filetype", icon_only = false, colored = true, color = dark },
+		battery,
+	},
 	lualine_z = {},
 }
 

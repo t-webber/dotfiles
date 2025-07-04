@@ -22,8 +22,8 @@ local options = {
 	breakindent = true, -- indent after line wrap
 	-- ,foldmethod = "expr" -- all functions are folded by default
 	undofile = true,
-	spell = true,
-	spelllang = { "en_gb" },
+	-- 	spell = true,
+	-- 	spelllang = { "en_gb" },
 }
 
 local globals = {

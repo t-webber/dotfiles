@@ -4,7 +4,6 @@ sleep 5
 dtl "starting..."
 
 taiw
-taau
 mountpoint -q /boot || mboot
 lsblk
 

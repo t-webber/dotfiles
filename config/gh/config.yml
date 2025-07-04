@@ -13,7 +13,16 @@ pager:
 # Aliases allow you to create nicknames for gh commands
 aliases:
     co: pr checkout
-    c: repo clone
+    ei: ext install
+    eb: ext browse
+    el: ext list
+    al: alias list
+    as: alias set
+    er: ext remove
+    es: ext search
+    rv: repo view
+    ad: alias delete
+    rp: repo clone
 # The path to a unix socket through which send HTTP connections. If blank, HTTP traffic will be handled by net/http.DefaultTransport.
 http_unix_socket:
 # What web browser gh should use when opening URLs. If blank, will refer to environment.

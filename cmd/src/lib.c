@@ -64,3 +64,13 @@ void store_usage(const char *const *const argv) {
         fprintf(fd, "%s\n", argv[0]);
         fclose(fd);
 }
+
+size_t utf8_strlen(const char *s) {
+        size_t len = 0;
+        while (*s) {
+                if ((*s & 0xC0) != 0x80)
+                        len++;
+                s++;
+        }
+        return len;
+}

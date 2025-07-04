@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+typedef const char *const *const Argv;
+
 #define NEW_STRING(str) {str, sizeof(str) - 1}
 
 typedef struct {
@@ -28,3 +30,5 @@ const char *argv_one_filename(const int argc, const char *const *const argv);
 bool has_slash(const char *const arg, size_t *len, const char **const position);
 
 void store_usage(const char *const *const argv);
+
+size_t utf8_strlen(const char *s);

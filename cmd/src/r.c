@@ -1,4 +1,5 @@
 #include "lib.h"
+#include <assert.h>
 #include <dirent.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -139,7 +140,7 @@ static int run_folder(void) {
 
                 if (!strcmp(entry->d_name, "package.json"))
                         return run_successive((const char *const[]){
-                            "bun", "i", NULL, "bun", "run", "dev"});
+                            "bun", "i", NULL, "bun", "run", "dev", NULL});
 
                 if (!strcmp(entry->d_name, "Makefile"))
                         exl("make", "make");
@@ -149,6 +150,7 @@ static int run_folder(void) {
 }
 
 int main(const int argc, const char *const *const argv) {
+        system("clear");
         store_usage(argv);
 
         const bool verbose = is_verbose(argv[0], "r", "rv");

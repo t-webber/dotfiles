@@ -26,7 +26,7 @@ static FILE *get_aliases_file(void) {
         return aliases_file;
 }
 
-int main(const int argc, const char *const *const argv) {
+int main(const int argc, Argv argv) {
         store_usage(argv);
         if (argc != 3) {
                 fprintf(stderr, "You must provide two arguments, found %d.\n",

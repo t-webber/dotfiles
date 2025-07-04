@@ -5,18 +5,30 @@ if [ -z "$ETC" ]; then
 	exit 1
 fi
 
-rm -rf "$ETC/etc"
+way="$1"
+
+if [ -z "$1" ]; then
+	rm -rf "$ETC/etc"
+fi
 
 link() {
 	root_path="$1"
 	link_path="$ETC$1"
+	save_path="$ETC/save$1"
 	link_folder="$(echo "$link_path" | awk -F/ '{OFS=FS; $NF=""; print}')"
+	save_folder="$(echo "$save_path" | awk -F/ '{OFS=FS; $NF=""; print}')"
 
-	mkdir -p "$link_folder"
-	sudo cp -r "$root_path" "$link_path"
-	sudo chown "$USER:$USER" "$link_path" -R
-	sudo chmod a+rwx "$link_path" -R
-
+	if [ -z "$way" ]; then
+		mkdir -p "$link_folder"
+		sudo cp -r "$root_path" "$link_path"
+		sudo chown "$USER:$USER" "$link_path" -R
+		sudo chmod u+rw "$link_path" -R
+	else
+		mkdir -p "$save_folder"
+		sudo cp -r "$root_path" "$save_path"
+		sudo cp -r "$link_path" "$root_path"
+		sudo chown "root:root" "$root_path" -R
+	fi
 }
 
 link "/etc/profile"

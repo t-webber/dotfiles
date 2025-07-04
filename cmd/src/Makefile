@@ -1,4 +1,4 @@
-LIBS := lib.c libfiles.c
+LIBS := lib.c libfiles.c libsort.c
 LIB_OBJS := $(LIBS:.c=.o)
 
 SRCS := $(filter-out $(LIBS), $(wildcard *.c))
