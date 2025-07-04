@@ -11,6 +11,11 @@ if [ -z "$1" ]; then
 	rm -rf "$ETC/etc"
 fi
 
+copy() {
+	echo "$1 => $2"
+	sudo cp -r "$1" "$2"
+}
+
 link() {
 	root_path="$1"
 	link_path="$ETC$1"
@@ -20,13 +25,13 @@ link() {
 
 	if [ -z "$way" ]; then
 		mkdir -p "$link_folder"
-		sudo cp -r "$root_path" "$link_path"
+		copy "$root_path" "$link_path"
 		sudo chown "$USER:$USER" "$link_path" -R
 		sudo chmod u+rw "$link_path" -R
 	else
 		mkdir -p "$save_folder"
-		sudo cp -r "$root_path" "$save_path"
-		sudo cp -r "$link_path" "$root_path"
+		copy "$root_path" "$save_path"
+		copy "$link_path" "$root_path"
 		sudo chown "root:root" "$root_path" -R
 	fi
 }
