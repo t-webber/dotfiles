@@ -17,4 +17,6 @@ cd "$FILES" || (
 	exit
 )
 git clone https://github.com/t-webber/dotfiles
-./dotfiles/etc/link.sh !
+
+export ETC="$FILES/dotfiles/etc"
+. ./dotfiles/etc/link.sh !
