@@ -4,7 +4,9 @@ sleep 5
 dtl "starting..."
 
 taiw
-mountpoint -q /boot || mboot
+if [ "$DEVICE" = "acer" ]; then
+	mountpoint -q /boot || mboot
+fi
 lsblk
 
 sd rmm -rf "$FILES/.waste"

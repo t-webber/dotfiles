@@ -308,6 +308,7 @@ al ii -p "$i" init
 al iss -p "$i" status
 al id -p "$i" diff
 al ia -p "$i" add
+al isb -p "$i" submodule
 
 _sep
 
