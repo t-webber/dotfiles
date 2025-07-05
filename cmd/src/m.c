@@ -1,11 +1,11 @@
 #include "lib.h"
+#include "zlib/zlib.h"
 #include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include <zlib.h>
 
 static bool line_has_target(const char *const line, const char *const target,
                             const size_t target_len) {
