@@ -17,10 +17,10 @@ CFLAGS += -Wwrite-strings -Wunreachable-code -Wlogical-op -Wno-unused-parameter
 BINARIES := $(patsubst %.c, $(BIN)/%, $(SRCS))
 LINKS := $(BIN)/sv $(BIN)/rv $(BIN)/mc
 
-.SILENT:
+# .SILENT:
 .PHONY: debug clean release out_folder build
 
-all: release 
+all: release
 
 debug: CFLAGS += -g
 debug: clean build
@@ -31,7 +31,7 @@ release: build
 build: out_folder $(BINARIES) $(LINKS)
 
 out_folder:
-	mkdir -p $(BIN)
+	@mkdir -p $(BIN)
 
 $(BIN)/sv: $(BIN)/s
 	ln -sf $< $@
