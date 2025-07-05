@@ -14,7 +14,7 @@ CFLAGS += -Wwrite-strings -Wunreachable-code -Wlogical-op -Wno-unused-parameter
 BINARIES := $(patsubst %.c, $(BIN)/%, $(SRCS))
 LINKS := $(BIN)/sv $(BIN)/rv $(BIN)/mc
 
-.SILENT:
+# .SILENT:
 .PHONY: debug clean release out_folder build
 
 all: release 
@@ -40,7 +40,7 @@ $(BIN)/mc: $(BIN)/m
 	ln -sf $< $@
 
 $(BIN)/m: m.o $(LIB_OBJS) libz.a
-	$(CC) $(CFLAGS) $(LDFLAGS) -Izlib/include $^ libz.a -o $@
+	$(CC) $(CFLAGS) $(LDFLAGS) -Izlib $^ libz.a -o $@
 
 $(BIN)/%: %.o $(LIB_OBJS)
 	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
