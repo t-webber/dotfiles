@@ -22,7 +22,7 @@ all: release
 debug: CFLAGS += -g
 debug: clean build
 
-release: CFLAGS += -O3
+release: CFLAGS += -Ofast
 release: build
 
 build: out_folder $(BINARIES) $(LINKS) 
@@ -39,14 +39,24 @@ $(BIN)/rv: $(BIN)/r
 $(BIN)/mc: $(BIN)/m
 	ln -sf $< $@
 
-$(BIN)/m: m.o $(LIB_OBJS)
-	$(CC) $(CFLAGS) $(LDFLAGS) -Izlib/include $^ zlib/lib/libz.a -o $@
+$(BIN)/m: m.o $(LIB_OBJS) libz.a
+	$(CC) $(CFLAGS) $(LDFLAGS) -Izlib/include $^ libz.a -o $@
 
 $(BIN)/%: %.o $(LIB_OBJS)
 	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
 
+
+LIBZ_OBJS := adler32.o crc32.o deflate.o infback.o inffast.o inflate.o inftrees.o trees.o zutil.o compress.o uncompr.o gzclose.o gzlib.o gzread.o gzwrite.o
+LIBZ_OBJS := $(foreach f, $(LIBZ_OBJS), zlib/$f)
+AR=ar
+ARFLAGS=rc
+
+libz.a: $(LIBZ_OBJS)
+	$(AR) $(ARFLAGS) $@ $(LIBZ_OBJS)
+
+
 clean: 
-	rm -f $(LIB_OBJS)
+	rm -f *.o *.a
 	rm -rf $(BIN)
 	mkdir -p $(BIN)
 	touch $(BIN)/.gitkeep
