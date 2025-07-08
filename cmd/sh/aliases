@@ -84,6 +84,7 @@ if [ -f '/etc/arch-release' ]; then
 
 	al paruu "$p" paru
 	al S -p "$p" '-S --noconfirm'
+	al Ss -p "$p" '-Ss'
 	al Si -p "$p" '-Si'
 	al Sii -p "$p" '-Sii'
 	al R -p "$p" '-R --noconfirm'

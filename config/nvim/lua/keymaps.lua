@@ -76,6 +76,33 @@ setwink("m", ":vert res -20<CR>")
 setwink("u", ":res +20<CR>")
 setwink("n", ":res -20<CR>")
 
+----------------
+--- Markdown ---
+----------------
+
+local mdprefix = "ç"
+local md = {
+	i = "ysiw*",
+	I = "ds*",
+	u = "ysiw_",
+	U = "ds_",
+}
+
+for k, v in pairs(md) do
+	keymaps[k] = { description = mdprefix .. v, modes = { "n" } }
+end
+
+setk(n, "ç", function()
+	local key = vim.fn.getcharstr()
+	local cmd = md[key]
+	if cmd then
+		local termcode = api.nvim_replace_termcodes(cmd, true, false, true)
+		api.nvim_feedkeys(termcode, "m", false)
+	else
+		api.nvim_feedkeys("ç" .. key, "n", false)
+	end
+end, nil, 1)
+
 -----------------
 --- Iron REPL ---
 -----------------
