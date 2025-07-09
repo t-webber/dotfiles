@@ -47,18 +47,15 @@ cd dotfiles
 section "Loading vars & aliases"
 ##############################
 
+git submodule update --init --recursive
+
 . cmd/sh/shellrc
 
-/bin/git submodule update --init --recursive
-
-printf "zlib files: $(ls cmd/src/zlib)\n"
-
 ##############################
-section "Installing software"
+section "Installing bun & rust"
 ##############################
 
 curl https://bun.sh/install | bash 2>/dev/null >&2 &
-/bin/make release -C "$CMD/src" >/dev/null &
 
 curl https://sh.rustup.rs | sh -s -- --no-modify-path --profile minimal -y
 
@@ -80,9 +77,15 @@ eh ">>> device: $DEVICE"
 eval "cat /etc/bash.bashrc | sed 's|^export DEVICE=.*|export DEVICE=$DEVICE|' | sudo tee /etc/bash.bashrc >/dev/null"
 
 ##############################
-section "Installing Rust apps"
+section "Installing cargo binstall"
 ##############################
 
 "$CARGO_HOME/bin/cargo" install cargo-binstall
+
+##############################
+section "Installing software"
+##############################
+
+printf "Install $(<$ETC/cargo)..."
 "$CARGO_HOME/bin/cargo" binstall $(<$ETC/cargo)
 "$CARGO_HOME/bin/cargo" install $(<$ETC/cargo)
