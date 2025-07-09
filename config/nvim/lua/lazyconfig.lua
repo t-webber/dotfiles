@@ -56,6 +56,12 @@ local spec = {
 	--- File explorer ---
 	---------------------
 	{
+		"nvim-tree/nvim-web-devicons",
+		config = function()
+			require("nvim-web-devicons").setup({ default = true })
+		end,
+	},
+	{
 		"stevearc/oil.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		config = function()
@@ -86,20 +92,10 @@ local spec = {
 	--- Finders ---
 	---------------
 	{
-		"folke/which-key.nvim",
-		keys = {
-			{
-				",?",
-				function()
-					require("which-key").show({})
-				end,
-			},
-		},
-	},
-	{
 		"folke/trouble.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		config = true,
+		cmd = "Trouble",
 	},
 	{
 		"nvim-pack/nvim-spectre",

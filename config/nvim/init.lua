@@ -1,4 +1,5 @@
 local files = {
+	"statusline",
 	"keymaps",
 	"colours",
 	"lsp",

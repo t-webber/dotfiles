@@ -4,10 +4,10 @@ local x = 2
 -------------------------
 
 local v = require("globals")
-local lualine_notif = v.lualine_notif
-local lualine_reg = v.lualine_reg
+local statusline_notif = v.statusline_notif
+local statusline_reg = v.statusline_reg
 
-vim.g[lualine_notif] = ""
+vim.g[statusline_notif] = ""
 local core_notify = vim.notify
 vim.notify = function(msg, ...)
 	if type(msg) ~= "string" then
@@ -15,10 +15,10 @@ vim.notify = function(msg, ...)
 	end
 	local key = msg:match("^You pressed the (.+) key too soon!")
 	if key then
-		vim.g[lualine_notif] = "You pressed " .. key .. " to many times!"
+		vim.g[statusline_notif] = "Stop pressing " .. key
 		vim.cmd("redrawstatus")
 	elseif msg:match("instead of") or msg:match("key is disabled!") then
-		vim.g[lualine_notif] = msg
+		vim.g[statusline_notif] = msg
 		vim.cmd("redrawstatus")
 	else
 		core_notify(msg, ...)
@@ -29,18 +29,16 @@ vim.api.nvim_create_autocmd({ "RecordingEnter" }, {
 	callback = function()
 		local reg = vim.fn.reg_recording()
 		if reg == "" then
-			vim.g[lualine_reg] = ""
+			vim.g[statusline_reg] = ""
 		else
-			vim.g[lualine_reg] = "Recording @" .. reg
+			vim.g[statusline_reg] = reg
 		end
-		require("lualine").refresh()
 	end,
 })
 
 vim.api.nvim_create_autocmd({ "RecordingLeave" }, {
 	callback = function()
-		vim.g[lualine_reg] = ""
-		require("lualine").refresh()
+		vim.g[statusline_reg] = ""
 	end,
 })
 
@@ -61,4 +59,4 @@ vim.api.nvim_create_user_command("GitBlameLine", function()
 	print(
 		vim.fn.system({ "git", "blame", "-L", line_number .. ",+1", filename })
 	)
-end, { desc = "Print the git blame for the current line" })
+end, {})

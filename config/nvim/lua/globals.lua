@@ -1,6 +1,6 @@
 local globals = {
-	lualine_notif = "___custom_lualine_notification_message",
-	lualine_reg = "___custom_lualine_register_message",
+	statusline_notif = "___custom_statusline_notification_message",
+	statusline_reg = "___custom_statusline_register_message",
 }
 
 for _, v in pairs(globals) do

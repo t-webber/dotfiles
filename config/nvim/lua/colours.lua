@@ -39,7 +39,8 @@ local colours = {
 	Normal = c(white, black),
 	CursorLineNr = c(red),
 	CursorLine = c(nil, dark),
-	StatusLine = c(nil, dark),
+	StatusLine = c(nil, black),
+	StatusLineNC = c(nil, black),
 	Directory = c(red),
 	TabLine = c(nil, black),
 	TabLineSel = c(nil, dark),
@@ -55,7 +56,7 @@ local colours = {
 	String = c(yellow),
 	Folded = c(green),
 	CustomSuccess = c(green),
-	CustomIgnored = c(blue),
+	CustomIgnored = c(darkcyan),
 	CustomWarning = c(yellow),
 	CustomError = c(red),
 
@@ -75,7 +76,7 @@ local colours = {
 
 	--- Mods ---
 	["@module"] = c(orange), -- modules or namespaces
-	["@module.builtin"] = none, -- built-in modules or namespaces
+	["@module.builtin"] = c(red), -- built-in modules or namespaces
 
 	--- Labels ---
 	["@label"] = c(orange), -- C labels, Rust labels
@@ -86,7 +87,7 @@ local colours = {
 	["@string.regexp"] = c(orange), -- regular expressions
 	["@string.escape"] = c(orange), -- escape sequences
 	["@string.special"] = none, -- other special strings (e.g. dates)
-	["@string.special.symbol"] = c(blue), -- symbols or atoms (e.g., Makefile variables)
+	["@string.special.symbol"] = c(darkcyan), -- symbols or atoms (e.g., Makefile variables)
 	["@string.special.path"] = c(yellow), -- filename, e.g. in git commit files
 	["@string.special.url"] = none, -- URIs (e.g. hyperlinks)
 	["@string.special.vimdoc"] = c(red), -- <thing> in vimdoc
@@ -99,9 +100,9 @@ local colours = {
 	["@number.float"] = c(magenta), -- floating-point number literals
 
 	--- Types ---
-	["@type"] = c(blue), -- type or class definitions and annotations
-	["@type.builtin"] = c(blue), -- built-in types
-	["@type.definition"] = c(blue), -- identifiers in type definitions (e.g. typedef <type> <identifier> in C)
+	["@type"] = c(darkcyan), -- type or class definitions and annotations
+	["@type.builtin"] = c(darkcyan), -- built-in types
+	["@type.definition"] = c(darkcyan), -- identifiers in type definitions (e.g. typedef <type> <identifier> in C)
 	["@attribute"] = c(magenta), -- attribute annotations (e.g. Python decorators, Rust lifetimes)
 	["@attribute.builtin"] = c(magenta), -- builtin annotations (e.g. @property in Python)
 	["@property"] = c(cyan), -- the key in key/value pairs
@@ -177,7 +178,7 @@ local colours = {
 	--- Tags ---
 	["@tag"] = c(cyan), -- XML-style tag names (e.g. in XML, HTML, etc.)
 	["@tag.builtin"] = c(cyan), -- builtin tag names (e.g. HTML5 tags)
-	["@tag.attribute"] = c(blue), -- XML-style tag attributes
+	["@tag.attribute"] = c(darkcyan), -- XML-style tag attributes
 	["@tag.delimiter"] = c(magenta), -- XML-style tag delimiters
 
 	--- LSP ---
@@ -229,8 +230,8 @@ local colours = {
 
 	NeogitSectionHeader = c(red),
 	NeogitRemote = c(cyan),
-	NeogitBranch = c(blue),
-	NeogitBranchHead = c(blue),
+	NeogitBranch = c(orange),
+	NeogitBranchHead = c(orange),
 	NeogitCommitViewHeader = title,
 
 	--> Hunk preview page <--
@@ -252,8 +253,8 @@ local colours = {
 	NeogitDiffAdditions = c(green),
 	NeogitDiffDeletions = c(red),
 	NeogitFilePath = c(orange),
-	NeogitDiffHeader = c(red, black, { bold = true }),
-	NeogitDiffHeaderHighlight = c(red, black, { bold = true }),
+	NeogitDiffHeader = c(red, black, { b = true }),
+	NeogitDiffHeaderHighlight = c(red, black, { b = true }),
 
 	--> Graph <--
 
@@ -263,25 +264,44 @@ local colours = {
 	NeogitChangeRenamed = c(magenta),
 	NeogitChangeDeleted = c(red),
 	NeogitActiveItem = c(magenta, dark),
+	NeogitGraphBoldBlue = c(orange),
+
+	-------------------
+	--- Status Line ---
+	-------------------
+
+	CustomStatusLineDefault = c(white),
+	CustomStatusLineRegister = c(orange),
+
+	--> Modes <--
+	CustomStatusLineNormal = c(white, darkblue),
+	CustomStatusLineInsert = c(white, darkgreen),
+	CustomStatusLineSelect = c(white, purple),
+	CustomStatusLineSelectLine = c(white, purple),
+	CustomStatusLineSelectBlock = c(white, purple),
+	CustomStatusLineVisual = c(white, darkred),
+	CustomStatusLineVisualLine = c(white, darkred),
+	CustomStatusLineVisualBlock = c(white, darkred),
+	CustomStatusLineCommand = c(white, darkmagenta),
+	CustomStatusLineReplace = c(white, darkcyan),
+	CustomStatusLineTerminal = c(white, brown),
+
+	--> Symbols <--
+	CustomStatusLineNormalSymbol = c(cyan, nil, { b = true }),
+	CustomStatusLineInsertSymbol = c(green, nil, { b = true }),
+	CustomStatusLineSelectSymbol = c(magenta, nil, { b = true }),
+	CustomStatusLineSelectLineSymbol = c(magenta, nil, { b = true }),
+	CustomStatusLineSelectBlockSymbol = c(magenta, nil, { b = true }),
+	CustomStatusLineVisualSymbol = c(red, nil, { b = true }),
+	CustomStatusLineVisualLineSymbol = c(red, nil, { b = true }),
+	CustomStatusLineVisualBlockSymbol = c(red, nil, { b = true }),
+	CustomStatusLineCommandSymbol = c(magenta, nil, { b = true }),
+	CustomStatusLineReplaceSymbol = c(cyan, nil, { b = true }),
+	CustomStatusLineTerminalSymbol = c(yellow, nil, { b = true }),
 }
 
 for name, options in pairs(colours) do
 	vim.api.nvim_set_hl(0, name, options)
 end
 
-return {
-	Foreground = white,
-	Dark = dark,
-	Background = black,
-	Normal = darkblue,
-	Insert = darkgreen,
-	Select = purple,
-	SelectLine = purple,
-	SelectBlock = purple,
-	Visual = darkred,
-	VisualLine = darkred,
-	VisualBlock = darkred,
-	Command = darkmagenta,
-	Replace = darkcyan,
-	Terminal = brown,
-}
+return {}

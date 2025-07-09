@@ -5,9 +5,9 @@ vim.diagnostic.config({ virtual_text = true })
 
 local options = {
 	relativenumber = true,
-	number = true, -- absolute number for current line
-	cursorline = true, -- needed to customise even only `cursorlinenr`
-	cmdheight = 0, -- hide command line
+	number = true,
+	cursorline = true,
+	cmdheight = 0,
 	mouse = "", -- disable mouse
 	showmode = false, -- hide `--INSERT--` in command line
 	fillchars = { eob = " " },
@@ -22,6 +22,9 @@ local options = {
 	breakindent = true, -- indent after line wrap
 	-- ,foldmethod = "expr" -- all functions are folded by default
 	undofile = true,
+	tabline = "",
+	-- winbar = "%!v:lua.___custom_statusline_content()",
+	showtabline = 0,
 	-- 	spell = true,
 	-- 	spelllang = { "en_gb" },
 }
