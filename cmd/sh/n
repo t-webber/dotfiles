@@ -11,7 +11,7 @@ if [ "$last" = "/" ]; then
 	mkdir -p "$1"
 else
 	parent="$(printf "$1" | awk -F'/' '{OFS=FS;$NF=""; print $0}')"
-	if [ -z "$p" ]; then
+	if [ -z "$parent" ]; then
 		:
 	else
 		mkdir -p "$parent"
