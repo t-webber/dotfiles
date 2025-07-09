@@ -1,6 +1,5 @@
 local red = "#e06c75"
 local green = "#98c379"
-local blue = "#60a0ff"
 local cyan = "#77bbcc"
 local grey = "#5c6370"
 local yellow = "#e5c07b"
@@ -20,12 +19,18 @@ local black = "#000000"
 local purple = "#553355"
 
 local c = function(fg, bg, opts)
-	return { fg = fg, bg = bg, bold = opts and opts.bold or nil }
+	return {
+		fg = fg,
+		bg = bg,
+		bold = opts and opts.b or false,
+		italic = opts and opts.i or false,
+		strikethrough = opts and opts.s or false,
+	}
 end
 
 local none = c("#ff0000")
 
-local title = { fg = magenta, bg = black, bold = true }
+local title = c(magenta, black, { b = true })
 
 local colours = {
 	--------------
@@ -142,9 +147,9 @@ local colours = {
 	["@comment.note"] = c(green), -- note-type comments (e.g. NOTE, INFO, XXX)
 
 	--- Markup ---
-	-- ["@markup.strong"] = { bold = true }, -- bold text
-	-- ["@markup.italic"] = { italic = true }, -- italic text
-	-- ["@markup.strikethrough"] = none, -- struck-through text
+	["@markup.strong"] = c(orange, nil, { b = true }), -- bold text
+	["@markup.italic"] = c(cyan, nil, { i = true }), -- italic text
+	["@markup.strikethrough"] = c(yellow, nil, { s = true }), -- struck-through text
 	-- ["@markup.underline"] = none, -- underlined text (only for literal underline markup!)
 	["@markup.heading"] = title, -- headings, titles (including markers)
 	-- ["@markup.heading.1"] = title, -- top-level heading

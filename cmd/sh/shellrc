@@ -97,7 +97,7 @@ disown
 # reload last location #
 ########################
 
-n "$LOGS"
+n "$LOGS/last_location.log"
 export LAST_LOCATION_FILE="$LOGS/last_location.log"
 p "$(<$LAST_LOCATION_FILE || eh $HOME)"
 
