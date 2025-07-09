@@ -810,9 +810,11 @@ al psg pgrep
 #####################################
 
 al z ". $CMD/sh/shellrc"
-al cup "p $CMD/src && /bin/make release && pp"
-al cupc "p $CMD/src && /bin/make clean && /bin/make release && pp"
-al cupd "p $CMD/src && /bin/make debug && pp"
+
+cup="/bin/make -C $CMD/src --no-print-directory"
+al cup "$cup release"
+al cupc "$cup clean release"
+al cupd "$cup debug"
 al zh "s $SECRET/bash_history"
 al de 'declare -f'
 

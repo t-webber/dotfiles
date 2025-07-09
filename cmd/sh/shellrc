@@ -91,7 +91,7 @@ export PATH=":/usr/bin:$CMD/sh:$CMD/bin:$CARGO_HOME/bin:$BUN_INSTALL/bin:/home/b
 #########################
 
 cup &
-disown
+disown 2>/dev/null # ignore output: not found if ran and not sourced
 
 ########################
 # reload last location #
@@ -99,7 +99,7 @@ disown
 
 n "$LOGS/last_location.log"
 export LAST_LOCATION_FILE="$LOGS/last_location.log"
-p "$(<$LAST_LOCATION_FILE || eh $HOME)"
+p "$(<$LAST_LOCATION_FILE || eh $HOME)" 2>/dev/null # ignore output: not found if ran and not sourced
 
 command_not_found_handle() { ehe "\033[31mCommand not found: \033[32m$1\033[31m.\033[0m"; }
 

@@ -51,6 +51,8 @@ section "Loading vars & aliases"
 
 /bin/git submodule update --init --recursive
 
+printf "zlib files: $(ls cmd/src/zlib)\n"
+
 ##############################
 section "Installing software"
 ##############################
