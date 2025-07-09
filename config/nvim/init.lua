@@ -19,5 +19,4 @@ vim.fn.writefile({}, vim.lsp.get_log_path())
 
 --- TODO ---
 
--- Embedded terminal: support for vim bindings in terminal, colours, etc.
 -- Clipboard history

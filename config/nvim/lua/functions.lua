@@ -1,4 +1,3 @@
-local x = 2
 -------------------------
 --- Lualine functions ---
 -------------------------
@@ -15,14 +14,32 @@ vim.notify = function(msg, ...)
 	end
 	local key = msg:match("^You pressed the (.+) key too soon!")
 	if key then
-		vim.g[statusline_notif] = "Stop pressing " .. key
+		vim.g[statusline_notif] = "Don't use " .. key
 		vim.cmd("redrawstatus")
-	elseif msg:match("instead of") or msg:match("key is disabled!") then
-		vim.g[statusline_notif] = msg
-		vim.cmd("redrawstatus")
-	else
-		core_notify(msg, ...)
+		return
 	end
+	key = msg:match("The (.+) key is disabled!")
+	if key then
+		if key == "<Up>" then
+			key = ""
+		elseif key == "<Left>" then
+			key = ""
+		elseif key == "<Right>" then
+			key = ""
+		elseif key == "<Down>" then
+			key = ""
+		end
+		vim.g[statusline_notif] = key .. " disabled"
+		vim.cmd("redrawstatus")
+		return
+	end
+	local first, second = msg:match("Use (.+) instead of (.+)")
+	if first and second then
+		vim.g[statusline_notif] = first .. " " .. second
+		vim.cmd("redrawstatus")
+		return
+	end
+	core_notify("core notif: " .. msg, ...)
 end
 
 vim.api.nvim_create_autocmd({ "RecordingEnter" }, {

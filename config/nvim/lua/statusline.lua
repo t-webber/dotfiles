@@ -31,9 +31,9 @@ end
 
 local sl_sep = function(eol)
 	local mode = get_mode_name()
-	local sep = " | "
+	local sep = " │ "
 	if eol ~= nil then
-		sep = " |"
+		sep = " │"
 	end
 	return "%#CustomStatusLine"
 		.. mode
@@ -86,8 +86,9 @@ local sl_messages = function()
 	return "%#CustomStatusLineRegister#"
 		.. vim.g[statusline_reg]
 		.. inner_sep
-		.. "%#CustomStatusLineDefault#"
+		.. "%#CustomStatusLineHardtime#"
 		.. vim.g[statusline_notif]
+		.. "%#CustomStatusLineDefault#"
 		.. outer_sep
 end
 
@@ -99,14 +100,13 @@ local sl_filetype = function()
 	local devicons = require("nvim-web-devicons")
 	local filetype = vim.bo.filetype
 	local icon, hg = devicons.get_icon(filetype)
-	return "%#" .. hg .. "#" .. icon .. "%#CustomStatusLineDefault#"
+	return "%#" .. hg .. "#%f " .. icon .. "%#CustomStatusLineDefault#"
 end
 
 function _G.___custom_statusline_content()
 	return sl_mode()
 		.. sl_time()
 		.. sl_sep()
-		.. "%f "
 		.. sl_filetype()
 		.. sl_sep()
 		.. sl_messages()

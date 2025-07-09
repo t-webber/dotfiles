@@ -272,6 +272,9 @@ local colours = {
 
 	CustomStatusLineDefault = c(white),
 	CustomStatusLineRegister = c(orange),
+	CustomStatusLineHardtime = c(magenta),
+	CustomStatusLineGood = c(green),
+	CustomStatusLineBad = c(red),
 
 	--> Modes <--
 	CustomStatusLineNormal = c(white, darkblue),
@@ -287,17 +290,17 @@ local colours = {
 	CustomStatusLineTerminal = c(white, brown),
 
 	--> Symbols <--
-	CustomStatusLineNormalSymbol = c(cyan, nil, { b = true }),
-	CustomStatusLineInsertSymbol = c(green, nil, { b = true }),
-	CustomStatusLineSelectSymbol = c(magenta, nil, { b = true }),
-	CustomStatusLineSelectLineSymbol = c(magenta, nil, { b = true }),
-	CustomStatusLineSelectBlockSymbol = c(magenta, nil, { b = true }),
-	CustomStatusLineVisualSymbol = c(red, nil, { b = true }),
-	CustomStatusLineVisualLineSymbol = c(red, nil, { b = true }),
-	CustomStatusLineVisualBlockSymbol = c(red, nil, { b = true }),
-	CustomStatusLineCommandSymbol = c(magenta, nil, { b = true }),
-	CustomStatusLineReplaceSymbol = c(cyan, nil, { b = true }),
-	CustomStatusLineTerminalSymbol = c(yellow, nil, { b = true }),
+	CustomStatusLineNormalSymbol = c(cyan),
+	CustomStatusLineInsertSymbol = c(green),
+	CustomStatusLineSelectSymbol = c(magenta),
+	CustomStatusLineSelectLineSymbol = c(magenta),
+	CustomStatusLineSelectBlockSymbol = c(magenta),
+	CustomStatusLineVisualSymbol = c(red),
+	CustomStatusLineVisualLineSymbol = c(red),
+	CustomStatusLineVisualBlockSymbol = c(red),
+	CustomStatusLineCommandSymbol = c(magenta),
+	CustomStatusLineReplaceSymbol = c(cyan),
+	CustomStatusLineTerminalSymbol = c(yellow),
 }
 
 for name, options in pairs(colours) do
