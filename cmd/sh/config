@@ -63,8 +63,12 @@ curl https://sh.rustup.rs | sh -s -- --no-modify-path --profile minimal -y
 section "Replacing global config"
 ##############################
 
+printf "Before ETC: Cargo bins: $(<$ETC/cargo)..."
+
 export ETC="$FILES/dotfiles/etc"
 ./etc/link.sh !
+
+printf "After ETC: Cargo bins: $(<$ETC/cargo)..."
 
 ##############################
 section "Adding DEVICE and FILES to globals"
