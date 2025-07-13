@@ -1,5 +1,5 @@
 [colors.primary]
-foreground = "#ffffff"
+foreground = "#bbaa99"
 background = "#000000"
 
 [font]
@@ -14,10 +14,10 @@ style.shape = "Beam"
 vi_mode_style.shape = "Block"
 
 [colors.normal]
-red = "#e06c75"
-green = "#98c379"
-yellow = "#e5c07b"
+red = "#bb5555"
+green = "#90c070"
+yellow = "#eecc00"
 blue = "#4070b0"
 magenta = "#cf7eea"
-cyan = "#60c0d0"
+cyan = "#60c0a0"
 white = "#888800"
