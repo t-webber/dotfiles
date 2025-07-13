@@ -56,6 +56,10 @@ setk(
 )
 
 setk(n, "è ", ":noh<CR>")
+setk(n, ",rx", function()
+	vim.cmd("write")
+	os.execute("pkill -USR1 -x sxhkd")
+end, "Reload sxhkd")
 
 ----------------
 --- Windows ---

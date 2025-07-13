@@ -1,4 +1,8 @@
 local lsps = {
+	Latex = {
+		cmd = { "texlab" },
+		filetypes = { "tex" },
+	},
 	Typescript = {
 		cmd = { "typescript-language-server", "--stdio" },
 		filetypes = {
@@ -26,7 +30,7 @@ local lsps = {
 		filetypes = { "rust" },
 		settings = {
 			["rust-analyzer"] = {
-				cargo = { allFeatures = true },
+				-- 				cargo = { allFeatures = true },
 				check = { command = "clippy" },
 			},
 		},

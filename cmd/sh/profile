@@ -1,6 +1,8 @@
 #!/bin/sh
 
 n "$LOGS/"
+rn "$LOGS/sh_startup.log"
+rn "$LOGS/x.log"
 
 if [ "$XDG_VTNR" = "1" ]; then
 	. sh_startup >"$LOGS/sh_startup.log" 2>&1 &

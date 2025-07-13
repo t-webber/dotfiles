@@ -10,7 +10,7 @@ fi
 lsblk
 
 sd rmm -rf "$FILES/.waste"
-mkdir -p "$FILES/.waste"
+n "$FILES/.waste/"
 
 "$ETC/link.sh"
 

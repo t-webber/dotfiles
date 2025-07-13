@@ -35,7 +35,7 @@ vim.notify = function(msg, ...)
 	end
 	local first, second = msg:match("Use (.+) instead of (.+)")
 	if first and second then
-		vim.g[statusline_notif] = first .. " " .. second
+		vim.g[statusline_notif] = first .. "  " .. second
 		vim.cmd("redrawstatus")
 		return
 	end

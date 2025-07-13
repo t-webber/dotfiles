@@ -146,7 +146,7 @@ static int run_folder(void) {
                         exl("make", "make");
         }
 
-        panic("Found no runner in the current folder.\n");
+        panic("No runner found in the current folder.\n");
 }
 
 int main(const int argc, const char *const *const argv) {

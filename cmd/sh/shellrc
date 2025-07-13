@@ -18,6 +18,7 @@ export DEV="$FILES/.dev"
 export LOGS="$DATA/logs"
 export SECRET="$FILES/.secret"
 export WASTE="$FILES/.waste"
+export STUDY="$FILES/.study"
 
 #############################
 # global location variables #
@@ -99,7 +100,7 @@ disown 2>/dev/null # ignore output: not found if ran and not sourced
 
 n "$LOGS/last_location.log"
 export LAST_LOCATION_FILE="$LOGS/last_location.log"
-p "$(<$LAST_LOCATION_FILE || eh $HOME)" 2>/dev/null # ignore output: not found if ran and not sourced
+p "$(<$LAST_LOCATION_FILE)" 2>/dev/null # ignore output: not found if ran and not sourced
 
 command_not_found_handle() { ehe "\033[31mCommand not found: \033[32m$1\033[31m.\033[0m"; }
 

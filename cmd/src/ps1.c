@@ -27,6 +27,12 @@ static char *exec(const char *const command) {
 
 static void pwd(char *const path, const bool is_acer) {
         char *pwd = exec("pwd");
+        if (pwd == NULL || strlen(pwd) == 0) {
+                *path = '?';
+                *(path + 1) = '\0';
+                return;
+        }
+        assert(strlen(pwd) >= 1);
         const size_t len = strlen(pwd);
         char *end = pwd + len;
         assert(*end == '\0');

@@ -47,6 +47,10 @@ super + {i,o}
 	bspc node {older,newer} -f; \
 	bspc wm -h on
 
+# rotate
+super + alt + {r,t}
+	bspc node -s @parent; bspc node @parent -R {270,90}
+
 ################
 # preselection #
 ################
@@ -89,7 +93,8 @@ XF86AudioMute
 	vol mute
 
 Print
-	maim -s | xclip -selection clipboard -t image/png
+	flameshot gui
+	# maim -s | xclip -selection clipboard -t image/png
 
 ############
 # desktops #
@@ -127,22 +132,25 @@ super + d
 	bspc desktop -f com && discord
 
 super + e; z
-	bspc desktop -f browser && brave --app=https://z.imt.fr
+	bspc desktop -f browser && brave --app="https://z.imt.fr"
 
 super + e; l
-        bspc desktop -f browser && brave --app=https://laposte.net/accueil
+        bspc desktop -f browser && brave --app="https://laposte.net/accueil"
 
 super + e; m
-        bspc desktop -f browser && brave --app=https://mail.google.com
+        bspc desktop -f browser && brave --app="https://mail.google.com"
 
 super + e; s
-        bspc desktop -f browser && brave --app=https://synapses.telecom-paris.fr
+        bspc desktop -f browser && brave --app="https://synapses.telecom-paris.fr"
 
 super + e; e
-        bspc desktop -f browser && brave --app=https://eole.telecom-paris.fr/annuaire
+        bspc desktop -f browser && brave --app="https://eole.telecom-paris.fr/annuaire"
 
 super + e; t
-        bspc desktop -f browser && brave --app=https://typst.app
+        bspc desktop -f browser && brave --app="https://typst.app"
+
+super + e; g
+        bspc desktop -f browser && brave --app="https://github.com"
 
 #############
 # clipboard #
@@ -165,4 +173,4 @@ super + y; question
 ###########
 
 mod3 + y
-	x
+	xdotool type "¥"

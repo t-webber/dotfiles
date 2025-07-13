@@ -79,6 +79,6 @@ if [ -z "$1" ]; then
 	"$CARGO_HOME/bin/cargo" install-update -a
 	"$CARGO_HOME/bin/cargo" install-update -l | grep No$ | awk '{print $1}' | tr '\n' ' ' >"$ETC/cargo"
 	if [ -f "/etc/arch-release" ]; then
-		pacman -Qtq >"$ETC/arch"
+		pacman -Qentq >"$ETC/arch"
 	fi
 fi

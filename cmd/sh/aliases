@@ -83,12 +83,13 @@ if [ -f '/etc/arch-release' ]; then
 	_uall paru
 
 	al paruu "$p" paru
-	al S -p "$p" '-S --noconfirm'
+	al S -p "$p" '-S --needed --noconfirm'
 	al Ss -p "$p" '-Ss'
 	al Si -p "$p" '-Si'
 	al Sii -p "$p" '-Sii'
 	al R -p "$p" '-R --noconfirm'
 	al Q -p "$p" -Q
+	al Qq -p "$p" -Qq
 	al Qd -p "$p" -Qd
 	al Qt -p "$p" -Qt
 	al Qent -p "$p" -Qent
@@ -97,6 +98,7 @@ if [ -f '/etc/arch-release' ]; then
 	al Rcns -p "$p" -Rcns
 	al Rdd -p "$p" -Rdd
 	al U "$p -Syyuu --devel --noconfirm && $p --devel --gendb" 'update packages and completions'
+	al F -p "$p" -F
 	al Fy -p "$p" -Fy
 	al C "$p -Rcns \$($p -Qdtq) --noconfirm && yes | $p -Scc" 'remove unused + clear cache'
 	al M 'sd reflector --latest 30 --sort rate --save /etc/pacman.d/mirrorlist --connection-timeout 20 --number 15' reflector
@@ -401,7 +403,7 @@ al ctlu 'ctl list-unit-files'
 
 _ual journalctl 'jctl or jctll'
 al jctl 'sd /bin/journalctl' 'sd journalctl'
-al jctll '/bin/journalctl' journalctl
+al jctll /bin/journalctl journalctl
 
 _sep
 
@@ -415,8 +417,9 @@ _sep
 
 _ual reboot tb
 _ual slp tl
+_ual alock tk
 
-al tk alock
+al tk /bin/alock
 al tu 'ctl suspend'
 al td 'sd shutdown -P now -h'
 al tb 'sd /bin/reboot'
@@ -561,7 +564,7 @@ al pi 'ping std.rs'
 
 s=/bin/ssh
 _uall ssh
-al rpi "$s uname@$RPIIP"
+al rpi "$s $_RPI_UNAME@$_RPI_IP"
 al mssh "$s mad@mad-ssh.rezel.net -J twebber-23@ssh.enst.fr"
 _ual tessh tesh
 al tesh "$s jet@137.194.13.203 -J twebber-23@ssh.enst.fr"
@@ -591,53 +594,65 @@ _gt() {
 	al "$1" "cls && p $2 && sv"
 }
 
-_gt 2a "$FILES/2a"
-_gt a7 "$FILES/2a/a7"
-_gt a8 "$FILES/2a/a8"
-_gt a8 "$FILES/2a/a8"
 _gt ap "$APPS"
-_gt blob "$FILES/blob"
-_gt sav "$FILES/blob/save"
-_gt cache "$HOME/.cache"
-_gt ces "$FILES/2a/cesure"
 _gt cf "$CONFIG"
 _gt cmd "$CMD"
-_gt d "$DEV"
 _gt data "$DATA"
 _gt log "$LOGS"
-_gt db "$FILES/2a/db"
-_gt del "$FILES/.waste"
-_gt dev "$DEV"
 _gt dot "$DOT"
-_gt emailrs "$DEV/email"
-_gt en "$FILES/2a/en"
-_gt en "$FILES/2a/en"
+_gt del "$WASTE"
 _gt etc "$ETC"
 _gt f "$FILES"
 _gt h "$HOME"
-_gt html "$DEV/html-filter"
-_gt inf "$FILES/2a/inf224"
-_gt jc "$DEV/jc"
-_gt mail "$DEV/mailbox"
-_gt mdw "$DEV/md-viewer"
-_gt ml "$FILES/2a/ml"
-_gt pars "$DEV/c-parser"
-_gt pdelc "$DEV/.c/"
-_gt pdelr "$DEV/.r/"
-_gt perso "$DEV/personal-website"
-_gt s1 "$FILES/2a/s1"
-_gt s2 "$FILES/2a/s2"
-_gt s4 "$FILES/2a/s4"
-_gt s5 "$FILES/2a/s5"
-_gt s5 "$FILES/2a/s5"
-_gt s6 "$FILES/2a/s6"
-_gt s8 "$FILES/2a/s8"
-_gt s8 "$FILES/2a/s8/hb_detector"
-_gt sp "$FILES/2a/sp"
-_gt sw "$DEV/sw"
-_gt tp3 "$FILES/2a/s5/git/td3"
-_gt vsh "$DEV/vimsh"
-_gt words "$DEV/words"
+
+_gt blob "$FILES/blob"
+_gt sav "$FILES/blob/save"
+
+_gtd() {
+	_gt "$1" "$DEV/$2"
+}
+
+_ual dev d
+_gtd d "$DEV"
+
+_gtd emailrs "email"
+_gtd html "html-filter"
+_gtd jc "jc"
+_gtd mail "mailbox"
+_gtd mdw "md-viewer"
+_gtd pars "c-parser"
+_gtd pdelc ".c/"
+_gtd pdelr ".r/"
+_gtd perso "personal-website"
+_gtd sw "sw"
+_gtd tp3 "2a/s5/git/td3"
+_gtd vsh "vimsh"
+_gtd words "words"
+
+_gts() {
+	_gt "$1" "$STUDY/$2"
+}
+
+_ual study st
+_gts st "$STUDY"
+
+_gts 2a "2a"
+_gts a7 "2a/a7"
+_gts a8 "2a/a8"
+_gts ces "2a/cesure"
+_gts db "2a/db"
+_gts en "2a/en"
+_gts ml "2a/ml"
+_gts s1 "2a/s1"
+_gts s2 "2a/s2"
+_gts s4 "2a/s4"
+_gts s5 "2a/s5"
+_gts s5 "2a/s5"
+_gts s6 "2a/s6"
+_gts s8 "2a/s8"
+_gts s8 "2a/s8/hb_detector"
+_gts sp "2a/sp"
+_gts inf "2a/inf224"
 
 ############
 ### EDIT ###
@@ -645,8 +660,8 @@ _gt words "$DEV/words"
 
 al hx helix
 
-al delc "e $DEV/.c/"
-al delr "e $DEV/.r/"
+al delc "pdelc && e ."
+al delr "pdelr && e ."
 _ual vi e
 al vim vi
 al nvim vi
@@ -656,6 +671,7 @@ al bsp "e $CONFIG/bspwm/bspwmrc"
 _ual sxhkdrc "sx"
 al se "sd $EDITOR"
 al sx "e $CONFIG/sxhkd/sxhkdrc"
+al rx 'pkill -USR1 -x sxhkd'
 
 al rm 'use rn'
 al rms rm
@@ -672,7 +688,6 @@ al ex 'edt sxhkd'
 _ual ce edt
 _ual nf edt
 
-al q 'eh 🚬'
 al wq q
 al :wq q
 al :q q
@@ -866,6 +881,11 @@ al nt numbat
 al gx2 "gx | uc | gv '^\s*1'"
 al md 'gh markdown-preview'
 al tf trufflehog
+al q qalc
+
+wasted=".config .config/* .local .local/* .pki .pki/* .cache .cache/*"
+al clean "h; sv $wasted; rn $wasted"
+al wr 'curl wttr.in'
 
 ################
 

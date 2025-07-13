@@ -1,10 +1,10 @@
 [colors.primary]
-foreground = "#ffffff"
+foreground = "#ffffaa"
 background = "#000000"
 
 [font]
 normal.family = "Hack Nerd Font"
-size=6  
+size = 6
 
 [scrolling]
 history = 100000
@@ -20,4 +20,4 @@ yellow = "#e5c07b"
 blue = "#4070b0"
 magenta = "#cf7eea"
 cyan = "#60c0d0"
-white = "#888888"
+white = "#888800"

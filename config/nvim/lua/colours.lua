@@ -1,7 +1,7 @@
 local red = "#e06c75"
 local green = "#98c379"
 local cyan = "#77bbcc"
-local grey = "#5c6370"
+local grey = "#5c6350"
 local yellow = "#e5c07b"
 local magenta = "#c678dd"
 local semidark = "#4b5263"
@@ -13,8 +13,8 @@ local darkyellow = "#bbbb00"
 local darkred = "#662222"
 local darkmagenta = "#660066"
 local darkcyan = "#558899"
-local dark = "#111111"
-local white = "#aaaaaa"
+local dark = "#111109"
+local white = "#aaaa99"
 local black = "#000000"
 local purple = "#553355"
 
@@ -86,12 +86,12 @@ local colours = {
 	["@string.documentation"] = c(grey), -- docstrings
 	["@string.regexp"] = c(orange), -- regular expressions
 	["@string.escape"] = c(orange), -- escape sequences
-	["@string.special"] = none, -- other special strings (e.g. dates)
+	["@string.special"] = c(orange), -- other special strings (e.g. dates)
 	["@string.special.symbol"] = c(darkcyan), -- symbols or atoms (e.g., Makefile variables)
 	["@string.special.path"] = c(yellow), -- filename, e.g. in git commit files
 	["@string.special.url"] = none, -- URIs (e.g. hyperlinks)
 	["@string.special.vimdoc"] = c(red), -- <thing> in vimdoc
-	["@character"] = c(orange), -- character literals
+	["@character"] = c(green), -- character literals
 	["@character.special"] = c(orange), -- special characters (e.g. wildcards)
 
 	--- Lits ---

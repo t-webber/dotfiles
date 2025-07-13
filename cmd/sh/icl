@@ -1,3 +1,0 @@
-#!/bin/sh
-
-curl -s -G "https://api.github.com/search/repositories" --data-urlencode "q=\"$1\" in:name" --data-urlencode 'sort=stars' --data-urlencode 'order=desc' | jq -r '.items[] | "\(.owner.login)/\(.name)"' | head -1 | xargs gh repo clone
