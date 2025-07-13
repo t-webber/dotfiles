@@ -788,7 +788,7 @@ al cpr 'cp -r'
 ### POWER ###
 #############
 
-al wl 's /sys/class/power_supply/BAT1/capacity'
+al wl 'ehe "\033[31m$(s /sys/class/power_supply/BAT1/capacity)\033[0m"'
 al wt 's /sys/class/power_supply/BAT1/status'
 al ws 'sd cpupower frequency-set -g powersave'
 al wp 'sd cpupower frequency-set -g performance'

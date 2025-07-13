@@ -5,7 +5,10 @@ deps() {
 }
 
 if [ -z "$1" ]; then
-	pacman -Qtq | while read p; do echo "$p $(deps $p)"; done
+	pacman -Qtq | while read p; do
+		echo "$p $(deps $p)" &
+	done
+	wait
 else
 	deps "$1"
 fi
