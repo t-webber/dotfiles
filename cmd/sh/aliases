@@ -782,6 +782,7 @@ al gg 'g --hidden'
 
 al sede 'sed -E'
 al fda 'fd --hidden --no-ignore'
+al fdaa 'fda . / | gv ^/home/b/.files/.data/cargo/ | gv /node_modules/ | gv ^/home/b/.files/.data/bun/ | gv ^/home/b/.files/blob/defs/ | gv /home/b/.files/.dev/words/data/defs | gv /target/'
 al jql 'jq -C  | less -R'
 
 _ual yes y
