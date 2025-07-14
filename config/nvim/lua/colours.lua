@@ -309,10 +309,10 @@ local colours = {
 	DevIconSh = c(green),
 	DevIconLua = c(cyan),
 	DevIconRust = c(orange),
+	DevIconTypeScript = c(darkcyan),
+	DevIconTsx = c(darkcyan),
 }
 
 for name, options in pairs(colours) do
 	vim.api.nvim_set_hl(0, name, options)
 end
-
-return {}

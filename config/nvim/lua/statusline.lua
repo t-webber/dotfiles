@@ -93,13 +93,7 @@ local sl_messages = function()
 end
 
 local sl_time = function()
-	return string.format(" %x%d", os.date("*t").hour, os.date("*t").min)
-end
-
-local replace_prefix = function(path, from, to)
-	if subpath ~= nil then
-		return to .. subpath
-	end
+	return string.format(" %x%d", os.date("*t").hour % 12, os.date("*t").min)
 end
 
 local reduce_path = function(path)
