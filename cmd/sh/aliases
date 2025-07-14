@@ -425,6 +425,8 @@ al td 'sd shutdown -P now -h'
 al tb 'sd /bin/reboot'
 al tbf 'sd /bin/reboot --force'
 
+_sep
+
 _ual restart ts
 _ual start ta
 _ual status tt
@@ -579,11 +581,12 @@ al ui 'curl -i'
 ### PUSHD ###
 #############
 
+_ual l p
+_ual pp j
 al p 'pushd >/dev/null'
-al pp 'popd >/dev/null'
+al j 'popd >/dev/null'
 al pc 'dirs -c'
 al pl 'dirs -v'
-al j pp
 al k 'p ..'
 
 _ual cd p
@@ -688,6 +691,7 @@ al ex 'edt sxhkd'
 _ual ce edt
 _ual nf edt
 
+al q 'ehe "\033[32m  \033[0m"'
 al wq q
 al :wq q
 al :q q
@@ -746,7 +750,7 @@ al sds '/bin/sudo -s'
 _ual xargs xa
 al xa /bin/xargs
 al cnt 'wc -l'
-al xcnt 'xargs wc -l'
+al xcnt 'xa wc -l'
 
 _ual head hd
 al hd /bin/head
@@ -762,6 +766,7 @@ al uc '/bin/uniq -c'
 _ual uniq uc
 al w /bin/awk
 _ual awk w
+al w1 "w '{print \$1}'"
 
 _ual rg g
 _ual grep g
@@ -881,7 +886,7 @@ al nt numbat
 al gx2 "gx | uc | gv '^\s*1'"
 al md 'gh markdown-preview'
 al tf trufflehog
-al q qalc
+al qa qalc
 
 wasted=".config .config/* .local .local/* .pki .pki/* .cache .cache/*"
 al clean "h; sv $wasted; rn $wasted"

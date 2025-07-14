@@ -5,11 +5,8 @@ if [ -z "$ETC" ]; then
 	exit 1
 fi
 
-way="$1"
-
-if [ -z "$1" ]; then
-	rm -rf "$ETC/etc"
-fi
+rm -rf "$ETC/etc" "$ETC/arch" "$ETC/cargo"
+echo "Deleted" "$ETC/etc" "$ETC/arch" "$ETC/cargo"
 
 copy() {
 	echo "$1 => $2"
@@ -38,22 +35,12 @@ link() {
 
 	root_folder="$(parent_folder $root_path !)"
 	link_folder="$(parent_folder $link_path)"
-	save_folder="$(parent_folder $save_path)"
 
-	if [ -z "$way" ]; then
-		if [ -e "$root_path" ]; then
-			copy "$root_path" "$link_path"
-		fi
-		sudo chown "$USER:$USER" "$link_path" -R
-		sudo chmod u+rw "$link_path" -R
-	else
-		if [ -e "$root_path" ]; then
-			copy "$root_path" "$save_path"
-		fi
-		sudo rm -rf "$root_path"
-		copy "$link_path" "$root_path"
-		sudo chown "root:root" "$root_path" -R
+	if [ -e "$root_path" ]; then
+		copy "$root_path" "$link_path"
 	fi
+	sudo chown "$USER:$USER" "$link_path" -R
+	sudo chmod u+rw "$link_path" -R
 }
 
 link "/etc/profile"
@@ -75,10 +62,5 @@ link "/etc/pacman.conf"
 link "/etc/makepkg.conf"
 link "/etc/makepkg.conf.d"
 
-if [ -z "$1" ]; then
-	"$CARGO_HOME/bin/cargo" install-update -a
-	"$CARGO_HOME/bin/cargo" install-update -l | grep No$ | awk '{print $1}' | tr '\n' ' ' >"$ETC/cargo"
-	if [ -f "/etc/arch-release" ]; then
-		pacman -Qentq >"$ETC/arch"
-	fi
-fi
+cargo install --list | grep -v '^ ' | awk '{print $1}' | tr '\n' ' ' >"$ETC/cargo"
+pacman -Qentq >"$ETC/arch"
