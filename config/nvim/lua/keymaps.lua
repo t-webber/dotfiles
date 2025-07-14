@@ -60,6 +60,7 @@ setk(n, ",rx", function()
 	vim.cmd("write")
 	os.execute("pkill -USR1 -x sxhkd")
 end, "Reload sxhkd")
+setk(n, ",i", ":NvimWebDeviconsHiTest<CR>")
 
 ----------------
 --- Windows ---

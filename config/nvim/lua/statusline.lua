@@ -96,11 +96,82 @@ local sl_time = function()
 	return string.format(" %x%d", os.date("*t").hour, os.date("*t").min)
 end
 
+local replace_prefix = function(path, from, to)
+	if subpath ~= nil then
+		return to .. subpath
+	end
+end
+
+local reduce_path = function(path)
+	local subpath
+	subpath = path:match(os.getenv("DEV") .. "/(.+)")
+	if subpath ~= nil then
+		return " " .. subpath
+	end
+	subpath = path:match(os.getenv("DOT") .. "/(.+)")
+	if subpath ~= nil then
+		return " " .. subpath
+	end
+	subpath = path:match(os.getenv("FILES") .. "/(.+)")
+	if subpath ~= nil then
+		return "" .. subpath
+	end
+	return path
+end
+
+local wrap_with_icon = function(filename, icon_type)
+	local icon, hg = require("nvim-web-devicons").get_icon(icon_type)
+	return { filename = filename, icon = icon, hg = hg }
+end
+
+local get_file_icon_hg = function()
+	local winid = vim.g.statusline_winid
+	local bufnr = vim.api.nvim_win_get_buf(winid)
+	local filepath = vim.api.nvim_buf_get_name(bufnr)
+	local tabnr = vim.api.nvim_win_get_tabpage(winid)
+	-- 	if true then
+	-- 		return { filename = filepath, hg = "", icon = "" }
+	-- 	end
+
+	local _, neogit_type = filepath:match("(.+)/Neogit(.+)")
+	if neogit_type ~= nil then
+		return wrap_with_icon(neogit_type, "git")
+	end
+	local _, git_file = filepath:match("(.+)/.git/(.+)")
+	if git_file ~= nil then
+		return wrap_with_icon(git_file, "git")
+	end
+
+	local cwd = vim.fn.getcwd(tabnr)
+	local filename = vim.fn.fnamemodify(filepath, ":." .. cwd)
+
+	local oil_path = filename:match("oil://(.+)")
+	if oil_path ~= nil then
+		return wrap_with_icon(reduce_path(oil_path), "zip")
+	end
+
+	local term_path = filename:match("term://(.+)")
+	if term_path ~= nil then
+		return wrap_with_icon(">_", "sh")
+	end
+
+	local local_file_name = reduce_path(filename)
+	local ext = vim.fn.fnamemodify(local_file_name, ":e")
+	if ext == "" then
+		ext = vim.bo[bufnr].filetype
+	end
+	return wrap_with_icon(local_file_name, ext)
+end
+
 local sl_filetype = function()
-	local devicons = require("nvim-web-devicons")
-	local filetype = vim.bo.filetype
-	local icon, hg = devicons.get_icon(filetype)
-	return "%#" .. hg .. "#%f " .. icon .. "%#CustomStatusLineDefault#"
+	local fih = get_file_icon_hg()
+	return "%#"
+		.. fih.hg
+		.. "#"
+		.. fih.filename
+		.. " "
+		.. fih.icon
+		.. "%#CustomStatusLineDefault#"
 end
 
 function _G.___custom_statusline_content()

@@ -301,6 +301,14 @@ local colours = {
 	CustomStatusLineCommandSymbol = c(magenta),
 	CustomStatusLineReplaceSymbol = c(cyan),
 	CustomStatusLineTerminalSymbol = c(yellow),
+
+	----------------
+	--- DevIcons ---
+	----------------
+
+	DevIconSh = c(green),
+	DevIconLua = c(cyan),
+	DevIconRust = c(orange),
 }
 
 for name, options in pairs(colours) do
