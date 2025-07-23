@@ -30,9 +30,7 @@ local setk = function(modes, keymap, action, description, ignore)
 end
 
 local n = { "n" }
-local ti = { "t", "i" }
-local i = { "i" }
-local v = { "v" }
+local nit = { "n", "i", "t" }
 local t = { "t" }
 local ni = { "n", "i" }
 local nv = { "n", "v" }
@@ -69,14 +67,13 @@ setk(n, ",rx", function()
 end, "Reload sxhkd")
 setk(n, ",i", ":NvimWebDeviconsHiTest<CR>")
 
-----------------
+---------------
 --- Windows ---
-----------------
+---------------
 
 local setwink = function(letter, command)
 	local keymap = "<A-" .. letter .. ">"
-	setk(n, keymap, command)
-	setk(ti, keymap, "<C-\\><C-n>" .. command, nil, 1)
+	setk(nit, keymap, "<C-\\><C-n>" .. command)
 end
 
 setwink("h", "<C-w>h")
@@ -85,8 +82,15 @@ setwink("k", "<C-w>k")
 setwink("l", "<C-w>l")
 setwink("g", ":vert res +20<CR>")
 setwink("m", ":vert res -20<CR>")
+setwink("ù", ":vert res -1<CR>")
+setwink("f", ":vert res +1<CR>")
 setwink("u", ":res +20<CR>")
 setwink("n", ":res -20<CR>")
+setwink("b", ":res -1<CR>")
+setwink("y", ":res +1<CR>")
+
+setk(n, "<C-*>", ":vsplit | term<CR>")
+setk(n, "<C-ù>", ":split | term<CR>")
 
 ----------------
 --- Markdown ---
@@ -131,13 +135,6 @@ setk(n, "<C-è>", function()
 
 	api.nvim_command("normal! j")
 end)
-
----------------
---- Buffers ---
----------------
-
-setk(n, "<C-*>", ":vsplit | term<CR>")
-setk(n, "<C-ù>", ":split | term<CR>")
 
 -----------
 --- Git ---
@@ -204,7 +201,7 @@ setk(n, "àt", function()
 	vim.cmd(
 		[[syntax match CustomError /\<\(failed\|FAILED\|error\|failures\)\>/]]
 	)
-end, "Open tests report")
+end, "Open cargo tests report")
 
 local move_and_open = function(action)
 	return function()
