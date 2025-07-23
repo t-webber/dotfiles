@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -82,15 +83,22 @@ static void wait_and_suspend(void) {
         pid_t pid = fork();
 
         if (pid < 0) {
-                panic("suspend failed, but you still have to plug it in.\n");
+                panic("suspend failed (0), but plug it in.\n");
         }
 
         if (pid == 0) {
                 setsid();
                 sleep(60);
-                execl("sudo", "sudo", "systemctl", "suspend", NULL);
-                panic("suspend failed, but you still have to plug it in.\n");
+                if (is_battery_charging())
+                        return;
+                execl("/bin/sudo", "sudo", "systemctl", "suspend", NULL);
+                panic("suspend failed (1), but plug it in\n");
         }
+
+        int status;
+        waitpid(pid, &status, 0);
+        if (!WIFEXITED(status))
+                panic("Failed to execute in fork\n")
 }
 
 static void get_battery_string(char *const battery, const bool is_acer) {

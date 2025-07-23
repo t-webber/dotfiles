@@ -136,7 +136,12 @@ local get_file_icon_hg = function()
 		return wrap_with_icon(git_file, "git")
 	end
 
-	local cwd = vim.fn.getcwd(tabnr)
+	local _, cwd = pcall(function()
+		return vim.fn.getcwd(tabnr)
+	end)
+	if not cwd then
+		return wrap_with_icon(filepath, "mojo")
+	end
 	local filename = vim.fn.fnamemodify(filepath, ":." .. cwd)
 
 	local oil_path = filename:match("oil://(.+)")

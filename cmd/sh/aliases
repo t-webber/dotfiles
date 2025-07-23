@@ -214,6 +214,7 @@ al cy -p "$c" 'clippy --all'
 _sep
 
 al ct -p "$c" test
+al ctt -p "$c" 'test --jobs 20 --no-fail-fast'
 al ctd 'ct --features debug'
 al ctn 'ct -- --nocapture'
 al ctdn 'ctd -- --nocapture'
@@ -322,7 +323,7 @@ al iam -p "$i" 'commit --amend'
 _sep
 
 al ipl -p "$i" pull
-al ie -p "$i" fetch
+al ife -p "$i" fetch
 al ieu 'ie --unshallow'
 al ick -p "$i" checkout
 al ickt -p "$i" 'checkout --track'
@@ -348,6 +349,7 @@ _sep
 
 al il -p "$i" log
 al ilo -p "$i" 'log --oneline'
+al ilr -p "$i" reflog
 
 _sep
 
@@ -562,7 +564,7 @@ al we 'wb https://ecampus.paris-saclay.fr/my/'
 
 al get 'curl -X GET'
 al post 'curl -X POST'
-al pi 'ping std.rs'
+al pi 'while :; do ping -c 3 std.rs; sleep 1; done'
 
 s=/bin/ssh
 _uall ssh
@@ -616,7 +618,7 @@ _gtd() {
 }
 
 _ual dev d
-_gtd d "$DEV"
+_gtd d
 
 _gtd emailrs "email"
 _gtd html "html-filter"
@@ -892,6 +894,7 @@ al qa qalc
 wasted=".config .config/* .local .local/* .pki .pki/* .cache .cache/*"
 al clean "h; sv $wasted; rn $wasted"
 al wr 'curl wttr.in'
+al psa 'ps -ax | g '
 
 ################
 

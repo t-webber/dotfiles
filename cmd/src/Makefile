@@ -25,7 +25,7 @@ all: release
 debug: CFLAGS += -g
 debug: clean build
 
-release: CFLAGS += -Ofast
+release: CFLAGS = -Ofast
 release: build
 
 build: out_folder $(BINARIES) $(LINKS)

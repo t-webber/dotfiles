@@ -22,7 +22,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 	end
 end
 
--- Add lazypath to nvim runtime path. Needed to call require("lazy")
+-- Add lazypath to nvim runtime path. Needed to call require("lazy") and it's where the plugins are installed.
 vim.opt.runtimepath:prepend(lazypath)
 
 local spec = {
@@ -145,13 +145,6 @@ local spec = {
 			vim.treesitter.language.register("python", "sage")
 		end,
 	},
-	-- 	{
-	-- 		"andythigpen/nvim-coverage",
-	-- 		requires = { "nvim-lua/plenary.nvim" },
-	-- 		config = function()
-	-- 			require("coverage").setup({})
-	-- 		end,
-	-- 	},
 	--------------
 	--- Editor ---
 	--------------
@@ -179,11 +172,6 @@ local spec = {
 			"TtTitle",
 		},
 	},
-	-- 	{
-	-- 		"tris203/precognition.nvim",
-	-- 		config = true,
-	-- 		event = "VeryLazy",
-	-- 	},
 	{
 		"karb94/neoscroll.nvim",
 		config = true,
@@ -197,6 +185,16 @@ local spec = {
 			require("registers").setup()
 		end,
 		event = "VeryLazy",
+	},
+	----------------
+	--- Terminal ---
+	----------------
+	{
+		"chomosuke/term-edit.nvim",
+		event = "TermOpen",
+		config = function()
+			require("term-edit").setup({ prompt_end = "%$ " })
+		end,
 	},
 	-------------------
 	-- Other plugins --

@@ -17,7 +17,7 @@
     font = Hack 5 
     line_height = 0
     markup = full
-    format = "<span font='8'>%s</span>\n%b"
+    format = "<span font='20'>%s</span>\n%b"
     alignment = left
     vertical_alignment = center
     show_age_threshold = 60

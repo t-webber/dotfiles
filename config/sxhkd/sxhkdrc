@@ -93,8 +93,7 @@ XF86AudioMute
 	vol mute
 
 Print
-	flameshot gui
-	# maim -s | xclip -selection clipboard -t image/png
+	maim -s | xclip -selection c -t image/png
 
 ############
 # desktops #

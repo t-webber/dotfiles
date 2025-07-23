@@ -11,9 +11,9 @@ local lsps = {
 			"javascript",
 			"javascriptreact",
 		},
-		root_dir = vim.fs.dirname(
-			vim.fs.find({ "package.json" }, { upward = true })[1]
-		),
+		settings = {
+			validate = "on",
+		},
 	},
 	Lua = {
 		cmd = { "lua-language-server" },

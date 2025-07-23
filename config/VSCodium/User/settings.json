@@ -52,7 +52,7 @@
     "editor.formatOnSave": true,
     "editor.glyphMargin": false,
     "editor.guides.indentation": false,
-    "editor.lineNumbers": "off",
+    "editor.lineNumbers": "on",
     "editor.minimap.enabled": false,
     "editor.mouseWheelZoom": true,
     "editor.occurrencesHighlight": "off",
@@ -157,5 +157,6 @@
     "workbench.tree.renderIndentGuides": "none",
     "[markdown]": {
         "editor.defaultFormatter": "yzhang.markdown-all-in-one"
-    }
+    },
+    "github.copilot.nextEditSuggestions.enabled": true
 }

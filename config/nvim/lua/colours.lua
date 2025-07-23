@@ -311,6 +311,7 @@ local colours = {
 	DevIconRust = c(orange),
 	DevIconTypeScript = c(darkcyan),
 	DevIconTsx = c(darkcyan),
+	DevIconPrisma = c(magenta),
 }
 
 for name, options in pairs(colours) do

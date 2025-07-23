@@ -1,4 +1,9 @@
-vim.opt.clipboard:append("unnamedplus")
+-- Sync clipboard between OS and Neovim.
+-- Schedule the setting after `UiEnter` because it can increase startup-time.
+-- See `:help 'clipboard'`
+vim.schedule(function()
+	vim.o.clipboard = "unnamedplus"
+end)
 
 -- show in-line errors
 vim.diagnostic.config({ virtual_text = true })
@@ -23,7 +28,7 @@ local options = {
 	-- ,foldmethod = "expr" -- all functions are folded by default
 	undofile = true,
 	tabline = "",
-	-- winbar = "%!v:lua.___custom_statusline_content()",
+	-- 	winbar = "%!v:lua.___custom_statusline_content()",
 	showtabline = 0,
 	-- 	spell = true,
 	-- 	spelllang = { "en_gb" },
