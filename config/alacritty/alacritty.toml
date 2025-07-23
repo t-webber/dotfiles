@@ -4,10 +4,14 @@ background = "#000000"
 
 [font]
 normal.family = "Hack Nerd Font"
-size = 6
+size = 40
 
 [scrolling]
 history = 100000
+
+[window]
+decorations = "None"
+option_as_alt = "Both"
 
 [cursor]
 style.shape = "Beam"

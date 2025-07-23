@@ -1,4 +1,5 @@
-local lazypath = os.getenv("DATA") .. "/lazy/lazy.nvim"
+local data = os.getenv("HOME")
+local lazypath = data .. "/lazy/lazy.nvim"
 
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
 	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -86,7 +87,6 @@ local spec = {
 			"stevearc/oil.nvim",
 		},
 		config = true,
-		cmd = "Oil",
 	},
 	---------------
 	--- Finders ---

@@ -1,9 +1,3 @@
-#!/bin/sh
-
-#########################
-# load custom variables #
-#########################
-
 [ -z "$FILES" ] && export FILES="$HOME/.files"
 
 [ -f "$FILES/.secret/vars" ] && . "$FILES/.secret/vars" >/dev/null
@@ -67,8 +61,8 @@ fi
 
 [ -z "$EDITOR" ] && export EDITOR="/bin/nvim"
 
+export GIT_PAGER=
 export GPG_TTY="$(tty)"
-export GPG_TTY
 export VCPKG_ROOT="$APPS/vcpkg"
 
 export HISTSIZE=4294967295
@@ -79,7 +73,7 @@ export HISTTIMEFORMAT='%F-%H-%M-%S '
 export LC_ALL=en_GB.UTF-8
 export LANG=en_GB.UTF-8
 
-export PATH=":/usr/bin:$CMD/sh:$CMD/bin:$CARGO_HOME/bin:$BUN_INSTALL/bin:/home/b/.files/.data/local/share/gem/ruby/3.4.0/bin"
+export PATH+=":/bin:/usr/bin:$CMD/sh:$CMD/bin:$CARGO_HOME/bin:$BUN_INSTALL/bin:/home/b/.files/.data/local/share/gem/ruby/3.4.0/bin"
 
 ################
 # load aliases #

@@ -49,12 +49,12 @@ local lsps = {
 		settings = {
 			python = {
 				analysis = {
-					typeCheckingMode = "strict",
+					-- 					typeCheckingMode = "strict",
 					autoSearchPaths = true,
 					useLibraryCodeForTypes = true,
-					diagnosticSeverityOverrides = {
-						reportMissingTypeStubs = "error",
-					},
+					-- 					diagnosticSeverityOverrides = {
+					-- 						reportMissingTypeStubs = "error",
+					-- 					},
 				},
 			},
 		},

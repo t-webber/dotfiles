@@ -29,8 +29,7 @@ static char *exec(const char *const command) {
 static void pwd(char *const path, const bool is_acer) {
         char *pwd = exec("pwd");
         if (pwd == NULL || strlen(pwd) == 0) {
-                *path = '?';
-                *(path + 1) = '\0';
+                *path = '\0';
                 return;
         }
         assert(strlen(pwd) >= 1);
@@ -104,7 +103,7 @@ static void wait_and_suspend(void) {
 static void get_battery_string(char *const battery, const bool is_acer) {
         if (!is_acer) {
                 char *end = stpcpy(battery, "\001\x1b[31m\002");
-                stpcpy(end, "?");
+                stpcpy(end, "");
                 return;
         }
 

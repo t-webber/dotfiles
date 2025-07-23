@@ -96,6 +96,12 @@ local sl_time = function()
 	return string.format(" %x%d", os.date("*t").hour % 12, os.date("*t").min)
 end
 
+local replace_prefix = function(path, from, to)
+	if subpath ~= nil then
+		return to .. subpath
+	end
+end
+
 local reduce_path = function(path)
 	local subpath
 	subpath = path:match(os.getenv("DEV") .. "/(.+)")
@@ -144,9 +150,21 @@ local get_file_icon_hg = function()
 	end
 	local filename = vim.fn.fnamemodify(filepath, ":." .. cwd)
 
-	local oil_path = filename:match("oil://(.+)")
+	local _, oil_path = filename:match("oil://(.+)")
 	if oil_path ~= nil then
-		return wrap_with_icon(reduce_path(oil_path), "zip")
+		return wrap_with_icon(reduce_path(oil_path), "tmux")
+	end
+
+	local _, _, arm_folder_path =
+		filename:match("oil(.+)://tomweb01(.+)tomweb01/popeye(.*)/$")
+	if arm_folder_path ~= nil then
+		return wrap_with_icon(arm_folder_path, "tmux")
+	end
+
+	local _, _, arm_file_path =
+		filename:match("oil(.+)://tomweb01(.+)tomweb01/popeye(.*)")
+	if arm_file_path ~= nil then
+		filename = arm_file_path
 	end
 
 	local term_path = filename:match("term://(.+)")

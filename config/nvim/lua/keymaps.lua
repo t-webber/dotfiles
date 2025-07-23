@@ -36,16 +36,23 @@ local v = { "v" }
 local t = { "t" }
 local ni = { "n", "i" }
 local nv = { "n", "v" }
+local niv = { "n", "i", "v" }
 
 --------------
 --- Global ---
 --------------
 
+setk(niv, "<A-(>", "{")
+setk(niv, "<A-)>", "}")
+setk(niv, "<D-:>", "\\")
+setk(niv, "<D-(>", "[")
+setk(niv, "<D-)>", "]")
+setk(niv, "<D-n>", "~")
 setk(nv, "<C-y>", '"+y')
 setk(n, "<C-a>", "gg^vG$<CR>")
 setk(ni, "<C-s>", "<Esc>:w<CR>")
 setk(ni, "<C-x>", "<Esc>:w<CR>:so<CR>")
-
+setk(n, "°&", "xi")
 setk(t, "<Esc>", [[<C-\><C-n>]])
 
 setk(
@@ -139,6 +146,7 @@ setk(n, "<C-ù>", ":split | term<CR>")
 setk(n, "gh", ":Gitsigns preview_hunk<CR>")
 setk(n, "gi", ":Gitsigns preview_hunk_inline<CR>")
 setk(n, "gb", ":Gitsigns toggle_current_line_blame<CR>")
+setk(n, "gd", ":Gitsigns reset_hunk<CR>")
 setk(n, "ga", ":te git add -p<CR>")
 setk(n, "go", ":Neogit<CR>")
 

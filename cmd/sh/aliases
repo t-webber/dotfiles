@@ -45,8 +45,8 @@ al() {
 	fi
 }
 
-_ual() { alias "$1"="eh use $2"; }
-_uall() { alias "$1"="eh use alias for $1"; }
+_ual() { true; }
+_uall() { true; }
 
 #############
 ### ALIAS ###
@@ -64,9 +64,7 @@ al aa "all | sed \"s/^alias //;s/='/\t/;s/'$//\""
 ### ECHO ###
 ############
 
-_ual echo eh
-
-al eh /bin/echo
+al eh /usr/bin/echo
 al ehe 'eh -e'
 al ehn 'eh -n'
 al ehen 'eh -en'
@@ -308,7 +306,7 @@ _flush
 
 _ual git i
 
-i=/bin/git
+i=/usr/bin/git
 al ii -p "$i" init
 al iss -p "$i" status
 al id -p "$i" diff
@@ -356,6 +354,7 @@ _sep
 al ibr -p "$i" branch
 al ibra -p "$i" "branch -a"
 al ibrr -p "$i" "branch -r"
+al ibru -p "$i" "branch -u"
 al isw -p "$i" switch
 al iswc -p "$i" 'switch -C'
 
@@ -486,7 +485,7 @@ al t2 'tx a -t 2 || tx new -s 2'
 
 _ual python py
 _ual python3 py
-al py /bin/python
+al py /usr/bin/python3.11
 al serve 'py -m http.server'
 
 ###########
@@ -534,7 +533,7 @@ al ducl 'dunstctl close-all'
 # clipboard
 
 _ual xclip x
-al x '/bin/xclip -selection c'
+al x "$XCLIP"
 al xl clipcat-menu
 
 # code
@@ -678,17 +677,17 @@ al se "sd $EDITOR"
 al sx "e $CONFIG/sxhkd/sxhkdrc"
 al rx 'pkill -USR1 -x sxhkd'
 
-al rm 'use rn'
 al rms rm
 al rmm /bin/rm
 al gsaved "s $CMD/data/saved.txt"
 al esaved "e $CMD/data/saved.txt"
 
 _ual touch n
-_ual mkdir n
 
 al ep 'edt profile'
 al ea 'edt aliases'
+al eb 'e ~/.bashrc'
+al rb '. ~/.bashrc'
 al ex 'edt sxhkd'
 _ual ce edt
 _ual nf edt
@@ -740,10 +739,10 @@ _ual sudo sd
 
 sd() {
 	:
-	/bin/sudo bash -ic "$*"
+	/usr/bin/sudo bash -ic "$*"
 }
 
-al sds '/bin/sudo -s'
+al sds '/usr/bin/sudo -s'
 
 #############
 ### PIPES ###
@@ -820,8 +819,7 @@ _kal o code
 _kal u codium
 _kal x sxhkd
 
-_ual btop bt
-al bt /bin/btop
+al bt btop
 
 al bare 'tonet; toau; to rtkit-daemon systemd-timesyncd systemd-journald systemd-journald.socket systemd-journald-dev-log.socket polkit; kr; kv; kd; kp; kc; kD; ku; ko'
 
@@ -834,7 +832,7 @@ al psg pgrep
 
 al z ". $CMD/sh/shellrc"
 
-cup="/bin/make -C $CMD/src --no-print-directory"
+cup="/usr/bin/make -C $CMD/src --no-print-directory"
 al cup "$cup release"
 al cupc "$cup clean release"
 al cupd "$cup debug"
@@ -895,6 +893,11 @@ wasted=".config .config/* .local .local/* .pki .pki/* .cache .cache/*"
 al clean "h; sv $wasted; rn $wasted"
 al wr 'curl wttr.in'
 al psa 'ps -ax | g '
+
+al ae 'e oil-ssh://tomweb01@oyl-vm.euhpc.arm.com///arm/projectscratch/pd/pj1100048/tomweb01/popeye'
+al as '/usr/bin/ssh -X tomweb01@oyl-vm.euhpc.arm.com'
+al ass 'rlwrap /usr/bin/ssh -X login81.euhpc.arm.com'
+al alac '/usr/bin/open -n -a alacritty'
 
 ################
 
