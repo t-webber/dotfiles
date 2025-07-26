@@ -11,7 +11,6 @@ dos2unix
 dunst
 eslint-language-server
 eslint_d
-firefox
 fzf
 github-cli
 helvum
@@ -24,17 +23,15 @@ lua-language-server
 maim
 man-pages
 mpv
-mypy
 neovim
 noto-fonts-emoji
+nushell
 nvidia
 obs-studio
+parallel
 pavucontrol
 pkgfile
 postgresql
-python-ddt
-python-gitdb
-python-pytest
 reflector
 ruff
 sof-firmware

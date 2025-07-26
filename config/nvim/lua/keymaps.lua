@@ -16,9 +16,12 @@ local describe = function(description, action)
 	return "?"
 end
 
+local nb = 0
+
 local setk = function(modes, keymap, action, description, ignore)
 	for _, mode in ipairs(modes) do
 		vim.keymap.set(mode, keymap, action, {})
+		nb = nb + 1
 	end
 	if ignore == nil and keymaps[keymap] ~= nil then
 		error("multiple keymaps for " .. keymap)
@@ -30,7 +33,6 @@ local setk = function(modes, keymap, action, description, ignore)
 end
 
 local n = { "n" }
-local i = { "i" }
 local nit = { "n", "i", "t" }
 local t = { "t" }
 local ni = { "n", "i" }
@@ -172,7 +174,7 @@ setk(n, "éi", function()
 			sorter = require("telescope.config").values.generic_sorter({}),
 		})
 		:find()
-end)
+end, "Telescope list issues")
 setk(n, "ép", function()
 	require("telescope.pickers")
 		.new({}, {
@@ -186,7 +188,7 @@ setk(n, "ép", function()
 			sorter = require("telescope.config").values.generic_sorter({}),
 		})
 		:find()
-end)
+end, "Telescope list prs")
 
 -----------
 --- Oil ---
@@ -399,3 +401,5 @@ api.nvim_set_keymap("n", "g?", "<Nop>", {
 		)
 	end,
 })
+
+print(nb)
