@@ -37,18 +37,18 @@ local nit = { "n", "i", "t" }
 local t = { "t" }
 local ni = { "n", "i" }
 local nv = { "n", "v" }
-local niv = { "n", "i", "v" }
+local nivt = { "n", "i", "v", "t" }
 
 --------------
 --- Global ---
 --------------
 
-setk(niv, "<A-(>", "{")
-setk(niv, "<A-)>", "}")
-setk(niv, "<D-:>", "\\")
-setk(niv, "<D-(>", "[")
-setk(niv, "<D-)>", "]")
-setk(niv, "<D-n>", "~")
+setk(nivt, "<A-(>", "{")
+setk(nivt, "<A-)>", "}")
+setk(nivt, "<D-:>", "\\")
+setk(nivt, "<D-(>", "[")
+setk(nivt, "<D-)>", "]")
+setk(nivt, "<D-n>", "~")
 setk(nv, "<C-y>", '"+y')
 setk(n, "<C-a>", "gg^vG$<CR>")
 setk(ni, "<C-s>", "<Esc>:w<CR>")
@@ -160,7 +160,7 @@ setk(n, "és", ":Telescope git_status<CR>")
 setk(n, "éh", ":Telescope highlights<CR>")
 setk(n, "ée", ":Telescope live_grep<CR>")
 setk(n, "ér", ":Telescope registers<CR>")
-setk(n, "éz", ":Telescope frecency<CR>")
+setk(n, "éz", ":Telescope frecency workspace=CWD<CR>")
 setk(n, "éi", function()
 	require("telescope.pickers")
 		.new({}, {
