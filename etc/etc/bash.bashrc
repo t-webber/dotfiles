@@ -2,6 +2,7 @@
 
 export FILES=/home/b/.files
 export DEVICE=acer
+export XCLIP='xclip -selection c'
 
 f="/usr/share/bash-completion/bash_completion"
 

@@ -87,6 +87,7 @@ local spec = {
 			"stevearc/oil.nvim",
 		},
 		config = true,
+		event = "VeryLazy",
 	},
 	---------------
 	--- Finders ---

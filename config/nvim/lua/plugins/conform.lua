@@ -9,7 +9,6 @@ local formatters = {
 	sql = { "sql_formatter" },
 	python = { "ruff" },
 	toml = { "taplo" },
-	prisma = { "prisma" },
 
 	-------------
 	--- Shell ---
@@ -30,6 +29,7 @@ local formatters = {
 	css = { "prettier" },
 	json = { "prettier" },
 	jsonc = { "prettier" },
+	markdown = { "prettier" },
 
 	--------------------
 	--- Clang Format ---

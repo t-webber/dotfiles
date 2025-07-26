@@ -17,7 +17,7 @@ local mode_names = {
 }
 
 local get_mode_name = function()
-	return mode_names[vim.fn.mode()]
+	return mode_names[vim.fn.mode()] or "Unknown" -- mode can be nil when transitioning (e.g. in Neogit)
 end
 
 local sl_mode = function()

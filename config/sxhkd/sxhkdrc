@@ -173,3 +173,6 @@ super + y; question
 
 mod3 + y
 	xdotool type "¥"
+
+super + shift + a
+	floaterm -e ex1

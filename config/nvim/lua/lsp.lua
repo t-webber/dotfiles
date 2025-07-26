@@ -59,6 +59,10 @@ local lsps = {
 			},
 		},
 	},
+	Prisma = {
+		cmd = { "prisma-language-server" },
+		filetypes = { "prisma" },
+	},
 }
 
 for name, config in pairs(lsps) do

@@ -3,6 +3,8 @@ base
 brightnessctl
 bspwm
 btop
+cava
+chromium
 clang
 dash
 dos2unix
@@ -18,7 +20,6 @@ jq
 libgit2
 libqalculate
 linux-headers
-lua
 lua-language-server
 maim
 man-pages
@@ -28,6 +29,7 @@ neovim
 noto-fonts-emoji
 nvidia
 obs-studio
+pavucontrol
 pkgfile
 postgresql
 python-ddt
@@ -35,6 +37,7 @@ python-gitdb
 python-pytest
 reflector
 ruff
+sof-firmware
 ttf-hack
 ttf-hack-nerd
 typescript-language-server

@@ -275,6 +275,7 @@ local colours = {
 	CustomStatusLineHardtime = c(magenta),
 	CustomStatusLineGood = c(green),
 	CustomStatusLineBad = c(red),
+	CustomStatusLineUnkown = none,
 
 	--> Modes <--
 	CustomStatusLineNormal = c(white, darkblue),

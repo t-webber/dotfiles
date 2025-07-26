@@ -134,21 +134,21 @@ static char *get_git_branch(void) {
         if (*branch == '\0')
                 return branch;
 
-        *(branch + strlen(branch) - 1) = ' ';
+        *(branch + strlen(branch) - 1) = '\0';
 
         if (strcmp(branch, "main ") == 0)
                 stpcpy(branch, ".");
         if (strcmp(branch, "master ") == 0)
                 stpcpy(branch, ":");
 
-        if (strchr(branch, '-')) {
-                //                 char *reader = branch;
-                //                 char *writer = branch;
-                //                 size_t written = 0;
-                //                 while (*reader) {
-                // 			if (written <=
-                //                 }
-        }
+        //         if (strchr(branch, '-')) {
+        //                 char *reader = branch;
+        //                 char *writer = branch;
+        //                 size_t written = 0;
+        //                 while (*reader) {
+        // 			if (written <=
+        //                 }
+        //         }
 
         return branch;
 }

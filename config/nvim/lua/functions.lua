@@ -63,6 +63,30 @@ vim.api.nvim_create_autocmd({ "RecordingLeave" }, {
 --- Other functions ---
 -----------------------
 
+local better_prisma_format = os.getenv("CMD") .. "/sh/paff"
+
+vim.api.nvim_create_autocmd("BufWritePost", {
+	pattern = "*.prisma",
+	callback = function()
+		local start = vim.loop.hrtime()
+
+		os.execute(better_prisma_format)
+
+		local paff = vim.loop.hrtime()
+
+		local path = vim.api.nvim_buf_get_name(0)
+		vim.cmd("bdelete!")
+		vim.cmd("edit " .. vim.fn.fnameescape(path))
+		vim.cmd("filetype detect")
+
+		local crazy_shit = vim.loop.hrtime()
+
+		local paff_time = math.floor((paff - start) / 1e6)
+		local crazy_shit_time = math.floor((crazy_shit - paff) / 1e6)
+		vim.g[statusline_notif] = paff_time .. " & " .. crazy_shit_time
+	end,
+})
+
 vim.api.nvim_create_autocmd("TextYankPost", {
 	callback = function()
 		vim.hl.on_yank()
