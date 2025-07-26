@@ -175,4 +175,7 @@ mod3 + y
 	xdotool type "¥"
 
 super + shift + a
+	floaterm
+
+super + x
 	floaterm -e ex1

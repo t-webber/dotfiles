@@ -86,6 +86,8 @@ static void wait_and_suspend(void) {
         }
 
         if (pid == 0) {
+                printf("\033[31mBattery running out. Plug your "
+                       "computer.\033[0m\n");
                 setsid();
                 sleep(60);
                 if (is_battery_charging())
@@ -121,7 +123,7 @@ static void get_battery_string(char *const battery, const bool is_acer) {
                 end = stpcpy(battery, "\001\x1b[31m\002");
         }
 
-        if (level_value <= 5)
+        if ((level_value <= 6 && !is_charging) || level_value <= 3)
                 wait_and_suspend();
 
         *end++ = level[0];

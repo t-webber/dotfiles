@@ -1,4 +1,4 @@
-local data = os.getenv("HOME")
+local data = os.getenv("DATA")
 local lazypath = data .. "/lazy/lazy.nvim"
 
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -131,6 +131,7 @@ local spec = {
 		config = function()
 			vim.cmd("COQnow --shut-up")
 		end,
+		event = "VeryLazy",
 	},
 	{
 		"nvim-treesitter/nvim-treesitter",
@@ -152,9 +153,6 @@ local spec = {
 	{ "kylechui/nvim-surround", config = true, event = "VeryLazy" },
 	{
 		"ggandor/leap.nvim",
-		dependencies = {
-			"tpope/vim-repeat",
-		},
 		keys = { { "s", mode = "n" } },
 		config = function()
 			require("leap").set_default_mappings()
@@ -173,6 +171,12 @@ local spec = {
 			"TtTitle",
 		},
 	},
+	-- 	{
+	-- 		"tpope/vim-commentary",
+	-- 		config = function()
+	-- 			require("vim-commentary")
+	-- 		end,
+	-- 	},
 	{
 		"karb94/neoscroll.nvim",
 		config = true,

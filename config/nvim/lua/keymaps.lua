@@ -30,6 +30,7 @@ local setk = function(modes, keymap, action, description, ignore)
 end
 
 local n = { "n" }
+local i = { "i" }
 local nit = { "n", "i", "t" }
 local t = { "t" }
 local ni = { "n", "i" }
@@ -157,6 +158,35 @@ setk(n, "és", ":Telescope git_status<CR>")
 setk(n, "éh", ":Telescope highlights<CR>")
 setk(n, "ée", ":Telescope live_grep<CR>")
 setk(n, "ér", ":Telescope registers<CR>")
+setk(n, "éz", ":Telescope frecency<CR>")
+setk(n, "éi", function()
+	require("telescope.pickers")
+		.new({}, {
+			finder = require("telescope.finders").new_oneshot_job({
+				"gh",
+				"issue",
+				"list",
+				"--limit",
+				"500",
+			}),
+			sorter = require("telescope.config").values.generic_sorter({}),
+		})
+		:find()
+end)
+setk(n, "ép", function()
+	require("telescope.pickers")
+		.new({}, {
+			finder = require("telescope.finders").new_oneshot_job({
+				"gh",
+				"pr",
+				"list",
+				"--limit",
+				"500",
+			}),
+			sorter = require("telescope.config").values.generic_sorter({}),
+		})
+		:find()
+end)
 
 -----------
 --- Oil ---

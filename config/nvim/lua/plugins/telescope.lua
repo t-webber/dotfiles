@@ -33,7 +33,11 @@ local borderchars = {
 
 return {
 	"t-webber/telescope.nvim",
-	dependencies = { "nvim-lua/plenary.nvim" },
+	dependencies = {
+		"nvim-lua/plenary.nvim",
+		"nvim-telescope/telescope-frecency.nvim",
+		"nvim-telescope/telescope-github.nvim",
+	},
 	cmd = "Telescope",
 	config = function()
 		local rg = { "rg", "--files", "--sortr=modified", "--hidden" }
@@ -53,5 +57,7 @@ return {
 				},
 			},
 		})
+		require("telescope").load_extension("frecency")
+		require("telescope").load_extension("gh")
 	end,
 }
