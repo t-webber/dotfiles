@@ -1,0 +1,1064 @@
+#!/bin/bash
+
+###############################
+### ALIAS DEFINITION HELPER ###
+###############################
+
+incr() {
+        local var="$1"
+        eval "$var=\$(( $var + 1 ))"
+}
+
+_sections=
+_print_sections() { _al "$1" "ehen '$_sections'"; }
+
+_buff=
+_flush() { _buff=; }
+_sep() { _buff="$_buff\n"; }
+_print() {
+        _al "$1" "cls && ehen '$_buff'" !
+        _sections="$_sections$1\t$2\n"
+}
+
+_buffappend() {
+        _buff="$_buff$1\t$2\n"
+}
+
+_al() {
+        if [ "$2" = '-p' ]; then
+                local dest="$3 $4"
+                if [ -z "$5" ]; then
+                        local comment="$4"
+                else if [ "$5" != '!' ]; then
+                        local comment="> $5"
+                fi; fi
+
+        else
+                local dest="$2"
+                if [ -z "$3" ]; then
+                        local comment="$2"
+                else if [ "$3" != '!' ]; then
+                        local comment="> $3"
+                fi; fi
+        fi
+
+        alias "$1"="$dest"
+
+        if [ -n "$comment" ]; then
+                _buffappend "$1" "$comment"
+        fi
+}
+
+_banned=""
+
+_ual() {
+        _al "$1" "echo use $2"
+        _banned="$_banned|$1"
+}
+
+_uall() {
+        _al "$1" "echo use alias for $1"
+        _banned="$_banned|$1"
+}
+
+_dal() {
+        if [ "$2" = '-p' ]; then
+                _al "$1" -p "$3" "$4" !
+                local start=5
+                local name="$4"
+        else
+                _al "$1" "$2" !
+                local start=3
+                local name="$2"
+        fi
+
+        _arg() {
+                if [ "${#1}" = "1" ]; then
+                        printf "%s\n" "-$1"
+                else
+                        printf "%s\n" "--$1"
+                fi
+        }
+
+        _abbr() { echo "${1:0:1}"; }
+
+        _inner() {
+                if [ "$2" = "-p" ]; then
+                        _al "$1$5" -p "$3" "$4 $6" !
+                else
+                        _al "$1$5" "$2 $6" !
+                fi
+        }
+
+        local argv=("${@:$start}")
+        local n=${#argv[@]}
+        local max=$((1 << n))
+
+        local display_args=""
+
+        for ((mask = 0; mask < max; mask++)); do
+                local abbrs=""
+                local args=""
+
+                for ((idx = 0; idx < n; idx++)); do
+                        if ((mask & (1 << idx))); then
+                                continue
+                        fi
+
+                        local arg=${argv[idx]}
+
+                        abbrs="$abbrs$(_abbr $arg)"
+                        args="$args $(_arg $arg)"
+                        _inner "$1" "$2" "$3" "$4" "$abbrs" "$args"
+                done
+        done
+
+        for ((idx = 0; idx < n; idx++)); do
+                display_args="$display_args[${argv[idx]}] "
+        done
+
+        _buffappend "$1" "$name $display_args"
+}
+
+#############
+### ALIAS ###
+#############
+
+unalias -a
+
+_al z ". $CMD/sh/shellrc"
+
+_al cup "sleep 1"
+
+_al all 'builtin alias'
+_al ad 'builtin unalias -a'
+_al add 'builtin unalias'
+
+_al aa "all | sed \"s/^alias //;s/='/\t/;s/'$//\""
+
+############
+### ECHO ###
+############
+
+_al eh echo # don't ual: on macos, echo is not echo
+
+_al ehe 'eh -e'
+_al ehn 'eh -n'
+_al ehen 'eh -en'
+_al ret 'eh $?'
+
+##############
+### PACMAN ###
+##############
+
+if [ -f '/etc/arch-release' ]; then
+        _flush
+
+        p="$CARGO_HOME/bin/paru"
+        _uall pacman
+        _uall paru
+
+        _al paruu "$p" paru
+        _al S -p "$p" '-S --needed --noconfirm'
+        _al Ss -p "$p" '-Ss'
+        _al Si -p "$p" '-Si'
+        _al Sii -p "$p" '-Sii'
+        _al R -p "$p" '-R --noconfirm'
+        _al Q -p "$p" -Q
+        _al Qq -p "$p" -Qq
+        _al Qd -p "$p" -Qd
+        _al Qt -p "$p" -Qt
+        _al Qent -p "$p" -Qent
+        _al Qdt -p "$p" -Qdt
+        _al Qdtq -p "$p" -Qdtq
+        _al Rcns -p "$p" -Rcns
+        _al Rdd -p "$p" -Rdd
+        _al U "$p -Syyuu --devel --noconfirm && $p --devel --gendb" 'update packages and completions'
+        _al F -p "$p" -F
+        _al Fy -p "$p" -Fy
+        _al C "$p -Rcns \$($p -Qdtq) --noconfirm && yes | $p -Scc" 'remove unused + clear cache'
+        _al M 'sd reflector --latest 30 --sort rate --save /etc/pacman.d/mirrorlist --connection-timeout 20 --number 15' reflector
+
+        _print pr paru
+fi
+
+###########
+### BUN ###
+###########
+
+_flush
+
+b="$BUN_INSTALL/bin/bun"
+_ual bun b
+_al ba -p "$b" add
+_al bi -p "$b" i
+_al bu -p "$b" update
+_al bug 'bu -g'
+_al bur -p "$b" "upgrade && $b update -g"
+_al big 'bi -g'
+_al bid 'bi -D'
+_al binit -p "$b" init
+_al bc "rn *lock* && rn .next && rn node_modules && $b i && $b run build"
+
+_sep
+
+_al br -p "$b" run
+_al bs 'br start'
+_al bb 'br build'
+_al bd 'br dev'
+_al bf 'br fmt'
+_sep
+
+_al nextjs -p "$b" 'x create-next-app@latest --typescript --eslint --tailwind --app --turbopack  --src-dir --use-bun'
+
+_sep
+
+_uall bunx
+_al bx -p "$b" x
+_ual knip bk
+_ual lint bl
+_ual prettier bp
+_al bk 'bx knip'
+_al bl 'bx eslint'
+_al bp 'bx prettier -cw .'
+_al bpp 'bx pretier'
+_al bcn 'bx shadcn@latest add'
+
+_print b bun
+
+##############
+### PRISMA ###
+##############
+
+_flush
+_pam() { _al "pam$1" -p "$b x prisma migrate" "$2"; }
+
+_pam r reset
+_pam rf 'reset --force'
+_pam v resolve
+_pam s status
+_pam d deploy
+_pam m 'dev --name'
+
+_print pam 'prisma migrate'
+
+_sep
+
+_pa() { _al "pa$1" -p "$b x prisma" "$2"; }
+
+_pa o studio
+_pa i init
+_pa g generate
+_pa s 'db seed'
+_pa pl pull
+_pa ph push
+_pa v validate
+_pa f format
+
+_print pa prisma
+
+#############
+### CARGO ###
+#############
+
+_flush
+
+c="$CARGO_HOME/bin/cargo"
+
+_uall cargo
+_al cnw -p "$c" new
+_al cii -p "$c" init
+_al ca -p "$c" add
+_al crm -p "$c" remove
+
+_sep
+
+_al ccl -p "$c" clean
+_al cb -p "$c" build
+_al cbr 'cb --release'
+_al cr -p "$c" run
+_al crr 'cr --release'
+_al crd 'cr --features debug'
+
+_sep
+
+_al cdoc -p "$c" doc
+_al cdoca 'cdoc --document-private-items --all'
+_al cdoco 'cdoc --open'
+_al cdocao 'cdoca --open'
+_al cfmt -p "$c" '+nightly fmt --all -- --unstable-features --error-on-unformatted'
+_al cy -p "$c" 'clippy --all'
+
+_sep
+
+_al ct -p "$c" test
+_al ctt -p "$c" 'test --jobs 20 --no-fail-fast'
+_al ctd 'ct --features debug'
+_al ctn 'ct -- --nocapture'
+_al ctdn 'ctd -- --nocapture'
+_al ctpp -p "$c" tarpaulin
+_al ctph 'ctp -o Html'
+_al ctpo 'ctph && brave tarpaulin-report.html'
+_al ctp 'ctpp --doc --tests'
+_al ctpf 'ctp --fail-under'
+
+_sep
+
+_al cu -p "$c" uninstall
+_al ciu -p "$c" 'install-update -a -g'
+
+_al cn -p "$c" +nightly
+_al cs -p "$c" search
+_al cw 'watchexec -e rs -r cargo run'
+_al cub -p "$c" uibless
+_al ce -p "$c" expand
+_al ceb 'ce --color=always | bat'
+_al cel 'ce --color=always | less -R'
+
+_sep
+
+_al cog -p "$c" login
+_al cop -p "$c" publish
+
+_al gy 'eh -e "\n#![warn(missing_docs,warnings,deprecated_safe,future_incompatible,keyword_idents,let_underscore,nonstandard_style,refining_impl_trait,rust_2018_compatibility,rust_2018_idioms,rust_2021_compatibility,rust_2024_compatibility,unused,clippy::all,clippy::pedantic,clippy::style,clippy::perf,clippy::complexity,clippy::correctness,clippy::restriction,clippy::nursery,clippy::cargo)]\n#![allow(clippy::single_call_fn,clippy::implicit_return,clippy::pattern_type_mismatch,clippy::blanket_clippy_restriction_lints,clippy::missing_trait_methods,clippy::question_mark_used,clippy::mod_module_files,clippy::module_name_repetitions,clippy::pub_with_shorthand,clippy::unseparated_literal_suffix,clippy::else_if_without_else)]\n" | x' 'all warnings for lib.rs'
+
+_al chk "cls && rn Cargo.lock && export RUSTDOCFLAGS='-D warnings' && cy -- -D warnings && cbr && ct && cdoca && cfmt && ctp --fail-under 100" 'all checks for ci'
+
+_al gcio 'ehn $(s $CMD/secret/cratesio.txt) | x'
+
+_print c cargo
+
+##############
+### RUSTUP ###
+##############
+
+_flush
+
+rp="$CARGO_HOME/bin/rustup"
+_ual rustup rp
+_al rpt -p "$rp" toolchain
+_al rptl "rpt list"
+_al rptli "rpt list --installed"
+_al rptu 'rpt uninstall'
+_al rpd -p "$rp" default
+_al rpu -p "$rp" update
+_al rpv -p "$rp" --version
+_al rpc -p "$rp" component
+_al rpca "rpc add"
+_al rpcl "rpc list"
+
+_sep
+
+_ual rnone r0
+_al r0 'export RUST_BACKTRACE=0'
+_al rtr 'export RUST_BACKTRACE=1'
+
+_print rp rust
+
+###########
+### IWD ###
+###########
+
+_flush
+
+iw='sd /bin/iwctl'
+iw0='sd /bin/iwctl station wlan0'
+
+_uall iw
+_uall iw0
+_ual iwgh iwr
+
+_al iwc -p "$iw0" connect
+_al iwd -p "$iw0" disconnect
+_al iwg -p "$iw0" get-networks
+_al iws -p "$iw0" scan
+
+_sep
+
+_al iwk -p "$iw" 'known-networks list'
+_al iwkk -p "$iw" known-networks
+
+_sep
+
+_al iwr 'iws; while :; do cls; iwg; sleep 1; done'
+
+_print iw iwctl
+
+###########
+### GIT ###
+###########
+
+_al idd /bin/id
+_ual git i
+
+_flush
+
+i=/usr/bin/git
+
+_i() {
+        _al "i$1" -p "$i" "$2"
+}
+
+_di() {
+        name="$1"
+        shift
+        _dal "i$name" -p "$i" $@
+
+}
+
+_i i init
+_i ss status
+_i d diff
+_i a add
+_i ap 'add .'
+_i sb submodule
+
+_sep
+
+_i c 'commit -m' S
+_i cc commit
+_di am 'commit --amend' q S no-edit allow-empty
+
+_sep
+
+_di pl pull a f
+_di ck checkout t orphan
+
+_i ckos 'checkout --orphan squash'
+
+_di e fetch a unshallow
+_di eo 'fetch origin' a unshallow
+_di mg merge allow-unrelated-histories
+
+_di ph push u d
+
+_i fh 'push -f'
+_i pho 'push origin'
+_i phdo 'push -d origin'
+_i phuo 'push -u origin'
+_i phuom 'push -u origin main'
+_i gh 'push origin HEAD:refs/for/master'
+
+_sep
+
+_di rt remote v
+_i rt 'remote set-url'
+_i rto 'remote set-url origin'
+_i rto 'remote set-url upstream'
+_i rta 'remote add'
+_i rtao 'remote add origin'
+_i rtau 'remote add upstream'
+
+_di rb rebase abort continue edit-todo i root
+
+_di ro restore S W
+
+_di rs reset hard
+_i rsf 'reset --hard origin/main'
+
+_sep
+
+_di l log oneline graph n
+_i lr reflog
+
+_sep
+
+_di br branch a d D m M r u
+_di sw switch c C
+
+_sep
+
+_i sh stash
+_i pop pop
+_i drop drop
+
+_sep
+
+_i v --version
+_i ls ls-files
+_i sec secrets
+
+_di cfg config global
+
+_sep
+
+_di sm 'submodule update' init recursive
+
+_sep
+
+_al ig git-graph
+
+_sep
+
+_al checks 'gh pr checks'
+_al ghs 'gh search'
+_al repo 'gh search repos'
+_al ghw 'gh repo view -w'
+
+_print i git
+
+###############
+### SYSTEMD ###
+###############
+
+_flush
+
+_ual systemctl 'ctl or ctll'
+_al ctl 'sd /bin/systemctl' 'sd systemctl'
+_al ctll '/bin/systemctl' systemctl
+_al ctlu 'ctl list-unit-files'
+
+_ual journalctl 'jctl or jctll'
+_al jctl 'sd /bin/journalctl' 'sd journalctl'
+_al jctll /bin/journalctl journalctl
+
+_sep
+
+_ual systemd-analyze tz
+_al tz /bin/systemd-analyze
+_al tzb 'tz blame'
+_al tzp 'tz plot > del.svg'
+_al tzc 'tz critical-chain'
+
+_sep
+
+_ual reboot tb
+
+_al tu 'ctl suspend'
+
+if [ "$(uname)" = 'Linux' ]; then
+        _al td 'sd shutdown -P now -h'
+else
+        _al td 'sd shutdown -h now'
+fi
+
+_dal tb 'sd /bin/reboot' force
+
+_sep
+
+_ual restart ts
+_ual start ta
+_ual status tt
+_ual stop to
+
+_ctl_def() {
+        if [ -z "$3" ]; then
+                c=ctl
+                j=jctl
+        else
+                c='ctll --user'
+                j='jctll --user'
+        fi
+
+        if [ -z "$1" ]; then
+                end=
+        else
+                _buffappend "$1" "$2"
+                end=!
+        fi
+
+        _al "ta$1" "$c start $2" "$end"
+        _al "ts$1" "$c restart $2" "$end"
+        _al "tt$1" "$c status $2" "$end"
+        _al "to$1" "$c stop $2" "$end"
+        _al "tj$1" "$j -xeu $2" "$end"
+}
+
+_ctl_def
+
+_sep
+
+_ctl_def iw iwd
+_ctl_def rd systemd-resolved
+_ctl_def net 'iwd systemd-resolved'
+_ctl_def sql postgresql
+_ctl_def au 'pipewire.socket wireplumber pipewire-pulse pipewire-pulse.socket' u
+_ctl_def aa 'pipewire-media-session' u
+
+_print t systemd
+
+##############
+### PYTHON ###
+##############
+
+_ual python py
+_ual python3 py
+
+_al py "$PYTHON"
+
+_al serve 'py -m http.server'
+
+###########
+### SEE ###
+###########
+
+_ual l s
+_ual cat s
+
+_ual ll sv
+_ual bat sv
+
+_al svv 'eza -lA --git'
+
+_al ls l
+_al la l
+_al lla ll
+_al llag ll
+
+_al sr 'sv README.md || sv docs/README.md || sv README || sv docs/README'
+
+_al gcv 'gc v'
+_al gk 'gc keymaps.lua'
+
+_ual pwdf pf
+_ual readlink pf
+_al pf '/bin/readlink -f'
+_al px 'eh -n $(pwd) | x'
+
+############
+### GUI ####
+############
+
+_al alcg 'alacritty msg config'
+_al resize "alacritty msg config 'font.size = 6'"
+
+# open
+
+_ual xdg-open o
+_ual open o
+_al ok '. drop o'
+_al ducl 'dunstctl close-all'
+
+# clipboard
+
+_ual xclip x
+_al x "$XCLIP"
+_al clipm clipcat-menu
+
+# code
+
+_ual codium uimm
+_al vscodium 'eh what is the difference with codium?'
+_al uimm "/bin/codium --extensions-dir='$CODE_EXTS_PATH'"
+_al code "/bin/code --extensions-dir='$CODE_EXTS_PATH'"
+_al uim 'bspc desktop -f neovim && uimm .'
+
+# xrandr
+
+_ual xrandr xr
+_al xr /bin/xrandr
+_al xr0 'xr --output $(xr | gw connected | hd -1 | w1)'
+_al zoom 'xr0 --scale 0.8x0.8'
+_al dezoom 'xr0 --scale 1.5x1.5'
+
+###############
+### NETWORK ###
+###############
+
+_al wb '. drop wb'
+_al ch 'wb https://www.chatgpt.com'
+_al ws 'wb https://synapses.telecom-paris.fr/login?type=Shib'
+_al we 'wb https://ecampus.paris-saclay.fr/my/'
+
+_al pi 'while :; do ping -c 3 std.rs; sleep 1; done'
+
+_al rpi "ssh $_RPI_UNAME@$_RPI_IP"
+_al mssh "ssh mad@mad-ssh.rezel.net -J twebber-23@ssh.enst.fr"
+_ual tessh tesh
+_al tesh "ssh jet@137.194.13.203 -J twebber-23@ssh.enst.fr"
+_al pssh 'ssh twebber-23@perso-twebber-23.lxc.enst.fr -J twebber-23@ssh.enst.fr'
+_al gssh "s ~/.ssh/id_ed25519.pub | x && s ~/.ssh/id_ed25519.pub"
+_al enst 'ssh twebber-23@ssh.enst.fr'
+
+_dal rl curl L O i progress-bar X
+_al rlg 'curl -X GET'
+_al rlp 'curl -X POST'
+
+#############
+### PUSHD ###
+#############
+
+_ual l p
+_ual pp j
+_al p 'pushd >/dev/null'
+_al pp 'popd'
+_al j 'popd >/dev/null'
+_al pc 'dirs -c'
+_al pl 'dirs -v'
+_al k 'p ..'
+
+_ual cd p
+_al src 'p src'
+_al cours "s $FILES/2a"
+
+_gt() {
+        _al "$1" "cls && p $2 && sv"
+}
+
+_gt ap "$APPS"
+_gt cf "$CONFIG"
+_gt cmd "$CMD"
+_gt data "$DATA"
+_gt log "$LOGS"
+_gt dot "$DOT"
+_gt del "$WASTE"
+_gt etc "$ETC"
+_gt f "$FILES"
+_gt h "$HOME"
+
+_ual cours st
+_gt st "$STUDY"
+
+_gt blob "$FILES/blob"
+_gt sav "$FILES/blob/save"
+
+_gtd() {
+        _gt "$1" "$DEV/$2"
+}
+
+_ual dev d
+
+_gtd d
+_gtd pemail email
+_gtd phtml html-filter
+_gtd prdj random-json
+_gtd prda random-data
+_gtd jc jet-centre
+_gtd pmail mailbox
+_gtd mdv md-viewer
+_gtd pars c-parser
+_gtd pdelc .c/
+_gtd pdelr .r/
+_gtd perso personal-website
+_gtd sw showcase-website
+_gtd vsh vimsh
+_gtd words words
+
+############
+### EDIT ###
+############
+
+_al hx helix
+
+_al delc "pdelc && e ."
+_al delr "pdelr && e ."
+_ual vi e
+_al vim vi
+_al nvim vi
+
+_ual bspwmrc ew
+_ual bsp ew
+_ual sxhkdrc ex
+
+_al se "sd $EDITOR"
+_al rx 'pkill -USR1 -x sxhkd'
+
+_ual rm rn
+_ual rms rn
+_al rmm /bin/rm
+
+_ge() {
+        _al "g$1" "gc $2"
+        _al "e$1" "edt $2"
+}
+
+_ge s saved.txt
+_ge a aliases
+_ge p profile
+_ge x sxhkdrc
+_ge w bspwmrc
+
+_ual touch n
+
+_al eb 'e ~/.bashrc'
+_al rb '. ~/.bashrc'
+
+_ual ce edt
+_ual nf edt
+
+_al q 'ehe "\033[32m  \033[0m"'
+_al wq q
+_al :wq q
+_al :q q
+
+#############
+### CLANG ###
+#############
+
+_ual gcc cc
+_al gccw 'cc -Wall -Wextra -Wpedantic -Werror -Wconversion -Wuninitialized -Wundef -Wshadow -Wvla -Wcast-align -Wstrict-prototypes -Wmissing-declarations -Wstrict-overflow=5 -Wnull-dereference -Wlogical-op -Wpacked -Wpointer-arith -Wcast-qual -Wswitch-default -Wmissing-noreturn -Wredundant-decls -Wno-unused -Wno-unused-variable -Wno-unused-function -Wno-unused-parameter -Wno-sign-compare -Wno-format -Wno-type-limits -Wno-deprecated-declarations -Wfatal-errors '
+
+_ual clang cl
+_al cl /bin/clang
+_al clw 'clang -Werror -Wextra -Wconversion -Wuninitialized -Wundef -Wshadow -Wvla -Wcast-align -Wstrict-prototypes -Wmissing-declarations -Wstrict-overflow -Wnull-dereference -Wpacked -Wpointer-arith -Wcast-qual -Wswitch-default -Wmissing-noreturn -Wredundant-decls -Wno-unused -Wno-unused-variable -Wno-unused-function -Wno-unused-parameter -Wno-sign-compare -Wno-format -Wno-type-limits -Wno-deprecated-declarations'
+
+_al cinit "cp $CMD/data/.clang* ."
+_al vg 'valgrind --track-origins=yes --show-error-list=yes --show-leak-kinds=all --leak-check=full'
+
+################
+### KEYBOARD ###
+################
+
+_ual setxkbmap fr
+_ual loadkeys frr
+s=/bin/setxkbmap
+_al fr "$s fr"
+_al frr 'sd /bin/loadkeys fr-latin1'
+_al grr "$s gr"
+_al gr "grr && read x; fr; eh \$x | x; eh \$x"
+
+##############
+
+### RIGHTS ###
+##############
+
+_ual chmod 'chda or chdx'
+_ual chown 'chwr or chrwb'
+
+_al chdx '/bin/chmod +x'
+_al chda '/bin/chmod a+rwx'
+_al chd '/bin/chmod'
+
+_al chwr 'sd /bin/chown root:root -R'
+_al chwb 'sd /bin/chown b:b -R'
+_al chw 'sd /bin/chown -R'
+_al chww 'sd /bin/chown'
+
+_ual sudo sd
+
+sd() {
+        :
+        /usr/bin/sudo bash -ic "$*"
+}
+
+_al sds '/usr/bin/sudo -s'
+
+#############
+### PIPES ###
+#############
+
+_al psa 'ps -ax | g '
+
+_ual xargs xg
+_al xg /usr/bin/xargs
+_al cnt 'wc -l'
+_al xcnt 'xg wc -l'
+
+_ual head hd
+_dal hd /bin/head n 1
+
+_ual tail tl
+_al tl /bin/tail
+
+_ual sort sn
+_dal sn /usr/bin/sort n
+
+_ual uniq uc
+_dal uc /usr/bin/uniq c d
+
+_al sede 'sed -E'
+
+_al fda 'fd --hidden --no-ignore'
+_al fdaa "fda . / | gv ^$DATA | gv /node_modules/ | gv ^/home/b/.files/blob/defs/ | gv /home/b/.files/.dev/words/data/defs | gv /target/ | gv /tldr/"
+
+_al sede 'sed -E'
+_al fda 'fd --hidden --no-ignore'
+_al fdah 'fd . . --hidden --no-ignore'
+_al fdar 'fd . / --hidden --no-ignore'
+_al jql 'jq -C  | less -R'
+
+_ual yes y
+_al y /bin/yes
+
+_al cpr 'cp -r'
+
+##########
+### RG ###
+##########
+
+_ual rg g
+_ual grep g
+_ual ripgrep g
+
+_flush
+
+_dal g "$CARGO_HOME/bin/rg" i v e w hidden no-ignore
+
+_al gs "gv '^\$'" 'gv ^$'
+
+_print ghh rg
+
+###########
+### AWK ###
+###########
+
+_ual awk w
+_al w '/usr/bin/awk '
+_al wf 'w -F'
+_al ww "'{print \$2}'"
+
+idx=1
+while [ $idx -lt 30 ]; do
+        _al "ww$idx" "'{print \$$idx}'"
+        _al "w$idx" "w ww$idx"
+        incr idx
+done
+
+_al wl "w '{print length, \$1}'"
+_al wll "w wwl"
+_al wwl "'{print length}'"
+
+#############
+### POWER ###
+#############
+
+_al pwl 'ehe "\033[31m$(s /sys/class/power_supply/BAT1/capacity)\033[0m"'
+_al pwt 's /sys/class/power_supply/BAT1/status'
+_al pws 'sd cpupower frequency-set -g powersave'
+_al pwp 'sd cpupower frequency-set -g performance'
+_al pww 's /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor'
+
+#################
+### processes ###
+#################
+
+_kal() {
+        _al "k$1" "killapp $2"
+}
+
+_kal e beeper
+_kal v brave
+_kal d dunst
+_kal D Discord
+_kal c clipcat
+_kal r reflector
+_kal o code
+_kal u codium
+_kal x sxhkd
+_kal X Xorg
+_kal w bspwm
+_kal g gotop
+_kal a adb
+_kap p paru
+
+_al bt btop
+
+_al bare 'tonet; toau; tosql; to rtkit-daemon systemd-timesyncd systemd-journald systemd-journald.socket systemd-journald-dev-log.socket polkit; kr; kv; kd; kp; kc; kD; ku; ko; kg; ka; ke'
+
+_al bgd 'bg && disown'
+_al psg pgrep
+
+############
+### TMUX ###
+############
+
+x=$(which tmux)
+
+_x() {
+        _al "x$1" -p "$x" "$2"
+}
+
+_x x
+_x a 'a -t'
+_x l ls
+_x n 'new-session -s'
+_x k 'kill-session -t'
+
+_al x0 'xe 0'
+_al x1 'xe 1'
+_al x2 'xe 2'
+
+#####################################
+#####################################
+#####################################
+
+cup="/usr/bin/make -C $CMD/src --no-print-directory"
+_al cup "$cup release"
+_al cupc "$cup clean release"
+_al cupd "$cup debug"
+
+_al zh "s $SECRET/bash_history"
+_al zhh "zh | gv '^#'"
+_al zhvban "zhh | gv '$_banned'"
+
+_al de 'declare -f'
+
+_ual gpt raw
+_al raw "fix && PS1='$ ' && PROMPT_COMMAND='' && builtin unalias -a && builtin alias z='. /etc/bash.bashrc'"
+
+_al mboot 'm /dev/nvme0n1p1 /boot'
+_ual mkinitcpio mkcp
+_al mkcp 'sd /bin/mkinitcpio -P'
+
+_ual mnt m
+_ual mount m
+_ual make m
+_ual mk m
+_ual man m
+_ual mn m
+
+_al ti time
+_al hf "$CARGO_HOME/bin/hyperfine"
+_ual hyperfine hf
+
+_al path 'eh $PATH'
+_al wi '. wi'
+_ual whereis wi
+_ual which wi
+
+_ual date "dt, dtl, dth"
+_al dt /bin/date
+_al dtl 'eh [$(dt "+%Y/%m/%d %H:%M:%S:%N")]'
+_al hour "dt '+%H:%M:%S'"
+
+_al mitapache "cp $CMD/data/LICENSE-MIT . && cp $CMD/data/LICENSE-APACHE ."
+_al mit "cp $CMD/data/LICENSE-MIT ."
+_al vimsh "$DEV/vsh/main.out"
+_al secret ". $FILES/.secret/vars"
+_al ling '/home/b/.files/.data/local/share/gem/ruby/3.4.0/bin/github-linguist'
+_al scope '/home/b/.files/.apps/telescope.nvim'
+
+_al ChkTeX chktex
+_al qr qrencode
+_al notif dunstify
+_al gpg-list 'gpg --list-secret-keys --keyid-format=long'
+_al cols 'tput cols'
+_al rand 'openssl rand -base64 255'
+_al codex 'code --install-extension'
+_al fix 'stty sane; builtin cd; ehen "\033[0m"'
+_al cls 'ehen "\033c"'
+_al nt numbat
+_al md 'gh markdown-preview'
+_al tf trufflehog
+_al qa qalc
+
+wasted=".config .config/* .local .local/* .pki .pki/* .cache .cache/*"
+_al clean "h; sv $wasted; rn $wasted"
+_al wr 'curl wttr.in'
+
+_al slp sleep
+
+_al alac '/usr/bin/open -n -a alacritty'
+
+_ual random-json rdj
+_al rdj "$CARGO_HOME/bin/random-json"
+
+_ual sort-rust-array sra
+_al sra "$CARGO_HOME/bin/sort-rust-array"
+
+_al mls "make -qp | awk -F':' '/^[a-zA-Z0-9][^$#\/\t=]*:([^=]|$)/ {split(\$1,A,/ /);for(i in A)print A[i]}' | sort -u"
+_al ltx pdflatex
+
+_al gx2 "gx | uc | gv '^\s*1'"
+
+_al adbl 'adb shell pm list packages'
+_al adbu 'adb uninstall --user 0'
+_al adbd 'adb shell pm disable-user --user 0'
+
+_ual floaterm ft
+_ual joplin jp
+_al jp "/bin/joplin --profile $XDG_CONFIG_HOME/joplin"
+
+################
+
+_print_sections '??'

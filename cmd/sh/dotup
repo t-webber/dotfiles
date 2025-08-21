@@ -1,0 +1,9 @@
+#!/bin/sh
+
+cd $DOT >/dev/null 2>&1
+
+git add . >/dev/null 2>&1
+git commit --amend --no-edit --quiet >/dev/null 2>&1
+git push -f >/dev/null 2>&1
+
+cd - >/dev/null 2>&1

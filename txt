@@ -1,0 +1,8 @@
+typescript
+esbuild
+eslint
+prettier
+pyright
+vite
+react
+react-dom

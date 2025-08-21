@@ -1,0 +1,17 @@
+#!/bin/sh
+
+if [ "$1" = "install"
+
+cd "$APPS"
+gh repo clone flutter/flutter
+
+paru -S android-sdk android-sdk-platform-tools android-sdk-build-tools android-sdk-cmdline-tools-latest
+
+echo '
+export ANDROID_HOME=/opt/android-sdk/
+
+PATH+=":$APPS/flutter/bin"
+PATH+=":$ANDROID_HOME/cmdline-tools/latest/bin"
+'
+
+sdkmanager 'build-tools;35.0.1' 'cmdline-tools;latest' 'emulator' 'platform-tools' 'platforms;android-36' 'system-images;android-35;google_apis;x86_64'

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+. ./scripts/load_asl-tools.sh
+set +e
+. dotbashrc
+
+export ASLTOOLS_HOME=./asl-tools_latest/
+module load llvm/clang/20.1.2
+
+$ASLTOOLS_HOME/bin/archsim --backend=C --asldecoder file.asl
