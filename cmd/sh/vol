@@ -1,0 +1,29 @@
+#!/bin/sh
+
+get_volume_level() {
+	pactl get-sink-volume @DEFAULT_SINK@ | awk 'NR==1 {print $5}'
+}
+
+set_volume_level() {
+	pactl set-sink-volume @DEFAULT_SINK@ "$1"
+}
+
+notify() {
+	dunstify -t 500 "  $1" -a stacked -h "string:x-dunst-stack-tag:stacked"
+}
+
+case "$1" in
+"" | "get") echo "$(get_volume_level)" ;;
+"up")
+	set_volume_level "+10%"
+	notify "$(get_volume_level)"
+	;;
+"down")
+	set_volume_level "-10%"
+	notify "$(get_volume_level)"
+	;;
+"mute")
+	pactl set-sink-mute @DEFAULT_SINK@ toggle
+	notify "$(pactl get-sink-mute @DEFAULT_SINK@)"
+	;;
+esac

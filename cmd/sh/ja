@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+
+export _JAVA_OPTIONS="-XX:+UseSerialGC -XX:-TieredCompilation -XX:+UseInterpreter -Xmx4G"
+
+export CLASSPATH="/arm/projectscratch/pd/pj1100048/tomweb01/popeye/works/asl-tools_latest/lib/asl-tools.jar"
+
+/arm/projectscratch/pd/pj1100048/tomweb01/popeye/works/asl-tools_latest/bin/archsim.py --project=v8.prj --config=-DSHOJI_VERSION=0 --config=-DARCH_MAJOR=8 --config=-DARCH_MINOR=4 --config=-DASL_MODEL --codegen=v8A --backend=C

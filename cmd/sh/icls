@@ -1,0 +1,3 @@
+#!/bin/sh
+
+gh s "$1" | xargs gh c

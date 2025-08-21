@@ -1,0 +1,5 @@
+#!/bin/sh
+
+. /etc/bash.bashrc
+
+. "$FILES/dotfiles/cmd/sh/profile"

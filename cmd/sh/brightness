@@ -1,0 +1,13 @@
+#!/bin/sh
+
+case "$1" in
+"") echo "Missing argument" ;;
+"up")
+	brightnessctl s 10+
+	dunstify -t 500 " $(brightnessctl g)%" -a stacked -h "string:x-dunst-stack-tag:stacked"
+	;;
+"down")
+	brightnessctl s 10-
+	dunstify -t 500 " $(brightnessctl g)%" -a stacked -h "string:x-dunst-stack-tag:stacked"
+	;;
+esac
