@@ -1,0 +1,51 @@
+* {
+  color: #ffffd0 !important;
+}
+
+html,
+body,
+#searchform,
+nav header,
+table,
+main,
+td,
+th {
+  background: #000000 !important;
+  color: #ffffd0 !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  background: #000000 !important;
+  color: #e06c75 !important;
+}
+
+em {
+  color: #c678dd !important;
+}
+
+div,
+span,
+section {
+  background: transparent !important;
+}
+
+pre,
+input,
+.pre,
+button,
+textarea {
+  background: #222200 !important;
+}
+
+a {
+  color: #77bbcc !important;
+  background: transparent !important;
+}
+
+a:hover {
+  text-decoration: underline;
+}

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+clear
+
+rm -rf archsim_build_C
+
+. ./scripts/load_asl-tools.sh
+set +e
+. dotbashrc
+
+export ASLTOOLS_HOME=./asl-tools_latest/
+module load llvm/clang/20.1.2
+
+$ASLTOOLS_HOME/bin/archsim --backend=C --incremental --codegen=aarch.sim --project=auto/unpickle.prj --flag=--asltoplevel --dap-src-dir=archex/dap --flag=--pch --notrace --noexec --verbose --warnings-as-errors --config=-DASL_MODEL --config=-DASL_0_DIVRM=1 --config=-DFREEZECONFIG=0 --enable-stdlib-odd-even --enable-new-getter-setter --enable-stdlib-log --enable-stdlib-pow2 --enable-stdlib-setbitnz --disable-stdlib-align --enable-stdlib-rol --enable-stdlib-odd-even --parallel=8 --nocompile
