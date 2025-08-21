@@ -1,0 +1,20 @@
+#!/bin/sh
+
+if [ -z "$1" ]; then
+	echo "Missing argument."
+	exit 1
+fi
+
+last="$(printf "$1" | tail -c 1)"
+
+if [ "$last" = "/" ]; then
+	mkdir -p "$1"
+else
+	parent="$(printf "$1" | awk -F'/' '{OFS=FS;$NF=""; print $0}')"
+	if [ -z "$parent" ]; then
+		:
+	else
+		mkdir -p "$parent"
+	fi
+	touch "$1"
+fi

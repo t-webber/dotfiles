@@ -1,0 +1,58 @@
+#!/bin/sh
+
+set -euo pipefail
+
+pkgs="android-sdk android-sdk-platform-tools android-sdk-build-tools android-sdk-cmdline-tools-latest"
+
+ANDROID_HOME=/opt/android-sdk/
+
+i_flutter() {
+        cd "$APPS"
+        [ -d flutter ] || gh repo clone flutter/flutter -- --depth 1
+        flutter config --android-sdk "$ANDROID_HOME"
+        flutter doctor --android-licenses
+        flutter doctor
+        flutter upgrade
+}
+
+i_android() {
+        paru -S --noconfirm --needed $pkgs
+
+        sudo chown -R b:b "$ANDROID_HOME"
+
+        sdkmanager 'build-tools;35.0.1'
+        sdkmanager 'cmdline-tools;latest'
+        sdkmanager 'platform-tools'
+        sdkmanager 'platforms;android-36'
+        sdkmanager 'system-images;android-36;google_apis;x86_64'
+        sdkmanager 'system-images;android-36;google_apis_playstore;x86_64'
+}
+
+if [ "$1" = "install" ]; then
+        echo '
+export ANDROID_HOME=/opt/android-sdk/
+export ANDROID_AVD_HOME=$CONFIG/.android/avd
+
+PATH+=":$APPS/flutter/bin"
+PATH+=":$ANDROID_HOME/cmdline-tools/latest/bin"
+'
+        PATH+=":$APPS/flutter/bin"
+        PATH+=":$ANDROID_HOME/cmdline-tools/latest/bin"
+
+        ANDROID_AVD_HOME=$CONFIG/.android/avd
+
+        i_flutter &
+        i_android &
+
+        wait
+
+        flutter emulators --create --name e
+
+else
+        if [ "$1" = "uninstall" ]; then
+                paru -Rcns --noconfirm $pkgs
+                sudo "$CMD/bin/rn" "$APPS/flutter" "$ANDROID_HOME"
+        else
+                echo "Usage: $0 [install|uninstall]"
+        fi
+fi
