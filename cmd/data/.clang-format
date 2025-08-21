@@ -1,0 +1,18 @@
+UseTab: Always
+TabWidth: 8
+IndentWidth: 8
+
+BreakBeforeBraces: Attach                    # { on same line
+BreakBeforeBinaryOperators: All              # && on new line
+BinPackArguments: false                      # 4 multiline array, 1 entry/line
+AllowAllArgumentsOnNextLine: false           # 4 multiline fn call, 1 arg/line
+BinPackParameters: false                     # same 4 fn def
+AlwaysBreakAfterReturnType: None
+MaxEmptyLinesToKeep: 1
+
+SortIncludes: true
+ColumnLimit: 80
+
+
+AlignAfterOpenBracket: Align      # align subsequent parameters
+AllowAllParametersOfDeclarationOnNextLine: false

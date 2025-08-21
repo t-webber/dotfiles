@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -euo pipefail
+
+rg -N "$1" /arm/projectscratch/pd/pj1100048/tomweb01/mod-all.txt
+
+{
+        cd /arm/projectscratch/pd/pj1100048/tomweb01/ &&
+                /arm/tools/setup/bin/mgrep | awk -F'[() ]' '{print $2, $1}' >temp.txt &&
+                mv temp.txt mod-all.txt
+} &

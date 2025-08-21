@@ -1,0 +1,25 @@
+#!/bin/sh
+
+. /etc/bash.bashrc
+
+# echo "inside"
+# date
+# echo "if bspwm hangs, look for bspwm/socket"
+# echo "inside xinit" >/home/b/x
+# date >>/home/b/x
+# rm -f /home/b/bsp
+
+export GTK_THEME=Adwaita:dark
+export PASSWORD_STORE_BACKEND=plain
+export CHROME_SECRET_STORE=gnome
+
+# echo "after at loop" >>/home/b/x
+# date >>/home/b/x
+
+# LOGS=/home/b/.files/.data/logs
+# date >$LOGS/bspwm.log
+# echo "[xinitrc] HOME=$HOME XDG_CONFIG_HOME=$XDG_CONFIG_HOME" >>$LOGS/bspwm.log
+exec bspwm # >>$LOGS/bspwm.log
+
+# echo "unreachable" >>/home/b/x
+# date >>/home/b/x

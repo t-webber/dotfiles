@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cargo build
+name=$(ls -lha "$CARGO_TARGET_DIR/debug" | grep ^- | awk '{print $9}' | grep -v '\.')
+rust-gdb "$CARGO_TARGET_DIR/debug/$name"
