@@ -1,0 +1,26 @@
+#!/bin/sh
+
+set -euo pipefail
+
+set -x
+
+cat /proc/cmdline
+yay -Q sof-firmware alsa-ucm-conf alsa-utils
+aplay -l
+aplay -L
+cat /proc/asound/cards
+id
+pactl list short sinks
+wpctl status
+speaker-test -D pipewire -c 2 -l 1
+pw-play /usr/share/sounds/alsa/Front_Center.wav
+sudo dmesg | grep -iE "sof|hda|audio|snd"
+sudo cat /etc/modprobe.d/alsa-base.conf
+pactl list sinks | grep -A9 ^Sink
+amixer -c1 contents | grep -i -E "speaker|headphone|eapd|mute|pin"
+ls /usr/lib/firmware/intel/sof/
+sudo cat /etc/modprobe.d/audio.conf
+
+set +x
+
+echo "I also checked that nothing was mute in alsamixer"

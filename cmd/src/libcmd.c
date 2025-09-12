@@ -1,0 +1,481 @@
+#include "libcmd.h"
+#include "assert.h"
+#include "lib.h"
+#include "libexec.h"
+#include "libterm.h"
+#include "libvec.h"
+#include <ctype.h> // IWYU pragma: keep
+#include <stdio.h>
+#include <string.h>
+
+#define NO_SEP 0
+#define ENV_SEP 1
+
+struct CharParsingState {
+        char prev_sep;
+        char sep;
+        bool less;
+        String raw_mode;
+        bool israw;
+};
+
+static void new_sep(struct CharParsingState *const state, const char new) {
+        if (state->sep != NO_SEP) {
+                upanic("2 successive separators is invalid: %c followed by %c.",
+                       state->sep,
+                       new);
+        }
+        if (new == ENV_SEP) state->israw = true;
+        state->sep = new;
+}
+
+static char LAST[2] = "\0";
+#define push0(value) push2(value, '\0', '\0');
+#define push1(value, first) push2(value, first, '\0')
+#define push2(value, first, second)                                            \
+        push_v(cmd, value);                                                    \
+        LAST[0] = first;                                                       \
+        LAST[1] = second;
+
+__attribute_const__ __wur const char *get_last_pushed(void) {
+        return LAST;
+}
+
+__nonnull() static void print_manual(const Manual *const manual) {
+        printf("%c  %s\n", manual->origin, manual->replace);
+}
+
+__nonnull() static void print_cmd(const Cmd *const cmd,
+                                  size_t max_alias,
+                                  const size_t max_expanded) {
+        if (max_alias) ++max_alias;
+        printf("%-*s %-*s ",
+               (int)max_alias,
+               cmd->alias,
+               (int)max_expanded,
+               cmd->expanded);
+        for (const char **rdr = cmd->options; *rdr != NULL; ++rdr) {
+                printf("[%s] ", *rdr);
+        }
+        printf("\n");
+}
+
+__wur __nonnull() static size_t
+    get_max_alias(const Cmd *const cmds, const size_t cmd_len) {
+        size_t max = 0;
+        size_t current;
+        for (size_t i = 0; i < cmd_len; ++i) {
+                current = strlen(cmds[i].alias);
+                if (current > max) max = current;
+        }
+        return max;
+}
+
+__wur __nonnull() static size_t
+    get_max_expanded(const Cmd *const cmds, const size_t cmd_len) {
+        size_t max = 0;
+        size_t current;
+        for (size_t i = 0; i < cmd_len; ++i) {
+                current = strlen(cmds[i].expanded);
+                if (current > max) max = current;
+        }
+        return max;
+}
+
+__nonnull() static void print_cmds(const Cmd *const cmds,
+                                   const size_t cmd_len) {
+        const size_t max_alias = get_max_alias(cmds, cmd_len);
+        const size_t max_expanded = get_max_expanded(cmds, cmd_len);
+        for (size_t i = 0; i < cmd_len; ++i) {
+                print_cmd(&cmds[i], max_alias, max_expanded);
+        }
+}
+
+__nonnull() static void print_help(const CliSettings *const settings) {
+        print_cmds(settings->cmd, settings->cmd_len);
+        printf("\
+---\n\
+!  clear\n\
+@  print command\n\
+_  toggle raw mode for in-arg-values\n\
+=  no pager\n\
+/  add / between 2-word arg\n\
+:  add : between 2-word arg\n\
+,  usage for command\n\
+\?  man for command\n\
+---\n\
+");
+        for (size_t i = 0; i < settings->manual_len; ++i) {
+                print_manual(&settings->manual[i]);
+        }
+}
+
+__wur __nonnull() static size_t find_command(const_str arg,
+                                             size_t *start,
+                                             const Cmd *const cmds,
+                                             const size_t len) {
+        for (size_t i = 0; i < len; ++i) {
+                size_t n = strlen(cmds[i].alias);
+                if (!strncmp(arg, cmds[i].alias, n)) {
+                        *start = n;
+                        return i;
+                }
+        };
+        upanic("Invalid prefix in arg: %s", arg);
+}
+
+__nonnull() __wur static bool take_two(Vec *const cmd,
+                                       Args opts,
+                                       const char first,
+                                       const char second) {
+        for (int i = 0; opts[i]; ++i) {
+                if (strncmp(opts[i], "--", 2) || opts[i][2] != first) continue;
+                const char *last = strrchr(opts[i] + 2, '-');
+                if (!last || !*++last || *last != second) continue;
+
+                push2(opts[i], first, second);
+                return true;
+        }
+
+        return false;
+}
+
+__nonnull() __wur static bool take_one(Vec *const cmd,
+                                       Args opts,
+                                       const char c,
+                                       struct CharParsingState *const state
+
+) {
+        bool is_env;
+        for (int i = 0; opts[i]; ++i) {
+                const char *first = opts[i];
+                const char *arg = opts[i];
+
+                is_env = *first == '_';
+                if (is_env) ++first;
+
+                if (*first == '=') {
+                        ++first;
+                        arg = first + 1;
+                } else {
+                        for (; *first == '-'; ++first);
+                }
+
+                if (*first != c) continue;
+
+                push1(arg, c);
+                if (is_env) new_sep(state, ENV_SEP);
+                return true;
+        }
+
+        return false;
+}
+
+__nonnull() static void push_raw(struct CharParsingState *const state,
+                                 Vec *const cmd) {
+
+        const size_t len = (state->raw_mode.len + 1);
+        char *raw_arg = malloc(sizeof(char) * len);
+        stpcpy(raw_arg, state->raw_mode.data);
+        push0(raw_arg);
+        state->raw_mode.len = 0;
+        state->israw = false;
+}
+
+__nonnull() static void handle_char(Vec *const cmd,
+                                    const Manual *const expansions,
+                                    const size_t nb_expansions,
+                                    const_str arg,
+                                    const Cmd *const current,
+                                    size_t *const i,
+                                    const size_t end,
+                                    struct CharParsingState *const state) {
+
+        const char ch = arg[*i];
+
+        if (ch == '_') {
+                if (state->israw) {
+                        push_raw(state, cmd);
+                } else {
+                        state->israw = true;
+                }
+                return;
+        }
+
+        if (state->israw) {
+                push_s(&state->raw_mode, ch);
+                return;
+        }
+
+        if (isdigit(ch)) {
+                size_t len = 0;
+                for (; isdigit(*(arg + *i + len)); ++len);
+                const_str value = current->cmd_num(atoi(arg + *i));
+                push0(value);
+                *i += len - 1;
+                return;
+        }
+
+        if (ch == '!') {
+                clear();
+                return;
+        }
+
+        if (ch == '*') {
+                setenv_checked("GIT_PAGER", "");
+                setenv_checked("DELTA_PAGER", "cat");
+                return;
+        }
+
+        if (ch == '/' || ch == ':' || ch == '=') {
+                if (state->sep != NO_SEP) upanic("Found 2 consecutive %c", ch);
+                state->sep = ch;
+                return;
+        }
+
+        if (ch == '%') {
+                state->less = true; // TODO: implement it
+                return;
+        }
+
+        if (ch == 'X') { // TODO: this is hardcoded
+                if (state->israw) upanic("unreachable: catched");
+
+#define estr ":(exclude)"
+                assert(state->raw_mode.len == 0);
+                extend_s(&state->raw_mode, estr, sizeof(estr) - 1);
+                state->israw = true;
+                return;
+        }
+
+        if (*i + 1 != end && take_two(cmd, current->options, ch, arg[*i + 1])) {
+                ++*i;
+        } else if (take_one(cmd, current->options, ch, state)) {
+        } else {
+                for (size_t m_idx = 0; m_idx < nb_expansions; ++m_idx) {
+                        if (ch == expansions[m_idx].origin) {
+                                const char *replace = expansions[m_idx].replace;
+                                bool env = *replace == '_';
+                                if (env) {
+                                        ++replace;
+                                        new_sep(state, ENV_SEP);
+                                }
+                                push1(replace, ch);
+                                return;
+                        }
+                }
+                upanic("Invalid letter: %c.", ch);
+        }
+}
+
+static void merge_sep(Vec *const cmd, const char sep) {
+        if (sep == NO_SEP) upanic("Tried to merge sep without sep");
+        const_str post_slash = pop_v(cmd);
+        const_str pre_slash = pop_v(cmd);
+        if (sep == ENV_SEP)
+                setenv_checked(pre_slash, post_slash);
+        else {
+                const size_t len = strlen(pre_slash) + strlen(post_slash) + 1;
+                char *const merged = malloc(sizeof(char) * (len + 1));
+                sprintf(merged, "%s%c%s", pre_slash, sep, post_slash);
+                push_v(cmd, merged);
+        }
+}
+
+__nonnull() static void parse_alias(const CliSettings *const settings,
+                                    Vec *const cmd,
+                                    const_str arg,
+                                    const size_t end) {
+
+        const bool has_command = settings->cmd_len > 1;
+        if (settings->cmd_len == 0)
+                upanic("`parse_alias` was given empty "
+                       "settings");
+
+        size_t start = 0;
+        size_t cmd_id;
+
+        if (has_command) {
+                cmd_id = find_command(arg,
+                                      &start,
+                                      settings->cmd,
+                                      settings->cmd_len);
+        } else {
+                cmd_id = 0;
+        }
+
+        const Cmd current = settings->cmd[cmd_id];
+
+        push_v(cmd, current.expanded);
+
+        struct CharParsingState state = {.sep = NO_SEP,
+                                         .prev_sep = NO_SEP,
+                                         .less = false,
+                                         .raw_mode = new_s(),
+                                         .israw = false};
+
+        for (size_t i = start; i < end; ++i) {
+                if (arg[i] == ',') {
+                        print_cmd(&current, 0, 0);
+                        exit(1);
+                }
+
+                handle_char(cmd,
+                            settings->manual,
+                            settings->manual_len,
+                            arg,
+                            &current,
+                            &i,
+                            end,
+                            &state);
+
+                if (state.prev_sep && !state.israw) {
+                        merge_sep(cmd, state.prev_sep);
+                        state.prev_sep = NO_SEP;
+                }
+                if (state.sep) {
+                        state.prev_sep = state.sep;
+                        state.sep = NO_SEP;
+                };
+        }
+
+        if (state.israw) push_raw(&state, cmd);
+        if (state.prev_sep) merge_sep(cmd, state.prev_sep);
+}
+
+__nonnull() _Noreturn static void print_exit_or_exec(const Vec *const cmd,
+                                                     const bool debug) {
+
+        if (!debug) exvd(cmd->data);
+
+        print_this_env();
+
+        for (size_t i = 0; i + 1 < cmd->len; ++i) {
+                printf("%s ", cmd->data[i]);
+        }
+
+        printf("\n");
+        exit(0);
+}
+
+__wur __nonnull() static bool push_others(Vec *const cmd,
+                                          const size_t argc,
+                                          Args argv) {
+        bool debug = false;
+
+        reserve_v(cmd, (size_t)(argc - 2));
+        for (size_t i = 2; i < argc; ++i) {
+                if (!strcmp(argv[i], "@")) {
+                        debug = true;
+                } else
+                        push_v(cmd, argv[i]);
+        }
+
+        push_v(cmd, NULL);
+
+        return debug;
+}
+
+__nonnull() _Noreturn void run_cli(const size_t argc,
+                                   Args argv,
+                                   const CliSettings *const settings,
+                                   Vec *const cmd) {
+        if (argc == 1 || (argc == 2 && !strcmp(argv[1], "!"))) {
+                if (argc == 2) clear();
+                print_help(settings);
+                exit(1);
+        }
+
+        store_usage(argv[0], argv[1], false);
+
+        parse_alias(settings, cmd, argv[1], strlen(argv[1]));
+
+        bool debug = push_others(cmd, argc, argv);
+
+        print_exit_or_exec(cmd, debug);
+}
+
+__nonnull() static void try_exec_no_args(const size_t argc,
+                                         Args argv,
+                                         const Cmd *const command) {
+
+        const_str alias = command->alias;
+        char verbose[64];
+        char *end = stpcpy(verbose, alias);
+        *end++ = alias[strlen(alias) - 1];
+        *end = '\0';
+
+        if (!is_verbose(argv[0], alias, verbose)) return;
+
+        Vec cmd = new_v();
+        push_v(&cmd, command->expanded);
+        bool debug = false;
+        for (size_t i = 1; i < argc; ++i)
+                if (!strcmp(argv[i], "@"))
+                        debug = true;
+                else
+                        push_v(&cmd, argv[i]);
+
+        print_exit_or_exec(&cmd, debug);
+}
+
+__nonnull() _Noreturn void run_cli_single(const size_t argc,
+                                          Args argv,
+                                          const Cmd *const command) {
+        try_exec_no_args(argc, argv, command);
+
+        bool should_clear = false, help = false;
+
+        for (size_t idx = 1; idx < argc; ++idx) {
+                const_str arg = argv[idx];
+                if (!strcmp(arg, "!")) { should_clear = true; }
+                if (!strcmp(arg, ",")) { help = true; }
+        }
+
+        if (should_clear) clear();
+        if (help) {
+                print_cmd(command, 0, 0);
+                exit(0);
+        }
+
+        Vec cmd = new_v();
+
+#define len 1
+        const Manual manual[len] = {{'?', "--help"}};
+        const size_t manual_len = len;
+#undef len
+
+        const CliSettings settings = {.cmd = command,
+                                      .cmd_len = 1,
+                                      .manual = manual,
+                                      .manual_len = manual_len};
+
+        bool debug = false;
+
+        if (argc >= 2) {
+                if (strcmp(argv[1], "_")) {
+                        parse_alias(&settings, &cmd, argv[1], strlen(argv[1]));
+                } else {
+                        push_v(&cmd, command->expanded);
+                }
+
+                debug = push_others(&cmd, argc, argv);
+
+                print_exit_or_exec(&cmd, debug);
+        } else {
+                exl1(command->expanded);
+        }
+}
+
+__nonnull() void print_vec(Vec *vec) {
+        for (size_t idx = 0; idx < vec->len; ++idx) {
+                printf("%s ", vec->data[idx]);
+        }
+        printf("\n");
+}
+
+__attribute_malloc__ __wur char *cmd_plain_num(const int value) {
+        char *ret = malloc(64);
+        sprintf(ret, "%d", value);
+        return ret;
+}
