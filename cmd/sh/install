@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -euo pipefail
+
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+cargo install cargo-binstall
+
+curl -fsSL https://bun.com/install | bash
+
+if [ "$(uname)" = "Darwin" ]; then
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+gh ext install gennaro-tedesco/gh-s

@@ -1,0 +1,23 @@
+#!/bin/sh
+
+if [ -n "$2" ]; then
+        start=$2
+        if [ -n "$3" ]; then
+                stop="$3"
+        fi
+fi
+
+if [ -z "$start" ]; then
+        start=0
+fi
+
+if [ -z "$stop" ]; then
+        stop=100000
+fi
+
+for i in $(seq $start $stop); do
+        printf "\033c"
+        echo "===============> $i ($1) <=============="
+        . $1 || break
+        sleep 1
+done

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ -z "$1" ]; then
+        l "%1Missing arg"
+else
+        i wa "../$1" "$1"
+        p "../$1"
+fi
