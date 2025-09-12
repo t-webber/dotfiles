@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -uo pipefail
+
+rg -N "$1" "$WORK/.cache/mod-all.txt"
+
+{
+        . /arm/tools/setup/init/bash
+        cd "$WORK/.cache"
+        /arm/tools/setup/bin/mgrep | awk -F'[() ]' '{print $2, $1}' >temp.txt
+        mv temp.txt mod-all.txt
+} &

@@ -1,0 +1,116 @@
+[
+  {
+    "key": "ctrl+k up",
+    "command": "editor.fold",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+k down",
+    "command": "editor.unfold",
+    "when": "editorTextFocus"
+  },
+  {
+    "args": {
+      "snippet": "$CURSOR_NUMBER"
+    },
+    "command": "editor.action.insertSnippet",
+    "key": "alt+m"
+  },
+  {
+    "command": "settings.cycle.lineNumberToggle",
+    "key": "ctrl+l"
+  },
+  {
+    "command": "git.push",
+    "key": "ctrl+alt+p"
+  },
+  {
+    "command": "workbench.action.zoomOut",
+    "key": "ctrl+shift+alt+o"
+  },
+  {
+    "command": "editor.action.copyLinesDownAction",
+    "key": "ctrl+meta+down"
+  },
+  {
+    "command": "editor.action.copyLinesUpAction",
+    "key": "ctrl+meta+up"
+  },
+  {
+    "command": "terminal.focus",
+    "key": "ctrl+[Quote]",
+    "when": "editorFocus"
+  },
+  {
+    "command": "workbench.action.focusFirstEditorGroup",
+    "key": "ctrl+[Quote]",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+shift+J",
+    "command": "workbench.action.toggleMaximizedPanel"
+  },
+  {
+    "key": "ctrl+q"
+  },
+  {
+    "command": "workbench.action.splitEditor",
+    "key": "ctrl+meta+right"
+  },
+  { "command": "explorer.newFile", "key": "ctrl+n" },
+  {
+    "command": "workbench.action.terminal.runSelectedText",
+    "key": "shift+enter",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+alt+a",
+    "command": "cursorLineStart",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+alt+e",
+    "command": "cursorLineEnd",
+    "when": "editorTextFocus"
+  },
+  {
+    "command": "workbench.action.files.saveWithoutFormatting",
+    "key": "ctrl+shift+s"
+  },
+  {
+    "command": "cursorDown",
+    "key": "ctrl+down",
+    "when": "editorTextFocus"
+  },
+  {
+    "command": "cursorUp",
+    "key": "ctrl+up",
+    "when": "editorTextFocus"
+  },
+  {
+    "command": "workbench.view.extension.todo-tree-container",
+    "key": "ctrl+alt+t"
+  },
+  {
+    "command": "workbench.action.navigateBack",
+    "key": "alt+left",
+    "when": "editorTextFocus"
+  },
+  {
+    "command": "workbench.action.navigateForward",
+    "key": "alt+right",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "shift shift",
+    "command": "closeFindWidget"
+  },
+  {
+    "key": "ctrl+k up",
+    "command": "cursorTop"
+  },
+  {
+    "key": "ctrl+k down",
+    "command": "cursorBottom"
+  }
+]

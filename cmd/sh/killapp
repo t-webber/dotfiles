@@ -1,0 +1,3 @@
+#!/bin/sh
+
+ps -ax | grep -i "$1" | grep -v 'cargo/bin/rg' | awk '{print $1}' | xargs kill -9

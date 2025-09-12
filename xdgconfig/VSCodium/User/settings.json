@@ -1,0 +1,162 @@
+{
+  "[c]": {
+    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+  },
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer"
+  },
+  "breadcrumbs.filePath": "off",
+  "breadcrumbs.icons": false,
+  "censitive.censoring": {
+    "border": "2px solid #111",
+    "color": "theme.editorInfo.background",
+    "grow": false,
+    "prefix": ""
+  },
+  "censitive.defaultCensoring": [
+    {
+      "censor": [".*password.*", ".*token.*", ".*secret.*", ".*auth.*"],
+      "match": "**/{.env,.env.*}"
+    }
+  ],
+  "chat.commandCenter.enabled": false,
+  "cSpell.blockCheckingWhenLineLengthGreaterThan": 1000000,
+  "cSpell.language": "en-GB",
+  "cSpell.userWords": [
+    "actix",
+    "cuid",
+    "doctypes",
+    "elts",
+    "idents",
+    "Linkedin",
+    "mtxprintf",
+    "nonstandard",
+    "repr",
+    "splitn",
+    "telecom",
+    "unwritable",
+    "usize"
+  ],
+
+  "diffEditor.ignoreTrimWhitespace": false,
+  "editor.cursorBlinking": "solid",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.folding": false,
+  "editor.fontFamily": "Hack Nerd Font Mono",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 18,
+  "editor.formatOnSave": true,
+  "editor.glyphMargin": false,
+  "editor.guides.indentation": false,
+  "editor.lineNumbers": "on",
+  "editor.minimap.enabled": false,
+  "editor.mouseWheelZoom": true,
+  "editor.occurrencesHighlight": "off",
+  "editor.overviewRulerBorder": false,
+  "editor.renderLineHighlight": "none",
+  "editor.renderWhitespace": "none",
+  "editor.scrollbar.horizontal": "hidden",
+  "editor.scrollbar.vertical": "hidden",
+  "editor.selectionHighlight": false,
+  "editor.showFoldingControls": "never",
+  "editor.stickyScroll.enabled": false,
+  "editor.tabSize": 8,
+
+  "editor.wordWrap": "on",
+  "emojisense.languages": {
+    "*": true
+  },
+  "explorer.compactFolders": false,
+  "explorer.confirmDragAndDrop": false,
+  "explorer.decorations.badges": false,
+  "files.hotExit": "off",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "git.autofetch": true,
+  "git.blame.editorDecoration.enabled": false,
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true,
+  "git.openRepositoryInParentFolders": "always",
+  "git.showActionButton": {
+    "commit": false,
+    "publish": false,
+    "sync": false
+  },
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "makefile.configureOnOpen": false,
+  "material-icon-theme.hidesExplorerArrows": true,
+  "material-icon-theme.opacity": 0.6,
+  "notebook.breadcrumbs.showCodeCells": false,
+  "prettier.tabWidth": 4,
+  "redhat.telemetry.enabled": false,
+  "rust-analyzer.cargo.features": "all",
+  "rust-analyzer.check.command": "clippy",
+  "settings.cycle": [
+    {
+      "id": "lineNumberToggle",
+      "values": [
+        {
+          "editor.lineNumbers": "off"
+        },
+        {
+          "editor.lineNumbers": "on"
+        }
+      ]
+    }
+  ],
+  "terminal.integrated.enablePersistentSessions": false,
+  "terminal.integrated.fontFamily": "Hack Nerd Font",
+  "terminal.integrated.fontSize": 18,
+  "terminal.integrated.persistentSessionReviveProcess": "never",
+  "terminal.integrated.scrollback": 10000,
+  "terminal.integrated.shellIntegration.decorationsEnabled": "never",
+  "terminal.integrated.tabs.enabled": false,
+  "terminals.autorun": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "update.showReleaseNotes": false,
+  "window.commandCenter": false,
+  "window.customTitleBarVisibility": "never",
+  "window.menuBarVisibility": "hidden",
+  "window.restoreWindows": "preserve",
+  "window.title": " ",
+  "window.titleBarStyle": "native",
+  "workbench.activityBar.location": "hidden",
+  "workbench.colorCustomizations": {
+    "button.background": "#000",
+    "editor.background": "#000",
+    "editorGroup.border": "#000",
+    "editorSuggestWidget.background": "#000",
+    "editorSuggestWidget.selectedBackground": "#000",
+    "editorSuggestWidget.selectedForeground": "#ffd",
+    "focusBorder": "#000",
+    "gitDecoration.ignoredResourceForeground": "#000",
+    "input.background": "#000",
+    "panel.border": "#000",
+    "quickInput.background": "#000",
+    "sideBar.background": "#000",
+    "sideBar.border": "#000",
+    "sideBarSectionHeader.background": "#000",
+    "terminal.background": "#000"
+  },
+  "workbench.colorTheme": "One Dark Pro Monokai Darker Reloaded",
+  "workbench.editor.editorActionsLocation": "hidden",
+  "workbench.editor.empty.hint": "hidden",
+  "workbench.editor.showTabs": "none",
+  "workbench.iconTheme": "vscode-great-icons",
+  "workbench.layoutControl.enabled": false,
+  "workbench.panel.defaultLocation": "left",
+  "workbench.panel.showLabels": false,
+  "workbench.sideBar.location": "right",
+  "workbench.startupEditor": "none",
+  "workbench.tips.enabled": false,
+  "workbench.tree.indent": 12,
+  "workbench.tree.renderIndentGuides": "none",
+  "[markdown]": {
+    "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+  },
+  "github.copilot.nextEditSuggestions.enabled": true
+}
