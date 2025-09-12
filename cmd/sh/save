@@ -1,0 +1,5 @@
+#!/bin/sh
+
+printf "%s\n" "$@" >>"$CMD/data/saved.txt"
+
+dotup

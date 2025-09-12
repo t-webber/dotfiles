@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -euo pipefail
+
+curl https://crates.io/api/v1/crates/$1 2>/dev/null | jq '.crate.newest_version,.crate.repository' | tr  '\n' ' ' | sed 's/"//g' | awk '{print $2, $1}'

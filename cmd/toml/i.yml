@@ -1,0 +1,112 @@
+main:
+  name: git
+  simple: false
+  H: HEAD
+  F: FETCH_HEAD
+  O: origin
+  U: upstream
+  C: --color=always
+  M|.: main
+  E|:: master
+  ^: HEAD^
+  ?: --help
+  \d: HEAD~\1
+
+add: -p . --intent-to-add -e
+
+branch: | # br
+  "-a -d -D -m -M -r -u"
+
+bisect: |
+  start good bad run =ereset visualize =a--stat
+
+checkout: |  # ck
+  -t --orphan
+
+cherry-pick: | # cp
+  --abort --continue
+
+config: | # cg
+  --global --add --replace-all --list
+  =euser.email
+  =nuser.name
+  init.defaultBranch
+  credential.helper
+
+commit: |
+  -m --amend -q -S --no-edit --quiet =y--allow-empty
+
+diff: |
+  --shortstat --cached
+
+fetch: | # e
+  --all --unshallow
+
+fsck: |
+  --no-reflogs --lost-found
+
+init: | # i
+
+ls-files: | # ls
+
+reflog: | # lr
+  --graph -n
+
+log: |
+  --oneline --graph -n
+
+move: # mv
+
+merge: |
+  --allow-unrelated-histories
+
+clean: | # n
+  -f -d -x
+
+push: | # ph
+  =F--force --force-with-lease -d -u --quiet --tags
+  =gHEAD:refs/for/master
+
+pull: | # pl
+  -a -f --quiet
+
+rebase: | # rb
+  --aboort --continue --root --edit-todo --quit -i
+
+remove: | # rm
+  -f -r
+
+restore: -S -W # ro
+
+reset: --hard --soft # rs
+
+remote: -v set-url add =wshow # rt
+
+rev-parse: --show-toplevel # rp
+
+rev-list: # rl
+
+review: -d # rw
+
+stash: | # sh 
+  pop drop clear show apply list
+
+submodule: | # sm
+  update --init --recursive add definit -f
+
+switch: | # sw
+  -C -c
+
+show: | # so
+
+status: | # s
+
+tag: |
+  -d
+
+worktree: |
+  add remove move list -f
+
+apply: | # y
+  -R --reject
+  =s--ignore-space-change =w--ignore-whitespace
