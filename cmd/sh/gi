@@ -1,0 +1,9 @@
+#!/bin/sh
+
+gsy "$1" || gsy2 "$2"
+
+echo -n "?"
+read x
+
+[ -n "$x" ] &&
+        ei "$x"

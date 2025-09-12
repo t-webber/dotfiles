@@ -1,0 +1,29 @@
+#!/bin/sh
+
+echo "don't forget to pull"
+
+if [ -z "$1" ]; then
+        echo "Usage: nix <file>[.c]"
+        exit
+fi
+
+cwd="$(pwd)"
+
+ext="$(echo "$1" | rev | cut -c1-2 | rev)"
+
+cd "${2:-$CMD}"
+
+if [ "$ext" = ".c" ]; then
+        cd src
+        printf "#include \"lib.h\"\n\nint main(const int argc, Args argv) {\n\t\n}\n" >>"$1"
+        $EDITOR "$1"
+else
+        [ -z "$2" ] && cd sh
+        printf "#!/bin/sh\n\n" >>"$1"
+        chmod +x "$1"
+        $EDITOR "$1"
+fi
+
+cd "$cwd"
+
+dotup

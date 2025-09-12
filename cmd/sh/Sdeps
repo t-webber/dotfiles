@@ -1,0 +1,14 @@
+#!/bin/sh
+
+deps() {
+	paru -Sii "$1" | grep 'Depends On' | awk -F':' '{print $2}' | tr ' ' '\n' | grep -v ^$ | wc -l
+}
+
+if [ -z "$1" ]; then
+	pacman -Qtq | while read p; do
+		echo "$(deps $p) $p" &
+	done
+	wait
+else
+	deps "$1"
+fi

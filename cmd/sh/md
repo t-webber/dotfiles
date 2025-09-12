@@ -1,0 +1,19 @@
+#!/bin/bash
+
+c="$BUILD/.cache/mod-all.txt"
+
+if [ -f "$c" ]; then
+        if [ -n "$1" ]; then
+                rg -N "$1" "$c"
+        else
+                module=$(s "$c" | fzf)
+                module load $module
+        fi
+else
+        eh "cache is out"
+fi
+
+{
+        modules=$($MGREP | awk -F'[() ]' '{print $2, $1}')
+        eh "$modules" >"$c"
+} &

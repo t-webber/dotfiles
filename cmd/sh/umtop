@@ -1,0 +1,27 @@
+#!/bin/sh
+
+tot=$((1 + 15 + 1 + 7))
+totall=$(($tot + 1 + 5 + 3))
+
+_inner() {
+        date
+        printf '%.s=' $(seq 1 $tot)
+        printf '\n'
+        utop
+        printf '%.s=' $(seq 1 $totall)
+        printf '\n'
+        mtop
+        printf '%.s=' $(seq 1 $totall)
+        printf '\n'
+}
+
+if [ -n "$1" ]; then
+        while :; do
+                _inner >$WASTE/umtop
+                printf "\033c"
+                cat $WASTE/umtop
+                sleep "$1"
+        done
+else
+        _inner
+fi
