@@ -1,0 +1,24 @@
+#!/bin/sh
+
+debug=2
+
+set -euo pipefail
+
+choice=$(iwl | fzf --ansi --preview "echo {} | awk '{print \$(NF-1) }' | xargs -I{} i soC {}")
+
+hash=$(echo $choice | awk '{print $(NF-1)}')
+name=$(echo $choice | awk '{$NF=$(NF-1)=""; print}' | tr -d '()[]' | sed 's/^\s*//;s/\s*$//g')
+path=$(echo $choice | awk -F'/' '{print $NF}')
+
+if [ $debug == "1" ]; then
+        echo ":$hash:" >&2
+        echo ":$name:" >&2
+        echo ":$path:" >&2
+fi
+
+res=$(i wl | rg -e "$hash" | rg -e "$name" | rg -e "$path" | awk '{print $1}')
+
+if [ $debug == "1" ]; then
+        echo ":$res:" >&2
+fi
+echo $res

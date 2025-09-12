@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -euo pipefail
+
+exec "$BUN_INSTALL/bin/bun" x prettier --write "$1"

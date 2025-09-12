@@ -1,0 +1,43 @@
+#!/bin/sh
+
+if [ -z "$1"]; then
+        l "%1missing argument"
+        exit 6
+fi
+
+ty=$(type $1 2>/dev/null || file "$1" 2>&1 || true)
+
+case "$ty" in
+*"No such file or directory"*)
+        l "unknown"
+        ;;
+"$1 is a shell builtin")
+        l "builtin"
+        ;;
+"$1 is a shell keyword")
+        l "keyword"
+        ;;
+"$1 is aliased to \`"*)
+        alias=${ty#"$1 is aliased to \`"}
+        alias=${alias%?}
+        l "$alias"
+        ;;
+"$1 is hashed ("*)
+        path=${ty#"$1 is hashed ("}
+        path="${path%?}"
+        path="$(readlink -f $path)"
+        l "$path"
+        ;;
+"$1 is "*)
+        path=${ty#"$1 is "}
+        path="$(readlink -f $path)"
+        l "$path"
+        ;;
+"$1: "*)
+        ft=${ty#"$1: "}
+        l $ft
+        ;;
+*)
+        l "%1unhandled case: %3$ty"
+        ;;
+esac

@@ -1,0 +1,40 @@
+#include "lib.h"
+#include "libexec.h"
+#include "libfiles.h"
+#include <stdbool.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+static __nonnull() __wur const
+    char *argv_one_filename(const int argc, const_str *const argv) {
+        if (argc == 1)
+                return ".";
+        else if (argc == 2)
+                return argv[1];
+        else
+                upanic("Too many arguments. Usage: %s [<filename>]", argv[0]);
+}
+
+int main(const int argc, const_str *const argv) {
+        store_usage(argv[0], "", false);
+        const char *filename = argv_one_filename(argc, argv);
+
+        struct stat st;
+        int x = stat(filename, &st);
+
+        if (x != 0) {
+                if (starts_with_const(filename, "http"))
+                        exldn("xdg-open", filename);
+
+                char url[256];
+                sprintf(url, "http://%s", filename);
+                exldn("xdg-open", url);
+        }
+
+        if (S_ISDIR(st.st_mode)) { exldn("nvim", filename, NULL); }
+
+        if (!S_ISREG(st.st_mode))
+                upanic("Invalid file %s: type %o", filename, st.st_mode);
+
+        exec_open_file(filename, DISPLAY_OPEN);
+}

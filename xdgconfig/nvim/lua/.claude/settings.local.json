@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(/usr/bin/which nvim:*)",
+      "Bash(/opt/homebrew/bin/which nvim:*)"
+    ]
+  }
+}

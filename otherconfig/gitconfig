@@ -1,0 +1,27 @@
+[user]
+	email = t.c.w.webber@gmail.com
+	name = Tom Webber
+[credential]
+	helper = store
+[init]
+	defaultBranch = main
+[pull]
+	rebase = true
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[commit]
+	gpgsign = true
+[diff]
+        tool = nvimdiff
+[difftool]
+        prompt = false
+[pack]
+	threads = 4
+[push]
+	autoSetupRemote = true
+[clean]
+	requireForce = true
