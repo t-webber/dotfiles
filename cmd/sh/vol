@@ -1,0 +1,33 @@
+#!/bin/sh
+
+get_volume_level() {
+        pactl get-sink-volume @DEFAULT_SINK@ | awk 'NR==1 {print $5}'
+}
+
+set_volume_level() {
+        pactl set-sink-volume @DEFAULT_SINK@ "$1"
+}
+
+notify() {
+        notify-send -u low -t 500 "🔊 $1" -h "string:x-dunst-stack-tag:stacked" -a center
+}
+
+case "$1" in
+"" | "get") echo "$(get_volume_level)" ;;
+"up")
+        set_volume_level "+10%"
+        notify "$(get_volume_level)"
+        ;;
+"down")
+        set_volume_level "-10%"
+        notify "$(get_volume_level)"
+        ;;
+"mute")
+        pactl set-sink-mute @DEFAULT_SINK@ toggle
+        if [ "$(pactl get-sink-mute @DEFAULT_SINK@ | awk '{print $2}')" = "yes" ]; then
+                notify "mute  "
+        else
+                notify "unmute"
+        fi
+        ;;
+esac

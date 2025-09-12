@@ -1,0 +1,15 @@
+#!/bin/sh
+
+git diff
+git status
+
+printf "Commit message: "
+read -r commit
+
+if [ -z "$commit" ]; then
+	exit 1
+fi
+
+git add "$1"
+git commit -m "$commit"
+git push
