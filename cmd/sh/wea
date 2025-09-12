@@ -1,0 +1,22 @@
+#!/bin/sh
+
+coords=$(curl -s ipinfo.io/loc) || {
+	echo "Failed to get location"
+	exit 1
+}
+lat=${coords%,*}
+lon=${coords#*,}
+
+API="https://api.open-meteo.com/v1/forecast?latitude=$lat&longitude=$lon&hourly=temperature_2m,precipitation,windspeed_10m,cloudcover&timezone=auto"
+
+curl -s "$API" | jq -r '
+  .hourly as $h
+  | ["Hour", "°C", "Rain(mm)", "Wind(kph)", "Cloud(%)"],
+    (range(0; 24) | [
+      ($h.time[.] | split("T")[1]),
+      ($h.temperature_2m[.] | round | tostring),
+      ($h.precipitation[.] | tostring),
+      ($h.windspeed_10m[.] | round | tostring),
+      ($h.cloudcover[.] | round | tostring)
+    ])
+  | @tsv' | column -t

@@ -1,0 +1,21 @@
+#!/bin/sh
+
+get_file_location() {
+        if [ -z "$1" ]; then
+                pwd
+        else
+                if [ -e "$1" ]; then
+                        pf "$1"
+                else
+                        /usr/bin/which "$1" 2>/dev/null
+                        if [ "$?" = "1" ]; then
+                                type "$1"
+                        fi
+                fi
+        fi
+}
+
+x="$(get_file_location $1)"
+
+eh "$x"
+[ "$DEVICE" != "v" ] && ehn "$x" | x

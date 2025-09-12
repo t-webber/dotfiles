@@ -1,0 +1,22 @@
+#!/bin/sh
+
+if [ "$1" = "v" ]; then
+	file="$2"
+else
+	file="$1"
+fi
+
+filename="$(fd "$file" "$FILES/dotfiles" -t f --hidden | awk -F/ '{print length($NF), $0}' | sort -n | awk 'NR==1 {print $NF}')"
+
+if [ -z "$filename" ]; then
+	echo "Found none."
+	exit
+fi
+
+echo "> $filename"
+
+if [ "$1" = "v" ]; then
+	sv "$filename"
+else
+	s "$filename"
+fi

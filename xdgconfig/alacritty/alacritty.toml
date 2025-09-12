@@ -1,0 +1,26 @@
+[font]
+normal.family = "Hack Nerd Font"
+size = 6
+
+[scrolling]
+history = 100000
+
+[window]
+decorations = "None"
+
+[cursor]
+style.shape = "Beam"
+vi_mode_style.shape = "Block"
+
+[colors.primary]
+foreground = "#ffffcc"
+background = "#000000"
+
+[colors.normal]
+red = "#e06c75"
+green = "#98c379"
+yellow = "#e5c07b"
+blue = "#4070b0"
+magenta = "#cf7eea"
+cyan = "#60c0d0"
+white = "#888800"

@@ -1,0 +1,7 @@
+#!/bin/sh
+cd $DOT >/dev/null 2>&1
+
+git reset --hard origin/main
+git pull -f
+
+cd - >/dev/null 2>&1

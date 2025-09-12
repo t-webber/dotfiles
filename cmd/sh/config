@@ -1,0 +1,95 @@
+#!/bin/sh
+
+section() {
+	term_width="$(tput cols)"
+	sect_width="${#1}"
+	eq_count=$(((term_width - 2 - $sect_width) / 2))
+	eqs=$(/bin/head -c $eq_count /dev/zero | tr '\0' '=')
+	printf "\033[35m$eqs $1 $eqs\033[0m\n"
+}
+
+##############################
+section Prompts
+##############################
+
+printf 'Name: '
+read -r DEVICE </dev/tty
+
+printf 'Files location (absolute path, ~ for $HOME): '
+read -r FILES </dev/tty
+
+if [ "$(echo "$FILES" | cut -c1-1)" = "~" ]; then
+	FILES="$(echo "$FILES" | cut -c2-)"
+	FILES="$HOME$FILES"
+fi
+
+##############################
+section "Creating $FILES"
+##############################
+
+mkdir -p "$FILES"
+cd "$FILES" || (
+	printf "Access denied: failed to creates FILES folder\n"
+	exit
+)
+
+##############################
+section "Cloning dotfiles"
+##############################
+
+git clone https://github.com/t-webber/dotfiles || (
+	printf "Failed to clone dotfiles\n"
+	exit
+)
+cd dotfiles
+
+##############################
+section "Loading vars & aliases"
+##############################
+
+git submodule update --init --recursive
+
+. cmd/sh/shellrc
+
+##############################
+section "Installing bun & rust"
+##############################
+
+curl https://bun.sh/install | bash 2>/dev/null >&2 &
+
+curl https://sh.rustup.rs | sh -s -- --no-modify-path --profile minimal -y
+
+##############################
+section "Replacing global config"
+##############################
+
+printf "Before ETC: Cargo bins: $(<$ETC/cargo)..."
+
+export ETC="$FILES/dotfiles/etc"
+./etc/link.sh !
+
+printf "After ETC: Cargo bins: $(<$ETC/cargo)..."
+
+##############################
+section "Adding DEVICE and FILES to globals"
+##############################
+
+eh ">>> files: $FILES"
+eval "cat /etc/bash.bashrc | sed 's|^export FILES=.*|export FILES=$FILES|' | sudo tee /etc/bash.bashrc >/dev/null"
+
+eh ">>> device: $DEVICE"
+eval "cat /etc/bash.bashrc | sed 's|^export DEVICE=.*|export DEVICE=$DEVICE|' | sudo tee /etc/bash.bashrc >/dev/null"
+
+##############################
+section "Installing cargo binstall"
+##############################
+
+"$CARGO_HOME/bin/cargo" install cargo-binstall
+
+##############################
+section "Installing software"
+##############################
+
+printf "Install $(<$ETC/cargo)..."
+"$CARGO_HOME/bin/cargo" binstall $(<$ETC/cargo)
+"$CARGO_HOME/bin/cargo" install $(<$ETC/cargo)

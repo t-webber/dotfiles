@@ -1,0 +1,39 @@
+#!/bin/sh
+
+if [ -z "$2" ]; then
+        echo "don't forget to pull"
+        search_folder="$DOT"
+else
+        search_folder="$2"
+fi
+
+filename="$(fd "$1" "$search_folder" -t f --hidden | awk -F/ '{print length($NF), $0}' | sort -n | awk 'NR==1 {print $NF}')"
+
+if [ -z "$filename" ]; then
+        filename="$(fd "$1" "$search_folder" --hidden | awk -F/ '{print length($NF), $0}' | sort -n | awk 'NR==1 {print $NF}')"
+fi
+
+if [ -z "$filename" ]; then
+        echo "Found none."
+        exit 6
+fi
+
+folder=$(echo "$filename" | rev | sed 's/\// /' | rev | awk '{print $1}')
+file=$(echo "$filename" | awk -F/ '{print $NF}')
+
+if [ -z "$3" ]; then
+
+        cd "$folder" || (
+                printf "Access to folder %s denied\n" "$folder"
+                exit 6
+        )
+
+        $EDITOR "$file"
+else
+        sudo bash -ic "p $folder && e $file"
+fi
+
+if [ -z "$2" ]; then
+        dotup &
+        :
+fi

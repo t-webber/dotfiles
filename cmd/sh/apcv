@@ -1,0 +1,10 @@
+#!/bin/sh
+
+nb=$(sv | rg -i cv | wc -l)
+
+if [ "$nb" != "1" ]; then
+        printf "Multiple CV files.\n"
+        exit 6
+fi
+
+mv CV* applic/Tom_Webber.pdf

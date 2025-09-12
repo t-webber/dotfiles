@@ -1,0 +1,25 @@
+#!/bin/sh
+
+set -euo pipefail
+
+export PAGER=
+
+echo "===== git diff ====="
+git diff
+echo "===== git status ====="
+git status
+echo "===== commit ====="
+
+printf "Commit message: "
+read -r commit
+
+if [ -z "$commit" ]; then
+        exit 1
+fi
+
+echo "===== git add ====="
+git add "$1"
+echo "===== git commit ====="
+git commit -m "$commit"
+echo "===== git push ====="
+git push
