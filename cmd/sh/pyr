@@ -1,0 +1,3 @@
+#!/bin/sh
+
+module load python/python/3.13.5 && python

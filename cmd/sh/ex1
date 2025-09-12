@@ -1,0 +1,6 @@
+#!/bin/sh
+
+. /etc/bash.bashrc
+
+read -r x
+eval "$x"

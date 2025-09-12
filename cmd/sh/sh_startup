@@ -1,0 +1,30 @@
+#!/bin/sh
+
+sleep 5
+
+taiw
+taau
+mountpoint -q /boot || mboot
+lsblk
+
+"$ETC/link.sh"
+
+exec plogd --resetdb >"$SLOGS/plog.log" 2>&1 &
+
+while ! ping -c1 -W1 1.1.1.1; do
+        sleep 1
+done
+
+bur | gv Downloading &
+
+go install github.com/t-webber/plog/plogd@latest &
+
+C &
+U &
+Fy &
+
+ru &
+sd pkgfile --update &
+tldr --update &
+
+wait

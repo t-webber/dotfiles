@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if ! [ -e /tmp/fifo ]; then
+        mkfifo /tmp/fifo
+fi
+
+read x < /tmp/fifo
+echo $x
+

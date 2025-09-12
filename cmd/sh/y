@@ -1,0 +1,33 @@
+#!/bin/sh
+
+if [ -n "$1" ]; then
+        yy $@
+        return 0
+fi
+
+if type deactivate 2>/dev/null >&2; then
+        uv sync
+        deactivate
+        return 0
+fi
+
+if [ -d ".venv" ]; then
+        . .venv/bin/activate
+else if [ -d "venv" ]; then
+        . venv/bin/activate
+else
+        uv venv
+fi; fi
+
+if [ ! -f "pyproject.toml" ]; then
+        uv init
+fi
+
+uv sync
+
+if [ -d ".complete" ]; then
+        for f in .complete/*; do
+                printf "$f "
+                . $f
+        done
+fi

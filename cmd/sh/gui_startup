@@ -1,0 +1,16 @@
+#!/bin/sh
+
+sxhkd & #>/home/b/.files/.data/logs/sxhkd.log 2>&1 &
+
+setxkbmap fr &
+
+xmodmap -e "clear Mod5"
+xmodmap -e "add Mod3 = ISO_Level3_Shift"
+# xrandr --output eDP-1 --scale 1.5x1.5
+
+xsetwacom set 12 Button 1 "key +Control_L +z -z"
+
+dunst &    #>/home/b/.files/.data/logs/dunst.log 2>&1 &
+clipcatd & # >/home/b/.files/.data/logs/clipcatd.log 2>&1 &
+
+lht set 20

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+tmux -f "$OCFG/tmux.conf" a -t "$1" || tmux -f "$OCFG/tmux.conf" new-session -s "$1"

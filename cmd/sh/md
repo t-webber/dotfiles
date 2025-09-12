@@ -1,0 +1,20 @@
+#!/bin/bash
+
+c="$XDG_CACHE_HOME/mod-all.txt"
+
+if [ -f "$c" ]; then
+        if [ -n "$1" ]; then
+                rg -N "$1" "$c"
+        else
+                module=$(s "$c" | fzf)
+                echo $module
+                module load $module
+        fi
+else
+        echo "cache is out"
+fi
+
+{
+        modules=$($MGREP | awk -F'[() ]' '{print $2, $1}')
+        echo "$modules" >"$c"
+} &

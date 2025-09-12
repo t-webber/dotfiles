@@ -1,0 +1,21 @@
+#!/bin/sh
+
+f=""
+
+inner() {
+        p=$(bjobs | rg PEND | wc -l)
+        r=$(bjobs | rg RUN | wc -l)
+
+        f="run: $r pend: $p"
+}
+
+if [ -n "$1" ]; then
+        while :; do
+                inner
+                printf "\033c$(date)\n$f\n"
+                sleep "$1"
+        done
+else
+        inner
+        printf "$f\n"
+fi
