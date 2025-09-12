@@ -1,0 +1,5 @@
+#!/bin/sh
+
+git branch -D "$1"
+git branch -D "origin/$1" --remote
+git push origin -d "$1"

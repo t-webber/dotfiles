@@ -1,0 +1,16 @@
+#!/bin/bash
+
+/bin/date >/tmp/log
+
+. ~/.bashrc
+
+if [ -z "$TMUX" ]; then
+        if [ "$XDG_VTNR" = "1" ]; then
+                wpad &>>/tmp/log &
+                sudo dhcpcd &>>/tmp/log &
+                exec startx
+        else
+                sudo rmmod pcspkr &>>/tmp/log
+                sudo loadkeys fr-latin1 &>>/tmp/log
+        fi
+fi

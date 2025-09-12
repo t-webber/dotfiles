@@ -1,0 +1,20 @@
+#!/bin/sh
+
+size=300
+
+x="$(bspc query -N | wc -l)"
+
+bspc rule -a Alacritty state=floating
+alacritty $@ &
+
+while [ "$(bspc query --nodes | wc -l)" = "$x" ]; do :; done
+
+wid="$(xdo id -n Alacritty | tail -1)"
+
+bspc node "$wid" -z left "-$size" 0
+bspc node "$wid" -z right "$size" 0
+bspc node "$wid" -z top 0 "-$size"
+bspc node "$wid" -z bottom 0 "$size"
+bspc node "$wid" -z left "-$size" 0
+
+bspc rule -r Alacritty

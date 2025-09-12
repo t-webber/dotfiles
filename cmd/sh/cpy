@@ -1,0 +1,6 @@
+#!/bin/sh
+
+set -euo pipefail
+
+printf "\033c"
+python "$1"

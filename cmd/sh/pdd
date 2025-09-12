@@ -1,0 +1,3 @@
+#!/bin/sh
+
+path=$(pd "$1") && pushd "$path" >/dev/null

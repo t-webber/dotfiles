@@ -1,0 +1,5 @@
+#!/bin/sh
+
+age=$(($(date +%s) - $(stat -c %W /)))
+
+echo "$((age / 86400)) days, $((age % 86400 / 3600)) hours, $((age % 3600 / 60)) mins, $((age % 60)) secs"

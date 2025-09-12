@@ -1,0 +1,51 @@
+#!/bin/sh
+
+printf '
+# Inline edition
+
+Ctrl+w          delete last word
+Alt+d           delete next word
+Ctrl+u          delete to ^
+Ctrl+k          delete to $
+
+Ctrl+t          swap characters
+Alt+t           swap words
+Alt+.           use last word of previous cmd (last arg)
+Ctrl+Alt+y      use 2nd word of previous cmd (1st arg)
+Alt+u           capitalise to end of word
+Alt+l           uncapitalise to end of word
+Alt+c           capitalise letter and uncapitalise word
+
+# Movements
+
+Alt+b           move last word
+Alt+f           move next word
+Ctrl+x          toggle between ^ and current position
+Ctrl+]          f in vi
+Ctrl+Alt+]      F in vi
+Ctrl+_          Undo
+
+# Display
+
+~TABTAB         list users
+$TABTAB         list variables
+
+
+# History
+
+Ctrl+s          search history forward       
+Ctrl+r          search history backward 
+Ctrl+o          leave history w/ exec
+Ctrl+g          leave history w/o exec
+Alt+r           revert changes since loaded rom history
+Alt+</>         beginning/end of history
+
+!!              run last cmd
+!vi             run last cmd starting with vi
+!vi:p           print last cmd starting with vi
+!$              last arg of last cmd
+!^              first arg of last cmd
+^abc^xyz        replace 1st occurance of abc with xyz in last cmd and exec it
+'
+
+# https://gist.github.com/tuxfight3r/60051ac67c5f0445efee

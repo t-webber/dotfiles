@@ -1,0 +1,5 @@
+#!/bin/sh
+
+while :; do
+        fd --hidden --no-ignore . "$1" | while read f; do chmod go-srwx "$f"; done
+done

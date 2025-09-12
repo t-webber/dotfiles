@@ -1,0 +1,30 @@
+#!/bin/bash
+
+echo "sh:$-:sh"
+
+export XCOPY="$(which pbcopy)"
+export XPASTE="$(which pbpaste)"
+export PYTHON=/opt/homebrew/bin/python3.13
+export EDITOR='/opt/homebrew/bin/nvim'
+export DEVICE='mac'
+export CC=/opt/homebrew/Cellar/gcc/15.2.0/bin/gcc-15
+
+. ~/.files/dotfiles/cmd/sh/bashrc
+# for f in /opt/homebrew/etc/bash_completion.d/*; do
+#         . "$f"
+# done
+
+case $- in
+*i*)
+        if [ -z "$ALACRITTY_LOG" ]; then
+                exec alacritty &
+                disown
+                exit
+        else
+                alacritty msg config "font.size = 15"
+        fi
+        ;;
+*) false ;;
+esac
+
+. "$HOME/.files/.data/local/share/../bin/env"

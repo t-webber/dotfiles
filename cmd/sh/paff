@@ -1,0 +1,14 @@
+#!/bin/sh
+
+bunx prisma format >/dev/null 2>/home/b/b
+
+fd . . | rg '.prisma$' | while read s; do
+	(
+		x=$(sed 's/^  /    /' "$s")
+		echo -e "$x" >"$s"
+	) &
+done
+
+wait
+
+date "+%Y/%m/%d %H:%M:%S:%N" >/home/b/a

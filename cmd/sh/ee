@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -euo pipefail
+
+echo "#!/bin/sh
+
+set -euo pipefail
+
+" >>"$1"
+chmod +x "$1"
+"$EDITOR" "$1"

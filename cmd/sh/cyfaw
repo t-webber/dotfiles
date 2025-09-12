@@ -1,0 +1,29 @@
+#!/bin/sh
+
+printf "\033c"
+
+cargo build
+
+echo '#![deny(clippy::restriction)]
+#![allow(
+    clippy::implicit_return,
+    clippy::single_call_fn,
+    clippy::question_mark_used,
+    clippy::pattern_type_mismatch,
+    clippy::blanket_clippy_restriction_lints,
+    clippy::unseparated_literal_suffix,
+    clippy::missing_trait_methods,
+    clippy::mod_module_files,
+    clippy::module_name_repetitions,
+    reason = ""
+)]' >"$WASTE/tmp"
+
+cat src/main.rs >>"$WASTE/tmp"
+mv src/main.rs "$WASTE/old"
+mv $WASTE/tmp src/main.rs
+
+c yfaw
+
+if [ -z $1 ]; then
+mv $WASTE/old src/main.rs
+fi
