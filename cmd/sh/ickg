@@ -1,0 +1,53 @@
+#!/bin/bash
+
+if [ -n "$1" ]; then
+        id="$1"
+else
+        id="$(get id)"
+fi
+
+if [ -n "$2" ]; then
+        patchset="$2"
+else
+        patchset="$(get patchset)"
+fi
+
+if [ -n "$3" ]; then
+        name="$3"
+else
+        name="$(get name)"
+fi
+
+id=$(eh "$id" | w -F'/' '{print $NF}')
+
+scope=$(eh "$id" | rev | cut -c1-2 | rev)
+
+url=$(i rtv | rg fetch | w '{print $2}')
+
+oldbranch=$(i br | rg '\*' | w '{print $2}')
+
+i e "$url" "refs/changes/$scope/$id/$patchset"
+i ckF
+
+if [ -n "$name" ]; then
+        newbranch="$name-$patchset"
+
+        i swc "$newbranch"
+
+        if [ -n "$4" ]; then
+                worktree="y"
+        else
+                worktree="$(get 'worktree [y/N]?')"
+        fi
+
+        if [ "$worktree" = "y" ]; then
+                i sw "$oldbranch"
+                i wa "../$newbranch" "$newbranch"
+                p "../$newbranch"
+        fi
+
+        . dotshrc_genasm_mp
+        python -m ensurepip
+        python -m pip install --upgrade pip
+        python -m pip install yapf pyright rich
+fi

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -eo pipefail
+
+if [ -z "$2" ] && [ -e "${1:-.}" ]; then
+        $EDITOR ${1:-.}
+        exit 0
+fi
+
+q=$(l "$*" | sed "s/\([^ ]\+\)/'\1/g")
+
+x=$({
+        ff . $DOT -E $CMD/src/zlib
+        ff . /etc -E /etc/ssl/certs
+} | fzf --no-sort --query "$q" -1 --cycle)
+
+$EDITOR $x

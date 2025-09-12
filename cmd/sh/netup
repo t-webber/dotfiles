@@ -1,0 +1,8 @@
+#!/bin/sh
+
+set -x
+
+sudo wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf
+sudo dhcpcd wlan0
+while :; do ping 8.8.8.8 -c 1 && break; sleep 0.1; done
+while :; do ping std.rs -c 1 && break; sleep 0.1; done

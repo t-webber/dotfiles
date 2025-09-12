@@ -1,0 +1,22 @@
+#!/bin/sh
+
+kill -15 -1
+
+for i in $(seq 1 20); do
+        if ! pgrep -v -x "init|sh|rc.shutdown|systemd|kthreadd" >/dev/null; then
+                break
+        fi
+        sleep 0.1
+done
+
+kill -9 -1
+
+sync
+
+echo u >/proc/sysrq-trigger
+
+if [ "$1" = "reboot" ]; then
+        echo b >/proc/sysrq-trigger
+else
+        echo o >/proc/sysrq-trigger
+fi

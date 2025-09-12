@@ -1,0 +1,42 @@
+html, body, aside, div, header, li, select, tr.dark {
+   background: black !important;
+   color: #ffffd0 !important;
+}
+
+span {
+    background: transparent !important;
+}
+
+a, .kwa {
+ color: #77bbff !important;
+}
+
+aui-badge, .aui-icon,
+.aui-navgroup-horizontal .aui-nav>li a,
+.aui-navgroup-vertical .aui-nav>li>a,
+.aui-nav-vertical>li>a
+{
+    color: #e06c75 !important;
+}
+
+.pseudocode, pre, .pre, button,
+input, tr.light, td, textarea {
+   background: #333300 !important;
+    color: #ffffd0 !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #e06c75 !important;
+}
+
+b, em {
+    color: #c678dd;
+}
+
+* {
+      font-family: monospace;
+}
+
+label {
+    color: #98c379 !important;
+}

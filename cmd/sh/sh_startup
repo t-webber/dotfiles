@@ -1,0 +1,26 @@
+#!/bin/bash
+
+sl=$SLOGS/sh-startup
+
+l / >$LOGS/last_location
+
+clipcatd &
+
+hermes &>$sl-net
+
+"$ETC/link.sh" &>$sl-link
+
+while ! ping -c1 -W1 1.1.1.1; do
+        sleep 1
+done
+
+bur &>$sl-bun &
+
+C &
+Fy &>$sl-Fy &
+
+ru &>$sl-ru &
+sudo pkgfile --update &>$sl-pkgfile &
+tldr --update &
+
+wait

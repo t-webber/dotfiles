@@ -1,0 +1,20 @@
+#!/bin/bash
+
+l="$LOGS/sound-"
+
+case "$1" in
+"logs")
+        for f in $l*; do
+                la "$f"
+                tail -n 10 $f
+        done
+        ;;
+"kill")
+        killapp pipewire
+        killapp wireplumber
+        r $l*
+        ;;
+*)
+        le "Usage: $0 [logs|kill|fg]"
+        ;;
+esac

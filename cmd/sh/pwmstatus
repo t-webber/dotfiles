@@ -1,0 +1,3 @@
+#!/bin/bash
+
+ioreg -rc AppleSmartBattery | rg IsCharging | awk '{print $NF}'

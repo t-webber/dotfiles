@@ -1,0 +1,13 @@
+#!/bin/sh
+
+sl=$SLOGS/bspwm
+
+setxkbmap fr
+
+gui_startup &>$sl-gui-startup &
+
+slock && (
+        sxhkd &>$sl-sxhkd &
+        alacritty &>$sl-alacritty &
+
+)

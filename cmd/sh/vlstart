@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -euo pipefail
+set -x
+
+sudo /usr/lib/rtkit-daemon &
+sleep 2
+pipewire &
+sleep 2
+pipewire-pulse &
+sleep 2
+wireplumber
