@@ -1,0 +1,75 @@
+paste <(git log | g ^commit  | awk '{print $2}' | xargs git show --stat  | g changed | tr -s ','  | awk '{print $4 - $6}' ) <(git log --oneline | awk '{$1=""; print $0}') | sort -n
+
+sudo -u postgres psql
+
+sudo su - postgres && psql
+
+git rebase -i --root --committer-date-is-author-date
+
+tput cols
+
+sudo dnf install codium.rpm
+
+gpg --list-secret-keys --keyid-format=long
+
+gpg --full-generate-key
+
+tar -xvz -f android-studio.tar.gz -C android
+
+git diff --stat HEAD~1 HEAD # see diff stat between 2 last commits
+
+git diff --stat --cached # see diff stat with uncommitted changed
+
+cargo create-tauri-app
+
+sudo ss -lptn 'sport = :5432'
+
+curl -H "Authorization: token $TOKEN" https://api.github.com/user
+
+git check-ignore -v alacritty/alacritty.toml 
+
+sudo systemctl list-unit-files | awk '$2 ~ /^enabled$/'
+
+ps -eo pid,ppid,comm
+
+sudo dmidecode -t system
+
+xrandr --output DP-0 --scale 1.5x1.5
+xrandr --output DP-0 --scale 0.75x0.675 --pos 0x0 --same-as HDMI-0
+
+git rebase --onto main b12449d templates
+
+git fetch -p
+
+bspc query -M --names
+
+bspc query -D --names
+
+bspc desktop editor -n neovim
+
+faillock --user b --reset
+
+sudo reflector --latest 30 --sort rate --save /etc/pacman.d/mirrorlist --connection-timeout 20 --number 15
+
+sudo timedatectl set-ntp true
+
+alias | awk -F '[ =]' '{print $2}' | g -x '.{0,2}'
+
+man -O width=120
+
+gh api -X PATCH /repos/t-webber/rust-clippy -f default_branch=master
+
+pg_dump --schema-only --schema=public --no-owner maindb -U postgres > schema.sql
+
+ffmpeg -i pr.mkv -codec copy pr.mp4
+
+ps -ef | g tomweb01 | g bash | awk '{print $3}' | while read p; do kill $p; done
+
+while :; do ps -ef | g tomweb01 | g bash | awk '{print $2}' | while read p; do kill $p; done; done
+
+self.call = traceback.format_stack()
+
+from rich.traceback import install
+install()
+
+def die(): traceback.print_stack(); traceback.print_exc(); sys.stderr.flush(); os._exit(1)

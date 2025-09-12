@@ -1,0 +1,41 @@
+; vim: ft=gitconfig
+[user]
+	email = t.c.w.webber@gmail.com
+	name = Tom Webber
+[credential]
+	helper = store
+[init]
+	defaultBranch = main
+[pull]
+	rebase = true
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[commit]
+	gpgsign = true
+[diff]
+        tool = nvimdiff
+[difftool]
+        prompt = false
+[pack]
+	threads = 4
+[push]
+	autoSetupRemote = true
+[clean]
+	requireForce = true
+[url "https://github.com/"]
+	insteadOf = gh:
+[url "https://github.com/t-webber/"]
+	insteadOf = t:
+[core]
+	excludesFile = /Users/twebber/.files/dotfiles/otherconfig/gitignore
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[lfs]
+	locksverify = true

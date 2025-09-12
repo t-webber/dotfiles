@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if [ -n "$2" ]; then
+        le too many arguments
+fi
+
+set -eo pipefail
+
+cd /
+
+x=$(. wi "$1")
+
+if [ "$(. wi "$1" | wc -l)" = "1" ]; then
+        "$EDITOR" "$(. wi "$1")"
+else
+        . wi "$1" | fzf | x . "$EDITOR" .
+fi

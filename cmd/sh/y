@@ -1,0 +1,25 @@
+#!/bin/bash
+
+if [ -n "$1" ]; then
+        yy "$@"
+        return 0
+fi
+
+if [ -d ".venv" ]; then
+        . .venv/bin/activate
+        uv sync
+else if [ -d "venv" ]; then
+        . venv/bin/activate
+else
+        yy @
+        return 0
+fi; fi
+
+if [ -d ".complete" ]; then
+        for f in .complete/*; do
+                printf "$f "
+                . $f
+                some=true
+        done
+        [ -n "$some" ] && printf "\n"
+fi
