@@ -1,0 +1,29 @@
+CompileFlags:
+  Add: 
+    - -Wall
+    - -Wextra
+    - -Werror
+    - -Wpedantic
+    - -Wshadow
+    - -Wconversion
+    - -Wformat=2
+    - -Wcast-align
+    - -Wstrict-overflow=5
+    - -Wundef
+    - -Wswitch-default
+    - -Wswitch-enum
+    - -Wfloat-equal
+    - -Wcast-qual
+    - -Wbad-function-cast
+    - -Wwrite-strings
+    - -Wmissing-declarations
+    - -Wmissing-prototypes
+    - -Wnested-externs
+    - -Wlogical-op
+    - -Wduplicated-cond
+    - -Wduplicated-branches
+    - -Wnull-dereference
+    - -Wjump-misses-init
+    - -Wdouble-promotion
+    - -Wvla
+    - -Wstack-protector

@@ -1,0 +1,13 @@
+#!/bin/sh
+
+rn "$SLOGS" >/dev/null
+n "$SLOGS/"
+
+if [ "$XDG_VTNR" = "1" ] && [ -z "$TMUX" ]; then
+        . sh_startup >"$SLOGS/sh_startup.log" 2>&1 &
+        exec startx >"$SLOGS/x.log" 2>&1
+fi
+
+if [ "$DEVICE" = "acer" ]; then
+        frr
+fi
