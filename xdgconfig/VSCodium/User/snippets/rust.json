@@ -1,0 +1,42 @@
+{
+  "ok": {
+    "prefix": "ok",
+    "body": "Ok(())"
+  },
+  "display": {
+    "prefix": "display",
+    "body": [
+      "#[expect(clippy::min_ident_chars, reason = \"follow traits naming patterns\")]",
+      "impl fmt::Display for $1 {",
+      "    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {",
+      "        ${2:todo!()}",
+      "    }",
+      "}"
+    ],
+    "description": "Implement display for a custom type."
+  },
+  "ddebug": {
+    "prefix": "ddebug",
+    "body": "#[derive(Debug)]"
+  },
+  "ddisplay": {
+    "prefix": "ddisplay",
+    "body": "#[derive(Display)]"
+  },
+  "ddefault": {
+    "prefix": "ddefault",
+    "body": "#[derive(Default)]"
+  },
+  "deq": {
+    "prefix": "deq",
+    "body": "#[derive(PartialEq, Eq)]"
+  },
+  "dord": {
+    "prefix": "dord",
+    "body": "#[derive(PartialOrd, Ord)]"
+  },
+  "derive": {
+    "prefix": "derive",
+    "body": "#[derive($1)]"
+  }
+}

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+ioreg -rc AppleSmartBattery | rg 'CurrentCapacity' | head -n 1 | awk '{print $NF}'

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+. /del/.dot/cmd/sh/shellrc
+
+export GTK_THEME=Adwaita:dark
+export PASSWORD_STORE_BACKEND=plain
+export CHROME_SECRET_STORE=gnome
+export XCURSOR_THEME=HUD_Machine_Red_Cursors
+export XCURSOR_SIZE=80
+
+# tap to click
+xinput set-prop "ELAN0524:00 04F3:3215 Touchpad" "libinput Tapping Enabled" 1
+# 2 fingers for right-click
+xinput set-prop "ELAN0524:00 04F3:3215 Touchpad" "libinput Click Method Enabled" 1 0
+
+sl=$SLOGS/xinit
+
+exec bspwm &>$sl-bspwm

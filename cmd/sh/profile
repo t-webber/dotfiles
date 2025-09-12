@@ -1,0 +1,15 @@
+#!/bin/bash
+
+. /del/.dot/cmd/sh/shellrc
+
+if [ "$(tty | sed 's/[^0-9]//g')" = "1" ] && [ -z "$TMUX" ]; then
+        [ -d $LOGS ] && r $LOGS
+        nd $SLOGS
+        sl=$SLOGS/profile
+        . sh_startup &>$sl-sh-startup &
+        exec xinit $OCFG/xinitrc &>$sl-xi
+fi
+
+if [ "$DEVICE" = "acer" ]; then
+        frr
+fi
