@@ -1,0 +1,3 @@
+#!/bin/sh
+
+make -C "$CMD/src" --no-print-directory release

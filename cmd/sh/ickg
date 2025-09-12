@@ -1,0 +1,62 @@
+#!/bin/sh
+
+set -x
+set -eo pipefail
+
+get() {
+        set +x
+        echo -n "$1: " >&2
+        read x
+        set -x
+        echo "$x"
+}
+
+if [ -n "$1" ]; then
+        id="$1"
+else
+        id="$(get id)"
+fi
+
+if [ -n "$2" ]; then
+        patchset="$2"
+else
+        patchset="$(get patchset)"
+fi
+
+if [ -n "$3" ]; then
+        name="$3"
+else
+        name="$(get name)"
+fi
+
+id=$(echo "$id" | awk -F'/' '{print $NF}')
+
+scope=$(echo "$id" | rev | cut -c1-2 | rev)
+
+url=$(git remote -v | grep fetch | awk '{print $2}')
+
+oldbranch=$(git branch | grep '\*' | awk '{print $2}')
+
+git fetch "$url" "refs/changes/$scope/$id/$patchset"
+git checkout FETCH_HEAD
+
+if [ -n "$name" ]; then
+        newbranch="$name-$patchset"
+
+        git switch -c "$newbranch"
+
+        if [ -n "$4" ]; then
+                worktree="y"
+        else
+                worktree="$(get 'worktree [y/N]?')"
+        fi
+
+        if [ "$worktree" = "y" ]; then
+                git switch "$oldbranch"
+                git worktree add "../$newbranch" "$newbranch"
+                cd "../$newbranch"
+        fi
+fi
+
+set +x
+set +euo
