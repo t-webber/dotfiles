@@ -1,0 +1,11 @@
+#!/bin/sh
+
+. $(dirname "$BASH_SOURCE")/shellrc
+
+####################
+### load aliases ###
+####################
+
+[ "$1" != "true" ] && {
+        . "$CMD/sh/aliases"
+}

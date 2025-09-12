@@ -1,0 +1,13 @@
+#!/bin/sh
+
+if [ -z "$1" ]; then
+        echo "missing name"
+        exit 6
+fi
+
+oldbranch=$(git branch | grep '\*' | awk '{print $2}')
+
+git switch -c "$1"
+git switch "$oldbranch"
+
+git worktree add ../"$1" "$1"

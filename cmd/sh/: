@@ -1,0 +1,26 @@
+#!/bin/sh
+
+makecmd() {
+        make -C "$CMD/src" --no-print-directory $1 -j 50
+}
+
+case "$1" in
+cr)
+        makecmd clean
+        makecmd release
+        ;;
+cd)
+        makecmd clean
+        makecmd debug
+        ;;
+d)
+        makecmd debug
+        ;;
+"")
+        makecmd debug
+        ;;
+*)
+        echo "Usage: $0 [cr,cd,d] (default: release, cr: clean release, cd: clean debug, d: debug)"
+        exit 6
+        ;;
+esac

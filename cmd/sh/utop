@@ -1,0 +1,18 @@
+#!/bin/sh
+
+_inner() {
+        ps -eo user,pcpu --no-headers | awk '{u[$1]+=$2} END { for(i in u)
+                printf "%-15s %7.2f%%\n", i, u[i]
+        }' | sort -k2 -nr
+}
+
+if [ -n "$1" ]; then
+        while :; do
+                printf "\033c"
+                date
+                _inner
+                sleep 1
+        done
+else
+        _inner
+fi
