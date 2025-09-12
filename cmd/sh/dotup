@@ -1,0 +1,32 @@
+#!/bin/sh
+
+cup
+
+export GIT_PAGER=
+cd $DOT >/dev/null 2>&1
+i d
+cd - >/dev/null 2>&1
+
+if [ -n "$1" ]; then
+        msg="$1"
+else
+        printf "commit (a/ /<message>): "
+        read msg
+fi
+
+[ -z "$msg" ] && exit 6
+
+cd $DOT >/dev/null 2>&1
+
+i a.
+
+if [ "$msg" = "a" ]; then
+        i can
+        i phfq
+else
+        i cm "$msg"
+        i plq
+        i phq
+fi
+
+cd - >/dev/null 2>&1

@@ -1,0 +1,9 @@
+#!/bin/sh
+
+set -eo pipefail
+
+[ -z "$1" ] && { printf "Missing arg\n"; exit 6; }
+
+i wa "../$1" "$1"
+p "../$1"
+
