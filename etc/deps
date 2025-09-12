@@ -1,0 +1,385 @@
+acl:    glibc 
+adwaita-cursors:         
+adwaita-fonts:         
+adwaita-icon-theme:    adwaita-icon-theme-legacy hicolor-icon-theme adwaita-cursors    adwaita-icon-theme-legacy hicolor-icon-theme adwaita-cursors 
+adwaita-icon-theme-legacy:    hicolor-icon-theme    hicolor-icon-theme 
+alsa-lib:    alsa-topology-conf alsa-ucm-conf glibc    alsa-topology-conf alsa-ucm-conf glibc 
+alsa-topology-conf:         
+alsa-ucm-conf:         
+archlinux-keyring:    pacman 
+archlinux-mirrorlist:     
+artix-archlinux-support:    archlinux-keyring archlinux-mirrorlist etmpfiles esysusers init-logind 
+artix-cgroups:    sh 
+artix-keyring:    pacman 
+artix-mirrorlist:         
+at-spi2-core:    bash dbus gcc-libs glib2 glibc gsettings-desktop-schemas libx11 libxi libxtst xorg-xprop    bash dbus gcc-libs glib2 glibc gsettings-desktop-schemas libx11 libxi libxtst systemd-libs xorg-xprop 
+attr:    glibc 
+audit:    bash glibc krb5 libkrb5.so=3-64 libgssapi_krb5.so=2-64 libcap-ng libcap-ng.so=0-64 
+autoconf:    awk m4 diffutils perl sh 
+automake:    perl bash 
+avahi:    bash dbus expat gdbm glib2 glibc libcap libdaemon libelogind libdbus-1.so=3-64    bash dbus expat gdbm glib2 glibc libcap libdaemon systemd-libs libdbus-1.so=3-64 
+base:    filesystem gcc-libs glibc bash coreutils file findutils gawk grep procps-ng sed tar gettext pciutils psmisc shadow util-linux bzip2 gzip xz licenses pacman artix-keyring init-logind esysusers etmpfiles iputils iproute2 
+base-devel:    artix-keyring autoconf automake binutils bison debugedit esysusers etmpfiles fakeroot file findutils flex gawk gcc gettext grep groff gzip libtool m4 make pacman patch pkgconf sed sudo texinfo which 
+bash:    readline libreadline.so=8-64 glibc ncurses 
+beeper-v4-bin:    libappindicator-gtk3 libnotify libsecret hicolor-icon-theme 
+binutils:    glibc jansson libelf zlib zstd 
+bison:    gettext glibc m4 sh 
+boost-libs:    bzip2 zlib icu zstd    bzip2 zlib icu zstd 
+brave-bin:    alsa-lib gtk3 libxss nss ttf-font 
+brightnessctl:    udev    systemd-libs 
+brotli:    glibc 
+bspwm:    glibc libxcb sh xcb-util xcb-util-keysyms xcb-util-wm    glibc libxcb sh xcb-util xcb-util-keysyms xcb-util-wm 
+btop:    gcc-libs glibc    gcc-libs glibc 
+bubblewrap:    gcc-libs glibc libcap    gcc-libs glibc libcap 
+bzip2:    glibc sh 
+c-ares:    glibc    glibc 
+ca-certificates:    ca-certificates-mozilla 
+ca-certificates-mozilla:    ca-certificates-utils>=20181109-3    ca-certificates-utils>=20181109-3 
+ca-certificates-utils:    bash coreutils findutils p11-kit 
+cairo:    bash fontconfig freetype2 glib2 glibc libpng libx11 libxcb libxext libxrender lzo pixman zlib    bash fontconfig freetype2 glib2 glibc libpng libx11 libxcb libxext libxrender lzo pixman zlib 
+clang:    llvm-libs gcc compiler-rt    llvm-libs gcc compiler-rt    llvm-libs gcc compiler-rt 
+compiler-rt:    gcc-libs    gcc-libs    gcc-libs 
+coreutils:    acl attr glibc gmp libcap openssl 
+curl:    ca-certificates brotli libbrotlidec.so=1-64 krb5 libgssapi_krb5.so=2-64 libidn2 libidn2.so=0-64 libnghttp2 libnghttp2.so=14-64 libnghttp3 libnghttp3.so=9-64 libpsl libpsl.so=5-64 libssh2 libssh2.so=1-64 zlib libz.so=1-64 zstd libzstd.so=1-64 openssl libcrypto.so=3-64 libssl.so=3-64 
+dav1d:    glibc    glibc 
+db5.3:    gcc-libs sh 
+dbus:    audit expat glibc libcap-ng libelogind libaudit.so=1-64 libcap-ng.so=0-64 libexpat.so=1-64 
+dbus-runit:    dbus runit 
+dconf:    bash gcc-libs glib2 glibc    bash gcc-libs glib2 glibc 
+debugedit:    glibc libelf xxhash 
+default-cursors:         
+desktop-file-utils:    glib2 glibc libglib-2.0.so=0-64    glib2 glibc libglib-2.0.so=0-64 
+dhcpcd:    glibc openssl sh libudev    glibc openssl sh systemd-libs 
+diffutils:    glibc bash 
+duktape:    glibc    glibc 
+dunst:    libxinerama dbus udev wayland libxss pango gdk-pixbuf2 libxrandr glib2    libxinerama dbus systemd wayland libxss pango gdk-pixbuf2 libxrandr glib2 
+e2fsprogs:    sh util-linux-libs    sh util-linux-libs 
+efibootmgr:    glibc popt efivar libefiboot.so=1-64 libefivar.so=1-64 
+efivar:    glibc 
+egl-gbm:    eglexternalplatform glibc mesa libdrm    eglexternalplatform glibc mesa libdrm 
+egl-wayland:    eglexternalplatform glibc libdrm wayland    eglexternalplatform glibc libdrm wayland 
+egl-x11:    eglexternalplatform glibc libdrm libx11 libxcb mesa    eglexternalplatform glibc libdrm libx11 libxcb mesa 
+eglexternalplatform:    libegl    libegl 
+elogind:    gcc-libs glibc libcap acl libacl.so=1-64 audit libaudit.so=1-64 dbus kexec-tools libcap.so=2-64 libelogind pam udev util-linux libmount.so=1-64 
+elogind-runit:    dbus-runit elogind 
+esysusers:    gcc-libs glibc libcap libcap.so=2-64 libxcrypt libcrypt.so=2-64 
+etmpfiles:    gcc-libs glibc libcap acl libacl.so=1-64 libcap.so=2-64 
+expat:    glibc 
+fakeroot:    glibc filesystem sed util-linux sh 
+file:    glibc bzip2 libbz2.so=1.0-64 libseccomp libseccomp.so=2-64 xz liblzma.so=5-64 zlib libz.so=1-64 zstd libzstd.so=1-64 
+filesystem:    iana-etc 
+findutils:    glibc 
+flex:    glibc m4 sh 
+fontconfig:    bash expat freetype2 glibc libexpat.so=1-64 libfreetype.so=6-64    bash expat freetype2 glibc libexpat.so=1-64 libfreetype.so=6-64 
+freetype2:    brotli bzip2 glibc libpng zlib    brotli bzip2 glibc libpng zlib 
+fribidi:    glibc    glibc 
+fzf:    bash    bash 
+gawk:    sh glibc mpfr 
+gc:    gcc-libs 
+gcc:    gcc-libs=15.2.1+r301+gf24307422d1d-1 binutils>=2.28 libmpc zstd libisl.so=23-64 
+gcc-libs:    glibc>=2.27 
+gdb:    bash expat gcc-libs gdb-common=16.3 glibc gmp guile libelf liblzma.so=5-64 libmpfr.so=6-64 libncursesw.so=6-64 libreadline.so=8-64 libxxhash.so=0-64 libzstd.so=1-64 mpfr ncurses python readline source-highlight xxhash xz zstd    bash expat gcc-libs gdb-common=16.3 glibc gmp guile libelf liblzma.so=5-64 libmpfr.so=6-64 libncursesw.so=6-64 libreadline.so=8-64 libxxhash.so=0-64 libzstd.so=1-64 mpfr ncurses python readline source-highlight xxhash xz zstd 
+gdb-common:    python guile    python guile 
+gdbm:    glibc sh readline libreadline.so=8-64 
+gdk-pixbuf2:    glib2 glibc glycin shared-mime-info    glib2 glibc glycin shared-mime-info 
+gettext:    acl attr gcc-libs gnulib-l10n libunistring libxml2 ncurses sh 
+giflib:    glibc    glibc 
+git:    curl expat perl perl-error perl-mailtools openssl pcre2 grep shadow zlib-ng    curl expat perl perl-error perl-mailtools openssl pcre2 grep shadow zlib-ng    curl expat perl perl-error perl-mailtools openssl pcre2 grep shadow zlib-ng    curl expat perl perl-error perl-mailtools openssl pcre2 grep shadow zlib-ng 
+github-cli:    glibc mailcap    glibc mailcap 
+glew:    glibc libegl libgl glu    glibc libegl libgl glu 
+glib-networking:    glib2 glibc gnutls gsettings-system-schemas libproxy    glib2 glibc gnutls gsettings-system-schemas libproxy 
+glib2:    bash gcc-libs glibc libffi libsysprof-capture pcre2 util-linux-libs zlib libffi.so=8-64 libmount.so=1-64    bash glibc libffi libsysprof-capture pcre2 util-linux-libs zlib libffi.so=8-64 libmount.so=1-64 
+glibc:    linux-api-headers>=4.10 tzdata filesystem 
+glu:    libgl gcc-libs glibc    libgl gcc-libs glibc 
+glycin:    bubblewrap cairo fontconfig gcc-libs glib2 glibc lcms2 libjxl librsvg libseccomp    bubblewrap cairo fontconfig gcc-libs glib2 glibc lcms2 libjxl librsvg libseccomp 
+gmp:    gcc-libs glibc 
+gnulib-l10n:     
+gnupg:    glibc gnutls libgcrypt libgpg-error libksba libldap libusb pinentry sh sqlite tpm2-tss zlib bzip2 libbz2.so=1.0-64 libassuan libassuan.so=9-64 npth libnpth.so=0-64 readline libreadline.so=8-64 
+gnutls:    glibc gcc-libs gmp libtasn1 zlib nettle leancrypto libp11-kit libidn2 zstd libidn2.so=0-64 libunistring brotli 
+gperftools:    gcc-libs glibc libunwind    gcc-libs glibc libunwind 
+gpgme:    gcc-libs glib2 glibc libassuan libgpg-error gnupg>=2 
+graphite:    gcc-libs glibc    gcc-libs glibc 
+grep:    glibc pcre2 
+groff:    perl gcc-libs 
+gsettings-desktop-schemas:    gsettings-system-schemas=49.1-1 adwaita-fonts dconf    gsettings-system-schemas=49.1-1 adwaita-fonts dconf 
+gsettings-system-schemas:    dconf    dconf 
+gtest:    gcc-libs glibc    gcc-libs glibc 
+gtk-update-icon-cache:    bash gdk-pixbuf2 glib2 glibc hicolor-icon-theme librsvg    bash gdk-pixbuf2 glib2 glibc hicolor-icon-theme librsvg 
+gtk3:    adwaita-fonts adwaita-icon-theme at-spi2-core cairo dconf desktop-file-utils fontconfig fribidi gdk-pixbuf2 glib2 glibc harfbuzz iso-codes libcloudproviders libcolord libcups libegl libepoxy libgl librsvg libx11 libxcomposite libxcursor libxdamage libxext libxfixes libxi libxinerama libxkbcommon libxrandr libxrender pango shared-mime-info tinysparql wayland gtk-update-icon-cache    adwaita-fonts adwaita-icon-theme at-spi2-core cairo dconf desktop-file-utils fontconfig fribidi gdk-pixbuf2 glib2 glibc harfbuzz iso-codes libcloudproviders libcolord libcups libegl libepoxy libgl librsvg libx11 libxcomposite libxcursor libxdamage libxext libxfixes libxi libxinerama libxkbcommon libxrandr libxrender pango shared-mime-info tinysparql wayland gtk-update-icon-cache 
+guile:    gmp ncurses libunistring gc libffi libxcrypt 
+gzip:    glibc bash coreutils sed grep 
+harfbuzz:    freetype2 glib2 glibc graphite libfreetype.so=6-64 libgraphite2.so=3-64 libglib-2.0.so=0-64 libgobject-2.0.so=0-64    freetype2 glib2 glibc graphite libfreetype.so=6-64 libgraphite2.so=3-64 libglib-2.0.so=0-64 libgobject-2.0.so=0-64 
+hicolor-icon-theme:         
+highway:    gcc-libs glibc gtest    gcc-libs glibc gtest 
+hwdata:     
+iana-etc:         
+icu:    gcc-libs glibc sh 
+intel-ucode:         
+iproute2:    glibc libxtables.so=12-64 libcap libcap.so=2-64 libelf libbpf libbpf.so=1-64 
+iptables:    bash glibc libmnl libnetfilter_conntrack libnfnetlink libnftnl libpcap nftables    libnftnl libpcap libnfnetlink libnetfilter_conntrack bash 
+iputils:    libcap libidn2 
+iso-codes:         
+jansson:    glibc 
+java-environment-common:         
+java-runtime-common:    bash findutils coreutils    bash findutils coreutils 
+jbigkit:    glibc    glibc 
+jdk-openjdk:    java-runtime-common>=3 ca-certificates-utils freetype2 gcc-libs glibc harfbuzz lcms2 libfreetype.so=6-64 libharfbuzz.so=0-64 libjpeg.so=8-64 libjpeg-turbo liblcms2.so=2-64 libnet nss java-environment-common=3 ca-certificates-utils freetype2 harfbuzz hicolor-icon-theme lcms2 libelf libfreetype.so=6-64 libgif.so=7-64 libharfbuzz.so=0-64 libjpeg.so=8-64 libjpeg-turbo liblcms2.so=2-64 libnet libpng nss    java-runtime-common>=3 ca-certificates-utils freetype2 gcc-libs glibc harfbuzz lcms2 libfreetype.so=6-64 libharfbuzz.so=0-64 libjpeg.so=8-64 libjpeg-turbo liblcms2.so=2-64 libnet nss java-environment-common=3 ca-certificates-utils freetype2 harfbuzz hicolor-icon-theme lcms2 libelf libfreetype.so=6-64 libgif.so=7-64 libharfbuzz.so=0-64 libjpeg.so=8-64 libjpeg-turbo liblcms2.so=2-64 libnet libpng nss 
+json-c:    glibc 
+json-glib:    glib2 glibc libglib-2.0.so=0-64 libgobject-2.0.so=0-64 libgio-2.0.so=0-64    glib2 glibc libglib-2.0.so=0-64 libgobject-2.0.so=0-64 libgio-2.0.so=0-64 
+kbd:    glibc gzip pam 
+kexec-tools:    xz zlib zstd    xz zlib zstd 
+keyutils:    glibc sh 
+kmod:    glibc zlib openssl xz zstd 
+krb5:    bash e2fsprogs glibc keyutils libldap libverto-module-base openssl lmdb libcom_err.so=2-64 libkeyutils.so=1-64 libss.so=2-64 libverto.so=1-64 
+lcms2:    libtiff    libtiff 
+leancrypto:    glibc 
+less:    glibc ncurses pcre2 
+libappindicator-gtk3:    glib2 glibc gtk3 libdbusmenu-glib libdbusmenu-gtk3 
+libarchive:    acl libacl.so=1-64 bzip2 libbz2.so=1.0-64 glibc libxml2 libxml2.so=16-64 lz4 openssl libcrypto.so=3-64 xz liblzma.so=5-64 zlib libz.so=1-64 zstd libzstd.so=1-64    acl libacl.so=1-64 bzip2 libbz2.so=1.0-64 glibc libxml2 libxml2.so=16-64 lz4 openssl libcrypto.so=3-64 xz liblzma.so=5-64 zlib libz.so=1-64 zstd libzstd.so=1-64 
+libassuan:    glibc libgpg-error sh 
+libbpf:    glibc libelf linux-api-headers zlib 
+libcap:    glibc pam 
+libcap-ng:    glibc 
+libcloudproviders:    glib2    glib2 
+libcolord:    gcc-libs glib2 glibc lcms2 libudev    gcc-libs glib2 glibc lcms2 systemd-libs 
+libcups:    gnutls avahi glibc zlib sh    gnutls avahi glibc zlib sh 
+libdaemon:    glibc    glibc 
+libdatrie:    glibc    glibc 
+libdbusmenu-glib:    glib2 glibc    glib2 glibc 
+libdbusmenu-gtk3:    libdbusmenu-glib at-spi2-core gdk-pixbuf2 glib2 glibc gtk3 pango    libdbusmenu-glib at-spi2-core gdk-pixbuf2 glib2 glibc gtk3 pango 
+libdeflate:    glibc    glibc 
+libdrm:    libpciaccess glibc    libpciaccess glibc 
+libedit:    glibc libncursesw.so=6-64 ncurses 
+libelf:    bzip2 libbz2.so=1.0-64 curl libcurl.so=4-64 glibc json-c xz liblzma.so=5-64 zlib zstd libzstd.so=1-64 
+libelogind:    gcc-libs glibc libcap libcap.so=2-64 libudev 
+libepoxy:    glibc libglvnd libx11    glibc libglvnd libx11 
+libevdev:    glibc    glibc 
+libevent:    openssl 
+libffi:    glibc 
+libfontenc:    zlib glibc xorg-fonts-encodings    zlib glibc xorg-fonts-encodings 
+libgcrypt:    libgpg-error glibc 
+libglvnd:    libxext mesa opengl-driver    libxext mesa opengl-driver 
+libgpg-error:    glibc sh 
+libgudev:    gcc-libs glib2 glibc libudev libglib-2.0.so=0-64 libgobject-2.0.so=0-64 libudev.so=1-64    gcc-libs glib2 glibc libsystemd libglib-2.0.so=0-64 libgobject-2.0.so=0-64 libudev.so=1-64 
+libice:    glibc xorgproto    glibc xorgproto 
+libidn2:    libunistring libunistring.so=5-64 
+libinput:    mtdev libevdev libwacom udev glibc    mtdev libevdev libwacom systemd-libs glibc 
+libisl:    gmp 
+libjpeg-turbo:    glibc    glibc 
+libjxl:    brotli gcc-libs giflib glibc gperftools highway libjpeg-turbo libpng    brotli gcc-libs giflib glibc gperftools highway libjpeg-turbo libpng 
+libksba:    bash libgpg-error glibc 
+libldap:    libsasl 
+libluv:    libuv luajit    libuv luajit 
+libmnl:    glibc 
+libmpc:    glibc gmp mpfr 
+libnet:    glibc sh    glibc sh 
+libnetfilter_conntrack:    libnfnetlink libmnl 
+libnfnetlink:    glibc 
+libnftnl:    libmnl 
+libnghttp2:    glibc 
+libnghttp3:    glibc 
+libngtcp2:    glibc openssl libssl.so=3-64 gnutls    glibc openssl libssl.so=3-64 gnutls 
+libnl:    glibc gcc-libs 
+libnotify:    gcc-libs gdk-pixbuf2 glib2 glibc    gcc-libs gdk-pixbuf2 glib2 glibc 
+libnsl:    glibc libtirpc 
+libp11-kit:    glibc libffi libtasn1 
+libpcap:    glibc libnl sh libdbus-1.so=3-64 
+libpciaccess:    glibc zlib    glibc zlib 
+libpng:    zlib sh    zlib sh    zlib sh    zlib sh 
+libproxy:    curl duktape gcc-libs glib2 glibc    curl duktape gcc-libs glib2 glibc 
+libpsl:    libidn2 libunistring libidn2.so=0-64 libunistring.so=5-64 
+librsvg:    cairo dav1d freetype2 gcc-libs gdk-pixbuf2 glib2 glibc harfbuzz libxml2 pango    cairo dav1d freetype2 gcc-libs gdk-pixbuf2 glib2 glibc harfbuzz libxml2 pango 
+libsasl:    glibc gdbm libgdbm.so=6-64 openssl libcrypto.so=3-64 
+libseccomp:    glibc 
+libsecret:    glib2 glibc libgcrypt tpm2-tss 
+libsm:    libice util-linux-libs xorgproto glibc    libice util-linux-libs xorgproto glibc 
+libsoup3:    brotli glib-networking glib2 glibc krb5 libnghttp2 libpsl libsysprof-capture sqlite zlib libbrotlidec.so=1-64 libgssapi_krb5.so=2-64 libglib-2.0.so=0-64 libgobject-2.0.so=0-64 libgio-2.0.so=0-64 libpsl.so=5-64    brotli glib-networking glib2 glibc krb5 libnghttp2 libpsl libsysprof-capture sqlite zlib libbrotlidec.so=1-64 libgssapi_krb5.so=2-64 libglib-2.0.so=0-64 libgobject-2.0.so=0-64 libgio-2.0.so=0-64 libpsl.so=5-64 
+libssh2:    openssl zlib 
+libstemmer:    glibc    glibc 
+libsysprof-capture:         
+libtasn1:    glibc 
+libthai:    glibc libdatrie    glibc libdatrie 
+libtiff:    gcc-libs glibc jbigkit libdeflate libjpeg-turbo libjpeg.so=8-64 libwebp xz zlib zstd    gcc-libs glibc jbigkit libdeflate libjpeg-turbo libjpeg.so=8-64 libwebp xz zlib zstd 
+libtirpc:    krb5 glibc 
+libtool:    sh tar glibc 
+libudev:    gcc-libs glibc libcap libcap.so=2-64 
+libunistring:    glibc 
+libunwind:    glibc xz zlib    glibc xz zlib 
+libusb:    glibc libudev libudev.so=1-64 
+libutempter:    glibc    glibc 
+libutf8proc:    glibc    glibc 
+libuv:    glibc libnsl    glibc libnsl 
+libverto:    glibc libevent 
+libvterm:    glibc    glibc 
+libwacom:    glib2 libevdev libgudev glibc    glib2 libevdev libgudev glibc 
+libwebp:    glibc    glibc 
+libx11:    libxcb glibc xorgproto    libxcb glibc xorgproto 
+libxau:    glibc xorgproto    glibc xorgproto 
+libxcb:    xcb-proto libxdmcp libxau glibc    xcb-proto libxdmcp libxau glibc 
+libxcomposite:    libxfixes xorgproto libx11 glibc    libxfixes xorgproto libx11 glibc 
+libxcrypt:    glibc 
+libxcursor:    libxfixes libxrender default-cursors libx11 glibc xorgproto    libxfixes libxrender default-cursors libx11 glibc xorgproto 
+libxcvt:    glibc    glibc 
+libxdamage:    libxfixes xorgproto libx11 glibc    libxfixes xorgproto libx11 glibc 
+libxdmcp:    glibc xorgproto    glibc xorgproto 
+libxext:    libx11 glibc xorgproto    libx11 glibc xorgproto 
+libxfixes:    libx11 xorgproto glibc    libx11 xorgproto glibc 
+libxfont2:    freetype2 libfontenc xorgproto zlib glibc    freetype2 libfontenc xorgproto zlib glibc 
+libxft:    fontconfig libxrender libx11 freetype2 glibc xorgproto    fontconfig libxrender libx11 freetype2 glibc xorgproto 
+libxi:    libxext libxfixes libx11 glibc xorgproto    libxext libxfixes libx11 glibc xorgproto 
+libxinerama:    libxext libx11 glibc xorgproto    libxext libx11 glibc xorgproto 
+libxkbcommon:    glibc libxml2 xkeyboard-config    glibc libxml2 xkeyboard-config 
+libxkbcommon-x11:    glibc libxcb libxkbcommon libxkbcommon.so=0-64    glibc libxcb libxkbcommon libxkbcommon.so=0-64 
+libxkbfile:    libx11 xorgproto glibc    libx11 xorgproto glibc 
+libxml2:    bash glibc icu readline zlib libicuuc.so=78-64    bash glibc icu readline zlib 
+libxmu:    libxext libxt libx11 xorgproto glibc    libxext libxt libx11 xorgproto glibc 
+libxrandr:    libxext libxrender libx11 glibc    libxext libxrender libx11 glibc 
+libxrender:    libx11 glibc xorgproto    libx11 glibc xorgproto 
+libxshmfence:    glibc    glibc 
+libxss:    libxext libx11 glibc xorgproto    libxext libx11 glibc xorgproto 
+libxt:    libsm libx11 libice glibc xorgproto    libsm libx11 libice glibc xorgproto 
+libxtst:    libxext libxi libx11 glibc xorgproto    libxext libxi libx11 glibc xorgproto 
+libxxf86vm:    libxext libx11 glibc xorgproto    libxext libx11 glibc xorgproto 
+licenses:     
+linux:    coreutils initramfs kmod 
+linux-api-headers:     
+linux-firmware:    linux-firmware-amdgpu linux-firmware-atheros linux-firmware-broadcom linux-firmware-cirrus linux-firmware-intel linux-firmware-mediatek linux-firmware-nvidia linux-firmware-other linux-firmware-radeon linux-firmware-realtek 
+linux-firmware-amdgpu:    linux-firmware-whence 
+linux-firmware-atheros:    linux-firmware-whence 
+linux-firmware-broadcom:    linux-firmware-whence 
+linux-firmware-cirrus:    linux-firmware-whence 
+linux-firmware-intel:    linux-firmware-whence 
+linux-firmware-mediatek:    linux-firmware-whence 
+linux-firmware-nvidia:    linux-firmware-whence 
+linux-firmware-other:     
+linux-firmware-radeon:    linux-firmware-whence 
+linux-firmware-realtek:    linux-firmware-whence 
+linux-firmware-whence:     
+llama.cpp:    curl gcc-libs glibc 
+llvm:    llvm-libs curl perl    llvm-libs curl perl    llvm-libs curl perl 
+llvm-libs:    gcc-libs zlib zstd libffi libedit libxml2    gcc-libs zlib zstd libffi libedit libxml2    gcc-libs zlib zstd libffi libedit libxml2 
+lm_sensors:    bash glibc    bash glibc 
+lmdb:    glibc    glibc 
+lsof:    glibc libtirpc    glibc libtirpc 
+lua51-lpeg:    glibc    glibc 
+luajit:    gcc-libs    gcc-libs 
+lz4:    glibc 
+lzo:    glibc 
+m4:    glibc bash 
+mailcap:         
+maim:    freetype2 libpng libjpeg-turbo libwebp libx11 libxcomposite libxext libxfixes libxrandr slop    freetype2 libpng libjpeg-turbo libwebp libx11 libxcomposite libxext libxfixes libxrandr slop 
+make:    glibc guile 
+mandoc:    zlib    zlib 
+mesa:    expat gcc-libs glibc libdrm libelf libglvnd libx11 libxcb libxext libxshmfence libxxf86vm llvm-libs lm_sensors spirv-tools wayland zlib zstd    expat gcc-libs glibc libdrm libelf libglvnd libx11 libxcb libxext libxshmfence libxxf86vm llvm-libs lm_sensors spirv-tools wayland zlib zstd    expat gcc-libs glibc libdrm libelf libglvnd libx11 libxcb libxext libxshmfence libxxf86vm llvm-libs lm_sensors spirv-tools wayland zlib zstd    expat gcc-libs glibc libdrm libelf libglvnd libx11 libxcb libxext libxshmfence libxxf86vm llvm-libs lm_sensors spirv-tools wayland zlib zstd 
+mkinitcpio:    awk mkinitcpio-busybox kmod util-linux libarchive coreutils bash binutils diffutils findutils grep gzip filesystem zstd udev 
+mkinitcpio-busybox:    glibc libxcrypt 
+mpdecimal:    glibc gcc-libs 
+mpfr:    glibc gmp 
+msgpack-c:    glibc    glibc 
+mtdev:    glibc    glibc 
+ncurses:    glibc gcc-libs 
+neovim:    libluv libutf8proc libuv libvterm>=0.3.3 lua51-lpeg luajit msgpack-c tree-sitter tree-sitter-c tree-sitter-lua tree-sitter-markdown tree-sitter-query tree-sitter-vim tree-sitter-vimdoc unibilium    libluv libutf8proc libuv libvterm>=0.3.3 lua51-lpeg luajit msgpack-c tree-sitter tree-sitter-c tree-sitter-lua tree-sitter-markdown tree-sitter-query tree-sitter-vim tree-sitter-vimdoc unibilium 
+nettle:    glibc gmp 
+nftables:    libmnl libnftnl gmp readline ncurses jansson    libmnl libnftnl gmp readline ncurses jansson 
+node-gyp:    nodejs nodejs-nopt semver    nodejs nodejs-nopt semver 
+nodejs:    brotli c-ares icu libnghttp2 libnghttp3 libngtcp2 libuv openssl simdjson zlib    brotli c-ares icu libnghttp2 libnghttp3 libngtcp2 libuv openssl simdjson zlib 
+nodejs-nopt:    nodejs    nodejs 
+noto-fonts-emoji:         
+npm:    node-gyp nodejs>=20.17.0 nodejs-nopt semver    node-gyp nodejs>=20.17.0 nodejs-nopt semver 
+npth:    glibc sh 
+nspr:    glibc sh 
+nss:    glibc nspr p11-kit sh sqlite zlib    glibc nspr p11-kit sh sqlite zlib 
+nvidia:    linux nvidia-utils=580.105.08 libglvnd    linux nvidia-utils=580.105.08 libglvnd 
+nvidia-utils:    libglvnd egl-wayland egl-gbm egl-x11    libglvnd egl-wayland egl-gbm egl-x11    libglvnd egl-wayland egl-gbm egl-x11 
+openssh:    glibc krb5 libkrb5.so=3-64 libgssapi_krb5.so=2-64 libedit libedit.so=0-64 libxcrypt libcrypt.so=2-64 openssl libcrypto.so=3-64 pam libpam.so=0-64 zlib libz.so=1-64 
+openssl:    glibc 
+p11-kit:    coreutils glibc libtasn1 libp11-kit=0.25.10-2 libp11-kit.so=0-64 
+pacman:    bash coreutils curl libcurl.so=4-64 gawk gettext glibc gnupg gpgme libgpgme.so=45-64 grep libarchive libarchive.so=13-64 openssl libcrypto.so=3-64 artix-mirrorlist 
+pam:    audit glibc libaudit.so=1-64 libcrypt.so=2-64 libnsl libtirpc libxcrypt pambase libelogind 
+pambase:     
+pango:    cairo fontconfig freetype2 fribidi glib2 glibc harfbuzz libsysprof-capture libthai libx11 libxft libxrender    cairo fontconfig freetype2 fribidi glib2 glibc harfbuzz libsysprof-capture libthai libx11 libxft libxrender 
+patch:    glibc attr 
+pciutils:    glibc hwdata kmod 
+pcre:    glibc gcc-libs readline zlib bzip2 bash 
+pcre2:    bzip2 glibc readline zlib 
+pcsclite:    libudev.so=1-64 libpolkit-gobject-1.so=0-64    libsystemd.so=0-64 libudev.so=1-64 libpolkit-gobject-1.so=0-64 
+perl:    gdbm>=1.17 db5.3 glibc libxcrypt libcrypt.so=2-64 
+perl-error:    perl    perl 
+perl-mailtools:    perl-timedate    perl-timedate 
+perl-timedate:    perl    perl 
+pinentry:    glibc ncurses libassuan libsecret glib2 libglib-2.0.so=0-64 libncursesw.so=6-64 libsecret-1.so=0-64 
+pixman:    glibc    glibc 
+pkgconf:    glibc 
+pkgfile:    curl gcc-libs glibc libarchive libelogind pacman pcre    curl gcc-libs glibc libarchive pacman pcre systemd-libs 
+polkit:    duktape expat glib2 glibc pam libelogind    duktape expat glib2 glibc pam systemd-libs 
+popt:    glibc 
+procps-ng:    glibc ncurses libncursesw.so=6-64 libelogind 
+psmisc:    ncurses 
+python:    bzip2 expat gdbm libffi libnsl libxcrypt openssl zlib tzdata mpdecimal 
+rankmirrors:    bash pacman 
+readline:    glibc libncursesw.so=6-64 ncurses 
+rsync:    acl libacl.so=1-64 lz4 openssl popt xxhash libxxhash.so=0-64 zlib zstd    acl libacl.so=1-64 lz4 openssl popt xxhash libxxhash.so=0-64 zlib zstd 
+runit:    runit-rc 
+runit-rc:    procps-ng bash eudev-runit artix-cgroups 
+sed:    glibc acl 
+semver:    nodejs    nodejs 
+shadow:    glibc acl libacl.so=1-64 attr libattr.so audit libaudit.so=1-64 libxcrypt libcrypt.so=2-64 pam libpam.so=0-64 libpam_misc.so=0-64 
+shared-mime-info:    libxml2 glib2 glibc gcc-libs    libxml2 glib2 glibc gcc-libs 
+shfmt:    glibc 
+simdjson:    gcc-libs    gcc-libs 
+slop:    libxext libx11 mesa glew libxrender    libxext libx11 mesa glew libxrender 
+source-highlight:    bash boost-libs    bash boost-libs 
+spirv-tools:    gcc-libs glibc sh    gcc-libs glibc sh 
+sqlite:    readline zlib glibc 
+stylua:    gcc-libs glibc 
+sudo:    glibc openssl pam libldap zlib libcrypto.so=3-64 libssl.so=3-64 
+sxhkd:    xcb-util-keysyms    xcb-util-keysyms 
+tar:    glibc acl 
+texinfo:    ncurses gzip perl sh 
+tinysparql:    avahi gcc-libs glib2 glibc icu json-glib libsoup3 libstemmer libxml2 sqlite    avahi gcc-libs glib2 glibc icu json-glib libsoup3 libstemmer libxml2 sqlite 
+tmux:    libevent libevent_core-2.1.so=7-64 libutempter ncurses libncursesw.so=6-64 libudev.so    libevent libevent_core-2.1.so=7-64 libutempter ncurses libncursesw.so=6-64 systemd-libs libsystemd.so=0-64 
+tpm2-tss:    curl json-c openssl libjson-c.so=5-64 
+tree-sitter:         
+tree-sitter-c:         
+tree-sitter-lua:         
+tree-sitter-markdown:         
+tree-sitter-query:         
+tree-sitter-vim:         
+tree-sitter-vimdoc:         
+ttf-hack-nerd:         
+ttf-liberation:         
+tzdata:     
+udev:    gcc-libs glibc libcap acl libacl.so=1-64 bash hwdata kbd kmod libcap.so=2-64 libudev util-linux libblkid.so=1-64 
+unibilium:    glibc    glibc 
+util-linux:    util-linux-libs=2.41.2 coreutils file libmagic.so=1-64 glibc libcap-ng libxcrypt libcrypt.so=2-64 ncurses libncursesw.so=6-64 pam readline shadow libudev libutempter zlib 
+util-linux-libs:    glibc sqlite 
+vi:    ncurses 
+visual-studio-code-bin:    libxkbfile gnupg gtk3 libsecret nss gcc-libs libnotify libxss glibc lsof shared-mime-info xdg-utils alsa-lib 
+wayland:    glibc libffi expat libxml2 default-cursors    glibc libffi expat libxml2 default-cursors 
+which:    bash glibc 
+wpa_supplicant:    glibc libdbus libnl openssl pcsclite readline 
+xcb-proto:         
+xcb-util:    libxcb glibc    libxcb glibc 
+xcb-util-keysyms:    libxcb glibc    libxcb glibc 
+xcb-util-wm:    libxcb glibc    libxcb glibc 
+xclip:    libxmu    libxmu 
+xdg-utils:    sh file xorg-xset xorg-xprop    sh file xorg-xset xorg-xprop 
+xf86-input-libinput:    libinput glibc    libinput glibc 
+xkeyboard-config:         
+xorg-fonts-encodings:         
+xorg-server:    libepoxy libxfont2 pixman xorg-server-common libunwind dbus libgl xf86-input-libinput nettle libxdmcp sh glibc libxau libelogind libtirpc libpciaccess libdrm libxshmfence libxcvt    libepoxy libxfont2 pixman xorg-server-common libunwind dbus libgl xf86-input-libinput nettle libxdmcp sh glibc libxau systemd-libs libtirpc libpciaccess libdrm libxshmfence libxcvt 
+xorg-server-common:    xkeyboard-config xorg-xkbcomp xorg-setxkbmap    xkeyboard-config xorg-xkbcomp xorg-setxkbmap 
+xorg-setxkbmap:    libxkbfile libxrandr    libxkbfile libxrandr 
+xorg-xauth:    libxmu libxau libxext libx11 glibc    libxmu libxau libxext libx11 glibc 
+xorg-xinit:    libx11 xorg-xauth xorg-xrdb xorg-xmodmap sh glibc    libx11 xorg-xauth xorg-xrdb xorg-xmodmap sh glibc 
+xorg-xkbcomp:    libxkbfile libx11 glibc    libxkbfile libx11 glibc 
+xorg-xmodmap:    libx11    libx11 
+xorg-xprop:    libx11 glibc    libx11 glibc 
+xorg-xrdb:    libx11 libxmu glibc    libx11 libxmu glibc 
+xorg-xset:    libxmu    libxmu 
+xorgproto:         
+xxhash:    glibc    glibc 
+xz:    sh 
+zlib:    glibc 
+zlib-ng:    glibc    glibc 
+zstd:    glibc gcc-libs zlib xz lz4 

@@ -1,0 +1,9 @@
+#!/usr/bin/python3.11
+
+import sys
+x = ''.join(sys.argv[1:])
+bs = bin(int(x, 16))[2:]
+print(bs)
+bs = bs[len(bs)::-1]
+for i, b in enumerate(bs):
+	print(i, b, end = "\n" if i % 2 else "\t")

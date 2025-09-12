@@ -1,0 +1,3 @@
+#!/bin/sh
+
+ssh "twebber-23@crdn-$1.enst.fr" -J twebber-23@ssh.enst.fr "$2"
