@@ -7,7 +7,7 @@
 #include <string.h>
 
 const Cmd COMMANDS[] = {
-    cmd("a", "add", "-p", ".", "--intent-to-add", ),
+    cmd("a", "add", "-p", ".", "--intent-to-add", "-e", ),
 
     cmd("br",
         "branch",

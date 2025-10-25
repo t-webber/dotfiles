@@ -235,7 +235,7 @@ local spec = {
 	{ 'kylechui/nvim-surround', config = true, event = 'VeryLazy' },
 	{
 		'folke/flash.nvim',
-                event = "VeryLazy", -- doesn't load on 'f'
+		event = 'VeryLazy', -- doesn't load on 'f'
 		---@type Flash.Config
 		opts = {
 			modes = {
