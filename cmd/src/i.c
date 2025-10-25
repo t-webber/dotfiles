@@ -70,7 +70,7 @@ const Cmd COMMANDS[] = {
         "--root", ),
     cmd("rm", "remove", "-f", ),
     cmd("ro", "restore", "-S", "-W", ),
-    cmd("rs", "reset", "--hard", ),
+    cmd("rs", "reset", "--hard", "--soft", ),
     cmd("rt", "remote", "-v", "set-url", "add", ),
     cmd("rp", "rev-parse", "--show-toplevel", ),
     cmd("rl", "rev-list", ),
