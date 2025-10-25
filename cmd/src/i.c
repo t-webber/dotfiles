@@ -76,7 +76,7 @@ const Cmd COMMANDS[] = {
     cmd("rl", "rev-list", ),
     cmd("rw", "review", "-d", ),
 
-    cmd("sh", "stash", "pop", "drop", "clear", "show", "apply", ),
+    cmd("sh", "stash", "pop", "drop", "clear", "show", "apply", "list", ),
     cmd("sm", "submodule", "update", "--init", "--recursive", ),
     cmd("ss", "status", ),
     cmd("sw", "switch", "-C", "-c", ),
