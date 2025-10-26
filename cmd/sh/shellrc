@@ -93,6 +93,7 @@ if [ "$DEVICE" = "mac" ]; then
         PATH+=":/sbin"
         PATH+=":/usr/bin"
         PATH+=":/opt/homebrew/bin/"
+        PATH+=":/usr/sbin"
 fi
 PATH+=":$BIN"
 PATH+=":$CMD/sh"
