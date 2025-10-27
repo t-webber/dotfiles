@@ -353,6 +353,7 @@ _sep
 
 _al cu -p "$c" uninstall
 _al ciu -p "$c" 'install-update -a -g'
+_al cig -p "$c" install git
 
 _al cn -p "$c" +nightly
 _al cs -p "$c" search
