@@ -44,6 +44,7 @@ local s = { s = true }
 local title = c(magenta, black, b)
 
 local colours = {
+
 	--------------
 	--- Window ---
 	--------------
@@ -356,6 +357,18 @@ local colours = {
 	DevIconCheckhealth = c(red),
 	DevIconGitLogo = c(orange),
 	DevIconGit = c(orange),
+
+	------------
+	--- TODO ---
+	------------
+
+	Todo = c(magenta),
+	Hack = c(magenta),
+	Warn = c(magenta),
+	Perf = c(magenta),
+	Note = c(magenta),
+	Test = c(magenta),
+	Fix = c(magenta),
 }
 
 for name, options in pairs(colours) do
