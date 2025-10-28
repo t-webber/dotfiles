@@ -72,3 +72,4 @@ self.call = traceback.format_stack()
 from rich.traceback import install
 install()
 
+def die(): traceback.print_stack(); traceback.print_exc(); sys.stderr.flush(); os._exit(1)
