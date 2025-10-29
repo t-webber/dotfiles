@@ -200,7 +200,14 @@ int exec_open_file(const_str filename,
         if (timg_supported(extension))
                 dezoom_and_run_alacritty(filename, false);
 
-        if (is_verbose) exl("bat", "bat", filename, "--style=plain", NULL);
+        if (is_verbose)
+                exl("bat",
+                    "bat",
+                    filename,
+                    "--style=plain",
+                    "--theme",
+                    "ansi",
+                    NULL);
 
         exl("cat", "cat", filename, NULL);
 }
