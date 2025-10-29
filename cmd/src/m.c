@@ -168,8 +168,7 @@ static size_t get_man_pages_in_folder(bool only_c_pages,
 static size_t get_man_pages(const bool only_c_pages, const_str page_name) {
         const size_t page_name_len = strlen(page_name);
 
-        DIR *d = opendir("/usr/share/man");
-        if (d == NULL) epanic("Failed to open /usr/share/man");
+        DIR *d = opendir_checked("/usr/share/man");
 
         struct dirent *file;
         size_t len = 0;

@@ -319,7 +319,7 @@ _sep
 _al ccl -p "$c" clean
 _al cb -p "$c" build
 _al cbr 'cb --release'
-_dal cr -p "$c" run release example
+_dal cr -p "$c" run release example p
 _al crd 'cr --features debug'
 
 _sep

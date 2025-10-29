@@ -37,6 +37,7 @@ const Cmd COMMANDS[] = {
     cmd("d", "diff", "--shortstat", "--cached", "=.-- .", ),
 
     cmd("e", "fetch", "--all", "--unshallow", ),
+    cmd("f", "fsck", "--no-reflogs", "--lost-found", ),
 
     cmd("i", "init", ),
 
