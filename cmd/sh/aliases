@@ -849,16 +849,6 @@ _al chws 'sd chw'
 _dal chwsr 'sd chwr' R
 _dal chwsb 'sd chwb' R
 
-_ual sd sudo
-_al sd /usr/bin/sudo
-
-# sd() {
-# need function for PATH
-#         :
-#         /usr/bin/sudo bash -ic "$*"
-# }
-
-_al sds '/usr/bin/sudo -s'
 
 ########## PIPES ##########
 
