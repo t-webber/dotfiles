@@ -1,15 +1,4 @@
-#!/bin/sh
-
-set -x
-set -eo pipefail
-
-get() {
-        set +x
-        echo -n "$1: " >&2
-        read x
-        set -x
-        echo "$x"
-}
+#!/bin/bash
 
 if [ -n "$1" ]; then
         id="$1"
@@ -29,21 +18,21 @@ else
         name="$(get name)"
 fi
 
-id=$(echo "$id" | awk -F'/' '{print $NF}')
+id=$(eh "$id" | w -F'/' '{print $NF}')
 
-scope=$(echo "$id" | rev | cut -c1-2 | rev)
+scope=$(eh "$id" | rev | cut -c1-2 | rev)
 
-url=$(git remote -v | grep fetch | awk '{print $2}')
+url=$(i rtv | rg fetch | w '{print $2}')
 
-oldbranch=$(git branch | grep '\*' | awk '{print $2}')
+oldbranch=$(i br | rg '\*' | w '{print $2}')
 
-git fetch "$url" "refs/changes/$scope/$id/$patchset"
-git checkout FETCH_HEAD
+i e "$url" "refs/changes/$scope/$id/$patchset"
+i ckF
 
 if [ -n "$name" ]; then
         newbranch="$name-$patchset"
 
-        git switch -c "$newbranch"
+        i swc "$newbranch"
 
         if [ -n "$4" ]; then
                 worktree="y"
@@ -52,11 +41,13 @@ if [ -n "$name" ]; then
         fi
 
         if [ "$worktree" = "y" ]; then
-                git switch "$oldbranch"
-                git worktree add "../$newbranch" "$newbranch"
-                cd "../$newbranch"
+                i sw "$oldbranch"
+                i wa "../$newbranch" "$newbranch"
+                p "../$newbranch"
         fi
-fi
 
-set +x
-set +euo
+        . dotshrc_genasm_mp
+        python -m ensurepip
+        python -m pip install --upgrade pip
+        python -m pip install yapf pyright rich
+fi

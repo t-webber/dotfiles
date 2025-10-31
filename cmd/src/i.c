@@ -41,11 +41,9 @@ const Cmd COMMANDS[] = {
 
     cmd("i", "init", ),
 
-    cmd("lr", "reflog", ),
-    // clang-format off
     cmd("ls", "ls-files", ),
-    // clang-format on
-    cmd("l", "log", "--oneline", "--graph", "-n", ),
+    cmd("lr", "reflog", "--graph", "-n", "=c--color=always", ),
+    cmd("l", "log", "--oneline", "--graph", "-n", "=c--color=always", ),
 
     cmd("m", "merge", "--allow-unrelated-histories", ),
 
@@ -155,7 +153,8 @@ static void handle_char(Vec *const cmd,
 
         if (isdigit(ch)) {
                 size_t len = 0;
-                for (; isdigit(*(arg + *i + len)); ++len);
+                for (; isdigit(*(arg + *i + len)); ++len)
+                        ;
                 char *const head_arg = malloc((len + 1 + 5) * sizeof(char));
                 sprintf(head_arg, "HEAD~%d", atoi(arg + *i));
                 push(cmd, head_arg);

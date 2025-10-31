@@ -473,6 +473,7 @@ _al irslmm 'i rshmm && i pl'
 _al iwl "i wl | w '{print \"\033[33m\" \$3 \"\033[0m\t\" \$2, \$1, \"\033[31m\" \$4}'"
 _al iws 'p $(iwl | fzf --ansi | w3)'
 _al iwc 'i wl | g HEAD | w1 | while read wt; do iwr $wt; done'
+_al ickg '. ickg'
 _al iwn '. iwn'
 
 _al iswh 'i sw $(i br --color | fzf --ansi | wnf)'
