@@ -969,17 +969,22 @@ _print kk kill
 
 _flush
 
-x=$(_wi tmux)
+x=$(_wi tmux -f "$OCFG/tmux.conf")
 
 _x() {
         _al "x$1" -p "$x" "$2"
 }
+
+
+_ual x tmux
 
 _x x
 _x a 'a -t'
 _x l ls
 _x n 'new-session -s'
 _x k 'kill-session -t'
+
+_al xr -p "$x" "source-file $OCFG/tmux.conf"
 
 _al x0 'xe 0'
 _al x1 'xe 1'
