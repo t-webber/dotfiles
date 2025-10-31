@@ -1,0 +1,7 @@
+#!/bin/sh
+
+p=$(bjobs | rg PEND | wc -l)
+r=$(bjobs | rg RUN | wc -l)
+
+echo "run: $r pend: $p"
+

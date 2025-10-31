@@ -1083,6 +1083,7 @@ _al ds1 'ds -d 1'
 _dal ob objdump T
 _al zj zellij
 _al gitignore "eh '*' > .gitignore"
+_al loop '. loop'
 
 _print other done
 
