@@ -716,7 +716,6 @@ _gt f "$FILES"
 _gt h "$HOME"
 _gt work "$WORK"
 _gt build "$WORK"
-_gt arm "$ARMDIR"
 _gt good "$BUILD/good"
 _gt auto "$BUILD/good/auto-build"
 _gt rt "$BUILD/good/runtime"
@@ -1083,7 +1082,7 @@ _al ds1 'ds -d 1'
 _dal ob objdump T
 _al zj zellij
 _al gitignore "eh '*' > .gitignore"
-_al loop '. loop'
+_al loop '. loop '
 
 _print other done
 
