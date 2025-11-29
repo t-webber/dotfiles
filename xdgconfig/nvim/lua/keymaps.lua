@@ -68,6 +68,7 @@ local telescopeicon = '🔭 '
 local giticon = '🦑 '
 local oilicon = '🌻 '
 local globalicon = '📢 '
+local harpoonicon = '🔱 '
 
 ---------------
 --- General ---
@@ -106,7 +107,7 @@ setk(i, '<D-)>', ']')
 setk(i, '<D-é>', '~')
 
 setk(nv, 'ça', 'gg^vG$<CR>')
-setk(nv, 'çs', '<Esc>:w<CR>', 'save')
+setk(nv, 'çs', '<Esc>:silent :w<CR>', 'save')
 setk(niv, 'çx', '<Esc>:w<CR>:so<CR>', 'save and execute')
 setk(niv, 'çd', function()
 	vim.cmd('vnew | r # | normal! G<CR>')
@@ -138,6 +139,34 @@ end, 'Reload sxhkd')
 setk(n, ',i', ':NvimWebDeviconsHiTest<CR>')
 
 setk(n, 'du', function() vim.cmd('normal! diwds(') end, 'Delete fn name and ()')
+
+---------------
+--- Harpoon ---
+---------------
+
+local function h() return require('harpoon') end
+
+setk(n, '§a', function() h():list():add() end, harpoonicon .. 'add')
+setk(
+	n,
+	'§s',
+	function() h().ui:toggle_quick_menu(h():list()) end,
+	harpoonicon .. 'list'
+)
+
+for __idx = 1, 10 do
+	local __i = __idx
+	if __i == 10 then __i = 0 end
+	setk(
+		n,
+		'§' .. __i,
+		function() h():list():select(1) end,
+		harpoonicon .. 'select ' .. __idx .. 'th buffer'
+	)
+end
+
+setk(n, '§h', function() h():list():prev() end, harpoonicon .. 'prev buffer')
+setk(n, '§l', function() h():list():next() end, harpoonicon .. 'next buffer')
 
 ----------------------------
 --- Statusline variables ---
@@ -185,6 +214,19 @@ for letter, vars in pairs({
 	setglobs(letter, vars, name, 'y', 'add', true)
 	setglobs(letter, vars, name, 'd', 'del', false)
 end
+
+setk(
+	n,
+	'ùyb',
+	function() vim.opt.listchars = require('settings').listchars end,
+	globalicon .. 'display tabs and spaces'
+)
+setk(
+	n,
+	'ùdb',
+	function() vim.opt.listchars = { space = ' ', tab = '  ' } end,
+	globalicon .. 'display tabs and spaces'
+)
 
 -------------------------
 --- Window navigation ---
@@ -346,6 +388,15 @@ setk(n, 'gn', ':Pipeline<CR>', giticon .. 'GitHub Actions')
 --- Telescope ---
 -----------------
 
+local function tpick(finder, previewer, sorter)
+	return require('telescope.pickers')
+		.new({}, { finder = finder, previewer = previewer, sorter = sorter })
+		:find()
+end
+
+local function tconf() return require('telescope.config').values end
+local function tfind() return require('telescope.finders') end
+
 for letter, cmd in pairs({
 	f = 'find_files',
 	g = 'git_files',
@@ -365,17 +416,15 @@ end
 local function settg(letter, cmd, description, functions)
 	setk(n, 'é' .. letter, function()
 		vim.o.laststatus = 0
-		local finder = require('telescope.finders').new_oneshot_job(
+		local finder = tfind().new_oneshot_job(
 			cmd,
 			{ entry_maker = functions and functions.entry_maker }
 		)
-		require('telescope.pickers')
-			.new({}, {
-				finder = finder,
-				sorter = require('telescope.config').values.generic_sorter({}),
-				attach_mappings = functions and functions.attach_mappings,
-			})
-			:find()
+		tpick(
+			finder,
+			tconf().generic_sorter({}),
+			functions and functions.attach_mappings
+		)
 		vim.o.laststatus = 2
 	end, description)
 end
@@ -448,15 +497,12 @@ settg(
 )
 
 setk(n, 'ét', function(opts)
-	local pickers = require('telescope.pickers')
-	local finders = require('telescope.finders')
 	local make_entry = require('telescope.make_entry')
-	local conf = require('telescope.config').values
 
 	opts = opts or {}
 	local cwd = opts.cwd or vim.uv.cwd()
 
-	local finder = finders.new_async_job({
+	local finder = tfind().new_async_job({
 		command_generator = function(prompt)
 			if not prompt or prompt == '' then return nil end
 
@@ -487,14 +533,27 @@ setk(n, 'ét', function(opts)
 		cwd = cwd,
 	})
 
-	pickers
-		.new(opts, {
-			finder = finder,
-			previewer = conf.grep_previewer(opts),
-			sorter = require('telescope.sorters').empty(),
-		})
-		:find()
+	tpick(
+		finder,
+		tconf().grep_previewer(opts),
+		require('telescope.sorters').empty()
+	)
 end, 'find content in files')
+
+setk(n, 'él', function()
+	local file_paths = {}
+	for _, item in ipairs(h():list().items) do
+		table.insert(file_paths, item.value)
+	end
+
+	tpick(
+		tfind().new_table({
+			results = file_paths,
+		}),
+		tconf().file_previewer({}),
+		tconf().generic_sorter({})
+	)
+end, telescopeicon .. harpoonicon)
 
 -----------
 --- Oil ---

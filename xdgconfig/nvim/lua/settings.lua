@@ -23,9 +23,11 @@ local options = {
 	smartcase = true, -- ... except if \C or capitals present
 	list = true, -- show Tab and trailing spaces
 	listchars = {
-		tab = '▹ ', -- shows tabs as → followed by a space
-		trail = '§', -- shows trailing spaces as §
-		nbsp = '␣', -- optional, for non-breaking spaces
+		tab = '▹ ',
+		trail = '§',
+		nbsp = '␣',
+		space = ' ',
+		lead = '·',
 	},
 	swapfile = false,
 	termguicolors = true,
@@ -59,3 +61,5 @@ end
 for k, v in pairs(globals) do
 	vim.g[k] = v
 end
+
+return options

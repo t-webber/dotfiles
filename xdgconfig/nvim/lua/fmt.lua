@@ -1,10 +1,11 @@
 local python = require('lsp')
-local yapf
-if python.venv_bin == nil then
-	yapf = 'yapf'
-else
-	yapf = python.venv_bin .. 'yapf'
-end
+local yapf = (function()
+	if python.venv_bin == nil then
+		return 'yapf'
+	else
+		return python.venv_bin .. 'yapf'
+	end
+end)()
 
 return {
 
