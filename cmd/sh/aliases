@@ -763,11 +763,11 @@ if [ "$DEVICE" != "v" ]; then
         _ual cl clang
         _ual clp clang++
         _ual clf clang-format
-        _al cl "$(_wi clang)"
+#         _al cl "$(_wi clang)"
         _dal clp "$(_wi clang++)" version
         _al clf "$(_wi clang-format)"
 else
-        _al cl clang
+#         _al cl clang
         _dal clp clang++ version
         _dal clf clang-format i
 fi

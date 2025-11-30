@@ -8,6 +8,7 @@ const Cmd COMMANDS[] = {
     cmd("a", "add", "--features", ),
 
     cmd("bi", "binstall", "-y", "--git", "--features", ),
+    cmd("be", "bench",),
     cmd("b", "build", "-r", "--features", "-p", ),
 
     cmd("ee", "tree", ),
