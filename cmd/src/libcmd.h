@@ -29,10 +29,10 @@ typedef struct {
         const size_t manual_len;
 } CliSettings;
 
-NON_NULL NO_RETURN void run_cli(const size_t argc,
+nonnull noreturn void run_cli(const size_t argc,
                                 Args argv,
                                 const CliSettings *const settings,
                                 Vec *const cmd);
 
-NON_NULL NO_RETURN void
+nonnull noreturn void
 run_cli_single(const size_t argc, Args argv, const Cmd *const cmd);

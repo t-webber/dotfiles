@@ -7,8 +7,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef char * var_str;
-typedef const char * const_var_str;
+#define null_ch '\0'
+#define A(x) __attribute__((x))
+#define mustuse A(warn_unused_result)
+#define nonnull A(nonnull)
+#define noreturn A(noreturn)
+
+typedef char *var_str;
+typedef const char *const_var_str;
 typedef char *const str;
 typedef const char *const const_str;
 typedef const_str *const Args;
@@ -20,7 +26,7 @@ typedef struct {
         const size_t length;
 } String;
 
-String get_env_subpath(const String subpath, const_str var);
+mustuse nonnull String get_env_subpath(const String subpath, const_str var);
 
 #define epanic(...)                                                            \
         {                                                                      \
@@ -36,26 +42,28 @@ String get_env_subpath(const String subpath, const_str var);
                 exit(6);                                                       \
         }
 
-void panic_err(const_str message);
+nonnull void panic_err(const_str message);
 
-bool is_verbose(const_str program_name,
-                const_str normal_name,
-                const_str verbose_name);
+mustuse nonnull bool is_verbose(const_str program_name,
+                                const_str normal_name,
+                                const_str verbose_name);
 
-const char *argv_one_filename(const int argc, const_str *const argv);
+mustuse nonnull const char *argv_one_filename(const int argc,
+                                              const_str *const argv);
 
-bool has_slash(const_str arg, size_t *len, const char **const position);
+mustuse nonnull bool
+has_slash(const_str arg, size_t *len, const char **const position);
 
-void store_usage(const_str *const argv);
+nonnull void store_usage(const_str *const argv);
 
-size_t utf8_strlen(const char *s);
+mustuse nonnull size_t utf8_strlen(const char *s);
 
-FILE *fopen_checked(const_str file_name, const_str mode);
-FILE *popen_checked(const_str command);
-DIR *opendir_checked(const_str file_name);
-const_var_str getenv_checked(const_str var);
+mustuse nonnull FILE *fopen_checked(const_str file_name, const_str mode);
+mustuse nonnull FILE *popen_checked(const_str command);
+nonnull mustuse DIR *opendir_checked(const_str file_name);
+nonnull mustuse const_var_str getenv_checked(const_str var);
 
-void exl_notif(const_str message);
+nonnull void exl_notif(const_str message);
 
 #define exl_corenotif(...)                                                     \
         char message[128];                                                     \
@@ -64,17 +72,10 @@ void exl_notif(const_str message);
 
 void exl_err_notif(void);
 
-var_str get_battery_level(void);
-var_str get_battery_status(void);
-
-#define max(a, b) a >= b ? a : b
+mustuse var_str get_battery_level(void);
+mustuse var_str get_battery_status(void);
 
 void clear(void);
 void exl_err_notif_msg(const_str msg);
 
-#define A(x) __attribute__((x))
-#define MUST_USE A(warn_unused_result)
-#define NON_NULL A(nonnull)
-#define NO_RETURN A(noreturn)
-
-#define null_ch '\0'
+mustuse size_t max(const size_t a, const size_t b);

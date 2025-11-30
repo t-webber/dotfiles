@@ -7,11 +7,11 @@
 #include <stdio.h>
 #include <string.h>
 
-NON_NULL static void print_manual(const Manual *const manual) {
+nonnull static void print_manual(const Manual *const manual) {
         printf("%c  %s\n", manual->origin, manual->replace);
 }
 
-NON_NULL static void
+nonnull static void
 print_cmd(const Cmd *const cmd, size_t max_alias, const size_t max_expanded) {
         if (max_alias) ++max_alias;
         printf("%-*s %-*s ",
@@ -25,7 +25,7 @@ print_cmd(const Cmd *const cmd, size_t max_alias, const size_t max_expanded) {
         printf("\n");
 }
 
-MUST_USE NON_NULL static size_t get_max_alias(const Cmd *const cmds,
+mustuse nonnull static size_t get_max_alias(const Cmd *const cmds,
                                               const size_t cmd_len) {
         size_t max = 0;
         size_t current;
@@ -36,7 +36,7 @@ MUST_USE NON_NULL static size_t get_max_alias(const Cmd *const cmds,
         return max;
 }
 
-MUST_USE NON_NULL static size_t get_max_expanded(const Cmd *const cmds,
+mustuse nonnull static size_t get_max_expanded(const Cmd *const cmds,
                                                  const size_t cmd_len) {
         size_t max = 0;
         size_t current;
@@ -47,7 +47,7 @@ MUST_USE NON_NULL static size_t get_max_expanded(const Cmd *const cmds,
         return max;
 }
 
-NON_NULL static void print_cmds(const Cmd *const cmds, const size_t cmd_len) {
+nonnull static void print_cmds(const Cmd *const cmds, const size_t cmd_len) {
         const size_t max_alias = get_max_alias(cmds, cmd_len);
         const size_t max_expanded = get_max_expanded(cmds, cmd_len);
         for (size_t i = 0; i < cmd_len; ++i) {
@@ -55,7 +55,7 @@ NON_NULL static void print_cmds(const Cmd *const cmds, const size_t cmd_len) {
         }
 }
 
-NON_NULL static void print_help(const CliSettings *const settings) {
+nonnull static void print_help(const CliSettings *const settings) {
         print_cmds(settings->cmd, settings->cmd_len);
         printf("\
 ---\n\
@@ -72,7 +72,7 @@ NON_NULL static void print_help(const CliSettings *const settings) {
         }
 }
 
-MUST_USE NON_NULL static size_t find_command(const_str arg,
+mustuse nonnull static size_t find_command(const_str arg,
                                              size_t *start,
                                              const Cmd *const cmds,
                                              const size_t len) {
@@ -86,7 +86,7 @@ MUST_USE NON_NULL static size_t find_command(const_str arg,
         upanic("Invalid prefix in arg: %s\n", arg);
 }
 
-NON_NULL MUST_USE static bool
+nonnull mustuse static bool
 take_two(Vec *const cmd, Args opts, const char first, const char second) {
         for (int i = 0; opts[i]; ++i) {
                 if (strncmp(opts[i], "--", 2) || opts[i][2] != first) continue;
@@ -100,7 +100,7 @@ take_two(Vec *const cmd, Args opts, const char first, const char second) {
         return false;
 }
 
-NON_NULL MUST_USE static bool
+nonnull mustuse static bool
 take_one(Vec *const cmd, Args opts, const char c) {
         for (int i = 0; opts[i]; ++i) {
                 const char *first = opts[i];
@@ -125,7 +125,7 @@ struct CharParsingState {
         char *raw_mode;
 };
 
-NON_NULL static void handle_char(Vec *const cmd,
+nonnull static void handle_char(Vec *const cmd,
                                  const Manual *const expansions,
                                  const size_t nb_expansions,
                                  const_str arg,
@@ -201,7 +201,7 @@ NON_NULL static void handle_char(Vec *const cmd,
         }
 }
 
-NON_NULL static void parse_alias(const CliSettings *const settings,
+nonnull static void parse_alias(const CliSettings *const settings,
                                  Vec *const cmd,
                                  const_str arg,
                                  const size_t end) {
@@ -266,7 +266,7 @@ NON_NULL static void parse_alias(const CliSettings *const settings,
         }
 }
 
-NON_NULL NO_RETURN static void print_exit_or_exec(const Vec *const cmd,
+nonnull noreturn static void print_exit_or_exec(const Vec *const cmd,
                                                   const bool debug) {
 
         if (!debug) exvd(cmd->data);
@@ -279,7 +279,7 @@ NON_NULL NO_RETURN static void print_exit_or_exec(const Vec *const cmd,
         exit(0);
 }
 
-MUST_USE NON_NULL static bool
+mustuse nonnull static bool
 push_others(Vec *const cmd, const size_t argc, Args argv) {
         bool debug = false;
 
@@ -296,7 +296,7 @@ push_others(Vec *const cmd, const size_t argc, Args argv) {
         return debug;
 }
 
-NON_NULL NO_RETURN void run_cli(const size_t argc,
+nonnull noreturn void run_cli(const size_t argc,
                                 Args argv,
                                 const CliSettings *const settings,
                                 Vec *const cmd) {
@@ -313,7 +313,7 @@ NON_NULL NO_RETURN void run_cli(const size_t argc,
         print_exit_or_exec(cmd, debug);
 }
 
-NON_NULL NO_RETURN void
+nonnull noreturn void
 run_cli_single(const size_t argc, Args argv, const Cmd *const command) {
         bool should_clear = false, help = false;
 
