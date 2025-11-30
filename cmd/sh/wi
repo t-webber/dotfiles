@@ -17,5 +17,5 @@ get_file_location() {
 
 x="$(get_file_location $1)"
 
-printf "$x"
+printf "$x\n"
 [ "$DEVICE" != "v" ] && printf "$x" | x

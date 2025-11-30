@@ -1,0 +1,8 @@
+#!/bin/sh
+
+set -euo pipefail
+
+hash=$(iwl | fzf --ansi --preview "echo {} | awk '{print \$(NF-1) }' | xargs -I{} i soC {}" | awk '{print $(NF-1)}')
+
+echo $(i wl | rg $hash | awk '{print $1}')
+

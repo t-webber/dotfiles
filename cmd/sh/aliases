@@ -416,14 +416,13 @@ _al iyfa "i yfrw ../*.diff"
 _al irslm 'i rshm && i pl'
 _al irslmm 'i rshmm && i pl'
 
-_al iwl "i wl | w '{print \"\033[33m\" \$3 \"\033[0m\t\" \$2, \$1, \"\033[31m\" \$4}'"
+_al iws 'p $(iwss)'
 _al iwc 'i wl | g HEAD | w1 | while read wt; do iwr $wt; done'
 _al ickg '. ickg'
 _al iwn '. iwn'
 
 # FZF
 
-_al iws 'p $(iwl | fzf --ansi | w3)'
 _al iswh 'i sw $(i br --color | fzf --ansi | wnf)'
 _al irbi 'i rbi $(i lo | fzf  --no-sort | w1)'
 _al ilsw 'i lo | fzf | w1 | i swc zzz'
