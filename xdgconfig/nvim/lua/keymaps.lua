@@ -218,7 +218,7 @@ end
 setk(
 	n,
 	'ùyb',
-	function() vim.opt.listchars = require('settings').listchars end,
+	function() vim.opt.listchars = require('data').listchars end,
 	globalicon .. 'display tabs and spaces'
 )
 setk(

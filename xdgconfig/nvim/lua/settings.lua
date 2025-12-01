@@ -2,9 +2,9 @@
 vim.diagnostic.config({ virtual_text = true })
 
 -- Sync clipboard between OS and Neovim.
---  Schedule the setting after `UiEnter` because it can increase startup-time.
---  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
+-- Schedule the setting after `UiEnter` because it can increase startup-time.
+-- Remove this option if you want your OS clipboard to remain independent.
+-- See `:help 'clipboard'`
 if os.getenv('DEVICE') ~= 'v' then
 	vim.schedule(function() vim.o.clipboard = 'unnamedplus' end)
 end
@@ -22,14 +22,8 @@ local options = {
 	ignorecase = true, -- ignore case in search...
 	smartcase = true, -- ... except if \C or capitals present
 	list = true, -- show Tab and trailing spaces
-	listchars = {
-		tab = '▹ ',
-		trail = '§',
-		nbsp = '␣',
-		space = ' ',
-		lead = '·',
-	},
 	swapfile = false,
+	listchars = { tab = '  ' },
 	termguicolors = true,
 	completeopt = { 'menuone', 'noselect' },
 	splitbelow = true, -- move cursor down on split

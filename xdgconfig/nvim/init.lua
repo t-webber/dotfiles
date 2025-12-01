@@ -9,6 +9,7 @@ local files = {
 	'functions',
 	'statusline',
 	'lazyconfig',
+	'syntax',
 }
 
 if os.getenv('DEVICE') == 'v' then

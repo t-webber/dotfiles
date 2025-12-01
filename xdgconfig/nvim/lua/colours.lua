@@ -384,11 +384,14 @@ local colours = {
 	TodoPartial = h(c.orange),
 	TodoHold = h(c.darkcyan),
 	Hide = h(c.semidark, c.black),
+
+	CommentBg = h(c.semidark, c.semidark),
 }
 
 for name, value in pairs(c) do
 	colours[name] = h(value[1])
-	colours['bg' .. name] = h(c.dark, value[1])
+	colours['bg-' .. name] = h(c.dark, value[1])
+	colours['bg-hide-' .. name] = h(value[1], value[1])
 end
 
 for name, options in pairs(colours) do
