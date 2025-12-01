@@ -762,11 +762,11 @@ if [ "$DEVICE" != "v" ]; then
         _ual cl clang
         _ual clp clang++
         _ual clf clang-format
-#         _al cl "$(_wi clang)"
+        #         _al cl "$(_wi clang)"
         _dal clp "$(_wi clang++)" version
         _al clf "$(_wi clang-format)"
 else
-#         _al cl clang
+        #         _al cl clang
         _dal clp clang++ version
         _dal clf clang-format i
 fi
@@ -808,6 +808,9 @@ _ual xg xargs
 _al xg "$(_wi xargs)"
 _al cnt 'wc -l'
 _al xcnt 'xg wc -l'
+_al xgi 'xg -I'
+_al xgid 'xg -I.'
+_al xgib 'xg -I{}'
 
 _ual hd head
 _dal hd "$(_wi head)" n 1
