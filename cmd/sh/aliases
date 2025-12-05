@@ -744,6 +744,8 @@ _gtd vsh vimsh
 _gtd words words
 _gtd TOdo test-hokla-aphp-py-tom-webber
 
+_al gd 'p $DEV && p $(fd --type d -d 1 | fzf)'
+
 for l in c r y g; do
         _gtd "pdel$l" ".$l"/
         _al "del$l" "pdel$l && e ."
