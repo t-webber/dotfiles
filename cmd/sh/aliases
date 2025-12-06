@@ -214,9 +214,9 @@ if [ -f '/etc/arch-release' ] || [ -f '/etc/artix-release' ]; then
 
         m='/etc/pacman.d/mirrorlist'
         if [ -f '/etc/artix-release' ]; then
-                _al M "rankmirrors $ETC/artix-mirrors | sudo tee $m"
+                _al M "rankmirrors $ETC/artix-mirrors | sudo tee $m && U"
         else if [ -f '/etc/arch-release' ]; then
-                _al M "sudo reflector --latest 30 --sort rate --save $m --connection-timeout 20 --number 15 reflector"
+                _al M "sudo reflector --latest 30 --sort rate --save $m --connection-timeout 20 --number 15 reflector && U"
         fi; fi
 
         _print pr paru

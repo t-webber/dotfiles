@@ -161,6 +161,16 @@ static int dezoom_and_run_alacritty(const_str filename, const bool is_mpv) {
         exit(0);
 }
 
+static bool is_file_binary(const_str path) {
+        FILE *f = fopen_checked(path, "rb");
+        int c;
+        while ((c = fgetc(f)) != EOF) {
+                if (c == '\n' || c == '\t' || c == '\r') continue;
+                if (c == 127 || c < 32) return true;
+        }
+        return false;
+}
+
 int exec_open_file(const_str filename,
                    const_str extension,
                    const bool is_open,
@@ -192,13 +202,10 @@ int exec_open_file(const_str filename,
         if (timg_supported(extension))
                 dezoom_and_run_alacritty(filename, false);
 
-        if (is_verbose)
-                exldn("bat",
-                      filename,
-                      "--style=plain",
-                      "--theme",
-                      "ansi",
-                      NULL);
+        if (is_file_binary(filename)) { exldn("file", filename); }
 
-        exldn("cat", "cat", filename);
+        if (is_verbose)
+                exldn("bat", filename, "--style=plain", "--theme", "ansi");
+
+        exldn("cat", filename);
 }
