@@ -13,6 +13,7 @@ echo '#![deny(clippy::restriction)]
     clippy::blanket_clippy_restriction_lints,
     clippy::unseparated_literal_suffix,
     clippy::missing_trait_methods,
+    clippy::mod_module_files,
     reason = ""
 )]' >"$WASTE/tmp"
 
