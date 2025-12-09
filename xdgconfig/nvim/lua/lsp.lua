@@ -23,7 +23,7 @@ end
 
 local lsps = {
 
-	Pyright = {
+	py = {
 		cmd = { python.bin .. 'pyright-langserver', '--stdio' },
 		filetypes = { 'python' },
 		settings = {
@@ -42,11 +42,11 @@ local lsps = {
 		},
 	},
 
-	Latex = {
+	tex = {
 		cmd = { 'texlab' },
 		filetypes = { 'tex' },
 	},
-	Typescript = {
+	ts = {
 		cmd = { 'typescript-language-server', '--stdio' },
 		filetypes = {
 			'typescript',
@@ -58,7 +58,7 @@ local lsps = {
 			vim.fs.find({ 'package.json' }, { upward = true })[1]
 		),
 	},
-	Lua = {
+	lua = {
 		cmd = { 'lua-language-server' },
 		filetypes = { 'lua' },
 		settings = {
@@ -68,7 +68,7 @@ local lsps = {
 			},
 		},
 	},
-	Rust = {
+	rs = {
 		cmd = { 'rust-analyzer' },
 		filetypes = { 'rust' },
 		settings = {
@@ -87,15 +87,15 @@ local lsps = {
 			},
 		},
 	},
-	Clang = {
+	c = {
 		cmd = { 'clangd' },
 		filetypes = { 'c', 'cpp', 'h', 'hpp' },
 	},
-	Bash = {
+	sh = {
 		cmd = { 'bash-language-server' },
 		filetypes = { 'sh', 'bash' },
 	},
-	Go = {
+	go = {
 		cmd = { 'gopls' },
 		filetypes = { 'go' },
 	},
