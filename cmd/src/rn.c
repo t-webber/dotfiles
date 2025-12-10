@@ -13,7 +13,7 @@
 const uint64_t NS = 1;
 const uint64_t SEC = 1000 * 1000 * 1000 * NS;
 
-mustuse static uint64_t since_unix(void) {
+__wur static uint64_t since_unix(void) {
         struct timespec ts;
         clock_gettime(CLOCK_REALTIME, &ts);
         const uint64_t nsec = (uint64_t)ts.tv_nsec;
@@ -21,7 +21,7 @@ mustuse static uint64_t since_unix(void) {
         return (nsec * NS + sec * SEC);
 }
 
-noreturn nonnull static void rn_file(const_str filename) {
+_Noreturn __nonnull() static void rn_file(const_str filename) {
         const_str waste = getenv_checked("WASTE");
         mkdir(waste, 0755);
 

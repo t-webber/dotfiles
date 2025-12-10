@@ -6,7 +6,7 @@
 #include <string.h>
 #include <sys/wait.h>
 
-nonnull mustuse String get_env_subpath(const String subpath, const_str var) {
+__nonnull() __wur String get_env_subpath(const String subpath, const_str var) {
         const_str cmd_path = getenv_checked(var);
 
         const size_t cmd_path_len = strlen(cmd_path);
@@ -20,9 +20,9 @@ nonnull mustuse String get_env_subpath(const String subpath, const_str var) {
         return fullpath_str;
 }
 
-nonnull mustuse bool is_verbose(const_str program_name,
-                                const_str normal_name,
-                                const_str verbose_name) {
+__nonnull() __wur bool is_verbose(const_str program_name,
+                                  const_str normal_name,
+                                  const_str verbose_name) {
         if (!strcmp(program_name, normal_name))
                 return false;
         else if (!strcmp(program_name, verbose_name))
@@ -34,8 +34,8 @@ nonnull mustuse bool is_verbose(const_str program_name,
                        verbose_name);
 }
 
-nonnull mustuse const char *argv_one_filename(const int argc,
-                                              const_str *const argv) {
+__nonnull() __wur const
+    char *argv_one_filename(const int argc, const_str *const argv) {
 
         if (argc == 1)
                 return ".";
@@ -47,8 +47,8 @@ nonnull mustuse const char *argv_one_filename(const int argc,
                        argv[0]);
 }
 
-nonnull mustuse bool
-has_slash(const_str arg, size_t *len, const char **const position) {
+__nonnull() __wur
+    bool has_slash(const_str arg, size_t *len, const char **const position) {
         const char *end = arg;
         bool res = false;
         for (; *end != '\0'; ++end)
@@ -60,7 +60,7 @@ has_slash(const_str arg, size_t *len, const char **const position) {
         return res;
 }
 
-nonnull void store_usage(Args argv) {
+__nonnull() void store_usage(Args argv) {
         const_str logs = getenv_checked("LOGS");
         const size_t logs_len = strlen(logs);
         str path
@@ -72,7 +72,7 @@ nonnull void store_usage(Args argv) {
         fclose(fd);
 }
 
-mustuse nonnull size_t utf8_strlen(const_str s) {
+__wur __nonnull() size_t utf8_strlen(const_str s) {
         size_t len = 0;
         const char *reader = s;
         while (*reader) {
@@ -82,31 +82,31 @@ mustuse nonnull size_t utf8_strlen(const_str s) {
         return len;
 }
 
-nonnull mustuse FILE *fopen_checked(const_str file_name, const_str mode) {
+__nonnull() __wur FILE *fopen_checked(const_str file_name, const_str mode) {
         FILE *f = fopen(file_name, mode);
         if (f == NULL) epanic("Failed to open file %s", file_name);
         return f;
 }
 
-mustuse nonnull DIR *opendir_checked(const_str file_name) {
+__wur __nonnull() DIR *opendir_checked(const_str file_name) {
         DIR *f = opendir(file_name);
         if (f == NULL) epanic("Failed to popen %s", file_name);
         return f;
 }
 
-mustuse nonnull FILE *popen_checked(const_str command) {
+__wur __nonnull() FILE *popen_checked(const_str command) {
         FILE *f = popen(command, "r");
         if (f == NULL) epanic("Failed to run %s", command);
         return f;
 }
 
-mustuse nonnull const_var_str getenv_checked(const_str var) {
+__wur __nonnull() const_var_str getenv_checked(const_str var) {
         const_str value = getenv(var);
         if (value == NULL) upanic("Env var %s not defined.", var);
         return value;
 }
 
-nonnull noreturn void exl_notif(const_str message) {
+__nonnull() _Noreturn void exl_notif(const_str message) {
         exldn("notify-send",
               "-u",
               "low",
@@ -119,7 +119,7 @@ nonnull noreturn void exl_notif(const_str message) {
               message);
 }
 
-mustuse char *get_battery_level(void) {
+__wur char *get_battery_level(void) {
         const_str device = getenv("DEVICE");
         if (!device || strcmp(device, "acer")) { return NULL; }
         FILE *fd = fopen_checked("/sys/class/power_supply/BAT1/capacity", "r");
@@ -129,7 +129,7 @@ mustuse char *get_battery_level(void) {
         return content;
 }
 
-mustuse char *get_battery_status(void) {
+__wur char *get_battery_status(void) {
         const_str device = getenv("DEVICE");
         if (!device || strcmp(device, "acer")) { return NULL; }
         FILE *fd = fopen_checked("/sys/class/power_supply/BAT1/status", "r");
@@ -148,10 +148,14 @@ void clear(void) {
         fflush(stdout);
 }
 
-noreturn nonnull void exl_err_notif_msg(const_str err_msg) {
+_Noreturn __nonnull() void exl_err_notif_msg(const_str err_msg) {
         exldn("notify-send", "-u", "critical", err_msg);
 }
 
-mustuse size_t max(const size_t a, const size_t b) {
+__wur size_t max(const size_t a, const size_t b) {
         return a > b ? a : b;
+}
+
+__nonnull() void chdir_checked(const_str path) {
+        if (chdir(path) == -1) { epanic("Failed to change process cwd.") };
 }

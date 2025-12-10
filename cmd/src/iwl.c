@@ -3,11 +3,11 @@
 #include "libvec.h"
 #include <string.h>
 
-nonnull static void maxed(size_t *store, const size_t new) {
+__nonnull() static void maxed(size_t *store, const size_t new) {
         if (new > *store) *store = new;
 }
 
-nonnull mustuse static size_t get_max_lengths(char *const buffer,
+__nonnull() __wur static size_t get_max_lengths(char *const buffer,
                                               Vec *const lines) {
         size_t max_sha_len = 0;
         size_t max_branch_len = 0;
@@ -31,7 +31,7 @@ nonnull mustuse static size_t get_max_lengths(char *const buffer,
         return (max_sha_len << 32) + max_branch_len;
 }
 
-nonnull static void display(const Vec *const lines,
+__nonnull() static void display(const Vec *const lines,
                             const size_t max_sha_len,
                             const size_t max_branch_len) {
 

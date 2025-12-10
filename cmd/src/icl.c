@@ -80,7 +80,7 @@ try_clone_url(const_str url, const char **const git_args, const bool exact) {
 /// gets the selected URL, and clones it.
 static void find_and_clone(const_str repo_name, const char **const icl_args) {
         int pipefd[2];
-        pipe(pipefd);
+        if (pipe(pipefd) == -1) { epanic("Failed to establish pipes.") };
 
         pid_t pid = fork_checked();
 

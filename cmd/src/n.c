@@ -36,7 +36,7 @@ static void create_file(char *const filename, bool are_all_dir) {
         *reader = '\0';
         mkdir(filename, 0700);
 
-        chdir(filename);
+        chdir_checked(filename);
         ++reader;
         create_file(reader, are_all_dir);
 }
@@ -46,7 +46,7 @@ int main(int argc, char *const *argv) {
         if (argc == 1) upanic("Missing arguments...");
 
         for (int i = 1; i < argc; ++i) {
-                if (*argv[i] == '/') chdir("/");
+                if (*argv[i] == '/') chdir_checked("/");
                 create_file(argv[i], are_all_dir);
         }
         return 0;
