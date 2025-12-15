@@ -433,6 +433,7 @@ _al ilon 'i lo=n'
 _al igh 'slp 1 && i phO HEAD:refs/for/master'
 _al ighw 'i phO HEAD:refs/for/master%wip'
 _al iyfa "i yfrw ../*.diff"
+_al ilg 'i l | rg -A5'
 
 _al irslm 'i rshm && i pl'
 _al irslmm 'i rshmm && i pl'
@@ -1050,7 +1051,7 @@ _al gpg-list 'gpg --list-secret-keys --keyid-format=long'
 _al cols 'tput cols'
 _al rand 'openssl rand -base64 255'
 _al codex 'code --install-extension'
-_al fix 'stty sane; builtin cd; printf "\033[0m"'
+_al fix 'stty sane; builtin cd; echo $HOME > $LOGS/last_location.log; printf "\033[0m"'
 _al cls 'printf "\033c"'
 _al nt numbat
 _al tf trufflehog
@@ -1099,6 +1100,7 @@ _al zj zellij
 _al gitignore "eh '*' > .gitignore"
 _al loop '. loop '
 _al wpad '/bin/sudo wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf'
+_al rnf 'fd --type d | xgid -P 50 rm -rf . &>/dev/null'
 
 _print other done
 
