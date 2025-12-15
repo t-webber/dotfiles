@@ -161,5 +161,5 @@ __wur __attribute_const__ size_t max(const size_t a, const size_t b) {
 }
 
 __nonnull() void chdir_checked(const_str path) {
-        if (chdir(path)) { epanic("Failed to change process cwd.") };
+        if (chdir(path)) { epanic("Failed to change process cwd to %s", path) };
 }

@@ -3,20 +3,24 @@
 #include <assert.h>
 #include <stdbool.h>
 
-static bool is_less_than(const char *first, const char *last) {
+__wur __attribute_pure__
+__nonnull() static bool is_less_than(const char *first, const char *last) {
         while (*first && *last && *first == *last) ++first, ++last;
 
         return first[0] == '\0' || (last[0] != '\0' && first[0] < last[0]);
 }
 
-static void
-swap(const char **const array, const size_t idx1, const size_t idx2) {
+__nonnull() static void swap(const char **const array,
+                             const size_t idx1,
+                             const size_t idx2) {
         const_str temp = array[idx1];
         array[idx1] = array[idx2];
         array[idx2] = temp;
 }
 
-void sort(const char **const keybinds, const size_t start, const size_t end) {
+__nonnull() void sort(const char **const keybinds,
+                      const size_t start,
+                      const size_t end) {
         if (start + 1 >= end) return;
         const_str pivot = keybinds[start];
 
