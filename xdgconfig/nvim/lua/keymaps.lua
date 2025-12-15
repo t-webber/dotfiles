@@ -20,9 +20,9 @@ local function describe(keymap, action, description)
 	error('misssing description for ' .. keymap)
 end
 
-local function set_keymap_for_all_modes(modes, keymap, action)
+local function set_keymap_for_all_modes(modes, keymap, action, opts)
 	for _, mode in ipairs(modes) do
-		vim.keymap.set(mode, keymap, action, {})
+		vim.keymap.set(mode, keymap, action, opts)
 		nb = nb + 1
 	end
 end
@@ -39,8 +39,10 @@ local function add_keymap_to_doc(modes, keymap, action, description)
 	})
 end
 
-local function setk(modes, keymap, action, description, ignore)
-	set_keymap_for_all_modes(modes, keymap, action)
+local default = { ignore = 666, opts = {} }
+
+local function setk(modes, keymap, action, description, opts, ignore)
+	set_keymap_for_all_modes(modes, keymap, action, opts or default.opts)
 	if ignore == nil then
 		add_keymap_to_doc(modes, keymap, action, description)
 	end
@@ -250,7 +252,14 @@ for letter, command in pairs({
 	setk(nit, keymap, '<C-\\><C-n>' .. command)
 	keymap = '<D-' .. letter .. '>'
 	setk(n, keymap, command)
-	setk(it, keymap, '<C-\\><C-n>' .. command, winicon .. command, 'setwink')
+	setk(
+		it,
+		keymap,
+		'<C-\\><C-n>' .. command,
+		winicon .. command,
+		default.opts,
+		default.ignore
+	)
 end
 
 setk(n, '<C-*>', ':vsplit | term<CR>')
@@ -347,7 +356,7 @@ setk(n, 'ç', function()
 	else
 		vim.api.nvim_feedkeys('ç' .. key, 'n', false)
 	end
-end, nil, 1)
+end, nil, default.opts, default.ignore)
 
 -----------------
 --- Iron REPL ---
@@ -738,6 +747,23 @@ setk(n, ',s', function()
 	end
 	vim.api.nvim_put({ table.concat(s) }, 'c', true, true)
 end, 'Generate a random string')
+
+------------
+--- Slop ---
+------------
+
+setk(
+	i,
+	'<C-CR>',
+	function()
+		return vim.fn
+			['copilot#Accept']('<CR>')
+			:gsub('[\128-\255]', '')
+			:gsub('@7$', '')
+	end,
+	'accept slop',
+	{ expr = true, script = true, silent = true }
+)
 
 ---------------------
 --- Custom helper ---

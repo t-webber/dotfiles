@@ -418,6 +418,14 @@ local spec = {
 		event = 'TermOpen',
 		config = function() require('term-edit').setup({ prompt_end = '%$ ' }) end,
 	},
+	---------------
+	--- Slop ------
+	---------------
+	{
+		'github/copilot.vim',
+		event = 'VeryLazy',
+		config = function() vim.cmd('Copilot status') end,
+	},
 }
 
 -- Don't call the file lazy.lua otherwise... conflict!
