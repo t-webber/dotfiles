@@ -1,4 +1,5 @@
 #include "lib.h"
+#include <assert.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -43,11 +44,15 @@ static void create_file(char *const filename, bool are_all_dir) {
 
 int main(int argc, char *const *argv) {
         bool are_all_dir = is_verbose(argv[0], "n", "nd");
-        if (argc == 1) upanic("Missing arguments...");
+        if (argc == 1) upanic("Missing arguments...\n");
 
         for (int i = 1; i < argc; ++i) {
-                if (*argv[i] == '/') chdir_checked("/");
-                create_file(argv[i], are_all_dir);
+                if (*argv[i] == '/') {
+                        chdir_checked("/");
+                        create_file(argv[i] + 1, are_all_dir);
+                } else {
+                        create_file(argv[i], are_all_dir);
+                }
         }
         return 0;
 }
