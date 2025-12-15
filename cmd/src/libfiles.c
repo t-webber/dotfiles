@@ -206,10 +206,11 @@ _Noreturn __nonnull() void exec_open_file(const_str filename,
         if (timg_supported(extension))
                 dezoom_and_run_alacritty(filename, false);
 
-        if (is_file_binary(filename)) { exldn("file", filename); }
+        if (is_verbose) {
+                if (is_file_binary(filename)) { exldn("file", filename); }
 
-        if (is_verbose)
                 exldn("bat", filename, "--style=plain", "--theme", "ansi");
+        }
 
         exldn("cat", filename);
 }
