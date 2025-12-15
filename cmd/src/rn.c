@@ -3,6 +3,7 @@
 #include <dirent.h>
 #include <inttypes.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -36,18 +37,26 @@ _Noreturn __nonnull() static void rn_file(const_str filename) {
 int main(int argc, Args argv) {
         store_usage(argv);
         if (argc == 1) upanic("Missing arguments...");
-        bool all_ok = false;
+        bool all_ok = true;
 
         pid_t *pids = malloc(sizeof(pid_t) * (size_t)(argc - 1));
 
         for (size_t i = 0; i < (size_t)argc - 1; ++i) {
-                pid_t pid = fork_checked();
-                pids[i] = pid;
-                if (pid == 0) { rn_file(argv[i + 1]); }
-                all_ok = all_ok && (access(argv[i + 1], F_OK));
+                const_str path = argv[i + 1];
+                if (access(path, F_OK)) {
+                        printf("%s doesn't exist\n", path);
+                        all_ok = false;
+                        pids[i] = 0;
+                } else {
+                        pid_t pid = fork_checked();
+                        if (pid == 0) { rn_file(path); }
+                        pids[i] = pid;
+                }
         }
 
-        for (size_t i = 0; i < (size_t)argc - 1; ++i) { fork_wait(pids[i]); }
+        for (size_t i = 0; i < (size_t)argc - 1; ++i) {
+                if (pids[i]) fork_wait(pids[i]);
+        }
 
         return all_ok ? 0 : 1;
 }
