@@ -5,17 +5,17 @@
 #include <string.h>
 #include <unistd.h>
 
-static void usage(const_str arg0) {
+__nonnull() static void usage(const_str arg0) {
         upanic("Too many arguments.\nUsage: %s <[user] "
                "<crate>|<url>> [-n name]",
                arg0);
 }
 
-static void parse_args(const int argc,
-                       Args argv,
-                       const char **user,
-                       const char **crate,
-                       const char **name) {
+__nonnull() static void parse_args(const int argc,
+                                   Args argv,
+                                   const char **user,
+                                   const char **crate,
+                                   const char **name) {
 
         if (argc < 2 || argc > 3) usage(argv[0]);
 
@@ -44,14 +44,15 @@ static void parse_args(const int argc,
         }
 }
 
-static bool is_url(const_str v) {
+__wur __nonnull() __attribute_pure__ static bool is_url(const_str v) {
         for (const char *ptr = v; *ptr != '\0'; ++ptr) {
                 if (*ptr == '/' || *ptr == '.') return true;
         }
         return false;
 }
 
-static const_var_str get_repo(const_str url) {
+__wur __nonnull() __attribute_malloc__ static const_var_str
+    get_repo(const_str url) {
         if (!strncmp(url, "http", 4)) return url;
 
         if (!strncmp(url, "git", 3) || !strncmp(url, "www", 3)) {

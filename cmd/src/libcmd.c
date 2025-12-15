@@ -11,8 +11,9 @@ __nonnull() static void print_manual(const Manual *const manual) {
         printf("%c  %s\n", manual->origin, manual->replace);
 }
 
-__nonnull() static void
-print_cmd(const Cmd *const cmd, size_t max_alias, const size_t max_expanded) {
+__nonnull() static void print_cmd(const Cmd *const cmd,
+                                  size_t max_alias,
+                                  const size_t max_expanded) {
         if (max_alias) ++max_alias;
         printf("%-*s %-*s ",
                (int)max_alias,
@@ -25,8 +26,8 @@ print_cmd(const Cmd *const cmd, size_t max_alias, const size_t max_expanded) {
         printf("\n");
 }
 
-__wur __nonnull() static size_t get_max_alias(const Cmd *const cmds,
-                                              const size_t cmd_len) {
+__wur __nonnull() static size_t
+    get_max_alias(const Cmd *const cmds, const size_t cmd_len) {
         size_t max = 0;
         size_t current;
         for (size_t i = 0; i < cmd_len; ++i) {
@@ -36,8 +37,8 @@ __wur __nonnull() static size_t get_max_alias(const Cmd *const cmds,
         return max;
 }
 
-__wur __nonnull() static size_t get_max_expanded(const Cmd *const cmds,
-                                                 const size_t cmd_len) {
+__wur __nonnull() static size_t
+    get_max_expanded(const Cmd *const cmds, const size_t cmd_len) {
         size_t max = 0;
         size_t current;
         for (size_t i = 0; i < cmd_len; ++i) {
@@ -47,7 +48,8 @@ __wur __nonnull() static size_t get_max_expanded(const Cmd *const cmds,
         return max;
 }
 
-__nonnull() static void print_cmds(const Cmd *const cmds, const size_t cmd_len) {
+__nonnull() static void print_cmds(const Cmd *const cmds,
+                                   const size_t cmd_len) {
         const size_t max_alias = get_max_alias(cmds, cmd_len);
         const size_t max_expanded = get_max_expanded(cmds, cmd_len);
         for (size_t i = 0; i < cmd_len; ++i) {
@@ -86,8 +88,10 @@ __wur __nonnull() static size_t find_command(const_str arg,
         upanic("Invalid prefix in arg: %s\n", arg);
 }
 
-__nonnull() __wur static bool
-take_two(Vec *const cmd, Args opts, const char first, const char second) {
+__nonnull() __wur static bool take_two(Vec *const cmd,
+                                       Args opts,
+                                       const char first,
+                                       const char second) {
         for (int i = 0; opts[i]; ++i) {
                 if (strncmp(opts[i], "--", 2) || opts[i][2] != first) continue;
                 char *last = strrchr(opts[i] + 2, '-');
@@ -100,8 +104,8 @@ take_two(Vec *const cmd, Args opts, const char first, const char second) {
         return false;
 }
 
-__nonnull() __wur static bool
-take_one(Vec *const cmd, Args opts, const char c) {
+__nonnull() __wur
+    static bool take_one(Vec *const cmd, Args opts, const char c) {
         for (int i = 0; opts[i]; ++i) {
                 const char *first = opts[i];
                 for (; *first == '-'; ++first);
@@ -126,13 +130,13 @@ struct CharParsingState {
 };
 
 __nonnull() static void handle_char(Vec *const cmd,
-                                 const Manual *const expansions,
-                                 const size_t nb_expansions,
-                                 const_str arg,
-                                 Args opts,
-                                 size_t *const i,
-                                 const size_t end,
-                                 struct CharParsingState *const state) {
+                                    const Manual *const expansions,
+                                    const size_t nb_expansions,
+                                    const_str arg,
+                                    Args opts,
+                                    size_t *const i,
+                                    const size_t end,
+                                    struct CharParsingState *const state) {
 
         const char ch = arg[*i];
 
@@ -202,9 +206,9 @@ __nonnull() static void handle_char(Vec *const cmd,
 }
 
 __nonnull() static void parse_alias(const CliSettings *const settings,
-                                 Vec *const cmd,
-                                 const_str arg,
-                                 const size_t end) {
+                                    Vec *const cmd,
+                                    const_str arg,
+                                    const size_t end) {
 
         const bool has_command = settings->cmd_len > 1;
         if (settings->cmd_len == 0)
@@ -226,10 +230,8 @@ __nonnull() static void parse_alias(const CliSettings *const settings,
 
         push(cmd, current.expanded);
 
-        struct CharParsingState state = {.sep = '\0',
-                                         .prev_sep = '\0',
-                                         .less = false,
-                                         .raw_mode = NULL};
+        struct CharParsingState state
+            = {.sep = '\0', .prev_sep = '\0', .less = false, .raw_mode = NULL};
 
         for (size_t i = start; i < end; ++i) {
                 if (arg[i] == ',') {
@@ -267,7 +269,7 @@ __nonnull() static void parse_alias(const CliSettings *const settings,
 }
 
 __nonnull() _Noreturn static void print_exit_or_exec(const Vec *const cmd,
-                                                  const bool debug) {
+                                                     const bool debug) {
 
         if (!debug) exvd(cmd->data);
 
@@ -279,8 +281,9 @@ __nonnull() _Noreturn static void print_exit_or_exec(const Vec *const cmd,
         exit(0);
 }
 
-__wur __nonnull() static bool
-push_others(Vec *const cmd, const size_t argc, Args argv) {
+__wur __nonnull() static bool push_others(Vec *const cmd,
+                                          const size_t argc,
+                                          Args argv) {
         bool debug = false;
 
         reserve(cmd, (size_t)(argc - 2));
@@ -297,9 +300,9 @@ push_others(Vec *const cmd, const size_t argc, Args argv) {
 }
 
 __nonnull() _Noreturn void run_cli(const size_t argc,
-                                Args argv,
-                                const CliSettings *const settings,
-                                Vec *const cmd) {
+                                   Args argv,
+                                   const CliSettings *const settings,
+                                   Vec *const cmd) {
         if (argc == 1 || (argc == 2 && !strcmp(argv[1], "!"))) {
                 if (argc == 2) clear();
                 print_help(settings);
@@ -313,8 +316,9 @@ __nonnull() _Noreturn void run_cli(const size_t argc,
         print_exit_or_exec(cmd, debug);
 }
 
-__nonnull() _Noreturn void
-run_cli_single(const size_t argc, Args argv, const Cmd *const command) {
+__nonnull() _Noreturn void run_cli_single(const size_t argc,
+                                          Args argv,
+                                          const Cmd *const command) {
         bool should_clear = false, help = false;
 
         for (size_t idx = 1; idx < argc; ++idx) {

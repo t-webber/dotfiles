@@ -47,7 +47,7 @@ __nonnull() __wur const
                        argv[0]);
 }
 
-__nonnull() __wur
+__nonnull() __wur __attribute_pure__
     bool has_slash(const_str arg, size_t *len, const char **const position) {
         const char *end = arg;
         bool res = false;
@@ -72,7 +72,7 @@ __nonnull() void store_usage(Args argv) {
         fclose(fd);
 }
 
-__wur __nonnull() size_t utf8_strlen(const_str s) {
+__attribute_pure__ __wur __nonnull() size_t utf8_strlen(const_str s) {
         size_t len = 0;
         const char *reader = s;
         while (*reader) {
@@ -88,10 +88,14 @@ __nonnull() __wur FILE *fopen_checked(const_str file_name, const_str mode) {
         return f;
 }
 
-__wur __nonnull() DIR *opendir_checked(const_str file_name) {
-        DIR *f = opendir(file_name);
-        if (f == NULL) epanic("Failed to popen %s", file_name);
-        return f;
+__wur __nonnull() DIR *opendir_checked(const_str dirname) {
+        DIR *dirp = opendir(dirname);
+        if (dirp == NULL) epanic("Failed to open dir %s", dirname);
+        return dirp;
+}
+
+__nonnull() void closedir_checked(DIR *dirp) {
+        if (closedir(dirp)) epanic("Failed to close dir\n");
 }
 
 __wur __nonnull() FILE *popen_checked(const_str command) {
@@ -139,7 +143,7 @@ __wur char *get_battery_status(void) {
         return content;
 }
 
-void exl_err_notif(void) {
+_Noreturn void exl_err_notif(void) {
         exldn("notify-send", "-u", "critical", "error");
 }
 
@@ -152,10 +156,10 @@ _Noreturn __nonnull() void exl_err_notif_msg(const_str err_msg) {
         exldn("notify-send", "-u", "critical", err_msg);
 }
 
-__wur size_t max(const size_t a, const size_t b) {
+__wur __attribute_const__ size_t max(const size_t a, const size_t b) {
         return a > b ? a : b;
 }
 
 __nonnull() void chdir_checked(const_str path) {
-        if (chdir(path) == -1) { epanic("Failed to change process cwd.") };
+        if (chdir(path)) { epanic("Failed to change process cwd.") };
 }

@@ -67,5 +67,5 @@ void fork_wait(pid_t pid);
 #define read_simple_exl1(buf_size, buffer, ...)                                \
         __read_simple_exl_maker(exl1, buf_size, buffer, __VA_ARGS__)
 
-void exvd(Args args);
+_Noreturn void exvd(Args args);
 void forked_exvd(Args args);

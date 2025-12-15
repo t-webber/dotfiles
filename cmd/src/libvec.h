@@ -9,10 +9,12 @@ typedef struct {
         size_t cap;
 } Vec;
 
-Vec new_vec(void);
+__wur Vec new_vec(void);
 
-void push(Vec *const vec, const_str val);
+__nonnull((1)) void push(Vec *const vec, const_str val);
 
-const_var_str pop(Vec *const vec);
+__nonnull() __wur const_var_str pop(Vec *const vec);
 
-void reserve(Vec *const vec, const size_t additional);
+__nonnull() void reserve(Vec *const vec, const size_t additional);
+
+__nonnull() void extend(Vec *const vec, Args other, const size_t len);

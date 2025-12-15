@@ -11,7 +11,7 @@
 
 /// Panics with a message and an explanation about how to
 /// use this program.
-static void usage(const_str message, const_str program) {
+__nonnull() static void usage(const_str message, const_str program) {
         upanic("%s\nUsage: %s [te/|rs/|?/|<user>/]<repo-name> "
                "[-- [git clone "
                "opts]]",
@@ -24,11 +24,12 @@ static void usage(const_str message, const_str program) {
 /// git clone).
 ///
 /// Git arguments come after `--`.
-static void separate_icl_git_args(const int argc,
-                                  Args argv,
-                                  size_t *const icl_len,
-                                  const char **const icl_args,
-                                  const char **const git_args) {
+__nonnull() static void separate_icl_git_args(
+    const int argc,
+    Args argv,
+    size_t *const icl_len,
+    const char *restrict *restrict const icl_args,
+    const char *restrict *restrict const git_args) {
         bool found_git_args = false;
         *icl_len = 0;
         size_t git_len = 0;
@@ -50,8 +51,9 @@ static void separate_icl_git_args(const int argc,
 }
 
 /// Check if the url exists, and if it does, clones it.
-static void
-try_clone_url(const_str url, const char **const git_args, const bool exact) {
+__nonnull() static void try_clone_url(const_str url,
+                                      const char **const git_args,
+                                      const bool exact) {
         printf("> Trying %s.\n", url);
 
         if (!exact) {

@@ -61,7 +61,7 @@ display(const_str filename, const bool is_verbose, const bool has_multiple) {
         }
 
         if (!S_ISREG(st.st_mode))
-                upanic("Invalid file %s: type %d", filename, st.st_mode);
+                upanic("Invalid file %s: type %u", filename, st.st_mode);
 
         pid_t pid = fork_checked();
         if (pid == 0) display_file(filename, is_verbose);

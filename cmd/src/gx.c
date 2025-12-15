@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
-static char *get_path(void) {
+__attribute_malloc__ __wur static char *get_path(void) {
         const_str config = getenv_checked("XDG_CONFIG_HOME");
         char *path = malloc(sizeof(char) * 128);
         char *end = stpcpy(path, config);
@@ -12,10 +12,10 @@ static char *get_path(void) {
         return path;
 }
 
-static char *replace_first(char *restrict const buff,
-                           const char *restrict const from,
-                           const_str to,
-                           char *temp) {
+__nonnull() static char *replace_first(char *restrict const buff,
+                                       const char *restrict const from,
+                                       const_str to,
+                                       char *temp) {
         char *sub = strstr(buff, from);
         if (!sub) return NULL;
 
@@ -25,8 +25,9 @@ static char *replace_first(char *restrict const buff,
         return stpcpy(sub, temp);
 }
 
-static char *
-shorten_and_copy(char *restrict from, char *restrict to, char *restrict temp) {
+__nonnull() static char *shorten_and_copy(char *restrict from,
+                                          char *restrict to,
+                                          char *restrict temp) {
         while (*from < 'A' || *from > 'z') ++from;
 
         char *reader = from;
@@ -56,7 +57,8 @@ shorten_and_copy(char *restrict from, char *restrict to, char *restrict temp) {
         return stpcpy(to, from);
 }
 
-static const char **get_keybinds(size_t *const keybinds_index) {
+__nonnull() __wur __attribute_malloc__ static const
+    char **get_keybinds(size_t *const keybinds_index) {
         const char **const keybinds = malloc(sizeof(char *) * 64);
         char *current = NULL;
         char *current_end = NULL;

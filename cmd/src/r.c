@@ -6,15 +6,16 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-static void copy_array(size_t *const idx,
-                       const char **const exec_args,
-                       Args cli_args,
-                       const size_t cli_args_len) {
+__nonnull() static void copy_array(size_t *const idx,
+                                   const char **const exec_args,
+                                   Args cli_args,
+                                   const size_t cli_args_len) {
         for (size_t i = 0; i < cli_args_len; ++i)
                 exec_args[(*idx)++] = cli_args[i];
 }
 
-static const char *single_work_file_runner(const_str file, const_str ext) {
+__nonnull() __wur static const
+    char *single_work_file_runner(const_str file, const_str ext) {
         if (!strcmp(ext, "py")) return "python";
 
         if (!strcmp(ext, "sage")) return "sage";
@@ -35,11 +36,11 @@ static const char *single_work_file_runner(const_str file, const_str ext) {
         return NULL;
 }
 
-static void run_file(const_str file,
-                     const_str ext,
-                     const_str *const argv,
-                     const size_t argv_len,
-                     const bool is_release) {
+__nonnull((1, 2)) static void run_file(const_str file,
+                                       const_str ext,
+                                       const_str *const argv,
+                                       const size_t argv_len,
+                                       const bool is_release) {
 
         if (!strcmp(ext, "c") || !strcmp(ext, "cc") || !strcmp(ext, "cpp")
             || !strcmp(ext, "rs")) {
@@ -95,7 +96,7 @@ static void run_file(const_str file,
         exvd(args);
 }
 
-static int run_folder(const bool is_release) {
+__wur static int run_folder(const bool is_release) {
         char cwd[128];
         char *buf = getcwd(cwd, 128);
         if (buf == NULL) {
@@ -145,7 +146,8 @@ static int run_folder(const bool is_release) {
         upanic("No runner found in the current folder");
 }
 
-static const char *as_extension(const_str file) {
+__wur __nonnull() __attribute_pure__ static const
+    char *as_extension(const_str file) {
         const char *ptr = file;
         for (; *ptr != '\0'; ++ptr)
                 if (*ptr == '.') return ptr + 1;

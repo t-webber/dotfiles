@@ -9,16 +9,18 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-const char *get_filename_extension(const_str filename, const size_t len) {
+__attribute_pure__ __wur __nonnull() const
+    char *get_filename_extension(const_str filename, const size_t len) {
         const char *end = filename + len;
         while (end != filename && *end != '.') --end;
         if (*end == '.') return ++end;
         return end;
 }
 
-static bool is_valid_extension(const_str *const supported,
-                               const_str extension,
-                               const size_t nb_extensions) {
+__wur __nonnull() __attribute_pure__
+    static bool is_valid_extension(const_str *const supported,
+                                   const_str extension,
+                                   const size_t nb_extensions) {
         for (size_t i = 0; i < nb_extensions; ++i)
                 if (strcmp(extension, supported[i]) == 0) return true;
 
@@ -29,7 +31,8 @@ static bool is_valid_extension(const_str *const supported,
         static const_str name##_EXT[] = {__VA_ARGS__};                         \
         static const size_t name##_LEN                                         \
             = sizeof(name##_EXT) / sizeof(name##_EXT[0]);                      \
-        static bool name##_supported(const_str extension) {                    \
+        __wur __nonnull() __attribute_pure__ static bool name##_supported(     \
+            const_str extension) {                                             \
                 return is_valid_extension(name##_EXT, extension, name##_LEN);  \
         }
 
@@ -135,7 +138,8 @@ static void sighandler(void) {
         sigflag = 1;
 }
 
-static int dezoom_and_run_alacritty(const_str filename, const bool is_mpv) {
+_Noreturn __nonnull() static void dezoom_and_run_alacritty(const_str filename,
+                                                           const bool is_mpv) {
         signal(SIGINT, (void (*)(int))sighandler);
         send_alacritty_config("font.size = 2");
 
@@ -161,7 +165,7 @@ static int dezoom_and_run_alacritty(const_str filename, const bool is_mpv) {
         exit(0);
 }
 
-static bool is_file_binary(const_str path) {
+__wur __nonnull() static bool is_file_binary(const_str path) {
         FILE *f = fopen_checked(path, "rb");
         int c;
         while ((c = fgetc(f)) != EOF) {
@@ -171,11 +175,11 @@ static bool is_file_binary(const_str path) {
         return false;
 }
 
-int exec_open_file(const_str filename,
-                   const_str extension,
-                   const bool is_open,
-                   const bool is_kitty,
-                   const bool is_verbose) {
+_Noreturn __nonnull() void exec_open_file(const_str filename,
+                                          const_str extension,
+                                          const bool is_open,
+                                          const bool is_kitty,
+                                          const bool is_verbose) {
         if (is_kitty) {
                 if (timg_supported(extension)) exldn("timg", filename);
 

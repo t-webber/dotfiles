@@ -12,17 +12,21 @@ B := $(CMD)/bin
 
 CFLAGS := -std=c99
 
+ifeq ($(shell uname),Linux)
+CFLAGS += -Wlogical-op
+endif
+
 CFLAGS += -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wformat=2 -Werror -Wfatal-errors
 CFLAGS += -Wfloat-equal -Wcast-align -Wcast-qual -Wmissing-prototypes -Wstrict-prototypes
 CFLAGS += -Wold-style-definition -Wmissing-declarations -Wnested-externs -Wredundant-decls
 CFLAGS += -Wstrict-aliasing=2 -Wswitch-default -Wswitch-enum -Wpointer-arith
 CFLAGS += -Wwrite-strings -Wunreachable-code -Wlong-long
-
-ifeq ($(VAR),Linux)
-CFLAGS += -Wlogical-op
-endif
-
-CFLAGS += -Wno-unused-command-line-argument
+CFLAGS += -Wdouble-promotion -Wformat-signedness -Wformat-overflow=2 -Wformat-truncation=2 -Wstringop-overflow=4 -Wstringop-truncation -Walloca -Walloc-size -Wvla -Wvla-larger-than=0 -Wunsafe-loop-optimizations
+CFLAGS += -Woverflow -Wstrict-overflow=5 -Wsign-conversion -Wsign-compare -Wshift-overflow=2 -Wshift-negative-value
+CFLAGS += -Wdangling-pointer -Wpointer-to-int-cast -Warray-bounds=2 -Wrestrict
+CFLAGS += -Wlogical-op -Wduplicated-cond -Wduplicated-branches -Wmisleading-indentation -Werror=implicit-fallthrough -Waggressive-loop-optimizations
+CFLAGS += -Wunused-but-set-variable -Wunused-value -Wsuggest-attribute=const -Wsuggest-attribute=pure -Wsuggest-attribute=noreturn
+CFLAGS += -fno-common -fstrict-aliasing
 
 BINARIES := $(patsubst %.c, $B/%, $(SRCS))
 LINKS := $B/v $B/rr $B/mc $B/mg $B/nd $B/rnc $B/cn $B/cs
@@ -32,8 +36,8 @@ LINKS := $B/v $B/rr $B/mc $B/mg $B/nd $B/rnc $B/cn $B/cs
 
 default: release
 
-ZFLAGS := cast-qual cast-align switch-default sign-conversion shorten-64-to-32 format-nonliteral switch-enum long-long error=conversion conversion
-ZFLAGS := $(filter-out $(addprefix -W, $(ZFLAGS)),$(CFLAGS)) $(addprefix -Wno-,$(ZFLAGS))
+OUT_NO := cast-qual cast-align switch-default sign-conversion shorten-64-to-32 format-nonliteral switch-enum long-long error=conversion conversion format-truncation suggest-attribute=pure suggest-attribute=const strict-overflow
+ZFLAGS := $(filter-out $(addprefix -W, $(OUT_NO)),$(CFLAGS)) $(addprefix -Wno-,$(OUT_NO))
 
 DEBUG_FLAGS := -O0 -g
 RELEASE_FLAGS := -O3 -ffast-math -flto -s -march=native -mtune=native
@@ -71,7 +75,7 @@ $B/cn $B/cs: $B/c
 	ln -sf $< $@
 
 $B/m: m.o $(LIB_OBJS) $(ZLIB_OBJS)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $(ZFLAGS) $^ -o $@
 
 $B/%: %.o $(LIB_OBJS)
 	$(CC) $(CFLAGS) $^ -o $@

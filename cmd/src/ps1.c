@@ -140,7 +140,7 @@ int main(void) {
                device_name,
                is_charging ? "32" : "31",
                battery == NULL ? "" : battery + 0,
-               tm.tm_hour % 12,
+               (unsigned)tm.tm_hour % 12,
                tm.tm_min,
                path,
                branch);
