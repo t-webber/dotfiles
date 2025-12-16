@@ -10,6 +10,8 @@ local vars = {
 	'statusline_filepath',
 	'statusline_treesitter',
 	'statusline_full_treesitter',
+	'statusline_battery',
+	'statusline_time',
 }
 
 for _, var in ipairs(vars) do
@@ -21,5 +23,7 @@ end
 vim.g[globals['statusline_filepath']] = 'dir' -- file, dir, path
 vim.g[globals['statusline_treesitter']] = 'active'
 vim.g[globals['statusline_linecol']] = 'active'
+vim.g[globals['statusline_battery']] = 'active'
+vim.g[globals['statusline_time']] = 'active'
 
 return globals

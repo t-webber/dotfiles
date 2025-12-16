@@ -5,6 +5,8 @@ local statusline_linecol = v.statusline_linecol
 local statusline_filepath = v.statusline_filepath
 local statusline_treesitter = v.statusline_treesitter
 local statusline_full_treesitter = v.statusline_full_treesitter
+local statusline_battery = v.statusline_battery
+local statusline_time = v.statusline_time
 
 local function print_dot_warning()
 	local fullfilepath = vim.fn.expand('%:p')
@@ -73,33 +75,31 @@ package.loaded['tscol'] = nil
 local ts_colours = require('tscol')
 
 local function ts_display_node(type, name, sep)
-	if
-		vim.g[statusline_treesitter] == ''
-		or vim.g[statusline_full_treesitter] == ''
-			and ts_colours['hiddennodes'][type] == true
-	then
-		return ''
-	end
+	if vim.g[statusline_treesitter] == '' then return '' end
 
 	for hg, node_types in pairs(ts_colours) do
 		local found = node_types[type]
-		if found and found ~= true then name = name or found end
-		if found then
-			local fixed = name
-			if not name then
-				if vim.g[statusline_full_treesitter] == '' then
-					fixed = ''
+		if found and hg ~= 'hiddennodes' then
+			if name == '' then
+				if found == true then
+					name = '!' .. type
 				else
-					fixed = '!' .. type .. '!'
+					name = '!' .. found
 				end
+			else
+				name = '=' .. name
 			end
 
-			return sep .. make_hg(hg) .. fixed .. reset_colour
+			if vim.g[statusline_full_treesitter] ~= '' then
+				return sep .. make_hg(hg) .. type .. ':' .. name .. reset_colour
+			else
+				return sep .. make_hg(hg) .. name .. reset_colour
+			end
 		end
 	end
 
 	if vim.g[statusline_full_treesitter] ~= '' then
-		return sep .. '(' .. type .. ')'
+		return sep .. '(' .. type .. ':' .. name .. ')'
 	else
 		return ''
 	end
@@ -162,6 +162,7 @@ local function sl_sep(char)
 end
 
 local function sl_battery()
+	if vim.g[statusline_battery] == '' then return '' end
 	if os.getenv('DEVICE') ~= 'acer' then return '' end
 	local level = read_unchecked('/sys/class/power_supply/BAT1/capacity')
 	local status = read_unchecked('/sys/class/power_supply/BAT1/status')
@@ -205,8 +206,12 @@ local function sl_messages()
 end
 
 local function sl_time()
-	return make_hg('CustomStatusLineTime')
-		.. string.format('%x%d', os.date('*t').hour % 12, os.date('*t').min)
+	if vim.g[statusline_time] ~= '' then
+		return make_hg('CustomStatusLineTime')
+			.. string.format('%x%d', os.date('*t').hour % 12, os.date('*t').min)
+	else
+		return ''
+	end
 end
 
 local function wrap_with_icon(filename, icon_type)
@@ -261,10 +266,32 @@ local function sl_file_part(is_active)
 	local path = ''
 
 	while node do
-		local name_node = node:field('name')[1]
-		local name = name_node and vim.treesitter.get_node_text(name_node, 0)[1]
-			or nil
-		path = ts_display_node(node:type(), name, sep) .. path
+		local type = node:type()
+		local names = {}
+
+		if type == 'assignment_statement' then
+			local vars = node:child(0)
+			if vars then
+				for child in vars:iter_children() do
+					if child:type() == 'identifier' then
+						table.insert(
+							names,
+							vim.treesitter.get_node_text(child, 0)
+						)
+					end
+				end
+			end
+		end
+
+		for child in node:iter_children() do
+			if child:type() == 'identifier' then
+				table.insert(names, vim.treesitter.get_node_text(child, 0))
+				break
+			end
+		end
+
+		local disp = ts_display_node(type, table.concat(names, '|'), sep)
+		path = disp .. path
 		node = node:parent()
 	end
 

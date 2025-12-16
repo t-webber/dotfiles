@@ -1,4 +1,4 @@
-----------------
+---------------
 --- Doc vars ---
 ----------------
 
@@ -200,6 +200,8 @@ for letter, vars in pairs({
 	t = { { 'treesitter', 'active' }, { 'full_treesitter', '' } },
 	e = { { 'full_treesitter', 'active' } },
 	l = { { 'linecol', 'active' } },
+	y = { { 'battery', 'active' } },
+	i = { { 'time', 'active' } },
 	f = { { 'filepath', 'file' } },
 	d = { { 'filepath', 'dir' } },
 	p = { { 'filepath', 'path' } },
@@ -592,9 +594,9 @@ end, oilicon .. 'open file')
 local v = require('globals')
 local pyfmt = v.pyfmt
 
-setk(n, 'ùdy', function() vim.g[pyfmt] = '' end, '🔧 Disable ruff')
+setk(n, 'ùd@', function() vim.g[pyfmt] = '' end, '🔧 Disable ruff')
 
-setk(n, 'ùyy', function() vim.g[pyfmt] = 'active' end, '🔧 Enable ruff')
+setk(n, 'ùy@', function() vim.g[pyfmt] = 'active' end, '🔧 Enable ruff')
 
 setk(
 	n,

@@ -141,7 +141,7 @@ super + p
 	bspc desktop -f com && beeper
 
 super + d
-	bspc desktop -f com && discord
+        killall dunst
 
 super + e; z
 	xdg-open "https://z.imt.fr"
