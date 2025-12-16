@@ -127,20 +127,34 @@ __wur char *get_battery_level(void) {
         const_str device = getenv("DEVICE");
         if (!device || strcmp(device, "acer")) { return NULL; }
         FILE *fd = fopen_checked("/sys/class/power_supply/BAT1/capacity", "r");
-        char *content = malloc(4 * sizeof(char));
-        fgets(content, 4, fd);
+        char *content = malloc(5 * sizeof(char));
+        fgets(content, 5, fd);
         content[strlen(content) - 1] = '\0';
         return content;
 }
 
-__wur char *get_battery_status(void) {
+__wur battery_status get_battery_status(void) {
         const_str device = getenv("DEVICE");
-        if (!device || strcmp(device, "acer")) { return NULL; }
+        if (!device || strcmp(device, "acer")) {
+                return BATTERY_STATUS_UNKNOWN;
+        }
         FILE *fd = fopen_checked("/sys/class/power_supply/BAT1/status", "r");
         char *content = malloc(32 * sizeof(char));
         fgets(content, 32, fd);
         content[strlen(content) - 1] = '\0';
-        return content;
+        if (!strcmp(content, "Charging")) {
+                free(content);
+                return BATTERY_STATUS_CHARGING;
+        }
+        if (!strcmp(content, "Discharging")) {
+                free(content);
+                return BATTERY_STATUS_DISCHARGING;
+        }
+        if (!strcmp(content, "Full")) {
+                free(content);
+                return BATTERY_STATUS_FULL;
+        }
+        upanic("Invalid battery status %s\n", content);
 }
 
 _Noreturn void exl_err_notif(void) {

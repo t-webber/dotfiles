@@ -77,8 +77,15 @@ __nonnull() void exl_notif(const_str message);
 
 void exl_err_notif(void);
 
+typedef enum {
+        BATTERY_STATUS_CHARGING,
+        BATTERY_STATUS_DISCHARGING,
+        BATTERY_STATUS_FULL,
+        BATTERY_STATUS_UNKNOWN
+} battery_status;
+
 __wur var_str get_battery_level(void);
-__wur var_str get_battery_status(void);
+__wur battery_status get_battery_status(void);
 
 void clear(void);
 void exl_err_notif_msg(const_str msg);

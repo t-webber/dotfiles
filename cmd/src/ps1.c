@@ -98,10 +98,10 @@ static void low_battery(void) {
                 fork_wait(pid_inner);
         }
 
-        const_str status = get_battery_status();
+        const battery_status status = get_battery_status();
         const int level = atoi(get_battery_level());
 
-        if (!strcmp(status, "Discharging") && level < 10) {
+        if (status == BATTERY_STATUS_DISCHARGING && level < 10) {
                 exldn("sudo", "systemctl", "suspend");
         }
 }
@@ -111,15 +111,18 @@ int main(void) {
         const bool is_acer = !strcmp(device_name, "acer");
 
         char *const battery = get_battery_level();
-        char *const status = get_battery_status();
-        const bool is_charging = status && !strcmp(status, "Charging");
-        if (status) free(status);
+        const battery_status status = get_battery_status();
 
         if (battery && !strcmp(battery, "100") && can_use_dunst())
                 exl_err_notif_msg("Battery full");
 
-        if (!is_charging && is_acer && battery && atoi(battery) < 10)
+        if (status == BATTERY_STATUS_DISCHARGING && is_acer && battery
+            && atoi(battery) < 10)
                 low_battery();
+
+        const_str battery_colour = status == BATTERY_STATUS_DISCHARGING ? "31"
+                                   : status == BATTERY_STATUS_CHARGING  ? "32"
+                                                                        : "33";
 
         if (!strcmp(device_name, "acer") || !strcmp(device_name, "mac"))
                 device_name = "";
@@ -140,7 +143,7 @@ int main(void) {
                "\001\x1b[36m\002%s"
                "\001\x1b[32m\002%s\001\x1b[39m\002",
                device_name,
-               is_charging ? "32" : "31",
+               battery_colour,
                battery == NULL ? "" : battery + 0,
                (unsigned)tm.tm_hour % 12,
                tm.tm_min,

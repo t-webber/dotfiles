@@ -1,23 +1,18 @@
 #include "lib.h"
-#include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 static const_var_str get_emoji(const bool emoji) {
-        char *const status = get_battery_status();
-        if (!strcmp(status, "Full")) {
-                free(status);
-                return emoji ? "💥" : "\033[35m";
-        };
-        if (!strcmp(status, "Discharging")) {
-                free(status);
-                return emoji ? "🪫" : "\033[31m";
-        };
-        if (!strcmp(status, "Charging")) {
-                free(status);
+        switch (get_battery_status()) {
+        case BATTERY_STATUS_CHARGING:
                 return emoji ? "🔋" : "\033[32m";
-        };
-        return emoji ? "🤔" : "\033[33m";
+        case BATTERY_STATUS_DISCHARGING:
+                return emoji ? "🪫" : "\033[31m";
+        case BATTERY_STATUS_FULL:
+                return emoji ? "💥" : "\033[35m";
+        case BATTERY_STATUS_UNKNOWN:
+        default:
+                upanic("Failed to get battery status\n");
+        }
 }
 
 int main(const int argc, Args argv) {
