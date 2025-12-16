@@ -67,6 +67,10 @@ static void pwd(str path) {
         free(pwd);
 }
 
+static bool can_use_dunst(void) {
+        return getenv("NO_DUNST") != NULL;
+}
+
 static char *get_git_branch(void) {
         char *branch = exec("/usr/bin/git branch "
                             "--show-current 2>/dev/null");
@@ -84,24 +88,22 @@ static char *get_git_branch(void) {
 static void low_battery(void) {
         pid_t pid_outer = fork_checked();
 
-        if (pid_outer == 0) {
+        if (pid_outer != 0) fork_wait(pid_outer);
+
+        if (can_use_dunst()) {
                 pid_t pid_inner = fork_checked();
 
                 if (pid_inner == 0) { exl_err_notif_msg("Low battery (ps1)"); }
 
                 fork_wait(pid_inner);
-
-                const_str status = get_battery_status();
-                const int level = atoi(get_battery_level());
-
-                if (!strcmp(status, "Discharging") && level < 10) {
-                        exldn("sudo", "systemctl", "suspend");
-                }
-
-                if (level < 10) {}
         }
 
-        fork_wait(pid_outer);
+        const_str status = get_battery_status();
+        const int level = atoi(get_battery_level());
+
+        if (!strcmp(status, "Discharging") && level < 10) {
+                exldn("sudo", "systemctl", "suspend");
+        }
 }
 
 int main(void) {
@@ -113,7 +115,7 @@ int main(void) {
         const bool is_charging = status && !strcmp(status, "Charging");
         if (status) free(status);
 
-        if (battery && !strcmp(battery, "100"))
+        if (battery && !strcmp(battery, "100") && can_use_dunst())
                 exl_err_notif_msg("Battery full");
 
         if (!is_charging && is_acer && battery && atoi(battery) < 10)
@@ -146,6 +148,5 @@ int main(void) {
                branch);
 
         free(branch);
-
         return 0;
 }
