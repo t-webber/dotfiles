@@ -165,8 +165,13 @@ local function sl_battery()
 	if os.getenv('DEVICE') ~= 'acer' then return '' end
 	local level = read_unchecked('/sys/class/power_supply/BAT1/capacity')
 	local status = read_unchecked('/sys/class/power_supply/BAT1/status')
-	if tonumber(level) < 10 and status ~= 'Charging' then
-		os.execte('/bin/notify-send -u critical low battery (nvim)')
+	if tonumber(level) < 15 and status ~= 'Charging' then
+		vim.system({
+			'/bin/notify-send',
+			'-u',
+			'critical',
+			'low battery (nvim)',
+		})
 	end
 	local hg = make_hg('CustomStatusLineBattery' .. status)
 	return sl_sep() .. hg .. string.format('%s', level)
