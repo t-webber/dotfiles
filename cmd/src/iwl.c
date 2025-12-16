@@ -28,7 +28,7 @@ __nonnull() __wur static size_t get_max_lengths(char *const buffer,
                 maxed(&max_branch_len, strlen(line + i));
         }
 
-        return (max_sha_len << 32) + max_branch_len;
+        return (max_sha_len << 16) + max_branch_len;
 }
 
 __nonnull() static void display(const Vec *const lines,
@@ -86,7 +86,7 @@ int main(void) {
         read_simple_exldn((1 << 12), buffer, "git", "worktree", "list");
         Vec lines = new_vec();
         const size_t lengths = get_max_lengths(buffer, &lines);
-        const size_t max_sha_len = lengths >> 32;
-        const size_t max_branch_len = lengths - (max_sha_len << 32);
+        const size_t max_sha_len = lengths >> 16;
+        const size_t max_branch_len = lengths - (max_sha_len << 16);
         display(&lines, max_sha_len, max_branch_len);
 }
