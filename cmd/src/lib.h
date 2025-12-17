@@ -33,8 +33,19 @@ typedef struct {
 #endif
 #define __nonnull(params) A(__nonnull__ params)
 
+#ifdef __attribute_pure__
+#undef __attribute_pure__
+#endif
 #define __attribute_pure__ A(__pure__)
+
+#ifdef __attribute_const__
+#undef __attribute_const__
+#endif
 #define __attribute_const__ A(__const__)
+
+#ifdef __attribute_malloc__
+#undef __attribute_malloc__
+#endif
 #define __attribute_malloc__ A(__malloc__)
 
 __wur __nonnull() String get_env_subpath(const String subpath, const_str var);

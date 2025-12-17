@@ -102,7 +102,7 @@ const Cmd COMMANDS[] = {
     cmd("rl", "rev-list", "--all", ),
     cmd("rw", "review", "-d", ),
 
-    cmd("sh", "stash", "pop", "drop", "clear", "show", "apply", "list", ),
+    cmd("sh", "stash", "pop", "drop", "clear", "show", "apply", "list", "-m", ),
     cmd("sm",
         "submodule",
         "update",
