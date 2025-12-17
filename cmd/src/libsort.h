@@ -1,7 +1,7 @@
 #pragma once
 
+#include "lib.h"
 #include "stddef.h"
-#include "sys/cdefs.h"
 
 __nonnull() void sort(const char **const keybinds,
                       const size_t start,

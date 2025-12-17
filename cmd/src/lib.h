@@ -28,6 +28,15 @@ typedef struct {
         const size_t length;
 } String;
 
+#ifdef __nonnull
+#undef __nonnull
+#endif
+#define __nonnull(params) A(__nonnull__ params)
+
+#define __attribute_pure__ A(__pure__)
+#define __attribute_const__ A(__const__)
+#define __attribute_malloc__ A(__malloc__)
+
 __wur __nonnull() String get_env_subpath(const String subpath, const_str var);
 
 #define epanic(...)                                                            \

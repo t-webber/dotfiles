@@ -1,4 +1,4 @@
-CC := gcc
+CC ?= gcc
 
 LIBS := $(wildcard lib*.c)
 LIB_OBJS := $(LIBS:.c=.o)
@@ -12,11 +12,7 @@ B := $(CMD)/bin
 
 CFLAGS := -std=c99
 
-ifeq ($(shell uname),Linux)
-CFLAGS += -Wlogical-op
-endif
-
-CFLAGS += -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wformat=2 -Werror -Wfatal-errors
+CFLAGS += -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wformat=2 
 CFLAGS += -Wfloat-equal -Wcast-align -Wcast-qual -Wmissing-prototypes -Wstrict-prototypes
 CFLAGS += -Wold-style-definition -Wmissing-declarations -Wnested-externs -Wredundant-decls
 CFLAGS += -Wstrict-aliasing=2 -Wswitch-default -Wswitch-enum -Wpointer-arith
@@ -24,23 +20,36 @@ CFLAGS += -Wwrite-strings -Wunreachable-code -Wlong-long
 CFLAGS += -Wdouble-promotion -Wformat-signedness -Wformat-overflow=2 -Wformat-truncation=2 -Wstringop-overflow=4 -Wstringop-truncation -Walloca -Walloc-size -Wvla -Wvla-larger-than=0 -Wunsafe-loop-optimizations
 CFLAGS += -Woverflow -Wstrict-overflow=5 -Wsign-conversion -Wsign-compare -Wshift-overflow=2 -Wshift-negative-value
 CFLAGS += -Wdangling-pointer -Wpointer-to-int-cast -Warray-bounds=2 -Wrestrict
-CFLAGS += -Wlogical-op -Wduplicated-cond -Wduplicated-branches -Wmisleading-indentation -Werror=implicit-fallthrough -Waggressive-loop-optimizations
-CFLAGS += -Wunused-but-set-variable -Wunused-value -Wsuggest-attribute=const -Wsuggest-attribute=pure -Wsuggest-attribute=noreturn
-CFLAGS += -fno-common -fstrict-aliasing
+CFLAGS += -Wlogical-op -Wduplicated-cond -Wduplicated-branches -Wmisleading-indentation -Werror=implicit-fallthrough -Waggressive-loop-optimizations -Wunused-but-set-variable 
+CFLAGS += -Wno-common -Wstrict-aliasing -Wunused-value 
+CFLAGS += -Wsuggest-attribute=const -Wsuggest-attribute=pure -Wsuggest-attribute=noreturn
+CFLAGS += -Werror -Wfatal-errors
 
 BINARIES := $(patsubst %.c, $B/%, $(SRCS))
 LINKS := $B/v $B/rr $B/mc $B/mg $B/nd $B/rnc $B/cn $B/cs
+
+DEBUG_FLAGS := -O0 -g
+RELEASE_FLAGS := -O3 -ffast-math -flto -mtune=native
+
+ifeq ($(shell uname),Linux)
+RELEASE_FLAGS += -march=native
+else
+RELEASE_FLAGS += -mcpu=apple-m3
+CFLAGS += -Wno-error=suggest-attribute=pure
+endif
+
+# ifeq ($(shell uname),Linux)
+# RELEASE_FLAGS += -s
+# CFLAGS += -Wformat-overflow=2 -Wformat-truncation=2 -Wstringop-overflow=4 -Wstringop-truncation 
+# endif
+
+OUT_NO := cast-qual cast-align switch-default sign-conversion shorten-64-to-32 format-nonliteral switch-enum long-long error=conversion conversion format-truncation suggest-attribute=pure suggest-attribute=const strict-overflow
+ZFLAGS := $(filter-out $(addprefix -W, $(OUT_NO)),$(CFLAGS)) $(addprefix -Wno-,$(OUT_NO))
 
 .PRECIOUS: %.o
 .PHONY: debug clean release build default
 
 default: release
-
-OUT_NO := cast-qual cast-align switch-default sign-conversion shorten-64-to-32 format-nonliteral switch-enum long-long error=conversion conversion format-truncation suggest-attribute=pure suggest-attribute=const strict-overflow
-ZFLAGS := $(filter-out $(addprefix -W, $(OUT_NO)),$(CFLAGS)) $(addprefix -Wno-,$(OUT_NO))
-
-DEBUG_FLAGS := -O0 -g
-RELEASE_FLAGS := -O3 -ffast-math -flto -s -march=native -mtune=native
 
 debug: CFLAGS += $(DEBUG_FLAGS)
 debug: ZFLAGS += $(DEBUG_FLAGS)
@@ -82,6 +91,9 @@ $B/%: %.o $(LIB_OBJS)
 
 zlib/%.o: zlib/%.c
 	$(CC) $(ZFLAGS) $^ -c -o $@ -include unistd.h
+
+m.o: m.c
+	$(CC) $(ZFLAGS) $^ -c -o $@
 
 clean:
 	rm -f *.o *.a zlib/*.o zlib/*.a

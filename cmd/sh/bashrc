@@ -72,8 +72,6 @@ export ANDROID_HOME=/opt/android-sdk/
 # global variables #
 ####################
 
-export CC="cc"
-
 if [ -f "/etc/arch-release" ]; then
         export DEBUGINFOD_URLS='https://debuginfod.archlinux.org/'
 fi
@@ -85,13 +83,14 @@ export LC_ALL=en_GB.UTF-8
 export LANG=en_GB.UTF-8
 
 PATH=""
-PATH+=":/bin"
 if [ "$DEVICE" = "mac" ]; then
-        PATH+=":/sbin"
-        PATH+=":/usr/bin"
-        PATH+=":/opt/homebrew/bin/"
+        PATH+=":/opt/homebrew/bin"
+        PATH+=":/opt/homebrew/sbin"
         PATH+=":/usr/sbin"
+        PATH+=":/usr/bin"
+        PATH+=":/sbin"
 fi
+PATH+=":/bin"
 PATH+=":$BIN"
 PATH+=":$CMD/sh"
 PATH+=":$CMD/bin"
@@ -198,4 +197,3 @@ umask 077 # default permissions on file are w/o perms to go
 [ "$1" != "true" ] && {
         . "$CMD/sh/aliases"
 }
-

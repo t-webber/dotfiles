@@ -1,7 +1,6 @@
 #include "lib.h"
 #include "libexec.h"
 #include "libvec.h"
-#include "zlib/zlib.h"
 #include <assert.h>
 #include <dirent.h>
 #include <stdio.h>

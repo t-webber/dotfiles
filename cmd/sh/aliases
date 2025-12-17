@@ -172,7 +172,7 @@ if [ "$DEVICE" = "v" ]; then
 else
         cc=gcc
 fi
-cup="$(_wi make) -C $CMD/src --no-print-directory -j 50 CC=$cc"
+cup="$(_wi make) -C $CMD/src --no-print-directory -j 50"
 _al cup "$cup release"
 _al cupc "$cup clean && $cup release"
 _al cupd "$cup debug"
