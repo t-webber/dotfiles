@@ -209,7 +209,7 @@ _Noreturn __nonnull() void exec_open_file(const_str filename,
         if (is_verbose) {
                 if (is_file_binary(filename)) { exldn("file", filename); }
 
-                exldn("bat", filename, "--style=plain", "--theme", "ansi");
+                exldn("bat", filename);
         }
 
         exldn("cat", filename);

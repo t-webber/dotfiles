@@ -754,17 +754,11 @@ end, 'Generate a random string')
 --- Slop ---
 ------------
 
-setk(
-	i,
+vim.api.nvim_set_keymap(
+	'i',
 	'<C-CR>',
-	function()
-		return vim.fn
-			['copilot#Accept']('<CR>')
-			:gsub('[\128-\255]', '')
-			:gsub('@7$', '')
-	end,
-	'accept slop',
-	{ expr = true, script = true, silent = true }
+	'copilot#Accept("<CR>")',
+	{ silent = true, script = true, expr = true }
 )
 
 ---------------------
