@@ -9,6 +9,85 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+static bool
+line_has_target(const_str line, const_str target, const size_t target_len) {
+        if (!strncmp(line, "%:", 2)) return true;
+
+        if (line[0] == '\0' || line[0] == '\t' || line[0] == ' '
+            || !strchr(line, ':'))
+                return false;
+
+        const char *start = line;
+        const size_t line_len = strlen(line);
+
+        while (start + target_len < line + line_len) {
+                if (*start == ' ') {
+                        ++start;
+                        continue;
+                };
+
+                if (!strncmp(target, start, target_len)
+                    && (start[target_len] == ':' || start[target_len] == ' ')) {
+                        return true;
+                }
+
+                start += target_len;
+        }
+        return false;
+}
+
+#define ALIASES_LEN 12
+
+const_str *const ALIASES[ALIASES_LEN] = {
+    (const_str[2]){"c", "clean"},
+
+    (const_str[2]){"d", "dev"},
+    (const_str[2]){"g", "debug"},
+    (const_str[2]){"r", "release"},
+    (const_str[2]){"u", "run"},
+
+    (const_str[2]){"ii", "init"},
+    (const_str[2]){"i", "install"},
+
+    (const_str[2]){"a", "start"},
+    (const_str[2]){"o", "stop"},
+    (const_str[2]){"e", "enable"},
+    (const_str[2]){"s", "disable"},
+
+    (const_str[2]){"v", "valgrind"},
+};
+
+static void try_make(const_str target, const_str makefile) {
+        const char *expanded_target = target;
+
+        for (size_t i = 0; i < ALIASES_LEN; ++i) {
+                const_str *const alias = ALIASES[i];
+
+                if (!strcmp(alias[0], expanded_target)) {
+                        expanded_target = alias[1];
+                        break;
+                }
+
+                if (!strcmp(alias[1], expanded_target))
+                        upanic("use m %s", alias[0]);
+        }
+
+        FILE *fd = fopen(makefile, "r");
+        if (fd == NULL) return;
+
+        const size_t target_len = strlen(expanded_target);
+        char line[128];
+
+        while (fgets(line, 128, fd)) {
+                if (line_has_target(line, expanded_target, target_len)) {
+                        fclose(fd);
+                        exldn("make", "-j20", "-f", makefile, expanded_target);
+                }
+        }
+
+        fclose(fd);
+}
+
 static bool open_man_page(const_str full_path, bool only_c_pages) {
         gzFile fd = gzopen(full_path, "r");
         char line[128];
@@ -48,7 +127,7 @@ static size_t get_man_pages_in_folder(bool only_c_pages,
 
         char path[32];
 
-        sprintf(path, "/usr/share/man/%s", folder_name);
+        snprintf(path, 32, "/usr/share/man/%s", folder_name);
 
         DIR *d = opendir(path);
         if (d == NULL) epanic("Failed to open %s", path);
@@ -111,11 +190,14 @@ static void parse_argv(int *const argc,
                        bool *const clear,
                        bool *const mount) {
         *git = !strcmp(argv[0], "mg");
+
         *c_man = !strcmp(argv[0], "mc");
 
-        if (!c_man && !git && strcmp(argv[0], "m"))
-                upanic("Erroneous program name. Should be m, mc or mg, but "
-                       "used %s.\n",
+        if (!c_man && strcmp(argv[0], "m"))
+                upanic("Erroneous program name. Should be "
+                       "either m or "
+                       "mc, but "
+                       "%s was found.",
                        argv[0]);
 
         *clear = strcmp(argv[*argc - 1], "!");
@@ -133,8 +215,21 @@ static void parse_argv(int *const argc,
                        "<page-name> | (<device> <path>)) "
                        "[!]\n\n",
                        argv[0]);
+                printf("Valid aliases:\n");
+                for (int i = 0; i < ALIASES_LEN; ++i)
+                        printf("  %s\t-> %s\n", ALIASES[i][0], ALIASES[i][1]);
                 exit(1);
         }
+}
+
+static int mount(const int argc, Args argv) {
+        if (argc > 4 || argc < 3)
+                upanic("Usage: %s [--mkdir] %s "
+                       "<destination>",
+                       argv[0],
+                       argv[1]);
+
+        exldn("sudo", "mount", argv[1], argv[2], argv[3]);
 }
 
 static int git_man_page(const int argc, Args argv) {
@@ -160,10 +255,19 @@ int main(const int argc, Args argv) {
                 return git_man_page(argc, argv);
         }
 
+        if (normalised_argc == 1) exldn("make", "-j");
+
+        if (is_mount) return mount(normalised_argc, argv);
+
+        if (normalised_argc == 3)
+                try_make(argv[1], argv[2]);
+        else
+                try_make(argv[1], "Makefile");
+
         if (clear) system("clear");
 
         const size_t nb = get_man_pages(c_man, argv[1]);
-        if (nb == 0) upanic("No man page found\n");
+        if (nb == 0) exldn("make", "-j", argv[1]);
 
         return 0;
 }

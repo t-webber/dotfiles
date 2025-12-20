@@ -61,6 +61,8 @@ __nonnull((1, 2)) static void run_file(const_str file,
 
                 const size_t len = argv_len + 2;
                 const char **const args = malloc(sizeof(char *) * len);
+
+                printf("Running a.out\n");
                 size_t idx = 0;
 
                 args[idx++] = "./a.out";
