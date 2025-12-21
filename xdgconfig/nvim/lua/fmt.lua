@@ -20,6 +20,7 @@ return {
 	toml = { 'taplo' },
 	go = { 'gofmt' },
 	kdl = { 'kdlfmt' },
+	zig = { 'zigfmt' },
 
 	-------------
 	--- Shell ---

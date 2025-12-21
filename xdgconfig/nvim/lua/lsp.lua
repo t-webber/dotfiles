@@ -23,6 +23,8 @@ end
 
 local lsps = {
 
+	zig = { cmd = { 'zls' }, filetypes = { 'zig' } },
+
 	py = {
 		cmd = { python.bin .. 'pyright-langserver', '--stdio' },
 		filetypes = { 'python' },
