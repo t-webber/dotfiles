@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -euo pipefail
+
+n "$1" && p "$1"

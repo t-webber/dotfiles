@@ -157,8 +157,6 @@ _dal() {
 
 unalias -a
 
-_al z ". $CMD/sh/shellrc"
-
 _al all 'builtin alias'
 _dal ad 'builtin unalias' a
 
@@ -348,9 +346,9 @@ _print ccc cargo
 
 _flush
 
-_ual rc rustc
-_dal rc "$(_wi rustc)" print W
-_al rct 'rcp target-list'
+_ual Rc rustc
+_dal Rc "$(_wi rustc)" print W
+_al Rct 'rcp target-list'
 
 r="$(_wi rustup)"
 
@@ -782,7 +780,7 @@ _ge fn functions
 _ge ss settings
 _ge col colours
 _ge y lazyconfig
-_ge l shellrc
+_ge rc shellrc
 _ge lsp lsp
 _ge p profile
 _ge x sxhkdrc
@@ -792,6 +790,7 @@ _ual n touch
 
 _al eb 'e ~/.bashrc'
 _al rb '. ~/.bashrc'
+_al rc '. $CMD/sh/shellrc'
 
 _al q 'ehe "\033[32m  \033[0m"'
 _al wq q
@@ -1101,6 +1100,7 @@ _al gitignore "eh '*' > .gitignore"
 _al loop '. loop '
 _al wpad '/bin/sudo wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf'
 _al rnf 'fd --type d | xgid -P 50 rm -rf . &>/dev/null'
+_al np '. np'
 
 _print other done
 
