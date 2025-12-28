@@ -1005,6 +1005,7 @@ _al x0 'xe 0'
 _al x1 'xe 1'
 _al x2 'xe 2'
 _al xs "xa \$(xl | fzf | w -F':' ww1)"
+_al xh 'v $OCFG/tmux.conf'
 
 _print xxx tmux
 
