@@ -2,7 +2,7 @@
 #include "libcmd.h"
 #include <assert.h>
 
-const Cmd RG = cmd("g",
+const Cmd RG = cmd("gg",
                    "rg",
                    "--no-ignore",
                    "=.--hidden",

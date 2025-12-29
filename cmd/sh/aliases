@@ -898,6 +898,8 @@ _ual g grep ripgrep
 
 _flush
 
+_al g rg
+
 # _al g '_dal g "$CARGO_HOME/bin/rg" N U i v w hidden no-ignore o e q'
 _al gm 'mrep'
 
@@ -1052,7 +1054,8 @@ _al cols 'tput cols'
 _al rand 'openssl rand -base64 255'
 _al codex 'code --install-extension'
 _al fix 'stty sane; builtin cd; echo $HOME > $LOGS/last_location.log; printf "\033[0m"'
-_al cls 'printf "\033c"'
+_ual l cls clear
+_al l 'printf "\033c"'
 _al nt numbat
 _al tf trufflehog
 _al qa qalc
