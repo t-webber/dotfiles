@@ -1,4 +1,4 @@
----------------
+----------------
 --- Doc vars ---
 ----------------
 
@@ -231,6 +231,9 @@ setk(
 	function() vim.opt.listchars = { space = ' ', tab = '  ' } end,
 	globalicon .. 'display tabs and spaces'
 )
+
+setk(n, "ùy$", function() vim.cmd("Copilot enable") end, globalicon .. 'enable copilot')
+setk(n, "ùd$", function() vim.cmd("Copilot disable") end, globalicon .. 'disable copilot')
 
 -------------------------
 --- Window navigation ---
