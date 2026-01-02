@@ -1,0 +1,46 @@
+echo "sh:$-:sh"
+case $- in
+*i*)
+        if [ "$USER" = "tomweb01" ] && [ "$1" != "real" ]; then
+                rl ipinfo.io 2>/dev/null | jq '.city' | tr -d '"'
+                alacritty msg config "font.size = 14"
+                printf "m/l/i/w/? "
+                read readvar
+                echo "|$readvar|"
+                clear
+                if [ "$readvar" != "m" ]; then
+                        NO_ALIASES="true"
+                fi
+        fi
+        ;;
+*) false ;;
+esac
+
+unalias -a
+
+export XCOPY="$(which pbcopy)"
+export XPASTE="$(which pbpaste)"
+export PYTHON=/opt/homebrew/bin/python3.13
+export EDITOR='/opt/homebrew/bin/nvim'
+export DEVICE='mac'
+export CC=/opt/homebrew/Cellar/gcc/15.2.0/bin/gcc-15
+
+. ~/.files/dotfiles/cmd/sh/bashrc "$NO_ALIASES"
+
+if [ -z "$readvar" ]; then
+        exec ash
+else if [ "$readvar" = "l" ]; then
+        exec /usr/bin/open -n -a alacritty
+else if [ "$readvar" = "i" ]; then
+        yabai &
+        skhd &
+        '/System/Volumes/Data/Applications/Cisco/Cisco Secure Client.app/Contents/MacOS/Cisco Secure Client' &
+        disown
+        exec /usr/bin/open -n -a alacritty
+else if [ "$readvar" = "w" ]; then
+        printf "shutdown? [y/N]"
+        read x
+        if [ "$x" = "y" ]; then
+                /usr/bin/sudo shutdown -h now
+        fi
+fi; fi; fi; fi
