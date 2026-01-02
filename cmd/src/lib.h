@@ -50,6 +50,9 @@ typedef struct {
 
 __wur __nonnull() String get_env_subpath(const String subpath, const_str var);
 
+#define starts_with_const(var, rodata)                                         \
+        (!strncmp(var, rodata, sizeof(rodata) - 1))
+
 #define epanic(...)                                                            \
         {                                                                      \
                 char msg[256];                                                 \
