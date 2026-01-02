@@ -22,7 +22,7 @@ _buff=
 _flush() { _buff=; }
 _sep() { _buff="$_buff\n"; }
 _print() {
-        _al "$1" "cls && printf '$_buff'" !
+        _al "$1" "l && printf '$_buff'" !
         _sections="$_sections$1\t$2\n"
 }
 
@@ -162,14 +162,6 @@ _dal ad 'builtin unalias' a
 
 _al aa "all | sed \"s/^alias //;s/='/\t/;s/'$//\""
 
-if [ "$DEVICE" = "v" ]; then
-        module load swdev gnu/gcc/15.2.0
-        cc=$(_wi gcc)
-# else if [ "$DEVICE" = "mac" ]; then
-#         cc=/opt/homebrew/opt/gcc/bin/gcc-15
-else
-        cc=gcc
-fi
 cup="$(_wi make) -C $CMD/src --no-print-directory -j 50"
 _al cup "$cup release"
 _al cupc "$cup clean && $cup release"
@@ -328,7 +320,7 @@ c="$CARGO_HOME/bin/cargo"
 
 _uall cargo
 
-_al ck 'cls && c yfaw-DR && c b &&  c f &&  c odaD && c t && c pf 100' 'all checks for ci'
+_al ck 'l && c yfaw-DR && c b &&  c f &&  c odaD && c t && c pf 100' 'all checks for ci'
 
 _al co 'brave tarpaulin-report.html'
 
@@ -416,7 +408,7 @@ _al dwk -p "$dw" known-networks
 
 _sep
 
-_al dwr 'dws; while :; do cls; dwg; sleep 1; done'
+_al dwr 'dws; while :; do l; dwg; sleep 1; done'
 
 _print iw iwctl
 
@@ -693,7 +685,7 @@ _al kkkkk 'k && k && k && k && k'
 _al src 'p src'
 
 _gt() {
-        _al "$1" "cls && p $2 && v"
+        _al "$1" "l && p $2 && v"
 }
 
 _ual 'ocf or xcf' cf
@@ -769,7 +761,7 @@ _al rmrf 'rmm -rf'
 
 _ge() {
         [ "$1" != "w" ] && _al "s$1" "gc $2"
-        _al "e$1" "edt $2"
+        _al "e$1" "ed $2"
 }
 
 _ge s saved.txt
@@ -880,7 +872,8 @@ _dal so /usr/bin/sort n
 _ual u uniq
 _dal u /usr/bin/uniq c d
 
-_al sede 'sed -E'
+_al d sed
+_al de 'd -E'
 _al less 'less -R'
 
 _al jql 'jq -C  | less -R'
@@ -913,27 +906,27 @@ _print ghh rg
 
 _flush
 
-_ual w awk
-_al w '/usr/bin/awk '
-_al wf 'w -F'
-_al ww "'{print \$2}'"
+_ual a awk
+_al a '/usr/bin/awk '
+_al af 'a -F'
+_al aw "'{print \$2}'"
 
 for ((i = 0; i <= 30; i++)); do
-        _al "ww$i" "'{print \$$i}'"
-        _al "w$i" "w ww$i"
+        _al "aa$i" "'{print \$$i}'"
+        _al "a$i" "a aa$i"
 done
 
-_al wl "w '{print length, \$1}'"
-_al wll "w wwl"
-_al wwl "'{print length}'"
-_al wwnf "'{print \$NF}'"
-_al wnf "w wwnf"
-_al wwrev "'{print \$2, \$1}'"
-_al wrev "w wwrev"
-_al wwdup "'{print \$0, \$0}'"
-_al wdup "w wwdup"
+_al al "a '{print length, \$1}'"
+_al all 'a aal'
+_al aal "'{print length}'"
+_al aanf "'{print \$NF}'"
+_al anf 'a aanf'
+_al aarev "'{print \$2, \$1}'"
+_al arev "a aarev"
+_al aadup "'{print \$0, \$0}'"
+_al adup 'a aadup'
 
-_print www wk
+_print aaa awk
 
 ###########################
 ########## POWER ##########
@@ -1105,6 +1098,8 @@ _al loop '. loop '
 _al wpad '/bin/sudo wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf'
 _al rnf 'fd --type d | xgid -P 50 rm -rf . &>/dev/null'
 _al np '. np'
+_al w while
+_al ed '$CMD/sh/ed'
 
 _print other done
 

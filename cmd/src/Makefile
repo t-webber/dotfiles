@@ -26,7 +26,7 @@ CFLAGS += -Wsuggest-attribute=const -Wsuggest-attribute=pure -Wsuggest-attribute
 CFLAGS += -Werror -Wfatal-errors
 
 BINARIES := $(patsubst %.c, $B/%, $(SRCS))
-LINKS := $B/v $B/rr $B/mc $B/mg $B/nd $B/rnc $B/cn $B/cs
+LINKS := $B/v $B/rr $B/mc $B/mg $B/nd $B/rc $B/cn $B/cs
 
 DEBUG_FLAGS := -O0 -g
 RELEASE_FLAGS := -O3 -ffast-math -flto -mtune=native
@@ -74,7 +74,7 @@ $B/rr: $B/r
 $B/nd: $B/n
 	ln -sf $< $@
 
-$B/rnc: $B/rn
+$B/rc: $B/r
 	ln -sf $< $@
 
 $B/mc $B/mg: $B/m

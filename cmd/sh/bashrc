@@ -90,6 +90,7 @@ export BAT_STYLE=plain
 export BAT_THEME=ansi
 
 PATH=""
+PATH+=":$CMD/sh" # ed override
 if [ "$DEVICE" = "mac" ]; then
         PATH+=":/opt/homebrew/bin"
         PATH+=":/opt/homebrew/sbin"
@@ -99,7 +100,6 @@ if [ "$DEVICE" = "mac" ]; then
 fi
 PATH+=":/bin"
 PATH+=":$BIN"
-PATH+=":$CMD/sh"
 PATH+=":$CMD/bin"
 PATH+=":$CARGO_HOME/bin"
 PATH+=":$BUN_INSTALL/bin"
