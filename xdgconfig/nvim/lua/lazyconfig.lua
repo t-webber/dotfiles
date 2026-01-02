@@ -424,7 +424,6 @@ local spec = {
 	{
 		'github/copilot.vim',
 		event = 'VeryLazy',
-		config = function() vim.cmd('Copilot status') end,
 	},
 }
 
