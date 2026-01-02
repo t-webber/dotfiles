@@ -7,9 +7,6 @@
 __attribute_pure__ __wur __nonnull() const
     char *get_filename_extension(const_str filename, const size_t len);
 
-// __wur bool has_timg_support(const_str extension);
-// __wur bool has_brave_support(const_str extension);
-
 _Noreturn __nonnull() void exec_open_file(const_str filename,
                                           const_str extension,
                                           const bool is_open,

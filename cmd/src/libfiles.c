@@ -175,6 +175,16 @@ __wur __nonnull() static bool is_file_binary(const_str path) {
         return false;
 }
 
+_Noreturn __nonnull() static void display_todo_file(const_str filename) {
+        FILE *fd = fopen_checked(filename, "r");
+        char line[1024];
+        while (fgets(line, 1024, fd)) {
+                const_str colour = "\033[0m";
+                if (starts_with_const(line, "- [x] ")) { colour = "\033[31m"; }
+        }
+        exit(0);
+}
+
 _Noreturn __nonnull() void exec_open_file(const_str filename,
                                           const_str extension,
                                           const bool is_open,
@@ -207,6 +217,8 @@ _Noreturn __nonnull() void exec_open_file(const_str filename,
                 dezoom_and_run_alacritty(filename, false);
 
         if (is_verbose) {
+                if (strcmp(extension, "todo")) { display_todo_file(filename); }
+
                 if (is_file_binary(filename)) { exldn("file", filename); }
 
                 exldn("bat", filename);
