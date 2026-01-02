@@ -7,7 +7,8 @@ history = 100000
 
 [window]
 decorations = "None"
-option_as_alt = "OnlyLeft"
+blur = true
+option_as_alt = "OnlyRight"
 
 [cursor]
 style.shape = "Beam"
