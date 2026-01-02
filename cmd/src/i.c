@@ -8,7 +8,8 @@
 ///
 /// - add $$ support for in-first-arg params
 /// - add a iorb to rebase edit on one commit only w/o editor
-/// - on git rebase conflicts, display the list of CONFLICTS only (and put the full log in a file in del?)
+/// - on git rebase conflicts, display the list of CONFLICTS only (and put the
+/// full log in a file in del?)
 /// - same for git merge
 /// - interactive git add that let's me select files to add.
 
@@ -40,6 +41,7 @@ const Cmd COMMANDS[] = {
     cmd("cp", "cherry-pick", "--abort", "--continue", ),
     cmd("cg",
         "config",
+        "set",
         "--global",
         "=euser.email",
         "=nuser.name",
@@ -103,14 +105,23 @@ const Cmd COMMANDS[] = {
         "-i",
         "--root", ),
     cmd("rm", "rm", "-f", "-r", "--cached", ),
-    cmd("ro", "restore", "-S", "-W", "--staged", ),
-    cmd("rs", "reset", "--hard", "--soft", ),
+    cmd("ro", "restore", "-S", "-W", "--staged", ".", ),
+    cmd("rs", "reset", "--hard", "--soft", ".", ),
     cmd("rt", "remote", "-v", "set-url", "add", "=wshow", ),
     cmd("rp", "rev-parse", "--show-toplevel", ),
     cmd("rl", "rev-list", "--all", ),
     cmd("rw", "review", "-d", ),
 
-    cmd("sh", "stash", "pop", "drop", "clear", "show", "apply", "list", "-m", "=S--staged",),
+    cmd("sh",
+        "stash",
+        "pop",
+        "drop",
+        "clear",
+        "show",
+        "apply",
+        "list",
+        "-m",
+        "=S--staged", ),
     cmd("sm",
         "submodule",
         "update",
