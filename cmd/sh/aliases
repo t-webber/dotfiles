@@ -1109,7 +1109,7 @@ _al np '. np'
 _al w while
 _al ed '$CMD/sh/ed'
 
-_print done
+_print other
 
 #####################################
 
