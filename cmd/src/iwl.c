@@ -7,8 +7,8 @@ __nonnull() static void maxed(size_t *store, const size_t new) {
         if (new > *store) *store = new;
 }
 
-__nonnull() __wur static size_t get_max_lengths(char *const buffer,
-                                              Vec *const lines) {
+__nonnull() __wur static size_t
+    get_max_lengths(char *const buffer, Vec *const lines) {
         size_t max_sha_len = 0;
         size_t max_branch_len = 0;
 
@@ -32,8 +32,8 @@ __nonnull() __wur static size_t get_max_lengths(char *const buffer,
 }
 
 __nonnull() static void display(const Vec *const lines,
-                            const size_t max_sha_len,
-                            const size_t max_branch_len) {
+                                const size_t max_sha_len,
+                                const size_t max_branch_len) {
 
         const_str work = getenv_checked("WORK");
         const size_t work_len = strlen(work);
@@ -83,6 +83,7 @@ __nonnull() static void display(const Vec *const lines,
 }
 
 int main(void) {
+        store_usage("iwl", "", false);
         read_simple_exldn((1 << 12), buffer, "git", "worktree", "list");
         Vec lines = new_vec();
         const size_t lengths = get_max_lengths(buffer, &lines);

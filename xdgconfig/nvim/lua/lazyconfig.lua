@@ -337,6 +337,7 @@ local spec = {
 				},
 			})
 			vim.treesitter.language.register('python', 'sage')
+			vim.treesitter.language.register('bash', 'zsh')
 			vim.treesitter.language.register('ruby', 'conf')
 		end,
 		event = 'VeryLazy',

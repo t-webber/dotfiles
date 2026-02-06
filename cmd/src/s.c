@@ -70,7 +70,7 @@ display(const_str filename, const bool is_verbose, const bool has_multiple) {
 }
 
 int main(const int argc, const_str *const argv) {
-        store_usage(argv);
+        store_usage(argv[0], "", false);
         bool verbose = is_verbose(argv[0], "s", "v");
 
         if (argc == 1) {

@@ -33,6 +33,7 @@ static void set_lht_level(const char *amount, const function f) {
 }
 
 int main(int argc, Args argv) {
+        store_usage(argv[0], "", false);
         if (argc == 1) {
                 print_level();
                 return 0;

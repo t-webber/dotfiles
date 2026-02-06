@@ -3,7 +3,7 @@
 #include <string.h>
 
 int main(int argc, Args argv) {
-        store_usage(argv);
+        store_usage(argv[1], "", true);
 
         if (argc == 1) exl1("brave");
 

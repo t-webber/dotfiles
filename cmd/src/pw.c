@@ -18,6 +18,7 @@ static const_var_str get_emoji(const bool emoji) {
 }
 
 int main(const int argc, Args argv) {
+        store_usage(argv[0], "", false);
         const_str emoji = get_emoji(true);
         const_str colour = get_emoji(false);
         const char *level = get_battery_level();

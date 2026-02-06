@@ -6,6 +6,8 @@
 
 int main(const int argc, Args argv) {
         assert(argc == 2 || (argc == 3 && !strcmp(argv[2], "@")));
+        store_usage(argv[0], "", false);
+
         bool dbg = argc == 3;
 
         const_str arg = argv[1];

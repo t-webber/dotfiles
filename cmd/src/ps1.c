@@ -126,6 +126,8 @@ static void low_battery(void) {
 #define COL(x) "\001\x1b[" #x "m\002"
 
 int main(void) {
+        store_usage("ps1", "", false);
+
         const char *device_name = getenv_checked("DEVICE");
         const bool is_acer = !strcmp(device_name, "acer");
 

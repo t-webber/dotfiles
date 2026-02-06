@@ -4,6 +4,8 @@
 #include <string.h>
 
 int main(const int argc, Args argv) {
+        store_usage(argv[0], "", false);
+
         if (argc == 1) upanic("Usage: %s <v|ast|file>", argv[0]);
 
         if (!strcmp(argv[1], "v")) { exldn("clang++", "--version"); }

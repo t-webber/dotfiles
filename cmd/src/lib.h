@@ -87,7 +87,9 @@ __nonnull() bool has_slash(const_str arg,
                            size_t *len,
                            const char **const position);
 
-__nonnull() void store_usage(const_str *const argv);
+__nonnull() void store_usage(const_str prog_name,
+                             const_str arg,
+                             const bool is_alias);
 
 __attribute_pure__ __wur __nonnull() size_t utf8_strlen(const char *s);
 

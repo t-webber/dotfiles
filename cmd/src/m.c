@@ -241,7 +241,7 @@ static int git_man_page(const int argc, Args argv) {
 }
 
 int main(const int argc, Args argv) {
-        store_usage(argv);
+        store_usage(argv[0], "", false);
         bool c_man;
         bool git;
         bool clear;

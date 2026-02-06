@@ -1,6 +1,5 @@
 #include "lib.h"
 #include "libexec.h"
-#include <assert.h>
 #include <stdbool.h>
 #include <string.h>
 #include <unistd.h>
@@ -71,7 +70,7 @@ __wur __nonnull() __attribute_malloc__ static const_var_str
 }
 
 int main(const int argc, Args argv) {
-        store_usage(argv);
+        store_usage(argv[0], "", false);
 
         const char *user;
         const char *crate;

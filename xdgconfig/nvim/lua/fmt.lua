@@ -28,6 +28,7 @@ return {
 
 	sh = { 'shfmt', ln = 'bash' },
 	bash = { 'shfmt', ln = 'bash' },
+	zsh = { 'shfmt', ln = 'zsh' },
 
 	----------------
 	--- Prettier ---

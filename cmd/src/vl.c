@@ -1,3 +1,4 @@
+#include "assert.h"
 #include "lib.h"
 #include "libexec.h"
 #include <stdlib.h>
@@ -97,6 +98,8 @@ static void edit_volume(Args argv) {
 }
 
 int main(const int argc, Args argv) {
+        store_usage(argv[1], "", true);
+        assert(argc == 2);
         if (argc == 1) {
                 print_display();
                 return 0;

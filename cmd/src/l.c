@@ -50,6 +50,8 @@ __nonnull() static void print_arg(const_str arg, const bool no_escape) {
 }
 
 int main(const int argc, Args argv) {
+        store_usage(argv[0], "", false);
+
         if (!strcmp(argv[0], "lc")) {
                 clear();
                 return 0;

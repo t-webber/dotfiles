@@ -51,6 +51,8 @@ static const char *__wur get_scope(const char scope) {
 
 int main(const int argc, Args argv) {
         if (argc != 2) upanic("Missing arguments");
+        store_usage(argv[0], "", false);
+
         const_str arg = argv[1];
 
         if (is_dir(arg)) {

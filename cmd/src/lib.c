@@ -58,16 +58,14 @@ __nonnull() __wur __attribute_pure__
         return res;
 }
 
-__nonnull() void store_usage(Args argv) {
-        return;
+__nonnull() void store_usage(const_str prog_name,
+                             const_str arg,
+                             const bool is_alias) {
         const_str logs = getenv_checked("LOGS");
-        const size_t logs_len = strlen(logs);
-        str path
-            = malloc(sizeof(char) * (logs_len + sizeof("/aliases.log") + 1));
-        char *end = stpcpy(path, logs);
-        stpcpy(end, "/aliases.log");
+        char path[512];
+        sprintf(path, "%s/aliases.log", logs);
         FILE *fd = fopen_checked(path, "a");
-        fprintf(fd, "%s ", argv[0]);
+        fprintf(fd, "%s %s %d\n", prog_name, arg, is_alias);
         fclose(fd);
 }
 

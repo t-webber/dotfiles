@@ -35,7 +35,7 @@ _Noreturn __nonnull() static void rn_file(const_str filename) {
 }
 
 int main(int argc, Args argv) {
-        store_usage(argv);
+        store_usage(argv[0], "", false);
         if (argc == 1) upanic("Missing arguments...");
         bool all_ok = true;
 

@@ -187,6 +187,8 @@ int main(const int argc, Args argv) {
                       "0.",
                       argv[0]);
 
+        store_usage(argv[0], "", false);
+
         const char **const icl_args
             = malloc(((unsigned long)argc + 1) * sizeof(char *));
         const char **const git_args

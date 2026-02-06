@@ -28,8 +28,9 @@ __wur static char *path(const_str file, const bool is_c, const_str folder) {
 #define include(x) "#include \"" #x ".h\"" nn
 
 #define normal                                                                 \
-        include(lib) "int main(const int argc, Args argv) {" tl "return 0;" nl \
-                     "}" nl
+        include(lib) "int main(const int argc, Args argv) {" tl                \
+                     "store_usage(argv[0], \"\", false);"                      \
+                     "return 0;" nl "}" nl
 
 #define single include(libcmd) "make_single(\"g\", \"rg\", \"=.--hidden\", )" nl
 
@@ -45,6 +46,8 @@ __wur static char *path(const_str file, const bool is_c, const_str folder) {
 
 int main(const int argc, Args argv) {
         if (argc < 2 || argc > 3) usage;
+
+        store_usage(argv[0], "", false);
 
         const_str ext = get_filename_extension(argv[1], strlen(argv[1]));
         const bool is_c = !strcmp(ext, "c");

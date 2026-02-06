@@ -168,7 +168,9 @@ static const Manual MANUAL[] = {{'H', "HEAD"},
                                 {'E', "master"},
                                 {'C', "--color=always"},
                                 {'-', "--"},
-                                {'M', "main"}};
+                                {'M', "main"},
+                                {'P', "--no-pager"},
+                                {'G', "--paginate"}};
 
 make_settings(SETTINGS, COMMANDS, MANUAL);
 

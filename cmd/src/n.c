@@ -43,6 +43,7 @@ static void create_file(char *const filename, bool are_all_dir) {
 }
 
 int main(int argc, char *const *argv) {
+        store_usage(argv[0], "", false);
         bool are_all_dir = is_verbose(argv[0], "n", "nd");
         if (argc == 1) upanic("Missing arguments...");
 

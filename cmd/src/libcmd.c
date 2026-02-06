@@ -305,6 +305,8 @@ __nonnull() _Noreturn void run_cli(const size_t argc,
                 exit(1);
         }
 
+        store_usage(argv[0], argv[1], false);
+
         parse_alias(settings, cmd, argv[1], strlen(argv[1]));
 
         bool debug = push_others(cmd, argc, argv);
@@ -315,6 +317,7 @@ __nonnull() _Noreturn void run_cli(const size_t argc,
 __nonnull() _Noreturn void run_cli_single(const size_t argc,
                                           Args argv,
                                           const Cmd *const command) {
+        store_usage(argv[0], argv[1] ? argv[1] : "", false);
         bool should_clear = false, help = false;
 
         for (size_t idx = 1; idx < argc; ++idx) {

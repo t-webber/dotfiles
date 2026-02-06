@@ -97,6 +97,7 @@ __nonnull() __wur __attribute_malloc__ static const
 }
 
 int main(void) {
+        store_usage("gx", "", false);
         size_t last_index = 0;
         const char **const keybinds = get_keybinds(&last_index);
         sort(keybinds, 0, last_index);

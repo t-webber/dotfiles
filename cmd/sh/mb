@@ -1,0 +1,21 @@
+#!/bin/sh
+
+case "$1" in
+r)
+        cmd="release"
+        ;;
+d)
+        cmd="debug"
+        ;;
+c)
+        cmd="clean"
+        ;;
+"" | "r")
+        cmd="release"
+        ;;
+*)
+        cmd="$1"
+        ;;
+esac
+
+make -C "$CMD/src" --no-print-directory $cmd -j 50

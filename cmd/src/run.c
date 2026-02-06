@@ -157,7 +157,7 @@ __wur __nonnull() __attribute_pure__ static const
 }
 
 int main(const int argc, Args argv) {
-        store_usage(argv);
+        store_usage(argv[0], "", false);
 
         const bool is_release = is_verbose(argv[0], "run", "runr");
 

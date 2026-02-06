@@ -4,6 +4,7 @@
 
 int main(const int argc, Args argv) {
         assert(argc == 2);
+        store_usage(argv[0], "", false);
         clear();
         char regex[512];
         sprintf(regex, "^\\S+\\s+\\S+\\s+\\S*%s", argv[1]);

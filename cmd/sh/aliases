@@ -5,7 +5,7 @@
 ##############################################
 
 _check=
-_dtl=yes
+_dtl=
 
 incr() {
         local var="$1"
@@ -63,7 +63,7 @@ _al() {
                 fi; fi
         fi
 
-        alias "$1"="$dest"
+        alias "$1"="trackusage '$1'; $dest"
 
         if [ -n "$_check" ]; then
 
@@ -176,11 +176,6 @@ _al all 'builtin alias'
 _dal ad 'builtin unalias' a
 
 _al aa "all | sed \"s/^alias //;s/='/\t/;s/'$//\""
-
-cup="$(_wi make) -C $CMD/src --no-print-directory -j 50"
-_al cup "$cup release"
-_al cupc "$cup clean && $cup release"
-_al cupd "$cup debug"
 
 _al uz "builtin unalias -a && alias z='. /etc/bash.bashrc' && alias rb='. ~/.bashrc'"
 _al raw "PS1='$ ' && PROMPT_COMMAND='' && uz"
@@ -864,6 +859,10 @@ _print rights
 
 _flush
 
+_ual g rg
+_ual f fd
+_ual tz tar
+_al tz "$(_wi tar)"
 _ual xg xargs
 _al xg "$(_wi xargs)"
 _al cnt 'wc -l'

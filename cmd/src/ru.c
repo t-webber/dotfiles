@@ -6,10 +6,10 @@
 
 const_str UPDATE = "/bin/rustup update";
 const_str DEFAULT = "/bin/rustup default nightly";
-const_str INSTALL_UPDATE
-    = "/bin/cargo install-update -a -g";
+const_str INSTALL_UPDATE = "/bin/cargo install-update -a -g";
 
 int main(void) {
+        store_usage("ru", "", false);
         char command[100];
         const_str cargo_home = getenv_checked("CARGO_HOME");
 
