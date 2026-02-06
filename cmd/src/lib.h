@@ -97,13 +97,18 @@ __nonnull() __wur DIR *opendir_checked(const_str file_name);
 __nonnull() void closedir_checked(DIR *dirp);
 __nonnull() __wur const_var_str getenv_checked(const_str var);
 __nonnull() void setenv_checked(const_str var, const_str val);
+__nonnull() __wur bool is_file(const_str path);
+__nonnull() void append_file(const_str path, const_str data);
+__nonnull() void chmod_checked(const_str path, const mode_t mode);
 
-__nonnull() void exl_notif(const_str message);
+_Noreturn __nonnull() void exl_notif(const_str message);
 
 #define exl_corenotif(...)                                                     \
-        char message[128];                                                     \
-        sprintf(message, __VA_ARGS__);                                         \
-        exl_notif(message);
+        {                                                                      \
+                char message[128];                                             \
+                sprintf(message, __VA_ARGS__);                                 \
+                exl_notif(message);                                            \
+        }
 
 void exl_err_notif(void);
 

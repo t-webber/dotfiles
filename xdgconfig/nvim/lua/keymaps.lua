@@ -65,6 +65,7 @@ local i = { 'i' }
 local t = { 't' }
 local it = { 'i', 't' }
 
+local troubleicon = '🚨 '
 local winicon = '🌄 '
 local telescopeicon = '🔭 '
 local giticon = '🦑 '
@@ -661,12 +662,26 @@ setk(
 setk(n, '<F12>', function() vim.lsp.buf.code_action() end, '💡 code action')
 setk(n, 'àf', function() vim.lsp.buf.code_action() end, '💡 code action')
 
-setk(n, 'àa', ':Trouble diagnostics<CR>', '🚨 trouble diagnostics')
+setk(n, 'àa', ':Trouble diagnostics<CR>', troubleicon .. 'diagnostics')
 setk(
 	n,
 	'àv',
 	':Trouble diagnostics win.type=split win.position=right win.width=120<CR>',
-	'🚨 trouble diagnostics vert'
+	troubleicon .. 'diagnostics vert'
+)
+
+setk(
+	n,
+	'à)',
+	function() require('trouble').next({ skip_groups = true, jump = true }) end,
+	troubleicon .. 'next'
+)
+
+setk(
+	n,
+	'à(',
+	function() require('trouble').prev({ skip_groups = true, jump = true }) end,
+	troubleicon .. 'prev'
 )
 
 setk(n, 'àt', function()

@@ -5,7 +5,7 @@
 ##############################################
 
 _check=
-_dtl=
+_dtl=yes
 
 incr() {
         local var="$1"
@@ -23,16 +23,20 @@ _buff=
 _flush() { _buff=; }
 _sep() { _buff="$_buff%n"; }
 
-_dt="$(_wi date)"
+if [ "$(uname)" = "Linux" ]; then
+        _dt="$(_wi date)"
+else
+        _dt="$(_wi gdate)"
+fi
 _prev="$($_dt +%s%N)"
 _print() {
         [ -n "$_dtl" ] && {
                 _now=$($_dt +%s%N)
                 "$(_wi echo)" "$((_now - _prev)) $1"
-                prev=$_now
+                _prev=$_now
         }
         _al "$1" "lc && lw '$_buff'" !
-        _sections="$_sections$1%t$2%n"
+        _sections="$_sections$1%t$1%n"
 }
 
 _buffappend() {
@@ -166,7 +170,7 @@ _s="$(_wi sudo)"
 ########## ALIAS ##########
 ###########################
 
-#unalias -a
+unalias -a
 
 _al all 'builtin alias'
 _dal ad 'builtin unalias' a
@@ -219,7 +223,7 @@ if [ -f '/etc/arch-release' ] || [ -f '/etc/artix-release' ]; then
                 _al M "$_s reflector --latest 30 --sort rate --save $m --connection-timeout 20 --number 15 reflector && U"
         fi; fi
 
-        _print pr paru
+        _print paru
 else if [ "$(uname)" = "Darwin" ]; then
         _flush
 
@@ -235,7 +239,7 @@ else if [ "$(uname)" = "Darwin" ]; then
         _al Qt -p "$b" 'list --installed-on-request'
         _al Qd -p "$b" 'list --installed-as-dependency'
 
-        _print bw brew
+        _print brew
 fi; fi
 
 #########################
@@ -278,7 +282,7 @@ _al bp -p "$b" 'x prettier -cw .'
 _al bpp -p "$b" 'x pretier'
 _al bcn -p "$b" 'x shadcn@latest add'
 
-_print b bun
+_print bun
 
 ############################
 ########## PRISMA ##########
@@ -294,7 +298,7 @@ _pam s status
 _pam d deploy
 _pam m 'dev --name'
 
-_print pam 'prisma migrate'
+_print pam
 
 _sep
 
@@ -310,7 +314,7 @@ _pa v validate
 _pa e version
 _pa f format
 
-_print pa prisma
+_print prisma
 
 ###########################
 ########## CARGO ##########
@@ -332,7 +336,7 @@ _al cy 'l "#![warn(missing_docs,warnings,deprecated_safe,future_incompatible,key
 
 _al cyx 'cy | x'
 
-_print ccc cargo
+_print cargo
 
 ############################
 ########## RUSTUP ##########
@@ -352,7 +356,7 @@ _al r0 'export RUST_BACKTRACE=0'
 _al r1 'export RUST_BACKTRACE=1'
 _al rf 'export RUST_BACKTRACE=full'
 
-_print rp rust
+_print rust
 
 #########################
 ########## IWD ##########
@@ -380,7 +384,7 @@ _sep
 
 _al dwr 'dws; while :; do l; dwg; sleep 1; done'
 
-_print iw iwctl
+_print iwctl
 
 #########################
 ########## GIT ##########
@@ -423,7 +427,7 @@ _al hw 'h pvw || h rvw'
 
 _ual i git
 _ual h gh ih
-_print iz git
+_print git
 
 #############################
 ########## SYSTEMD ##########
@@ -431,31 +435,79 @@ _print iz git
 
 _flush
 
-_ual ty systemctl
+[ -f "/bin/systemctl" ] && {
+        _ual ty systemctl
 
-if [ "$(uname)" = "Darwin" ]; then
-        _al tyy "$(_wi brew) services"
-        _al ty "$_s $(_wi brew) services"
-else
-        _dal tyy "$(_wi systemctl)" user
-        _al ty "$_s $(_wi systemctl)" user
-fi
-_al tyu 'ty list-unit-files'
+        if [ "$(uname)" = "Darwin" ]; then
+                _al tyy "$(_wi brew) services"
+                _al ty "$_s $(_wi brew) services"
+        else
+                _dal tyy "$(_wi systemctl)" user
+                _al ty "$_s $(_wi systemctl)" user
+        fi
+        _al tyu 'ty list-unit-files'
 
-_ual tj journalctl
-_dal tjj "$(_wi journalctl)" user
-_al tj "$_s tjj"
-_al tje 'tj -xeu'
-_al tjje 'tjj -xeu'
-_al tjjue 'tjju -xeu'
+        _ual tj journalctl
+        _dal tjj "$(_wi journalctl)" user
+        _al tj "$_s tjj"
+        _al tje 'tj -xeu'
+        _al tjje 'tjj -xeu'
+        _al tjjue 'tjju -xeu'
 
-_sep
+        _sep
 
-_uall tz
-tz="$(_wi systemd-analyze)"
-_al tzb -p "$tz" "blame"
-_al tzp -p "$tz" "plot > del.svg"
-_al tzc -p "$tz" "critical-chain"
+        _uall tz
+        tz="$(_wi systemd-analyze)"
+        _al tzb -p "$tz" "blame"
+        _al tzp -p "$tz" "plot > del.svg"
+        _al tzc -p "$tz" "critical-chain"
+
+        _sep
+
+        _ual tr restart
+        _ual ta start
+        _ual tt status
+        _ual to stop
+        _ual td disable
+        _ual te enable
+
+        _ctl_def() {
+                if [ -z "$3" ]; then
+                        local c=ty
+                        local j=tje
+                else
+                        local c=tyyu
+                        local j=tjjue
+                fi
+                if [ -z "$2" ]; then
+                        arg=""
+                else
+                        arg=" $2"
+                fi
+
+                [ -n "$1" ] && local end=!
+
+                _al "ta$1" "$c start$arg" "$end"
+                _al "ts$1" "$c restart$arg" "$end"
+                _al "tt$1" "$c status$arg" "$end"
+                _al "to$1" "$c stop$arg" "$end"
+                _al "te$1" "$c enable$arg" "$end"
+                _al "td$1" "$c disable$arg" "$end"
+
+                [ -n "$1" ] && _al "tj$1" "$j$arg" "$end"
+        }
+
+        _ctl_def
+
+        _ctl_def iw iwd
+        _ctl_def rd systemd-resolved
+        _ctl_def net 'iwd systemd-resolved'
+        _ctl_def sql postgresql
+        _ctl_def d docker
+        _ctl_def p podman
+        _ctl_def au 'pipewire.socket pipewire-pulse pipewire-pulse.socket wireplumber' u
+        _ctl_def aa 'pipewire.socket pipewire-pulse pipewire-pulse.socket pipewire-media-session' u
+}
 
 _sep
 
@@ -471,53 +523,7 @@ fi
 
 _dal tb "$_s $(_wi reboot)" force
 
-_sep
-
-_ual tr restart
-_ual ta start
-_ual tt status
-_ual to stop
-_ual td disable
-_ual te enable
-
-_ctl_def() {
-        if [ -z "$3" ]; then
-                local c=ty
-                local j=tje
-        else
-                local c=tyyu
-                local j=tjjue
-        fi
-        if [ -z "$2" ]; then
-                arg=""
-        else
-                arg=" $2"
-        fi
-
-        [ -n "$1" ] && local end=!
-
-        _al "ta$1" "$c start$arg" "$end"
-        _al "ts$1" "$c restart$arg" "$end"
-        _al "tt$1" "$c status$arg" "$end"
-        _al "to$1" "$c stop$arg" "$end"
-        _al "te$1" "$c enable$arg" "$end"
-        _al "td$1" "$c disable$arg" "$end"
-
-        [ -n "$1" ] && _al "tj$1" "$j$arg" "$end"
-}
-
-_ctl_def
-
-_ctl_def iw iwd
-_ctl_def rd systemd-resolved
-_ctl_def net 'iwd systemd-resolved'
-_ctl_def sql postgresql
-_ctl_def d docker
-_ctl_def p podman
-_ctl_def au 'pipewire.socket pipewire-pulse pipewire-pulse.socket wireplumber' u
-_ctl_def aa 'pipewire.socket pipewire-pulse pipewire-pulse.socket pipewire-media-session' u
-
-_print t systemd
+_print systemd
 
 ############################
 ########## PYTHON ##########
@@ -554,7 +560,7 @@ _al vy 'uv sync'
 _al vi 'uv pip install'
 _al vd 'uv add'
 
-_print yy python
+_print python
 
 #########################
 ########## SEE ##########
@@ -564,7 +570,7 @@ _flush
 
 _ual 's or v' cat ls lla llag bat eza ll
 
-_ual 'l, lw, lc, lr or ret' echo printf cls clear eh
+_ual 'l, lw, lc, lr or ret' cls clear eh
 _al ret 'l $?'
 
 _al svv "$(_wi eza) -lA --git"
@@ -627,7 +633,7 @@ _al xr0 'xr --output $(xr | gw connected | hd -1 | w1)'
 _al zoom 'xr0 --scale 0.8x0.8'
 _al dezoom 'xr0 --scale 1.5x1.5'
 
-_print gui gui
+_print gui
 
 #############################
 ########## NETWORK ##########
@@ -651,7 +657,7 @@ _al enst 'ssh twebber-23@ssh.enst.fr'
 
 _ual rl curl
 
-_print network network
+_print network
 
 ###########################
 ########## PUSHD ##########
@@ -732,7 +738,7 @@ for l in c r y g; do
         _al "del$l" "pdel$l && e ."
 done
 
-_print cd cd
+_print cd
 
 ##########################
 ########## EDIT ##########
@@ -783,7 +789,7 @@ _al wq q
 _al :wq q
 _al :q q
 
-_print edit edit
+_print edit
 
 ###########################
 ########## CLANG ##########
@@ -811,7 +817,7 @@ _al clw 'cl -Werror -Wextra -Wconversion -Wuninitialized -Wundef -Wshadow -Wvla 
 _al cinit "cp $CMD/data/.clang* ."
 _al vg 'valgrind --track-origins=yes --show-error-list=yes --show-leak-kinds=all --leak-check=full'
 
-_print clang clang
+_print clang
 
 ##############################
 ########## KEYBOARD ##########
@@ -827,7 +833,7 @@ _al frr "$_s $(_wi loadkeys) fr-latin1"
 _al grr "$s gr"
 _al gr 'grr && read x; fr; l $x | x; l $x'
 
-_print keyboard keyboard
+_print keyboard
 
 ############################
 ########## RIGHTS ##########
@@ -850,7 +856,7 @@ _al chws "$_s chw"
 _dal chwsr "$_s chwr" R
 _dal chwsb "$_s chwb" R
 
-_print rights rights
+_print rights
 
 ###########################
 ########## PIPES ##########
@@ -894,7 +900,7 @@ _ual g grep ripgrep rg
 _al gs "g v '^$'" 'g v ^$'
 _al gcs "g Cv '^$'" 'g Cv ^$'
 
-_print pipes pipes
+_print pipes
 
 #########################
 ########## AWK ##########
@@ -922,7 +928,7 @@ _al arev "a aarev"
 _al aadup "'{print \$0, \$0}'"
 _al adup 'a aadup'
 
-_print aaa awk
+_print awk
 
 ###########################
 ########## POWER ##########
@@ -968,7 +974,7 @@ _al psg pgrep
 
 _al kbg 'pkill -u "$USER" -x bash -P 1'
 
-_print kk kill
+_print kill
 
 ##########################
 ########## TMUX ##########
@@ -998,7 +1004,7 @@ _al x2 'xe 2'
 _al xs "xa \$(xl | fzf | w -F':' ww1)"
 _al xh 'v $OCFG/tmux.conf'
 
-_print xxx tmux
+_print tmux
 
 #####################################
 
@@ -1103,7 +1109,7 @@ _al np '. np'
 _al w while
 _al ed '$CMD/sh/ed'
 
-_print other done
+_print done
 
 #####################################
 

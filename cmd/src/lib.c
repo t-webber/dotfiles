@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <sys/wait.h>
 
 __nonnull() __wur String get_env_subpath(const String subpath, const_str var) {
@@ -68,6 +69,21 @@ __nonnull() void store_usage(Args argv) {
         FILE *fd = fopen_checked(path, "a");
         fprintf(fd, "%s ", argv[0]);
         fclose(fd);
+}
+
+__nonnull() void append_file(const_str path, const_str data) {
+        FILE *f = fopen_checked(path, "a");
+        fputs(data, f);
+        fclose(f);
+}
+
+__nonnull() __wur bool is_file(const_str file_name) {
+        FILE *f = fopen(file_name, "r");
+        if (f) {
+                fclose(f);
+                return true;
+        }
+        return false;
 }
 
 __attribute_pure__ __wur __nonnull() size_t utf8_strlen(const_str s) {
@@ -203,4 +219,8 @@ __wur __attribute_const__ size_t max(const size_t a, const size_t b) {
 
 __nonnull() void chdir_checked(const_str path) {
         if (chdir(path)) { epanic("Failed to change process cwd to %s", path) };
+}
+
+__nonnull() void chmod_checked(const_str path, const mode_t mode) {
+        if (chmod(path, mode)) epanic("Failed to run chmod %u %s", mode, path);
 }

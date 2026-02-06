@@ -10,3 +10,5 @@ xmodmap -e "add Mod3 = ISO_Level3_Shift"
 
 dunst &    #>/home/b/.files/.data/logs/dunst.log 2>&1 &
 clipcatd & # >/home/b/.files/.data/logs/clipcatd.log 2>&1 &
+
+lht set 10

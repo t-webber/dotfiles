@@ -16,6 +16,7 @@ export DATA="$FILES/.data"
 
 export DOT="$FILES/dotfiles"
 export CMD="$DOT/cmd"
+export SH="$CMD/sh"
 export XCFG="$DOT/xdgconfig"
 export ETC="$DOT/etc"
 export APPS="$FILES/.apps"

@@ -95,7 +95,7 @@ static void find_and_clone(const_str repo_name, const char **const icl_args) {
         int status;
         waitpid(pid, &status, 0);
         if (status)
-                epanic("No repository named %s "
+                upanic("No repository named %s "
                        "found.",
                        repo_name);
 
