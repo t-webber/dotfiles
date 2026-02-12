@@ -1,46 +1,29 @@
-local python
-
-if os.getenv('DEVICE') == 'v' then
-	local venv_bin = os.getenv('VENV_BIN')
-	local venv = os.getenv('VENV')
-	python = {
-		venv = venv,
-		bin = venv_bin,
-		venvPath = venvPath,
-		diagnostics = {
-			reportUnknownVariableType = false,
-			reportUnknownParameterType = false,
-			reportMissingTypeStubs = false,
-		},
-		extraPaths = {
-			'tools',
-			os.getenv('UNIVENT'),
-		},
-	}
-else
-	python = { venv = nil, venvPath = nil, bin = '', diagnostics = {} }
-end
+local root = vim.fs.root(0, { 'pyproject.toml', '.git', 'venv' })
+	or vim.fn.getcwd()
 
 local lsps = {
 
 	zig = { cmd = { 'zls' }, filetypes = { 'zig' } },
 
 	py = {
-		cmd = { python.bin .. 'pyright-langserver', '--stdio' },
+		cmd = { 'pyright-langserver', '--stdio' },
 		filetypes = { 'python' },
+		root_markers = { 'pyproject.toml', '.git', 'venv' },
 		settings = {
 			python = {
-				pythonPath = python.bin .. 'python',
+				pythonPath = 'python3',
 				analysis = {
-					-- 					typeCheckingMode = "strict",
+					typeCheckingMode = 'strict',
 					autoSearchPaths = true,
 					useLibraryCodeForTypes = true,
-					diagnosticSeverityOverrides = python.diagnostics,
-					extraPaths = python.extraPaths,
+					useLibraryCodeForTypes = true,
+					reportMissingTypeStubs = false,
+					-- 					diagnosticSeverityOverrides = python.diagnostics,
+					-- 					extraPaths = python.extraPaths,
 				},
 			},
-			venvPath = python.venvPath,
-			venv = python.venv,
+			-- 			venvPath = python.venvPath,
+			-- 			venv = python.venv,
 		},
 	},
 

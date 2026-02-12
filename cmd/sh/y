@@ -1,0 +1,19 @@
+#!/bin/sh
+
+if type deactivate 2>/dev/null >&2; then
+        yy $@
+else
+        if [ -d ".venv" ]; then
+                . .venv/bin/activate
+        else if [ -d "venv" ]; then
+                . venv/bin/activate
+        fi; fi
+        if [ -d ".complete" ]; then
+                for f in .complete/*; do
+                        if [ "$f" != ".gitignore" ]; then
+                                echo "$f"
+                                . $f
+                        fi
+                done
+        fi
+fi

@@ -1072,6 +1072,7 @@ _al w while
 _al whereami "$(_wi curl) ipinfo.io"
 _al dbg 'export DEBUG=1'
 _al nodbg 'unset DEBUG'
+_al y '. y'
 
 _print other
 

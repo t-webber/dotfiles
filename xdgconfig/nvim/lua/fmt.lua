@@ -1,12 +1,3 @@
-local python = require('lsp')
-local yapf = (function()
-	if python.venv_bin == nil then
-		return 'yapf'
-	else
-		return python.venv_bin .. 'yapf'
-	end
-end)()
-
 return {
 
 	-----------------
@@ -16,7 +7,7 @@ return {
 	lua = { 'stylua' },
 	rust = { 'rustfmt' },
 	sql = { 'sql_formatter' },
-	python = { yapf },
+	python = { 'ruff_fix', 'ruff_format' },
 	toml = { 'taplo' },
 	go = { 'gofmt' },
 	kdl = { 'kdlfmt' },
