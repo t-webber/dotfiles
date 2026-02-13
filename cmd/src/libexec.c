@@ -7,10 +7,16 @@ __wur bool is_dbg(void) {
         return getenv("DEBUG") != NULL;
 }
 
-pid_t fork_checked(void) {
+__wur pid_t fork_checked(void) {
         pid_t pid = fork();
         if (pid < 0) epanic("Failed to fork");
 
+        return pid;
+}
+
+__wur bool fork_and_wait(void) {
+        pid_t pid = fork_checked();
+        if (pid != 0) fork_wait(pid);
         return pid;
 }
 
@@ -37,7 +43,26 @@ _Noreturn void exvd(Args args) {
 }
 
 __nonnull() void forked_exvd(Args args) {
-        pid_t pid = fork_checked();
-        if (pid == 0) exvd(args);
-        fork_wait(pid);
+        if (fork_and_wait()) exvd(args);
+}
+
+__nonnull() _Noreturn void exl_notif(const_str message) {
+        exldn("notify-send",
+              "-u",
+              "low",
+              "-t",
+              "500",
+              "-h",
+              "string:x-dunst-stack-tag:stacked",
+              "-a",
+              "center",
+              message);
+}
+
+_Noreturn void exl_err_notif(void) {
+        exldn("notify-send", "-u", "critical", "error");
+}
+
+_Noreturn __nonnull() void exl_err_notif_msg(const_str err_msg) {
+        exldn("notify-send", "-u", "critical", err_msg);
 }

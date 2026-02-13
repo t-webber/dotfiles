@@ -3,7 +3,6 @@
 #include "libfiles.h"
 #include "libos.h"
 
-
 #define usage                                                                  \
         upanic(MAGENTA "Usage:" RED " %s <" YELLOW "file" RED ">(" YELLOW      \
                        ".c" RED " [single|multi] || [<" YELLOW "folder" RED    \
@@ -51,7 +50,7 @@ int main(const int argc, Args argv) {
 
         store_usage(argv[0], "", false);
 
-        const_str ext = get_filename_extension(argv[1], strlen(argv[1]));
+        const_str ext = get_filename_extension(argv[1]);
         const bool is_c = !strcmp(ext, "c");
         const_str dest = path(argv[1], is_c, argv[2]);
 

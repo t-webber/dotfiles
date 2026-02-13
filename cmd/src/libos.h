@@ -1,3 +1,5 @@
+#pragma once
+
 #include "lib.h"
 
 bool __wur __nonnull() is_dir(const_str path);

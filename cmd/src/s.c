@@ -39,15 +39,6 @@ ls(const_str filename, const bool is_verbose, const bool has_multiple) {
                      filename);
 }
 
-static void display_file(const_str filename, const bool is_verbose) {
-        const size_t len = strlen(filename);
-        const_str extension = get_filename_extension(filename, len);
-        const bool is_not_alacrity
-            = strcmp(getenv_checked("TERM"), "alacritty");
-
-        exec_open_file(filename, extension, false, is_not_alacrity, is_verbose);
-}
-
 static void
 display(const_str filename, const bool is_verbose, const bool has_multiple) {
         struct stat st;
@@ -63,9 +54,9 @@ display(const_str filename, const bool is_verbose, const bool has_multiple) {
         if (!S_ISREG(st.st_mode))
                 upanic("Invalid file %s: type %u", filename, st.st_mode);
 
-        pid_t pid = fork_checked();
-        if (pid == 0) display_file(filename, is_verbose);
-        fork_wait(pid);
+        if (fork_and_wait())
+                exec_open_file(filename,
+                               is_verbose ? DISPLAY_VERBOSE : DISPLAY_RAW);
 }
 
 int main(const int argc, const_str *const argv) {

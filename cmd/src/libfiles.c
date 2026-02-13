@@ -10,7 +10,8 @@
 #include <unistd.h>
 
 __attribute_pure__ __wur __nonnull() const
-    char *get_filename_extension(const_str filename, const size_t len) {
+    char *get_filename_extension(const_str filename) {
+        const size_t len = strlen(filename);
         const char *end = filename + len;
         while (end != filename && *end != '.') --end;
         if (*end == '.') return ++end;
@@ -36,98 +37,15 @@ __wur __nonnull() __attribute_pure__
                 return is_valid_extension(name##_EXT, extension, name##_LEN);  \
         }
 
-extensions(timg,
-           "jpg",
-           "jpeg",
-           "png",
-           "gif",
-           "tiff",
-           "tif",
-           "bmp",
-           "webp",
-           "jp2",
-           "jpx",
-           "heif",
-           "heic",
-           "avif",
-           "svg")
+// clang-format off
+extensions(timg,"jpg","jpeg","png","gif","tiff","tif","bmp","webp","jp2","jpx","heif","heic","avif","svg")
 
-    extensions(mpv,
-               // Videos
-               "mp4",
-               "mkv",
-               "avi",
-               "mov",
-               "wmv",
-               "flv",
-               "webm",
-               "mpeg",
-               "mpg",
-               "3gp",
-               "m4v",
-               "vob",
-               "rm",
-               "rmvb",
-               "ogv",
-               "mts",
-               "m2ts",
-               "divx",
-               "xvid",
-               "f4v",
-               "mxf",
-               "y4m",
+extensions(mpv,"mp4","mkv","avi","mov","wmv","flv","webm","mpeg","mpg","3gp","m4v","vob","rm","rmvb","ogv","mts","m2ts","divx","xvid","f4v","mxf","y4m","mp3","aac","wav","flac","ogg","opus","m4a","alac","wma","ac3","eac3","dts","dtsma","truehd","amr","ra","ape","srt","ass","ssa","vtt","sub","idx","mpl")
 
-               // Audios
-               "mp3",
-               "aac",
-               "wav",
-               "flac",
-               "ogg",
-               "opus",
-               "m4a",
-               "alac",
-               "wma",
-               "ac3",
-               "eac3",
-               "dts",
-               "dtsma",
-               "truehd",
-               "amr",
-               "ra",
-               "ape",
+extensions(sxiv,"bmp","jpg","jpeg","png","gif","tiff","tif","xpm","pcx","tga","pbm","pgm","ppm","webp","ico","heif","heic","psd","hdr","exr")
+    // clang-format on
 
-               // Subtitles
-               "srt",
-               "ass",
-               "ssa",
-               "vtt",
-               "sub",
-               "idx",
-               "mpl")
-
-        extensions(sxiv,
-                   "bmp",
-                   "jpg",
-                   "jpeg",
-                   "png",
-                   "gif",
-                   "tiff",
-                   "tif",
-                   "xpm",
-                   "pcx",
-                   "tga",
-                   "pbm",
-                   "pgm",
-                   "ppm",
-                   "webp",
-                   "ico",
-                   "heif",
-                   "heic",
-                   "psd",
-                   "hdr",
-                   "exr")
-
-            static void send_alacritty_config(const_str font_size) {
+    static void send_alacritty_config(const_str font_size) {
         forked_exldn("alacritty", "msg", "config", font_size);
 }
 
@@ -165,16 +83,6 @@ _Noreturn __nonnull() static void dezoom_and_run_alacritty(const_str filename,
         exit(0);
 }
 
-__wur __nonnull() static bool is_file_binary(const_str path) {
-        FILE *f = fopen_checked(path, "rb");
-        int c;
-        while ((c = fgetc(f)) != EOF) {
-                if (c == '\n' || c == '\t' || c == '\r') continue;
-                if (c == 127 || c < 32) return true;
-        }
-        return false;
-}
-
 _Noreturn __nonnull() static void display_todo_file(const_str filename) {
         FILE *fd = fopen_checked(filename, "r");
         char line[1024];
@@ -191,11 +99,12 @@ _Noreturn __nonnull() static void display_todo_file(const_str filename) {
 }
 
 _Noreturn __nonnull() void exec_open_file(const_str filename,
-                                          const_str extension,
-                                          const bool is_open,
-                                          const bool is_kitty,
-                                          const bool is_verbose) {
-        if (is_kitty) {
+                                          const display_type ty) {
+
+        const_str extension = get_filename_extension(filename);
+        terminal_app terminal = what_terminal();
+
+        if (terminal == TERMINAL_KITTY) {
                 if (timg_supported(extension)) exldn("timg", filename);
 
                 if (!strcmp(extension, "pdf")) exldn("tdf", filename);
@@ -204,8 +113,12 @@ _Noreturn __nonnull() void exec_open_file(const_str filename,
                         exldn("mpv", "--vo=kitty", filename);
         }
 
-        if (is_open) {
-                if (!strcmp(extension, "pdf")) exldn("brave", filename);
+        if (ty == DISPLAY_OPEN) {
+                if (!strcmp(extension, "pdf")) {
+                        if (is_file("/usr/bin/zathura"))
+                                exldn("zathura", filename);
+                        exldn("brave", filename);
+                };
 
                 if (mpv_supported(extension)) exldn("mpv", filename);
 
@@ -216,12 +129,13 @@ _Noreturn __nonnull() void exec_open_file(const_str filename,
                 exldn("nvim", filename);
         }
 
-        if (mpv_supported(extension)) dezoom_and_run_alacritty(filename, true);
+        if (mpv_supported(extension) && terminal == TERMINAL_ALACRITTY)
+                dezoom_and_run_alacritty(filename, true);
 
         if (timg_supported(extension))
                 dezoom_and_run_alacritty(filename, false);
 
-        if (is_verbose) {
+        if (ty == DISPLAY_VERBOSE) {
                 if (!strcmp(extension, "todo")) { display_todo_file(filename); }
 
                 if (is_file_binary(filename)) { exldn("file", filename); }

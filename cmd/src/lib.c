@@ -111,19 +111,6 @@ __wur __nonnull() const_var_str getenv_checked(const_str var) {
         return value;
 }
 
-__nonnull() _Noreturn void exl_notif(const_str message) {
-        exldn("notify-send",
-              "-u",
-              "low",
-              "-t",
-              "500",
-              "-h",
-              "string:x-dunst-stack-tag:stacked",
-              "-a",
-              "center",
-              message);
-}
-
 __wur char *get_battery_level(void) {
         const_str device = getenv("DEVICE");
         if (!device) return NULL;
@@ -161,11 +148,12 @@ __wur battery_status get_battery_status(void) {
                         free(content);
                         return BATTERY_STATUS_DISCHARGING;
                 }
-                if (!strcmp(content, "Full")) {
+                if (!strcmp(content, "Full")
+                    || !strcmp(content, "Not charging")) {
                         free(content);
                         return BATTERY_STATUS_FULL;
                 }
-                upanic("Invalid battery status :%s:", content);
+                upanic("Invalid acer battery status :%s:", content);
         }
         if (!strcmp(device, "mac")) {
                 read_simple_exl1(8, content, "pwmstatus");
@@ -178,22 +166,9 @@ __wur battery_status get_battery_status(void) {
                         free(content);
                         return BATTERY_STATUS_DISCHARGING;
                 };
-                upanic("Invalid battery status :%s:", content);
+                upanic("Invalid mac battery status :%s:", content);
         }
         return BATTERY_STATUS_UNKNOWN;
-}
-
-_Noreturn void exl_err_notif(void) {
-        exldn("notify-send", "-u", "critical", "error");
-}
-
-void clear(void) {
-        printf("\033c");
-        fflush(stdout);
-}
-
-_Noreturn __nonnull() void exl_err_notif_msg(const_str err_msg) {
-        exldn("notify-send", "-u", "critical", err_msg);
 }
 
 __wur __attribute_const__ size_t max(const size_t a, const size_t b) {

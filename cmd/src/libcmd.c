@@ -96,7 +96,7 @@ __nonnull() __wur static bool take_two(Vec *const cmd,
                                        const char second) {
         for (int i = 0; opts[i]; ++i) {
                 if (strncmp(opts[i], "--", 2) || opts[i][2] != first) continue;
-                char *last = strrchr(opts[i] + 2, '-');
+                const char *last = strrchr(opts[i] + 2, '-');
                 if (!last || !*++last || *last != second) continue;
 
                 push(cmd, opts[i]);

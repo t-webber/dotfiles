@@ -1,19 +1,37 @@
 #!/bin/sh
 
-[ -z "$FILES" ] && export FILES="$HOME/.files"
-[ -f "$FILES/.secret/vars" ] && . "$FILES/.secret/vars" >/dev/null
-[ -z "$WASTE" ] && export WASTE="$FILES/.waste"
-[ -z "$EDITOR" ] && export EDITOR="$(/usr/bin/which nvim)"
-[ -z "$XCOPY" ] && export XCOPY="$(/usr/bin/which xclip) -selection c"
-[ -z "$XPASTE" ] && export XPASTE="$XCOPY -o"
+_wi() {
+        /usr/bin/which "$1"
+}
 
-export DATA="$FILES/.data"
-[ "$DEVICE" = "acer" ] && export XAUTHORITY="$DATA/Xauthority"
+if [ "$(uname)" = "Darwin" ]; then
+
+        export CC=/opt/homebrew/bin/gcc-15
+        export XCOPY=/usr/bin/pbcopy
+        export XPASTE=/usr/bin/pbpaste
+        export DEVICE=mac
+
+else
+
+        export CC=/bin/gcc
+        export XCOPY='/bin/xclip -selection c'
+        export XPASTE="$XCOPY -o"
+
+        if [ -f '/sys/class/power_supply/BAT1/capacity' ]; then
+                export DEVICE=acer
+        else
+                export DEVICE=??
+        fi
+
+fi
 
 #################################
 ### custom location variables ###
 #################################
 
+[ -z "$FILES" ] && export FILES="$HOME/.files"
+export DATA="$FILES/.data"
+export WASTE="$FILES/.waste"
 export DOT="$FILES/dotfiles"
 export CMD="$DOT/cmd"
 export SH="$CMD/sh"
@@ -48,6 +66,7 @@ export NPM_CONFIG_CACHE="$OCFG/npm/cache"
 export INPUTRC="$OCFG/inputrc"
 export ANDROID_AVD_HOME=$OCFG/android-avd
 
+[ "$DEVICE" = "acer" ] && export XAUTHORITY="$DATA/Xauthority"
 export IPYTHONDIR="$DATA/ipython"
 export SAGE_ROOT="$DATA/sage_root"
 export WGETRC="$DATA/wget-hsts"
@@ -73,6 +92,9 @@ export ANDROID_HOME=/opt/android-sdk/
 ########################
 ### global variables ###
 ########################
+
+[ -f "$SECRET/vars" ] && . "$SECRET/vars" >/dev/null
+export EDITOR="$(_wi nvim)"
 
 if [ -f "/etc/arch-release" ]; then
         export DEBUGINFOD_URLS='https://debuginfod.archlinux.org/'
@@ -235,3 +257,32 @@ precmd() {
         pwd >"$LAST_LOCATION_FILE"
         fc -AI
 }
+
+###############
+### aliases ###
+###############
+
+if [ "$sh" = "bash" ]; then
+        . "$CMD/sh/aliases"
+fi
+
+########################################
+### open alacritty with right config ###
+########################################
+
+# on macos i can't source the bash_profile before X
+# so I need to respawn the terminal after running it
+
+if [ "$(uname)" = "Darwin" ]; then
+        case $- in
+        *i*)
+                if [ -z "$ALACRITTY_LOG" ]; then
+                        exec alacritty &
+                        disown
+                        exit
+                else
+                        alacritty msg config "font.size = 15"
+                fi
+                ;;
+        esac
+fi

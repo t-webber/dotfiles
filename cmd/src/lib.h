@@ -97,17 +97,6 @@ __attribute_pure__ __wur __nonnull() size_t utf8_strlen(const char *s);
 __nonnull() __wur const_var_str getenv_checked(const_str var);
 __nonnull() void setenv_checked(const_str var, const_str val);
 
-_Noreturn __nonnull() void exl_notif(const_str message);
-
-#define exl_corenotif(...)                                                     \
-        {                                                                      \
-                char message[128];                                             \
-                sprintf(message, __VA_ARGS__);                                 \
-                exl_notif(message);                                            \
-        }
-
-void exl_err_notif(void);
-
 typedef enum {
         BATTERY_STATUS_CHARGING,
         BATTERY_STATUS_DISCHARGING,
@@ -118,21 +107,13 @@ typedef enum {
 __wur var_str get_battery_level(void);
 __wur battery_status get_battery_status(void);
 
-void clear(void);
-void exl_err_notif_msg(const_str msg);
-
 __attribute_const__ __wur size_t max(const size_t a, const size_t b);
-
-#define RED "\033[31m"
-#define GREEN "\033[32m"
-#define YELLOW "\033[33m"
-#define BLUE "\033[34m"
-#define MAGENTA "\033[35m"
-#define CYAN "\033[36m"
-#define RESET "\033[0m"
-#define C(colour, str) colour str RESET
 
 #define array_len(x) sizeof(x) / sizeof(x[0])
 
 __nonnull() void print_inline_array(const char *const *const array);
 void print_inline_variadic(const_str first, ...);
+
+__wur __nonnull() bool is_file_binary(const_str path);
+
+#include "libterm.h" // IWYU pragma: keep

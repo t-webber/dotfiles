@@ -1,9 +1,0 @@
-#!/bin/sh
-
-path=$(realpath "${(%):-%N}")
-path=$(dirname $path)
-. "$path/shellrc"
-
-        . "$CMD/sh/aliases"
-
-        exit

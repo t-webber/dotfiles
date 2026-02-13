@@ -1,7 +1,5 @@
 #include "lib.h"
-
-
-typedef enum { ACER, MAC, OTHER } HW;
+#include "libexec.h"
 
 static const_var_str get_emoji(const bool emoji) {
         switch (get_battery_status()) {

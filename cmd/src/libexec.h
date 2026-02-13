@@ -24,11 +24,7 @@ __wur bool is_dbg(void);
 #define exldn(cmd, ...) exl(cmd, cmd, __VA_ARGS__, NULL);
 
 #define forked_exldn(cmd, ...)                                                 \
-        {                                                                      \
-                pid_t pid = fork_checked();                                    \
-                if (pid == 0) exldn(cmd, __VA_ARGS__);                         \
-                fork_wait(pid);                                                \
-        }
+        if (fork_and_wait()) exldn(cmd, __VA_ARGS__);
 
 #define __read_simple_exl_maker(__exl_func, buf_size, buffer, ...)             \
         int fildes[2];                                                         \
@@ -65,5 +61,19 @@ __wur bool is_dbg(void);
 #define read_simple_exl1(buf_size, buffer, ...)                                \
         __read_simple_exl_maker(exl1, buf_size, buffer, __VA_ARGS__)
 
-_Noreturn void exvd(Args args);
-void forked_exvd(Args args);
+_Noreturn __nonnull() void exvd(Args args);
+__nonnull() void forked_exvd(Args args);
+
+_Noreturn __nonnull() void exl_notif(const_str message);
+_Noreturn void exl_err_notif(void);
+
+#define exl_corenotif(...)                                                     \
+        {                                                                      \
+                char message[128];                                             \
+                sprintf(message, __VA_ARGS__);                                 \
+                exl_notif(message);                                            \
+        }
+
+_Noreturn __nonnull() void exl_err_notif_msg(const_str msg);
+
+__wur bool fork_and_wait(void);

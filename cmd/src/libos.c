@@ -57,3 +57,13 @@ __nonnull() __wur bool is_file(const_str file_name) {
 __nonnull() void touch_checked(const_str filename) {
         fclose(fopen_checked(filename, "a"));
 }
+
+__wur __nonnull() bool is_file_binary(const_str path) {
+        FILE *f = fopen_checked(path, "rb");
+        int c;
+        while ((c = fgetc(f)) != EOF) {
+                if (c == '\n' || c == '\t' || c == '\r') continue;
+                if (c == 127 || c < 32) return true;
+        }
+        return false;
+}

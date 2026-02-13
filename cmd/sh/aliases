@@ -502,21 +502,30 @@ _flush
         _ctl_def p podman
         _ctl_def au 'pipewire.socket pipewire-pulse pipewire-pulse.socket wireplumber' u
         _ctl_def aa 'pipewire.socket pipewire-pulse pipewire-pulse.socket pipewire-media-session' u
+
+        _sep
 }
 
-_sep
-
 _ual tb reboot
+_ual th hibernate
+_ual tu suspend
 _ual tw shutdown
-_al tu 'ty suspend'
+
+_al tb "$_s $(_wi reboot)"
+
+if [ -f "/etc/artix-release" ]; then
+        _al th "$_s ZZZ"
+        _al tu "$_s zzz"
+else
+        _al th 'ty hibernate'
+        _al tu 'ty suspend'
+fi
 
 if [ "$(uname)" = 'Linux' ]; then
         _al tw "$_s $(_wi shutdown) -P now -h"
 else
         _al tw "$_s $(_wi shutdown) -h now"
 fi
-
-_dal tb "$_s $(_wi reboot)" force
 
 _print systemd
 

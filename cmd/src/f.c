@@ -12,4 +12,6 @@ make_single("f",
             "=F--fixed-strings",
             "=d--max-depth",
             "--extension",
-            "=L--follow", )
+            "=L--follow",
+            "=..",
+            "-E", )

@@ -1,5 +1,6 @@
 #include "lib.h"
 #include "libexec.h"
+#include "libos.h"
 #include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -67,10 +68,6 @@ static void pwd(str path) {
         free(pwd);
 }
 
-static bool can_use_dunst(void) {
-        return getenv("NO_DUNST") != NULL;
-}
-
 #define ghprefix(str, short)                                                   \
         {                                                                      \
                 size_t prefix = sizeof(str) - 1;                               \
@@ -102,44 +99,37 @@ static char *get_git_branch(void) {
         return branch;
 }
 
-static void low_battery(void) {
-        pid_t pid_outer = fork_checked();
+#define COL(x) "\001\x1b[" #x "m\002"
 
-        if (pid_outer != 0) fork_wait(pid_outer);
+static void battery_warnings(const battery_status status, int battery) {
+        const bool can_use_dunst = getenv("NO_DUNST") == NULL;
 
-        if (can_use_dunst()) {
-                pid_t pid_inner = fork_checked();
+        if (status == BATTERY_STATUS_FULL && can_use_dunst)
+                if (fork_and_wait()) exl_err_notif_msg("Battery full");
 
-                if (pid_inner == 0) { exl_err_notif_msg("Low battery (ps1)"); }
+        if (status == BATTERY_STATUS_DISCHARGING && battery < 20
+            && can_use_dunst)
+                if (fork_and_wait()) exl_err_notif_msg("Low battery (ps1)");
 
-                fork_wait(pid_inner);
-        }
-
-        const battery_status status = get_battery_status();
-        const int level = atoi(get_battery_level());
-
-        if (status == BATTERY_STATUS_DISCHARGING && level < 10) {
-                exldn("sudo", "systemctl", "suspend");
+        if (status == BATTERY_STATUS_DISCHARGING && battery < 10) {
+                if (is_file("/etc/artix-release")) {
+                        if (fork_and_wait()) exldn("sudo", "zzz");
+                } else {
+                        if (fork_and_wait())
+                                exldn("sudo", "systemctl", "suspend");
+                }
         }
 }
-
-#define COL(x) "\001\x1b[" #x "m\002"
 
 int main(void) {
         store_usage("ps1", "", false);
 
         const char *device_name = getenv_checked("DEVICE");
-        const bool is_acer = !strcmp(device_name, "acer");
 
         char *const battery = get_battery_level();
         const battery_status status = get_battery_status();
 
-        if (battery && !strcmp(battery, "100") && can_use_dunst())
-                exl_err_notif_msg("Battery full");
-
-        if (status == BATTERY_STATUS_DISCHARGING && is_acer && battery
-            && atoi(battery) < 10)
-                low_battery();
+        if (battery) battery_warnings(status, atoi(battery));
 
         const_str battery_colour = status == BATTERY_STATUS_DISCHARGING
                                        ? COL(31)
