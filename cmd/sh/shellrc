@@ -1,9 +1,5 @@
 #!/bin/sh
 
-_wi() {
-        /usr/bin/which "$1"
-}
-
 if [ "$(uname)" = "Darwin" ]; then
 
         export CC=/opt/homebrew/bin/gcc-15
@@ -75,6 +71,7 @@ export GNUPGHOME="$DATA/gnupg"
 export NODE_REPL_HISTORY="$DATA/repl/node_repl_history"
 export TS_NODE_HISTORY="$DATA/repl/ts_node_repl_history"
 export PYTHON_HISTORY="$DATA/repl/python_history"
+/bin/mkdir -p $DATA/repl
 export BUN_INSTALL="$DATA/bun"
 export CARGO_HOME="$DATA/cargo"
 export NVM_DIR="$DATA/nvm"
@@ -94,7 +91,7 @@ export ANDROID_HOME=/opt/android-sdk/
 ########################
 
 [ -f "$SECRET/vars" ] && . "$SECRET/vars" >/dev/null
-export EDITOR="$(_wi nvim)"
+export EDITOR="$(/usr/bin/which nvim)"
 
 if [ -f "/etc/arch-release" ]; then
         export DEBUGINFOD_URLS='https://debuginfod.archlinux.org/'
