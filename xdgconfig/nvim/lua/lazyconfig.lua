@@ -445,11 +445,6 @@ local spec = {
 	--- Slop ----
 	-------------
 	{
-		'github/copilot.vim',
-		event = 'VeryLazy',
-		config = function() vim.cmd('Copilot disable') end,
-	},
-	{
 		'dccsillag/magma-nvim',
 		build = ':UpdateRemotePlugins',
 		lazy = false,

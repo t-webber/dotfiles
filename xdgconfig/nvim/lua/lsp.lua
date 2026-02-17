@@ -8,7 +8,7 @@ local lsps = {
 	py = {
 		cmd = { 'pyright-langserver', '--stdio' },
 		filetypes = { 'python' },
-		root_markers = { 'pyproject.toml', '.git', 'venv' },
+		root_markers = { 'pyproject.toml', '.venv', 'venv' },
 		settings = {
 			python = {
 				pythonPath = 'python3',
@@ -74,7 +74,7 @@ local lsps = {
 	},
 	c = {
 		cmd = { 'clangd' },
-		filetypes = { 'c', 'cpp', 'h', 'hpp' },
+		filetypes = { 'c', 'cpp' },
 	},
 	sh = {
 		cmd = { 'bash-language-server' },
@@ -93,6 +93,10 @@ local lsps = {
 
 for name, config in pairs(lsps) do
 	vim.lsp.enable(name)
+	if config['root_markers'] == nil then config['root_markers'] = {} end
+	for _, markers in ipairs({ '.git', '.' }) do
+		table.insert(config['root_markers'], marker)
+	end
 	vim.lsp.config(name, config)
 end
 
