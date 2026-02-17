@@ -90,7 +90,8 @@ static void edit_volume(Args argv) {
 
         const bool up = !strcmp(argv[1], "up");
 
-        if (!up && strcmp(argv[1], "down")) exl_err_notif();
+        if (!up && strcmp(argv[1], "down"))
+                exl_err_notif("Invalid command: expected up or down");
 
         char *const diff = unwrap_or(argv[2], up);
         forked_pactl("set-sink-volume", diff);

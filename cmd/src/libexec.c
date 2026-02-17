@@ -1,5 +1,6 @@
 #include "libexec.h"
 #include "lib.h"
+#include "libos.h"
 
 #include <sys/wait.h>
 
@@ -46,23 +47,34 @@ __nonnull() void forked_exvd(Args args) {
         if (fork_and_wait()) exvd(args);
 }
 
+_Noreturn __nonnull((1)) static void macos_notif(const_str message,
+                                                 const char *title) {
+        if (title == NULL) title = "C error";
+        char osascript[512];
+        sprintf(osascript,
+                "display notification \"%s\" with title \"%s\"",
+                message,
+                title);
+        exldn("osascript", "-e", osascript);
+}
+
 __nonnull() _Noreturn void exl_notif(const_str message) {
-        exldn("notify-send",
-              "-u",
-              "low",
-              "-t",
-              "500",
-              "-h",
-              "string:x-dunst-stack-tag:stacked",
-              "-a",
-              "center",
-              message);
+        if (is_file("/bin/notify-send"))
+                exldn("notify-send",
+                      "-u",
+                      "low",
+                      "-t",
+                      "500",
+                      "-h",
+                      "string:x-dunst-stack-tag:stacked",
+                      "-a",
+                      "center",
+                      message);
+        macos_notif(message, NULL);
 }
 
-_Noreturn void exl_err_notif(void) {
-        exldn("notify-send", "-u", "critical", "error");
-}
-
-_Noreturn __nonnull() void exl_err_notif_msg(const_str err_msg) {
-        exldn("notify-send", "-u", "critical", err_msg);
+_Noreturn __nonnull() void exl_err_notif(const_str err_msg) {
+        if (is_file("/bin/notify-send"))
+                exldn("notify-send", "-u", "critical", err_msg);
+        macos_notif(err_msg, NULL);
 }

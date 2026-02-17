@@ -65,7 +65,6 @@ _Noreturn __nonnull() void exvd(Args args);
 __nonnull() void forked_exvd(Args args);
 
 _Noreturn __nonnull() void exl_notif(const_str message);
-_Noreturn void exl_err_notif(void);
 
 #define exl_corenotif(...)                                                     \
         {                                                                      \
@@ -74,6 +73,6 @@ _Noreturn void exl_err_notif(void);
                 exl_notif(message);                                            \
         }
 
-_Noreturn __nonnull() void exl_err_notif_msg(const_str msg);
+_Noreturn __nonnull() void exl_err_notif(const_str msg);
 
 __wur bool fork_and_wait(void);
