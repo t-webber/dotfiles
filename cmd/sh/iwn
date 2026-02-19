@@ -1,11 +1,8 @@
 #!/bin/sh
 
-set -eo pipefail
-
-[ -z "$1" ] && {
-        l "Missing arg"
-        exit 6
-}
-
-i wa "../$1" "$1"
-p "../$1"
+if [ -z "$1" ]; then
+        l "%1Missing arg"
+else
+        i wa "../$1" "$1"
+        p "../$1"
+fi

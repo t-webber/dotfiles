@@ -10,4 +10,7 @@ make_single("rl",
             "-X",
             "-H",
             "GET",
-            "POST", )
+            "POST",
+            "-f",
+            "-s",
+            "-S", )

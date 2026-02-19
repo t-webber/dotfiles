@@ -252,6 +252,7 @@ _al bur -p "$b" "upgrade && $b update -g"
 _dal brm -p "$b" remove g
 _al binit -p "$b" init
 _al bc "rn *lock* && rn .next && rn node_modules && $b i && $b run build"
+_al bn -p "$b" link
 
 _sep
 
