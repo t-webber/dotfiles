@@ -14,3 +14,4 @@ if [ -z "$TMUX" ]; then
                 sudo loadkeys fr-latin1 &>>/tmp/log
         fi
 fi
+. "/home/b/.files/.data/cargo/env"
