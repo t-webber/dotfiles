@@ -113,7 +113,7 @@ static void battery_warnings(const battery_status status, int battery) {
 
         if (status == BATTERY_STATUS_DISCHARGING && battery < 10) {
                 if (is_file("/etc/artix-release")) {
-                        if (fork_and_wait()) exldn("sudo", "zzz");
+                        if (fork_and_wait()) exldn("loginctl", "suspend");
                 } else {
                         if (fork_and_wait())
                                 exldn("sudo", "systemctl", "suspend");
@@ -121,21 +121,28 @@ static void battery_warnings(const battery_status status, int battery) {
         }
 }
 
+static char get_battery(const char **const colour) {
+        const battery_status status = get_battery_status();
+
+        *colour = status == BATTERY_STATUS_FULL          ? COL(35)
+                  : status == BATTERY_STATUS_DISCHARGING ? COL(31)
+                  : status == BATTERY_STATUS_CHARGING    ? COL(32)
+                                                         : COL(33);
+
+        const char *battery = get_battery_level();
+        if (battery == NULL) battery = "??";
+
+        if (battery) battery_warnings(status, atoi(battery));
+        return strlen(battery) != 2 ? '0' : battery[0];
+}
+
 int main(void) {
         store_usage("ps1", "", false);
 
+        const char *bat_col;
+        const char bat = get_battery(&bat_col);
+
         const char *device_name = getenv_checked("DEVICE");
-
-        char *const battery = get_battery_level();
-        const battery_status status = get_battery_status();
-
-        if (battery) battery_warnings(status, atoi(battery));
-
-        const_str battery_colour = status == BATTERY_STATUS_DISCHARGING
-                                       ? COL(31)
-                                   : status == BATTERY_STATUS_CHARGING ? COL(32)
-                                   : status == BATTERY_STATUS_FULL     ? COL(35)
-                                                                       : "";
 
         if (!strcmp(device_name, "acer") || !strcmp(device_name, "mac"))
                 device_name = "";
@@ -148,19 +155,16 @@ int main(void) {
 
         char *branch = get_git_branch();
 
-        if (battery && battery[0] != '\0') battery[strlen(battery) - 1] = '\0';
-
-        printf(COL(35) "%s%s%s" COL(33) "%x%d" COL(36) "%s" COL(32) "%s" COL(0),
+        printf(COL(35) "%s%s%c" COL(33) "%x%d" COL(36) "%s" COL(32) "%s" COL(0),
                device_name,
-               battery_colour,
-               battery == NULL ? "" : battery + 0,
+               bat_col,
+               bat,
                (unsigned)tm.tm_hour % 12,
                tm.tm_min,
                path,
                branch);
 
         fflush(stdout);
-
         free(branch);
         return 0;
 }

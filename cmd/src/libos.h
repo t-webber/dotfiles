@@ -1,6 +1,7 @@
 #pragma once
 
 #include "lib.h"
+#include <dirent.h>
 
 bool __wur __nonnull() is_dir(const_str path);
 __nonnull() void chdir_checked(const_str path);
