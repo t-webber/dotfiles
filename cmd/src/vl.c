@@ -107,5 +107,6 @@ int main(const int argc, Args argv) {
         }
 
         edit_volume(argv);
+        slp(0, 1e6);
         exl_display();
 }

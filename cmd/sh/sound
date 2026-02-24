@@ -1,8 +1,8 @@
 #!/bin/sh
 
-l="$LOGS/sound-"
-
 set -eo pipefail
+
+l="$LOGS/sound-"
 
 if [ "$1" = "logs" ]; then
         bat $l*
@@ -26,10 +26,13 @@ fi
 if [ -n "$1" ]; then
         echo "Usage: $0 [logs|fg|--help]"
         exit 1
-
-        pipewire >"$l-1" 2>"$l-2" &
-        pipewire-pulse >"$l-pulse-1" 2>"$l-pulse-2" &
-        wireplumber >"$l-wire-1" 2>"$l-wire-2" &
-        disown
-
 fi
+
+for f in $l*; do
+        mv $f $f.old
+done
+
+pipewire >"$l-1" 2>"$l-2" &
+pipewire-pulse >"$l-pulse-1" 2>"$l-pulse-2" &
+wireplumber >"$l-wire-1" 2>"$l-wire-2" &
+disown

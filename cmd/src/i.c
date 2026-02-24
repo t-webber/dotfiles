@@ -63,7 +63,7 @@ static const Cmd COMMANDS[] = {
         "=w--allow-empty-message",
         "--reset-author", ),
 
-    cmd("d", "diff", "--shortstat", "--cached", "=.-- .", ),
+    cmd("d", "diff", "--shortstat", "--cached", ),
 
     cmd("e", "fetch", "--all", "--unshallow", "--prune", "--tags", ),
 

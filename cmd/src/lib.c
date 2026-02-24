@@ -10,6 +10,7 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 
+#include <time.h>
 __nonnull() void print_inline_array(const char *const *const array) {
         for (const char *const *arg = array; *arg; ++arg) {
                 printf("%s ", *arg);
@@ -173,4 +174,11 @@ __wur battery_status get_battery_status(void) {
 
 __wur __attribute_const__ size_t max(const size_t a, const size_t b) {
         return a > b ? a : b;
+}
+
+void slp(const long secs, const long nanos) {
+        struct timespec ts;
+        ts.tv_sec = secs;
+        ts.tv_nsec = nanos;
+        nanosleep(&ts, NULL);
 }

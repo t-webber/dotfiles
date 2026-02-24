@@ -172,9 +172,15 @@ __nonnull() static void handle_char(Vec *const cmd,
                 return;
         }
 
-        if (ch == '=') setenv_checked("PAGER", "");
+        if (ch == '=') {
+                setenv_checked("PAGER", "");
+                return;
+        }
 
-        if (ch == 'R') setenv_checked("RUST_BACKTRACE", "1");
+        if (ch == 'R') {
+                setenv_checked("RUST_BACKTRACE", "1");
+                return;
+        }
 
         if (ch == '/' || ch == ':') {
                 if (state->sep != '\0') upanic("Found 2 consecutive %c", ch);

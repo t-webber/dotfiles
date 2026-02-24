@@ -1088,6 +1088,8 @@ _al dbg 'export DEBUG=1'
 _al nodbg 'unset DEBUG'
 _al y '. y'
 _al macosallowrun 'xattr -d com.apple.quarantine'
+_al la 'mv $HOME/.bashrc $HOME/.oldrc'
+_al lo 'mv $HOME/.oldrc $HOME/.bashrc'
 
 _print other
 
