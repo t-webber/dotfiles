@@ -1,5 +1,3 @@
 bin/
 *.o
 *.a
-ash
-armrc
