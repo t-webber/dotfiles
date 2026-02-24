@@ -96,7 +96,8 @@ _Noreturn static void serve(Args args) {
 static const_str USAGE = U
         NL PROG("y")
         NL PROG("y") S OPT("u,i") S PLACE("file.py") OPTS 
-        NL PROG("y") S OPT("n,y,i,p,a,v") OPTS
+        NL PROG("y") S OPT("n,y,i,m,r,a,v") OPTS
+        NL "\tvenv init sync python-mgr python-run add serve"
         NL PROG("y") S PLACE("module") OPTS;
 // clang-format on
 
@@ -114,8 +115,14 @@ int main(const int argc, Args argv) {
         if (argc > 1 && !strcmp(argv[1], "n")) uv("venv", argv + 2);
         if (argc > 1 && !strcmp(argv[1], "i")) uv("init", argv + 2);
         if (argc > 1 && !strcmp(argv[1], "y")) uv("sync", argv + 2);
-        if (argc > 1 && !strcmp(argv[1], "p")) uv("python", argv + 2);
+        if (argc > 1 && !strcmp(argv[1], "m")) uv("python", argv + 2);
         if (argc > 1 && !strcmp(argv[1], "v")) serve(argv + 2);
+        if (argc > 1 && !strcmp(argv[1], "r")) {
+                Vec cmd = new_vec();
+                push(&cmd, "python");
+                for (int i = 2; i < argc; ++i) { push(&cmd, argv[i]); }
+                exvd(cmd.data);
+        }
 
         if (argc > 2 && !strcmp(argv[1], "a")) uv("add", argv + 2);
 
