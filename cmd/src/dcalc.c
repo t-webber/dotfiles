@@ -1,6 +1,11 @@
 #include "lib.h"
 #include <ctype.h> // IWYU pragma: keep
+#include <stdlib.h>
 #include <time.h>
+
+// dcalc 14h30m - 6h
+// dcalc 10h30m - 11h
+// dcalc 23/2/ - 11h
 
 typedef struct {
         int year;
@@ -10,6 +15,8 @@ typedef struct {
         int min;
         int sec;
 } DT;
+
+const DT MASK_ALL = {1, 1, 1, 1, 1, 1};
 
 __wur static DT new_dt(void) {
         return (DT){0, 0, 0, 0, 0, 0};
@@ -98,20 +105,42 @@ __wur __nonnull((2)) static DT parse_dt(const_str input, DT *mask) {
         return dt;
 }
 
-__nonnull() static void print_dt(const DT *const dt, const DT *const mask) {
+__nonnull() static void print_dt(const DT *const dt,
+                                 const DT *const mask,
+                                 char *buf) {
+#define s(...)                                                                 \
+        {                                                                      \
+                int n = sprintf(buf, __VA_ARGS__);                             \
+                buf += n;                                                      \
+        }
+
         bool d = mask->year || mask->month || mask->day;
-        if (d) printf("%02d/%02d", dt->day, dt->month);
-        if (mask->year) printf("/%d", dt->year);
+        if (mask->day) {
+                if (mask->year || mask->month) {
+                        s("%02d", dt->day);
+                } else {
+                        s("%dd", dt->day);
+                }
+        }
+        if (mask->month || (mask->year && mask->day)) s("/%02d", dt->month);
+        if (mask->year) s("/%d", dt->year);
 
         bool t = mask->hour || mask->min || mask->sec;
-        if (d && t) printf(" ");
+        if (d && t) s(" ");
 
         if (t) {
-                printf("%dh", dt->hour);
-                if (mask->min || dt->min || mask->sec) printf("%02dm", dt->min);
-                if (mask->sec) printf("%02ds", dt->sec);
+                s("%dh", dt->hour);
+                if (mask->min || dt->min || mask->sec) s("%02dm", dt->min);
+                if (mask->sec) s("%02ds", dt->sec);
         }
-        printf("\n");
+}
+
+__nonnull() static void print_dbg(const DT *const dt) {
+        if (getenv("DEBUG")) {
+                char m[64];
+                print_dt(dt, &MASK_ALL, m);
+                puts(m);
+        }
 }
 
 #define carry(this, higher, modulo)                                            \
@@ -154,7 +183,7 @@ static void fix_days(DT *const dt, DT *const mask) {
         } while (1);
 }
 
-_Noreturn __nonnull((2)) static void plus(const_str arg1, const_str arg2) {
+__nonnull((2)) static void plus(const_str arg1, const_str arg2, char *buf) {
         DT mask = new_dt();
         const DT dt1 = parse_dt(arg1, &mask);
         const DT dt2 = parse_dt(arg2, &mask);
@@ -171,10 +200,11 @@ _Noreturn __nonnull((2)) static void plus(const_str arg1, const_str arg2) {
         carry(hour, day, 24);
         carry(month, year, 12);
 
-        fix_days(&sum, &mask);
+        if (mask.year != 0 || mask.month != 0) { fix_days(&sum, &mask); }
 
-        print_dt(&sum, &mask);
-        exit(0);
+        print_dbg(&mask);
+
+        print_dt(&sum, &mask, buf);
 }
 
 #define carrysub(this, higher, modulo)                                         \
@@ -184,7 +214,7 @@ _Noreturn __nonnull((2)) static void plus(const_str arg1, const_str arg2) {
                 sum.this += modulo;                                            \
         }
 
-_Noreturn __nonnull((2)) static void minus(const_str arg1, const_str arg2) {
+__nonnull((2)) static void minus(const_str arg1, const_str arg2, char *buf) {
         DT mask = new_dt();
         const DT dt1 = parse_dt(arg1, &mask);
         const DT dt2 = parse_dt(arg2, &mask);
@@ -221,19 +251,16 @@ _Noreturn __nonnull((2)) static void minus(const_str arg1, const_str arg2) {
 
         fix_days(&sum, &mask);
 
-        print_dt(&sum, &mask);
-        exit(0);
+        print_dt(&sum, &mask, buf);
 }
 
 #define usage upanic("Usage: %s [[<datetime>] (+|-) <datetime>]", argv[0])
 
-int main(const int argc, Args argv) {
-        store_usage(argv[0], "", false);
-
+static void process_args(const int argc, Args argv, char *buf) {
         if (argc == 1) {
                 const DT dt = now();
-                print_dt(&dt, &(DT){1, 1, 1, 1, 1, 1});
-                return 0;
+                print_dt(&dt, &MASK_ALL, buf);
+                return;
         }
 
         if (argc != 3 && argc != 4) usage;
@@ -248,9 +275,27 @@ int main(const int argc, Args argv) {
                 arg2 = argv[2];
         }
 
-        if (!strcmp(op, "+")) { plus(arg1, arg2); }
-        if (!strcmp(op, "-")) { minus(arg1, arg2); }
+        if (!strcmp(op, "+")) {
+                plus(arg1, arg2, buf);
+                return;
+        }
+        if (!strcmp(op, "-")) {
+                minus(arg1, arg2, buf);
+                return;
+        }
 
         usage;
-        return 0;
 }
+
+#ifndef TEST
+int main(const int argc, Args argv) {
+        store_usage(argv[0], "", false);
+        char buf[64];
+        process_args(argc, argv, buf);
+        puts(buf);
+}
+#else
+int main(void) {
+        printf("blob");
+}
+#endif

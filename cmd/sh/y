@@ -29,5 +29,7 @@ if [ -d ".complete" ]; then
         for f in .complete/*; do
                 printf "$f "
                 . $f
+                some=true
         done
+        [ -n "$some" ] && printf "\n"
 fi
