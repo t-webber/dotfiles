@@ -9,6 +9,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+#include <time.h>
 
 __nonnull() void print_inline_array(const char *const *const array) {
         for (const char *const *arg = array; *arg; ++arg) {
@@ -177,4 +178,11 @@ __wur __attribute_const__ size_t max(const size_t a, const size_t b) {
 
 __nonnull() void printn(const_str pattern, const size_t n) {
         for (size_t i = 0; i < n; ++i) { fputs(pattern, stdout); }
+}
+
+void slp(const long secs, const long nanos) {
+        struct timespec ts;
+        ts.tv_sec = secs;
+        ts.tv_nsec = nanos;
+        nanosleep(&ts, NULL);
 }

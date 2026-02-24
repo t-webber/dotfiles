@@ -1,7 +1,6 @@
 #include "lib.h"
 #include "libexec.h"
 
-
 static const_str EMOJI = "☀️";
 
 _Noreturn static void exl_notif_level(void) {

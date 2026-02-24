@@ -39,15 +39,15 @@ __wur static const char *get_python(void) {
                 return "python3";
 }
 
-__nonnull((1, 2)) _Noreturn static void python(const_str file,
-                                               Args argv,
-                                               const_str opts) {
+__nonnull((2)) _Noreturn static void python(const_str file,
+                                            Args argv,
+                                            const_str opts) {
         Vec cmd = new_vec();
         push(&cmd, get_python());
 
         if (opts) { parse_python_opts(&cmd, opts); }
 
-        push(&cmd, file);
+        if (file) push(&cmd, file);
         for (const char *const *arg = argv; *arg != NULL; ++arg)
                 push(&cmd, *arg);
         push(&cmd, NULL);
@@ -117,12 +117,7 @@ int main(const int argc, Args argv) {
         if (argc > 1 && !strcmp(argv[1], "y")) uv("sync", argv + 2);
         if (argc > 1 && !strcmp(argv[1], "m")) uv("python", argv + 2);
         if (argc > 1 && !strcmp(argv[1], "v")) serve(argv + 2);
-        if (argc > 1 && !strcmp(argv[1], "r")) {
-                Vec cmd = new_vec();
-                push(&cmd, "python");
-                for (int i = 2; i < argc; ++i) { push(&cmd, argv[i]); }
-                exvd(cmd.data);
-        }
+        if (argc > 1 && !strcmp(argv[1], "r")) python(NULL, argv + 2, NULL);
 
         if (argc > 2 && !strcmp(argv[1], "a")) uv("add", argv + 2);
 

@@ -100,6 +100,10 @@ zlib/%.o: zlib/%.c
 m.o: m.c
 	$(CC) $(ZFLAGS) $^ -c -o $@
 
+test: dcalc.o $(LIB_OBJS)
+	$(CC) -DTEST $(CFLAGS) $^ -o $B/t-dcalc
+	$B/t-dcalc
+
 clean:
 	rm -f *.o *.a zlib/*.o zlib/*.a
 	rm -rf $B

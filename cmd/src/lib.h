@@ -116,5 +116,6 @@ void print_inline_variadic(const_str first, ...);
 
 __wur __nonnull() bool is_file_binary(const_str path);
 __nonnull() void printn(const_str pattern, const size_t n);
+void slp(const long secs, const long nanos);
 
 #include "libterm.h" // IWYU pragma: keep

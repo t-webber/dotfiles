@@ -17,6 +17,7 @@ else if [ -d "venv" ]; then
         . venv/bin/activate
 else
         uv venv
+        . .venv/bin/activate
 fi; fi
 
 if [ ! -f "pyproject.toml" ]; then
@@ -29,5 +30,7 @@ if [ -d ".complete" ]; then
         for f in .complete/*; do
                 printf "$f "
                 . $f
+                some=true
         done
+        [ -n "$some" ] && printf "\n"
 fi

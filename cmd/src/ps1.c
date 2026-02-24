@@ -99,8 +99,6 @@ static char *get_git_branch(void) {
         return branch;
 }
 
-#define COL(x) "\001\x1b[" #x "m\002"
-
 static void battery_warnings(const battery_status status, int battery) {
         const bool can_use_dunst = getenv("NO_DUNST") == NULL;
 
@@ -121,13 +119,13 @@ static void battery_warnings(const battery_status status, int battery) {
         }
 }
 
-static char get_battery(const char **const colour) {
+__wur static char get_battery(const char **const colour) {
         const battery_status status = get_battery_status();
 
-        *colour = status == BATTERY_STATUS_FULL          ? COL(35)
-                  : status == BATTERY_STATUS_DISCHARGING ? COL(31)
-                  : status == BATTERY_STATUS_CHARGING    ? COL(32)
-                                                         : COL(33);
+        *colour = status == BATTERY_STATUS_FULL          ? MAGENTA
+                  : status == BATTERY_STATUS_DISCHARGING ? RED
+                  : status == BATTERY_STATUS_CHARGING    ? GREEN
+                                                         : YELLOW;
 
         const char *battery = get_battery_level();
         if (battery == NULL) battery = "??";
@@ -136,16 +134,19 @@ static char get_battery(const char **const colour) {
         return strlen(battery) != 2 ? '0' : battery[0];
 }
 
+__wur static const char *get_dev(void) {
+        const char *dev = getenv_checked("DEVICE");
+        if (!strcmp(dev, "acer") || !strcmp(dev, "mac")) return "";
+        return dev;
+}
+
 int main(void) {
         store_usage("ps1", "", false);
 
+        const_str dev = get_dev();
+
         const char *bat_col;
         const char bat = get_battery(&bat_col);
-
-        const char *device_name = getenv_checked("DEVICE");
-
-        if (!strcmp(device_name, "acer") || !strcmp(device_name, "mac"))
-                device_name = "";
 
         time_t t = time(NULL);
         struct tm tm = *localtime(&t);
@@ -153,10 +154,16 @@ int main(void) {
         char path[50];
         pwd(path);
 
-        char *branch = get_git_branch();
+        char *const branch = get_git_branch();
 
-        printf(COL(35) "%s%s%c" COL(33) "%x%d" COL(36) "%s" COL(32) "%s" COL(0),
-               device_name,
+        const_str venv = getenv("VIRTUAL_ENV") ? "v" : "";
+        const_str root = !strcmp(getenv_checked("USER"), "root") ? "#" : "";
+
+        printf(BLUE "%s%s" MAGENTA "%s%s%c" YELLOW "%x%d" CYAN "%s" GREEN
+                    "%s" RESET,
+               venv,
+               root,
+               dev,
                bat_col,
                bat,
                (unsigned)tm.tm_hour % 12,
