@@ -17,6 +17,7 @@ else if [ -d "venv" ]; then
         . venv/bin/activate
 else
         uv venv
+        . .venv/bin/activate
 fi; fi
 
 if [ ! -f "pyproject.toml" ]; then

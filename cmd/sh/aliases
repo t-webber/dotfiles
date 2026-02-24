@@ -1032,7 +1032,8 @@ _al gpg-list 'gpg --list-secret-keys --keyid-format=long'
 _al cols 'tput cols'
 _al rand 'openssl rand -base64 255'
 _al codex 'code --install-extension'
-_al fix 'stty sane; builtin cd; l $HOME > $LOGS/last_location.log; lc'
+_al fix 'stty sane; lc'
+_al pfix 'builtin cd; l $HOME > $LOGS/last_location.log; lc'
 _al nt numbat
 _al tf trufflehog
 _al qa qalc
