@@ -6,6 +6,7 @@ if [ "$(uname)" = "Darwin" ]; then
         export XCOPY=/usr/bin/pbcopy
         export XPASTE=/usr/bin/pbpaste
         export DEVICE=mac
+        export RAY_ACCEL_ENV_VAR_OVERRIDE_ON_ZERO=0
 
 else
 
@@ -227,7 +228,7 @@ fi
 ### reload last location ###
 ############################
 
-export LAST_LOCATION_FILE="$LOGS/last_location.log"
+export LAST_LOCATION_FILE="$LOGS/last_location"
 n "$LAST_LOCATION_FILE"
 builtin pushd "$(<$LAST_LOCATION_FILE)" >/dev/null
 

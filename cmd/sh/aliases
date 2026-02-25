@@ -921,7 +921,7 @@ _al aadup "'{print \$0, \$0}'"
 _al adup 'a aadup'
 _al aasum "'{a += \$1} END { print \$a }'"
 _al asum 'a asum'
-_al aanoh "'NR >= 1'"
+_al aanoh "'NR > 1'"
 _al anoh 'a aanoh'
 
 _print awk
@@ -1111,6 +1111,8 @@ _al y '. y'
 _al macosallowrun 'xattr -d com.apple.quarantine'
 _al la 'mv $HOME/.bashrc $HOME/.oldrc'
 _al lo 'mv $HOME/.oldrc $HOME/.bashrc'
+_al saveloc 'pwd > $LOGS/saved_location'
+_al loadloc 'p $(<$LOGS/saved_location)'
 
 _print other
 
