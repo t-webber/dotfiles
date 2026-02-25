@@ -277,6 +277,7 @@ if [ "$(uname)" = "Darwin" ]; then
         case $- in
         *i*)
                 if [ -z "$ALACRITTY_LOG" ]; then
+                        caffeinate -s &
                         exec alacritty &
                         disown
                         exit
