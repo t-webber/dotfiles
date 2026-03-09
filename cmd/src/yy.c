@@ -73,7 +73,7 @@ _Noreturn static void serve(Args args) {
         for (const char *const *arg = args; *arg != NULL; ++arg) {
                 bool isnum = true;
                 for (const char *ch = *arg; *ch; ++ch) {
-                        if (*ch > '0' && *ch < '9') {
+                        if (*ch < '0' || *ch > '9') {
                                 isnum = false;
                                 break;
                         };

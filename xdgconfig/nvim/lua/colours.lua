@@ -211,6 +211,11 @@ local colours = {
 	['@diff.minus'] = h(c.red), -- deleted text (for diff files)
 	['@diff.delta'] = h(c.yellow), -- changed text (for diff files)
 
+	DiffAdd = h(nil, '#002200'),
+	DiffDelete = h('#440000', '#220000'),
+	DiffChange = h(nil, '#332200'),
+	DiffText = h(nil, '#551144'),
+
 	--- Tags ---
 	['@tag'] = h(c.cyan), -- XML-style tag names (e.g. in XML, HTML, etc.)
 	['@tag.builtin'] = h(c.cyan), -- builtin tag names (e.g. HTML5 tags)
