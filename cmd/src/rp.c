@@ -7,6 +7,7 @@ const Cmd COMMANDS[] = {
         "list",
         "--quiet",
 
+        "add",
         "uninstall",
         "stable",
         "nightly",
@@ -16,7 +17,7 @@ const Cmd COMMANDS[] = {
         "--target",
         "=o--no-self-update",
         "--force",
-        "--allow-downgrade", ),
+        "=d--allow-downgrade", ),
     cmd("c",
         "component",
 

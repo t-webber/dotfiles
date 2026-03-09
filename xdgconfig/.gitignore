@@ -37,7 +37,8 @@
 
 !VSCodium/
 !VSCodium/User/
-!VSCodium/User/*.json
+!VSCodium/User/keybindings.json
+!VSCodium/User/settings.json
 !VSCodium/User/snippets/
 !VSCodium/User/snippets/**
 

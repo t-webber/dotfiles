@@ -285,3 +285,4 @@ if [ "$(uname)" = "Darwin" ]; then
                 ;;
         esac
 fi
+export PATH="$HOME/.npm-global/bin:$PATH"

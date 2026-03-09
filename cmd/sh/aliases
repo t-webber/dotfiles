@@ -390,6 +390,7 @@ _flush
 
 _al ififo 'export GIT_ASKPASS=read-fifo'
 _al ilon 'i lo=n'
+_al isl 'i s && i lon= 5'
 _al igh 'slp 1 && i phO HEAD:refs/for/master'
 _al iyfa 'i yfrw ../*.diff'
 _al ilg 'i l | rg -A5'
@@ -397,6 +398,22 @@ _al ica 'i canrS'
 _al ifh 'i phf'
 _al ida 'i rlH | w read c; do i so "$c"; done'
 _al isa 'i rlH | w read c; do i s "$c"; done'
+_al iap 'l "
+| Key | Meaning                                                      |
+| --- | ------------------------------------------------------------ |
+|  y  | Stage this hunk.                                             |
+|  n  | Do not stage this hunk.                                      |
+|  q  | Quit; leave the remaining hunks unstaged.                    |
+|  a  | Stage this hunk and all remaining hunks in the file.         |
+|  d  | Do not stage this hunk nor any remaining hunks in the file.  |
+|  s  | Split the current hunk into smaller hunks (if possible).     |
+|  e  | Edit the patch manually before staging it.                   |
+|  j  | Skip to the next undecided hunk, leaving this one undecided. |
+|  J  | Skip to the next hunk, regardless of earlier decisions.      |
+|  k  | Go to the previous undecided hunk.                           |
+|  K  | Go to the previous hunk.                                     |
+|  ?  | Show help.                                                   |
+"'
 
 _al irslm 'i rshm && i pl'
 _al irslmm 'i rshmm && i pl'
@@ -420,6 +437,9 @@ _sep
 
 _al hv 'h pv || h rv'
 _al hw 'h pvw || h rvw'
+_al hiinit 'nd .github/workflows && rsync -a $OCFG/github-actions/* .github/workflows/'
+_al hicmp 'diff .github/workflows/ $OCFG/github-actions/'
+_al hiup 'r .github/workflows && hiinit'
 
 _ual i git
 _ual h gh ih

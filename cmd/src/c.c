@@ -2,13 +2,12 @@
 #include "libcmd.h"
 #include "libvec.h"
 
-
 const Cmd COMMANDS[] = {
     cmd("a", "add", ),
 
     cmd("bi", "binstall", "-y", "--git", ),
     cmd("be", "bench", ),
-    cmd("b", "build", "-r", "-p", ),
+    cmd("b", "build", "-r", "-p", "--all-targets", ),
 
     cmd("ee", "tree", ),
     cmd("e", "expand", ),
@@ -43,6 +42,7 @@ const Cmd COMMANDS[] = {
 
     cmd("t",
         "test",
+        "--doc",
         "--jobs",
         "--release",
         "=n--no-fail-fast",
@@ -54,7 +54,15 @@ const Cmd COMMANDS[] = {
 
     cmd("v", "remove", ),
 
-    cmd("wa", "watch", "=x--exec", "--shell", "--clear", "--delay", ),
+    cmd("wa",
+        "watch",
+        "=x--exec",
+        "--shell",
+        "--clear",
+        "--delay",
+        "test",
+        "build",
+        "=yclippy", ),
     cmd("w", "new", "--lib", ),
 
     cmd("y",
@@ -66,6 +74,13 @@ const Cmd COMMANDS[] = {
         "=w--allow-dirty",
         "-D warnings",
         "=R-D clippy::restriction", ),
+
+    cmd("z",
+        "fuzz",
+        "run",
+        "tmin",
+        "init",
+        "=g--target=x86_64-unknown-linux-gnu", ),
 };
 
 const Manual MANUAL[] = {
