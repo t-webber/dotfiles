@@ -19,3 +19,5 @@
         tool = nvimdiff
 [difftool]
         prompt = false
+[pack]
+	threads = 4

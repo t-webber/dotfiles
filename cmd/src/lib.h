@@ -80,9 +80,6 @@ __wur __nonnull() bool is_verbose(const_str program_name,
                                   const_str normal_name,
                                   const_str verbose_name);
 
-__wur __nonnull() const
-    char *argv_one_filename(const int argc, const_str *const argv);
-
 __attribute_pure__ __wur
 __nonnull() bool has_slash(const_str arg,
                            size_t *len,

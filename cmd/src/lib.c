@@ -56,17 +56,6 @@ __nonnull() __wur bool is_verbose(const_str program_name,
                        verbose_name);
 }
 
-__nonnull() __wur const
-    char *argv_one_filename(const int argc, const_str *const argv) {
-
-        if (argc == 1)
-                return ".";
-        else if (argc == 2)
-                return argv[1];
-        else
-                upanic("Too many arguments. Usage: %s [<filename>]", argv[0]);
-}
-
 __nonnull() __wur __attribute_pure__
     bool has_slash(const_str arg, size_t *len, const char **const position) {
         const char *end = arg;

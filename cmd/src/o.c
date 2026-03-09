@@ -5,6 +5,16 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+static __nonnull() __wur const
+    char *argv_one_filename(const int argc, const_str *const argv) {
+        if (argc == 1)
+                return ".";
+        else if (argc == 2)
+                return argv[1];
+        else
+                upanic("Too many arguments. Usage: %s [<filename>]", argv[0]);
+}
+
 int main(const int argc, const_str *const argv) {
         store_usage(argv[0], "", false);
         const char *filename = argv_one_filename(argc, argv);

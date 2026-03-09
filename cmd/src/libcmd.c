@@ -172,6 +172,8 @@ __nonnull() static void handle_char(Vec *const cmd,
                 return;
         }
 
+        if (ch == '_') return;
+
         if (ch == '=') {
                 setenv_checked("PAGER", "");
                 return;

@@ -102,7 +102,9 @@ static char *get_git_branch(void) {
 static void battery_warnings(const battery_status status, int battery) {
         const bool can_use_dunst = getenv("NO_DUNST") == NULL;
 
-        if (status == BATTERY_STATUS_FULL && can_use_dunst)
+        if ((status == BATTERY_STATUS_FULL
+             || (battery == 100 && status == BATTERY_STATUS_CHARGING))
+            && can_use_dunst)
                 if (fork_and_wait()) exl_err_notif("Battery full");
 
         if (status == BATTERY_STATUS_DISCHARGING && battery < 20
@@ -125,14 +127,14 @@ static void battery_warnings(const battery_status status, int battery) {
 
 __wur static char get_battery(const char **const colour) {
         const battery_status status = get_battery_status();
+        const char *battery = get_battery_level();
+        if (battery == NULL) battery = "??";
 
-        *colour = status == BATTERY_STATUS_FULL          ? COL(35)
+        *colour = (status == BATTERY_STATUS_FULL || !strcmp(battery, "100"))
+                      ? COL(35)
                   : status == BATTERY_STATUS_DISCHARGING ? COL(31)
                   : status == BATTERY_STATUS_CHARGING    ? COL(32)
                                                          : COL(33);
-
-        const char *battery = get_battery_level();
-        if (battery == NULL) battery = "??";
 
         if (battery) battery_warnings(status, atoi(battery));
         return strlen(battery) != 2 ? '0' : battery[0];

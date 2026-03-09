@@ -42,6 +42,7 @@ const Cmd COMMANDS[] = {
 
     cmd("t",
         "test",
+        "--all",
         "--doc",
         "--jobs",
         "--release",

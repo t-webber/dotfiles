@@ -22,7 +22,8 @@ static const Cmd COMMANDS[] = {
         "-M",
         "-r",
         "-u",
-        "--contains", ),
+        "--contains",
+        "--show-current", ),
     cmd("bi",
         "bisect",
         "start",
@@ -75,8 +76,10 @@ static const Cmd COMMANDS[] = {
 
     cmd("f", "fsck", "--no-reflogs", "--lost-found", ),
 
-    cmd("gc", "gc", "--prime=now", "--aggressive", ),
+    cmd("gc", "gc", "--prune=now", "--aggressive", ),
     cmd("g", "grep", "-F", "--all-match", "-n", ),
+
+    cmd("help", "status", ),
 
     cmd("i", "init", ),
 

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+set -eo pipefail
+
+x=$(readlink -f ${1:-.})
+
+printf "%s" "$x" | $XCOPY
+echo "$x"

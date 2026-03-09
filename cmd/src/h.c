@@ -15,6 +15,7 @@ const Cmd COMMANDS[] = {
     cmd("p", "pr", "=ncreate", "view", "-w", ),
     cmd("r",
         "repo",
+        "rename",
         "=ncreate",
         "=oclone",
         "set-default",

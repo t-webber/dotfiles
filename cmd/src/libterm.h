@@ -26,5 +26,7 @@ void clear(void);
 #define PROG(x) RED x
 #define ARG(x) MAGENTA x
 #define PLACE(x) MAGENTA "<" GREEN x MAGENTA ">"
+#define GRP(x) MAGENTA "(" x MAGENTA ")"
+#define OR MAGENTA " || "
 #define S " "
 #define U CYAN "Usage:"

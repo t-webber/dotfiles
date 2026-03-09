@@ -561,15 +561,13 @@ _ual 's or v' cat ls lla llag bat eza ll
 _ual 'l, lw, lc, lr or ret' cls clear eh
 _al ret 'l $?'
 
-_al svv "$(_wi eza) -lA --git"
+_al svv "$(_wi eza) -lA --git --git-ignore"
 
 _al sr 'v README.md || v docs/README.md || v README || v docs/README'
 
 _al gcv 'gc v'
 _al gk 'gc keymaps.lua'
 
-_ual rd readlink pwdf
-_al rd "$(_wi readlink) -f"
 _al px 'pwd | x'
 
 _print see
@@ -854,8 +852,6 @@ _flush
 
 _ual g rg
 _ual f fd
-_ual tz tar
-_al tz "$(_wi tar)"
 _ual xg xargs
 _al xg "$(_wi xargs)"
 _al cnt 'wc -l'
@@ -1098,6 +1094,7 @@ _al dsx 'ds -X .snapshot'
 _al ds1 'ds -d 1'
 _dal ob objdump T
 _al zj 'zellij --config $XDG_CONFIG_HOME/zellij/config.kdl'
+_al zjm 'zj -s m || zj a m'
 _al gitignore "l '*' > .gitignore"
 _al loop '. loop '
 _al wpad "$_s wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf"
@@ -1111,8 +1108,9 @@ _al y '. y'
 _al macosallowrun 'xattr -d com.apple.quarantine'
 _al la 'mv $HOME/.bashrc $HOME/.oldrc'
 _al lo 'mv $HOME/.oldrc $HOME/.bashrc'
-_al saveloc 'pwd > $LOGS/saved_location'
-_al loadloc 'p $(<$LOGS/saved_location)'
+_al pstore 'pwd > $LOGS/saved_location'
+_al pload 'p $(<$LOGS/saved_location)'
+_al caff 'for x in i s d; do caffeinate -$x & done'
 
 _print other
 

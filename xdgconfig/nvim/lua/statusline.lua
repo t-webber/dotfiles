@@ -161,21 +161,69 @@ local function sl_sep(char)
 		.. reset_colour
 end
 
-local function sl_battery()
-	if vim.g[statusline_battery] == '' then return '' end
-	if os.getenv('DEVICE') ~= 'acer' then return '' end
+local function sl_acer_battery()
 	local level = read_unchecked('/sys/class/power_supply/BAT1/capacity')
 	local status = read_unchecked('/sys/class/power_supply/BAT1/status')
-	if tonumber(level) < 15 and status ~= 'Charging' then
+	if tonumber(level) < 20 and status ~= 'Charging' then
 		vim.system({
 			'/bin/notify-send',
 			'-u',
 			'critical',
-			'low battery (nvim)',
+			'low battery (nvim) (' .. level .. '%)',
+		})
+	end
+	if status == 'Full' then
+		vim.system({
+			'/bin/notify-send',
+			'-u',
+			'critical',
+			'battery full (nvim)',
 		})
 	end
 	local hg = make_hg('CustomStatusLineBattery' .. status)
 	return sl_sep() .. hg .. string.format('%s', level)
+end
+
+local level = ''
+local status = ''
+
+local function sl_mac_battery()
+	vim.system({ 'pwmcharge' }, { text = true }, function(o1)
+		level = o1.stdout
+		vim.system({ 'pwmstatus' }, { text = true }, function(o2)
+			if o2.stdout == 'Yes\n' then
+				status = 'Charging'
+			else
+				status = 'Discharging'
+			end
+			if tonumber(level) < 20 and status == 'Discharging' then
+				vim.system({
+					'osascript',
+					'-e',
+					'display notification "low battery ('
+						.. level
+						.. ')" with title "nvim"',
+				})
+			end
+			if tonumber(level) == 100 and status == 'Charging' then
+				vim.system({
+					'osascript',
+					'-e',
+					'display notification "battery full" with title "nvim"',
+				})
+			end
+		end)
+	end)
+	local hg = make_hg('CustomStatusLineBattery' .. status)
+	return sl_sep() .. hg .. string.format('%s', level)
+end
+
+local function sl_battery()
+	if vim.g[statusline_battery] == '' then return '' end
+	local dev = os.getenv('DEVICE')
+	if dev == 'acer' then return sl_acer_battery() end
+	if dev == 'mac' then return sl_mac_battery() end
+	return ''
 end
 
 local function sl_position()

@@ -248,6 +248,7 @@ command_not_found_handler() {
 prompt() {
         pwd >"$LAST_LOCATION_FILE"
         history -a
+        history -r
 }
 
 unset PROMPT_COMMAND
@@ -287,4 +288,3 @@ if [ "$(uname)" = "Darwin" ]; then
                 ;;
         esac
 fi
-export PATH="$HOME/.npm-global/bin:$PATH"
