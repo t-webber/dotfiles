@@ -113,7 +113,8 @@ export BAT_STYLE=plain
 export BAT_THEME=ansi
 
 PATH=""
-PATH+=":$CMD/sh" # ed override
+PATH+=":$CMD/sh"  # ed override
+PATH+=":$CMD/bin" # dc override
 if [ "$DEVICE" = "mac" ]; then
         PATH+=":/opt/homebrew/bin"
         PATH+=":/opt/homebrew/sbin"
@@ -125,7 +126,6 @@ fi
 PATH+=":/bin"
 PATH+=":$XDG_DATA_HOME/../bin"
 PATH+=":$BIN"
-PATH+=":$CMD/bin"
 PATH+=":$CARGO_HOME/bin"
 PATH+=":$BUN_INSTALL/bin"
 PATH+=":$GOROOT/bin"

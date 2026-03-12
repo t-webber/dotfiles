@@ -22,6 +22,10 @@ __nonnull() static void parse_python_opts(Vec *cmd, const_str opts) {
                 case 'u':
                         push(cmd, "-u");
                         break;
+                case '!':
+                        printf("\033c");
+                        fflush(stdout);
+                        break;
                 case 'i':
                         push(cmd, "-i");
                         break;

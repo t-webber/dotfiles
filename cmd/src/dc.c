@@ -1,5 +1,6 @@
 #include "lib.h"
 #include <ctype.h> // IWYU pragma: keep
+#include <string.h>
 #include <time.h>
 
 #include <stdlib.h>
@@ -9,6 +10,15 @@
 // dcalc 10h30m - 11h
 // dcalc 23/2/ - 11h
 
+typedef enum { Amount, Absolute, NotKnown, Meaningless } AmountType;
+
+static AmountType combine_amount(const AmountType a, const AmountType b) {
+        if (a == Meaningless || b == Meaningless)
+                upanic("Tried to combine meaningless amounts");
+        if (a == Absolute || b == Absolute) return Absolute;
+        return Amount;
+}
+
 typedef struct {
         int year;
         int month;
@@ -16,27 +26,39 @@ typedef struct {
         int hour;
         int min;
         int sec;
+        AmountType amount;
 } DT;
 
-const DT MASK_ALL = {1, 1, 1, 1, 1, 1};
+const DT MASK_ALL = {1, 1, 1, 1, 1, 1, Meaningless};
 
 __wur static DT new_dt(void) {
-        return (DT){0, 0, 0, 0, 0, 0};
+        return (DT){0, 0, 0, 0, 0, 0, NotKnown};
 }
 
-#define fill_with(field, func)                                                 \
-        if (dt.field == 0) {                                                   \
+__wur static bool has_date(const DT *const mask) {
+        return (mask->year || mask->month || mask->day);
+}
+
+__wur static bool has_time(const DT *const mask) {
+        return mask->hour || mask->min || mask->sec;
+}
+
+#define force_fill_with(field, val)                                            \
+        {                                                                      \
                 *wrt = '\0';                                                   \
-                dt.field = atoi(buf);                                          \
-                dt.field = func;                                               \
+                dt.field += val;                                               \
                 mask->field = 1;                                               \
                 wrt = buf;                                                     \
                 continue;                                                      \
         }
 
-#define fill(field) fill_with(field, dt.field)
+#define fill_with(field, val)                                                  \
+        if (dt.field == 0) { force_fill_with(field, val) }
+
+#define fill(field) fill_with(field, atoi(buf))
 
 __wur static DT now(void) {
+#ifndef TEST
         time_t t = time(NULL);
         struct tm tm = *localtime(&t);
 
@@ -45,7 +67,11 @@ __wur static DT now(void) {
                     tm.tm_mday,
                     tm.tm_hour,
                     tm.tm_min,
-                    tm.tm_sec};
+                    tm.tm_sec,
+                    Absolute};
+#else
+        return (DT){2021, 2, 25, 11, 42, 37, Absolute};
+#endif
 }
 
 #define toomany(x) upanic("Invalid input '%s': too many '" x "'", input);
@@ -63,6 +89,7 @@ __wur __nonnull((2)) static DT parse_dt(const_str input, DT *mask) {
         char *const buf = malloc(4 * (sizeof(char)));
         char *wrt = buf;
         enum ParsingState state = HasNone;
+        bool filled_w = false;
 
         for (const char *ch = input; *ch; ++ch) {
                 if (isdigit(*ch)) {
@@ -85,11 +112,15 @@ __wur __nonnull((2)) static DT parse_dt(const_str input, DT *mask) {
                 } else if (*ch == 'd') {
                         setstate(HasModifiers);
                         fill(day);
-                        toomany("d or w");
+                        if (!filled_w) {
+                                toomany("d");
+                        } else
+                                force_fill_with(day, atoi(buf));
                 } else if (*ch == 'w') {
+                        if (filled_w) toomany("w");
+                        filled_w = true;
                         setstate(HasModifiers);
-                        fill_with(day, dt.day * 7);
-                        toomany("d or w");
+                        force_fill_with(day, atoi(buf) * 7);
                 } else if (*ch == 'h') {
                         fill(hour);
                         toomany("h");
@@ -100,47 +131,76 @@ __wur __nonnull((2)) static DT parse_dt(const_str input, DT *mask) {
                         fill(sec);
                         toomany("s");
                 }
-                upanic("Invalid character %c in %s", *ch, input);
+                upanic("Invalid character '%c' in %s", *ch, input);
         }
         if (wrt != buf)
                 upanic("You can't end datetime with a digit: %s", input);
+
+        if (state == HasModifiers)
+                dt.amount = Amount;
+        else if (state == HasSlashes)
+                dt.amount = Absolute;
+
         return dt;
 }
 
-__nonnull() static void print_dt(const DT *const dt,
-                                 const DT *const mask,
-                                 char *buf) {
 #define s(...)                                                                 \
         {                                                                      \
                 int n = sprintf(buf, __VA_ARGS__);                             \
                 buf += n;                                                      \
         }
 
-        bool d = mask->year || mask->month || mask->day;
-        if (mask->day) {
-                if (mask->year || mask->month) {
-                        s("%02d", dt->day);
-                } else {
-                        s("%dd", dt->day);
-                }
+__nonnull() static void print_dt_absolute(const DT *const dt,
+                                          const DT *const mask,
+                                          char *buf) {
+        const bool d = has_date(mask);
+        if (d) {
+                s("%02d/%02d", dt->day, dt->month);
+                if (mask->year) s("/%d", dt->year);
         }
-        if (mask->month || (mask->year && mask->day)) s("/%02d", dt->month);
-        if (mask->year) s("/%d", dt->year);
 
-        bool t = mask->hour || mask->min || mask->sec;
+        const bool t = has_time(mask);
         if (d && t) s(" ");
 
         if (t) {
-                s("%dh", dt->hour);
-                if (mask->min || dt->min || mask->sec) s("%02dm", dt->min);
+                s("%dh%02dm", dt->hour, dt->min);
                 if (mask->sec) s("%02ds", dt->sec);
         }
+}
+
+__nonnull() static void print_dt(const DT *const dt,
+                                 const DT *const mask,
+                                 char *buf) {
+        if (dt->amount == Absolute) {
+                print_dt_absolute(dt, mask, buf);
+                return;
+        }
+
+#define p(x, c)                                                                \
+        if (mask->x) { s("%d%s", dt->x, #c); }
+
+        p(year, y);
+        p(month, t);
+        p(day, d);
+
+        if (has_time(mask) && has_date(mask)) s(" ");
+
+        p(hour, h);
+
+        p(min, m);
+        p(sec, s);
 }
 
 __nonnull() static void print_dbg(const DT *const dt) {
         if (getenv("DEBUG")) {
                 char m[64];
                 print_dt(dt, &MASK_ALL, m);
+                const AmountType a = dt->amount;
+                printf(a == Amount        ? "amount"
+                       : a == Absolute    ? "Absolute"
+                       : a == Meaningless ? "Meaningless"
+                                          : "NotKnown");
+                printf(": ");
                 puts(m);
         }
 }
@@ -155,8 +215,7 @@ __nonnull() static void print_dbg(const DT *const dt) {
 #define mod(x) (year % x == 0)
 
 __wur static bool leap_year(const int year) {
-        return mod(4)
-               && (!mod(100) || (mod(400) && (!mod(1000) || (mod(4000)))));
+        return mod(4) && (!mod(100) || (mod(400)));
 }
 
 __wur static int days_per_month(const int month, const int year) {
@@ -195,16 +254,28 @@ __nonnull((2)) static void plus(const_str arg1, const_str arg2, char *buf) {
                   dt1.day + dt2.day,
                   dt1.hour + dt2.hour,
                   dt1.min + dt2.min,
-                  dt1.sec + dt2.sec};
+                  dt1.sec + dt2.sec,
+                  combine_amount(dt1.amount, dt2.amount)};
 
         carry(sec, min, 60);
         carry(min, hour, 60);
         carry(hour, day, 24);
         carry(month, year, 12);
 
-        if (mask.year != 0 || mask.month != 0) { fix_days(&sum, &mask); }
+        if (sum.amount == Absolute) { fix_days(&sum, &mask); }
 
-        print_dbg(&mask);
+        if (getenv("DEBUG")) {
+                printf("1 ");
+                print_dbg(&dt1);
+                printf("2 ");
+                print_dbg(&dt2);
+                printf("------------\n");
+                printf("mask ");
+                print_dbg(&mask);
+                printf("sum ");
+                print_dbg(&sum);
+                printf("========================\n");
+        }
 
         print_dt(&sum, &mask, buf);
 }
@@ -225,7 +296,8 @@ __nonnull((2)) static void minus(const_str arg1, const_str arg2, char *buf) {
                   dt1.day - dt2.day,
                   dt1.hour - dt2.hour,
                   dt1.min - dt2.min,
-                  dt1.sec - dt2.sec};
+                  dt1.sec - dt2.sec,
+                  combine_amount(dt1.amount, dt2.amount)};
 
         carrysub(sec, min, 60);
         carrysub(min, hour, 60);
@@ -256,7 +328,7 @@ __nonnull((2)) static void minus(const_str arg1, const_str arg2, char *buf) {
         print_dt(&sum, &mask, buf);
 }
 
-#define usage upanic("Usage: %s [[<datetime>] (+|-) <datetime>]", argv[0])
+#define usage upanic("Usage: %s [[<datetime>](+|-)<datetime>]", argv[0])
 
 static void process_args(const int argc, Args argv, char *buf) {
         if (argc == 1) {
@@ -265,31 +337,34 @@ static void process_args(const int argc, Args argv, char *buf) {
                 return;
         }
 
-        if (argc != 3 && argc != 4) usage;
+        char arg[128];
+        char *ptr = arg;
+        for (int i = 1; i < argc; ++i) { ptr = stpcpy(ptr, argv[i]); }
 
-        const char *arg1 = NULL, *arg2 = NULL, *op;
-        if (argc == 4) {
-                arg1 = argv[1];
-                op = argv[2];
-                arg2 = argv[3];
-        } else {
-                op = argv[1];
-                arg2 = argv[2];
+        char *arg1 = NULL, *arg2 = NULL;
+        char *r = arg;
+
+        for (; *r; ++r) {
+                if (*r == '+' || *r == '-') break;
         }
 
-        if (!strcmp(op, "+")) {
+        if (*r == '\0' || *(r + 1) == '\0') usage;
+
+        const bool is_plus = *r == '+';
+        *r = '\0';
+        arg1 = r == arg ? NULL : arg;
+        arg2 = r + 1;
+
+        if (is_plus) {
                 plus(arg1, arg2, buf);
-                return;
-        }
-        if (!strcmp(op, "-")) {
+        } else {
                 minus(arg1, arg2, buf);
-                return;
         }
-
-        usage;
 }
 
 #ifndef TEST
+// #ifdef MAIN
+
 int main(const int argc, Args argv) {
         store_usage(argv[0], "", false);
         char buf[64];
@@ -297,7 +372,77 @@ int main(const int argc, Args argv) {
         puts(buf);
 }
 #else
+
+#define tst(expected, ...)                                                     \
+        process_args(sizeof((const_str[]){"", __VA_ARGS__})                    \
+                         / sizeof(const_str),                                  \
+                     (const_str[]){"", __VA_ARGS__},                           \
+                     out);                                                     \
+        if (getenv("DEBUG")) printf("out %s\n", out);                          \
+        if (strcmp(expected, out))                                             \
+                upanic("(expected) '%s' != '%s' (output)", expected, out);
+
 int main(void) {
-        printf("blob");
+        char out[64];
+
+        tst("25/02/2021 11h42m37s", );
+
+        /// relative plus
+
+        tst("11h42m38s", "+1s");
+        tst("11h43m18s", "+41s");
+        tst("11h44m18s", "+101s");
+        tst("12h42m38s", "+3601s");
+        tst("12h42m37s", "+3600s");
+        tst("26/02 11h42m37s", "+86400s");
+
+        tst("11h43m", "+1m");
+        tst("12h43m", "+61m");
+        tst("12h42m", "+60m");
+        tst("26/02 11h42m", "+1440m");
+
+        tst("12h42m", "+1h");
+        tst("26/02 12h42m", "+25h");
+
+        tst("26/02", "+1d");
+        tst("07/03", "+10d");
+        tst("05/03", "+1w1d");
+        tst("05/03", "+1d1w");
+
+        /// absolute plus
+
+        // precision
+
+        tst("11h41m1s", "11h41m+1s");
+        tst("11h41m1s", "11h41m", "+", "1s");
+        tst("28/02 11h41m01s", "28/02/11h41m+1s");
+        tst("28/02/2026 0h00m01s", "28/02/2026/+1s");
+        tst("28/02/2026 0h01m", "28/02/2026/+1m");
+        tst("28/02/2026 1h00m", "28/02/2026/+1h");
+
+        tst("28/02/2027", "28/02/2026/+1y");
+        tst("28/03/2027", "28/02/2026/+1y1t");
+        tst("28/03/2027", "28/02/2026/+1t1y");
+
+        // leap years
+
+        tst("01/03/2026", "28/02/2026/+1d");
+        tst("29/02/2020", "28/02/2020/+1d");
+        tst("01/03/1900", "28/02/1900/+1d");
+        tst("29/02/2000", "28/02/2000/+1d");
+
+        /// amount plus
+
+        tst("2d", "1d+1d");
+        tst("2d 1h", "1d+1d1h");
+        tst("3d 1h", "1d+1d25h");
+        tst("36d", "1d+35d");
+        tst("1t36d", "1d+35d1t");
+
+        tst("1d 1h3s", "1h3s+1d");
+        tst("1y36d", "1d+35d1y");
+        tst("43d", "1d+35d1w");
+
+        printf("All tests passed\n");
 }
 #endif

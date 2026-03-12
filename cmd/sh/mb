@@ -16,6 +16,12 @@ cd)
 d)
         makecmd debug
         ;;
+t)
+        makecmd $CMD/bin/dc.test
+        for x in $CMD/bin/*.test; do
+                $x
+        done
+        ;;
 "")
         makecmd debug
         ;;

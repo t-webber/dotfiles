@@ -30,8 +30,7 @@ __wur __nonnull() __attribute_pure__
 
 #define extensions(name, ...)                                                  \
         static const_str name##_EXT[] = {__VA_ARGS__};                         \
-        static const size_t name##_LEN                                         \
-            = sizeof(name##_EXT) / sizeof(name##_EXT[0]);                      \
+        static const size_t name##_LEN = array_len(name##_EXT);                \
         __wur __nonnull() __attribute_pure__ static bool name##_supported(     \
             const_str extension) {                                             \
                 return is_valid_extension(name##_EXT, extension, name##_LEN);  \
