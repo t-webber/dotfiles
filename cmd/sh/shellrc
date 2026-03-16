@@ -248,7 +248,7 @@ command_not_found_handler() {
 prompt() {
         pwd >"$LAST_LOCATION_FILE"
         history -a
-        history -r
+        history -n
 }
 
 unset PROMPT_COMMAND
@@ -288,3 +288,7 @@ if [ "$(uname)" = "Darwin" ]; then
                 ;;
         esac
 fi
+
+export NVM_DIR="$HOME/.files/.data/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion

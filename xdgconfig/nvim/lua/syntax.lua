@@ -97,4 +97,10 @@ vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile', 'BufWinEnter' }, {
 	callback = function() y_todo() end,
 })
 
+vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile', 'BufWinEnter' }, {
+	group = todo_group,
+	pattern = '*.md',
+	callback = function() y_todo() end,
+})
+
 y_all()

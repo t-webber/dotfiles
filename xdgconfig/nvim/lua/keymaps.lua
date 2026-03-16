@@ -449,6 +449,8 @@ for letter, cmd in pairs({
 	e = 'live_grep',
 	r = 'registers',
 	z = 'frecency workspace=CWD',
+	c = 'command_history',
+	a = 'search_history',
 }) do
 	setk(n, 'é' .. letter, function()
 		vim.o.laststatus = 0

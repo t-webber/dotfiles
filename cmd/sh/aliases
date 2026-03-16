@@ -1111,6 +1111,7 @@ _al lo 'mv $HOME/.oldrc $HOME/.bashrc'
 _al pstore 'pwd > $LOGS/saved_location'
 _al pload 'p $(<$LOGS/saved_location)'
 _al caff 'for x in i s d; do caffeinate -$x & done'
+_al usenvm '. "$NVM_DIR/nvm.sh"'
 
 _print other
 
