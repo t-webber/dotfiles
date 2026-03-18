@@ -3,6 +3,7 @@
 
 #include <assert.h>
 
+#include <stdlib.h>
 static const size_t DEFAULT_CAP = 8;
 static const size_t PTR_SIZE = sizeof(char *);
 
@@ -25,6 +26,7 @@ __nonnull((1)) void push(Vec *const vec, const_str val) {
 }
 
 __nonnull() __wur const_var_str pop(Vec *const vec) {
+        if (vec->len == 0) return NULL;
         return vec->data[--vec->len];
 }
 

@@ -4,6 +4,10 @@ makecmd() {
         make -C "$CMD/src" --no-print-directory $1 -j 50
 }
 
+maketest() {
+        makecmd "$CMD/bin/$1.test"
+}
+
 case "$1" in
 cr)
         makecmd clean
@@ -17,7 +21,7 @@ d)
         makecmd debug
         ;;
 t)
-        makecmd $CMD/bin/dc.test
+        maketest dc
         for x in $CMD/bin/*.test; do
                 $x
         done

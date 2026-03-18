@@ -443,6 +443,6 @@ int main(void) {
         tst("1y36d", "1d+35d1y");
         tst("43d", "1d+35d1w");
 
-        printf("All tests passed\n");
+        printf("dc tests passed\n");
 }
 #endif

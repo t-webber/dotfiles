@@ -61,7 +61,6 @@ export XDG_STATE_HOME="$DATA/local/state"
 export NPM_CONFIG_USERCONFIG="$OCFG/npm/config"
 export NPM_CONFIG_CACHE="$OCFG/npm/cache"
 export INPUTRC="$OCFG/inputrc"
-export ANDROID_AVD_HOME=$OCFG/android-avd
 
 [ "$DEVICE" = "acer" ] && export XAUTHORITY="$DATA/Xauthority"
 export IPYTHONDIR="$DATA/ipython"
@@ -77,15 +76,20 @@ export BUN_INSTALL="$DATA/bun"
 export CARGO_HOME="$DATA/cargo"
 export NVM_DIR="$DATA/nvm"
 export GH_BINPATH="$DATA/git/gh"
+export CODE_EXTS_PATH="$DATA/code-extensions"
+
 export GEM_HOME="$DATA/gem/install"
 export GEM_PATH="$DATA/gem/install"
 export GEM_SPEC_CACHE="$DATA/gem/specs"
-export CODE_EXTS_PATH="$DATA/code-extensions"
+
 export GOROOT="$DATA/go/root"
 export GOTOOLDIR="$DATA/go/tooldir"
 export GOHOME="$DATA/go/home"
 export GOPATH="$DATA/go/path"
-export ANDROID_HOME=/opt/android-sdk/
+
+export ANDROID_HOME="$DATA/android/sdk"
+export NDK_HOME="$ANDROID_HOME/ndk/29.0.14206865/"
+export ANDROID_AVD_HOME="$ANDROID_HOME/avd"
 
 ########################
 ### global variables ###
@@ -131,7 +135,9 @@ PATH+=":$BUN_INSTALL/bin"
 PATH+=":$GOROOT/bin"
 PATH+=":$GOPATH/bin"
 PATH+=":$APPS/flutter/bin"
-PATH+=":$ANDROID_HOME/cmdline-tools/latest/bin"
+PATH+=":$ANDROID_HOME/emulator"
+PATH+=":$ANDROID_HOME/platform-tools"
+PATH+=":$ANDROID_HOME/cmdline-tools/latest/bin/"
 export PATH
 
 export RUSTUP_HOME="$DATA/rustup"
@@ -288,7 +294,3 @@ if [ "$(uname)" = "Darwin" ]; then
                 ;;
         esac
 fi
-
-export NVM_DIR="$HOME/.files/.data/nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion

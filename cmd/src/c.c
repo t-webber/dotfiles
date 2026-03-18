@@ -50,6 +50,7 @@ const Cmd COMMANDS[] = {
         "=u--no-run",
         "=c--no-capture", ),
 
+    cmd("ui", "uitest", ),
     cmd("ub", "uibless", ),
     cmd("u", "uninstall", ),
 

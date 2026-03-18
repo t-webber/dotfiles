@@ -13,4 +13,5 @@ make_single("rl",
             "POST",
             "-f",
             "-s",
-            "-S", )
+            "-S",
+            "=jContent-Type: application/json", )

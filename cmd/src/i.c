@@ -70,7 +70,7 @@ static const Cmd COMMANDS[] = {
         "--reset-author", ),
 
     cmd("do", "difftool", "--cached", ),
-    cmd("d", "diff", "--shortstat", "--cached", ),
+    cmd("d", "diff", "--shortstat", "--cached", "--exclude", ),
 
     cmd("e", "fetch", "--all", "--unshallow", "--prune", "--tags", ),
 
