@@ -105,17 +105,17 @@ static void battery_warnings(const battery_status status, int battery) {
         if ((status == BATTERY_STATUS_FULL
              || (battery == 100 && status == BATTERY_STATUS_CHARGING))
             && can_use_dunst)
-                if (fork_and_wait()) exl_err_notif("Battery full");
+                if (!fork_and_wait()) exl_err_notif("Battery full");
 
         if (status == BATTERY_STATUS_DISCHARGING && battery < 20
             && can_use_dunst)
-                if (fork_and_wait()) exl_err_notif("Low battery (ps1)");
+                if (!fork_and_wait()) exl_err_notif("Low battery (ps1)");
 
         if (status == BATTERY_STATUS_DISCHARGING && battery < 10) {
                 if (is_file("/etc/artix-release")) {
-                        if (fork_and_wait()) exldn("loginctl", "suspend");
+                        if (!fork_and_wait()) exldn("loginctl", "suspend");
                 } else {
-                        if (fork_and_wait())
+                        if (!fork_and_wait())
                                 exldn("sudo", "systemctl", "suspend");
                 }
         }

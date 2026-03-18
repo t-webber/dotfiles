@@ -44,7 +44,7 @@ _Noreturn void exvd(Args args) {
 }
 
 __nonnull() void forked_exvd(Args args) {
-        if (fork_and_wait()) exvd(args);
+        if (!fork_and_wait()) exvd(args);
 }
 
 _Noreturn __nonnull((1)) static void macos_notif(const_str message,

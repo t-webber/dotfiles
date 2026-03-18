@@ -24,7 +24,7 @@ __wur bool is_dbg(void);
 #define exldn(cmd, ...) exl(cmd, cmd, __VA_ARGS__, NULL);
 
 #define forked_exldn(cmd, ...)                                                 \
-        if (fork_and_wait()) exldn(cmd, __VA_ARGS__);
+        if (!fork_and_wait()) exldn(cmd, __VA_ARGS__);
 
 #define __read_simple_exl_maker(__exl_func, buf_size, buffer, ...)             \
         int fildes[2];                                                         \

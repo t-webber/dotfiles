@@ -54,7 +54,7 @@ display(const_str filename, const bool is_verbose, const bool has_multiple) {
         if (!S_ISREG(st.st_mode))
                 upanic("Invalid file %s: type %u", filename, st.st_mode);
 
-        if (fork_and_wait())
+        if (!fork_and_wait())
                 exec_open_file(filename,
                                is_verbose ? DISPLAY_VERBOSE : DISPLAY_RAW);
 }
