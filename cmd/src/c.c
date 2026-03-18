@@ -7,7 +7,7 @@ const Cmd COMMANDS[] = {
 
     cmd("bi", "binstall", "-y", "--git", ),
     cmd("be", "bench", ),
-    cmd("b", "build", "-r", "-p", "--all-targets", ),
+    cmd("b", "build", "-r", "-p", ),
 
     cmd("ee", "tree", ),
     cmd("e", "expand", ),
@@ -90,6 +90,7 @@ const Manual MANUAL[] = {
     {'C', "--color=always"},
     {'-', "--"},
     {'F', "--features"},
+    {'A', "--all-targets"},
 };
 
 make_settings(SETTINGS, COMMANDS, MANUAL);
