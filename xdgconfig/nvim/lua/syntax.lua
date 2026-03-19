@@ -65,6 +65,8 @@ local function checkbox_letters()
 end
 
 local function y_todo()
+	vim.cmd('set spell')
+
 	vim.fn.clearmatches()
 
 	checkbox_letters()

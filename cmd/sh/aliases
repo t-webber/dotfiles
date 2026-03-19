@@ -1113,6 +1113,7 @@ _al pload 'p $(<$LOGS/saved_location)'
 _al caff 'for x in i s d; do caffeinate -$x & done'
 _al usenvm '. "$NVM_DIR/nvm.sh"'
 _ual l echo
+_al zjdk 'zj ka && zj da'
 
 _print other
 

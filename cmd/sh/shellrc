@@ -254,7 +254,6 @@ command_not_found_handler() {
 prompt() {
         pwd >"$LAST_LOCATION_FILE"
         history -a
-        history -n
 }
 
 unset PROMPT_COMMAND

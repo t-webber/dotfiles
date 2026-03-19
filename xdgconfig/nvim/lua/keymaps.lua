@@ -112,6 +112,7 @@ setk(nivt, '<D-:>', '\\')
 setk(i, '<D-(>', '[')
 setk(i, '<D-)>', ']')
 setk(i, '<D-é>', '~')
+setk(i, '<D-">', '#')
 
 setk(nv, 'ça', 'gg^vG$<CR>')
 setk(nv, 'çs', '<Esc>:silent :w<CR>', 'save')
