@@ -22,7 +22,14 @@ int main(const int argc, const_str *const argv) {
         struct stat st;
         int x = stat(filename, &st);
 
-        if (x != 0) epanic("Failed to read %s", filename);
+        if (x != 0) {
+                if (starts_with_const(filename, "http"))
+                        exldn("xdg-open", filename);
+
+                char url[256];
+                sprintf(url, "http://%s", filename);
+                exldn("xdg-open", url);
+        }
 
         if (S_ISDIR(st.st_mode)) { exldn("nvim", filename, NULL); }
 

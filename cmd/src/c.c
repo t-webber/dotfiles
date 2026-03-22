@@ -54,7 +54,7 @@ const Cmd COMMANDS[] = {
     cmd("ub", "uibless", ),
     cmd("u", "uninstall", ),
 
-    cmd("v", "remove", ),
+    cmd("v", "dev", ),
 
     cmd("wa",
         "watch",

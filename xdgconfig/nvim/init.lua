@@ -12,10 +12,6 @@ local files = {
 	'syntax',
 }
 
-if os.getenv('DEVICE') == 'v' then
-	vim.g.python3_host_prog = os.getenv('VENV_BIN') .. 'python'
-end
-
 for _, file in ipairs(files) do
 	--pcall(require, file)
 end

@@ -323,6 +323,7 @@ c="$CARGO_HOME/bin/cargo"
 _ual c cargo
 
 _al ck 'l && c yfaw-DR && c b &&  c f &&  c odaD && c t && c pf 100' 'all checks for ci'
+_al cph 'c pdtoh'
 
 _al co 'brave tarpaulin-report.html'
 
@@ -390,6 +391,7 @@ _flush
 
 _al ififo 'export GIT_ASKPASS=read-fifo'
 _al ilon 'i lo=n'
+_al ifom 'i phfOH:M'
 _al isl 'i s && i lon= 5'
 _al igh 'slp 1 && i phO HEAD:refs/for/master'
 _al iyfa 'i yfrw ../*.diff'
@@ -436,9 +438,10 @@ _al ig git-graph
 _sep
 
 _al hv 'h pv || h rv'
-_al hw 'h pvw || h rvw'
+_al hw 'h pvw || h rvw || o github.com'
 _al hiinit 'nd .github/workflows && rsync -a $OCFG/github-actions/* .github/workflows/'
 _al hicmp 'diff .github/workflows/ $OCFG/github-actions/'
+_al hiapply 'r $OCFG/github-actions/* && rsync -a .github/workflows/* $OCFG/github-actions/'
 _al hiup 'r .github/workflows && hiinit'
 
 _ual i git

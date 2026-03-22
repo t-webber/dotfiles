@@ -6,9 +6,9 @@ local keymap_display = {}
 local keymap_taken = {}
 local nb = 0
 
------------------------------
---- Fns to define keymaps ---
------------------------------
+---------------
+--- helpers ---
+---------------
 
 local function describe(keymap, action, description)
 	local t = type(description)
@@ -81,9 +81,6 @@ local lspicon = '💡 '
 setk(n, '<C-A>', 'v<C-a>')
 setk(n, '<C-X>', 'v<C-x>')
 
-setk(nivt, '<F1>', '<C-o>')
-setk(nivt, '<F2>', '<C-i>')
-
 for letter, scope in pairs({
 	r = 'word',
 	R = 'WORD',
@@ -105,14 +102,6 @@ setk(n, ',o', function()
 		os.execute('open ' .. vim.fn.expand('<cWORD>'))
 	end
 end, 'open link')
-
-setk(nivt, '<A-(>', '{')
-setk(nivt, '<A-)>', '}')
-setk(nivt, '<D-:>', '\\')
-setk(i, '<D-(>', '[')
-setk(i, '<D-)>', ']')
-setk(i, '<D-é>', '~')
-setk(i, '<D-">', '#')
 
 setk(nv, 'ça', 'gg^vG$<CR>')
 setk(nv, 'çs', '<Esc>:silent :w<CR>', 'save')
@@ -146,7 +135,19 @@ end, 'Reload sxhkd')
 
 setk(n, ',i', ':NvimWebDeviconsHiTest<CR>')
 
-setk(n, 'du', function() vim.cmd('normal! diwds(') end, 'Delete fn name and ()')
+-------------
+--- MacOS ---
+-------------
+
+setk(nivt, '<F1>', '<C-o>')
+setk(nivt, '<F2>', '<C-i>')
+setk(nivt, '<A-(>', '{')
+setk(nivt, '<A-)>', '}')
+setk(nivt, '<D-:>', '\\')
+setk(i, '<D-(>', '[')
+setk(i, '<D-)>', ']')
+setk(i, '<D-é>', '~')
+setk(i, '<D-">', '#')
 
 ---------------
 --- Harpoon ---
@@ -176,9 +177,9 @@ end
 setk(n, '§h', function() h():list():prev() end, harpoonicon .. 'prev buffer')
 setk(n, '§l', function() h():list():next() end, harpoonicon .. 'next buffer')
 
-----------------------------
---- Statusline variables ---
-----------------------------
+-----------------------------
+--- Status line variables ---
+-----------------------------
 
 local function setglobs(letter, vars, name, action_letter, action_name, add)
 	setk(n, 'ù' .. action_letter .. letter, function()
@@ -452,6 +453,7 @@ for letter, cmd in pairs({
 	z = 'frecency workspace=CWD',
 	c = 'command_history',
 	a = 'search_history',
+	y = 'lsp_dynamic_workspace_symbols',
 }) do
 	setk(n, 'é' .. letter, function()
 		vim.o.laststatus = 0
@@ -822,6 +824,39 @@ vim.api.nvim_set_keymap(
 
 local tsletters = require('tsletters')
 
+local function fmt_keymap(keymap, inline)
+	local open, close
+	if inline then
+		open = '('
+		close = ') '
+	else
+		open = '\t '
+		close = '\t '
+	end
+	local modes = table.concat(keymap.modes)
+	local description = keymap.description or 'nil'
+	local line = keymap.keymap:gsub(' ', '␣')
+		.. open
+		.. modes
+		.. close
+		.. description
+
+	return line
+end
+
+local msg = require('globals').statusline_notif
+
+local timer = vim.loop.new_timer()
+timer:start(
+	0,
+	10 * 1000,
+	vim.schedule_wrap(function()
+		math.randomseed(os.time())
+		local idx = math.random(0, #keymap_display)
+		vim.g[msg] = fmt_keymap(keymap_display[idx], true)
+	end)
+)
+
 local function load_lines(width)
 	local lines = {
 		nb .. ' keymaps (q to exit)',
@@ -833,14 +868,7 @@ local function load_lines(width)
 	}
 
 	for _, keymap in ipairs(keymap_display) do
-		local modes = table.concat(keymap.modes)
-		local description = keymap.description or 'nil'
-		local line = keymap.keymap:gsub(' ', '␣')
-			.. ' \t'
-			.. modes
-			.. '\t '
-			.. description
-		table.insert(lines, line)
+		table.insert(lines, fmt_keymap(keymap))
 	end
 
 	for letter, scope in pairs(tsletters.letters) do
@@ -850,41 +878,43 @@ local function load_lines(width)
 	return lines
 end
 
+local function open_ui()
+	local ui = vim.api.nvim_list_uis()[1]
+	local width = 60
+
+	local lines = load_lines(width)
+
+	local height = #lines
+	local col = math.floor((ui.width - width) / 2)
+	local row = math.floor((ui.height - height) / 2)
+
+	local buf = vim.api.nvim_create_buf(false, true)
+	vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+
+	local opts = {
+		style = 'minimal',
+		relative = 'editor',
+		width = width,
+		height = height,
+		row = row,
+		col = col,
+		border = 'rounded',
+	}
+
+	local win = vim.api.nvim_open_win(buf, true, opts)
+	vim.api.nvim_win_set_option(win, 'winhl', 'Normal:Normal')
+
+	vim.api.nvim_buf_set_keymap(
+		buf,
+		'n',
+		'q',
+		':close<CR>',
+		{ noremap = true, silent = true }
+	)
+end
+
 vim.api.nvim_set_keymap('n', 'g?', '<Nop>', {
-	callback = function()
-		local ui = vim.api.nvim_list_uis()[1]
-		local width = 60
-
-		local lines = load_lines(width)
-
-		local height = #lines
-		local col = math.floor((ui.width - width) / 2)
-		local row = math.floor((ui.height - height) / 2)
-
-		local buf = vim.api.nvim_create_buf(false, true)
-		vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
-
-		local opts = {
-			style = 'minimal',
-			relative = 'editor',
-			width = width,
-			height = height,
-			row = row,
-			col = col,
-			border = 'rounded',
-		}
-
-		local win = vim.api.nvim_open_win(buf, true, opts)
-		vim.api.nvim_win_set_option(win, 'winhl', 'Normal:Normal')
-
-		vim.api.nvim_buf_set_keymap(
-			buf,
-			'n',
-			'q',
-			':close<CR>',
-			{ noremap = true, silent = true }
-		)
-	end,
+	callback = open_ui,
 })
 
 print(nb)

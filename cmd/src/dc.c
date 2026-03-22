@@ -262,7 +262,13 @@ __nonnull((2)) static void plus(const_str arg1, const_str arg2, char *buf) {
         carry(hour, day, 24);
         carry(month, year, 12);
 
-        if (sum.amount == Absolute) { fix_days(&sum, &mask); }
+        if (sum.amount == Absolute) {
+                if (sum.month == 0) {
+                        sum.month = 12;
+                        sum.year -= 1;
+                }
+                fix_days(&sum, &mask);
+        }
 
         if (getenv("DEBUG")) {
                 printf("1 ");
@@ -410,6 +416,10 @@ int main(void) {
         tst("05/03", "+1d1w");
 
         /// absolute plus
+
+        // carry
+
+        tst("30/12/2026", "29/12/2026/+1d");
 
         // precision
 

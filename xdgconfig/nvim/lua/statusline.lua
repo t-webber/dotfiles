@@ -8,18 +8,6 @@ local statusline_full_treesitter = v.statusline_full_treesitter
 local statusline_battery = v.statusline_battery
 local statusline_time = v.statusline_time
 
-local function print_dot_warning()
-	local fullfilepath = vim.fn.expand('%:p')
-	local dot = os.getenv('DOT')
-	if dot == nil then
-		vim.g[statusline_reg] = 'No $DOT...'
-	elseif fullfilepath:find(dot, 1, true) then
-		vim.g[statusline_reg] = "Don't forget to pull..."
-	end
-end
-
-print_dot_warning()
-
 -------------
 --- Utils ---
 -------------

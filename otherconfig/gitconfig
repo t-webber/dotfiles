@@ -21,3 +21,5 @@
         prompt = false
 [pack]
 	threads = 4
+[push]
+	autoSetupRemote = true
