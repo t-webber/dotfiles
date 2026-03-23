@@ -25,15 +25,15 @@ return {
 	--- Prettier ---
 	----------------
 
-	javascript = { 'prettier' },
-	javascriptreact = { 'prettier' },
-	typescript = { 'prettier' },
-	typescriptreact = { 'prettier' },
-	html = { 'prettier' },
-	css = { 'prettier' },
-	json = { 'prettier' },
-	jsonc = { 'prettier' },
-	markdown = { 'prettier' },
+	javascript = { 'pret' },
+	javascriptreact = { 'pret' },
+	typescript = { 'pret' },
+	typescriptreact = { 'pret' },
+	html = { 'pret' },
+	css = { 'pret' },
+	json = { 'pret' },
+	jsonc = { 'pret' },
+	markdown = { 'pret' },
 
 	--------------------
 	--- Clang Format ---

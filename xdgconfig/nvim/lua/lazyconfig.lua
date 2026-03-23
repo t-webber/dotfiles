@@ -232,7 +232,6 @@ local spec = {
 					cache_picker = {
 						num_pickers = 1000,
 					},
-					file_ignore_patterns = {},
 					layout_strategy = 'horizontal',
 					path_display = { 'truncate' },
 					layout_config = {
@@ -292,6 +291,14 @@ local spec = {
 					timeout_ms = 1000,
 				},
 				formatters_by_ft = fmt,
+				formatters = {
+					pret = {
+						command = 'pret',
+						args = { '$FILENAME' },
+						stdin = false,
+						tmp_file_ext = '.md',
+					},
+				},
 			})
 			require('conform').formatters.shfmt =
 				{ append_args = { '-ln', 'bash' } }

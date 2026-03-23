@@ -115,8 +115,8 @@ static const_str USAGE = U
         NL PROG("y")
         NL PROG("y") S OPT("u,i") S PLACE("file.py") OPTS 
         NL PROG("y") S CYAN "k" S OPT(PLACE("module"))
-        NL PROG("y") S OPT("n,y,i,m,r,a,v,t,c") OPTS
-        NL "\tveNv sYnc Init python-Mgr python-Run Add serVe pyTest C"
+        NL PROG("y") S OPT("n,y,i,r,a,v,t,c,e,p") OPTS
+        NL "\tveNv sYnc Init Rm Add serVe pyTest C rEpl Pip"
         NL PROG("y") S PLACE("module") OPTS;
 // clang-format on
 
@@ -133,14 +133,14 @@ int main(const int argc, Args argv) {
 
         if (argc > 1 && !strcmp(argv[1], "n")) uv("venv", NULL, argv + 2);
         if (argc > 1 && !strcmp(argv[1], "i")) uv("init", NULL, argv + 2);
+        if (argc > 1 && !strcmp(argv[1], "r")) uv("rm", NULL, argv + 2);
         if (argc > 1 && !strcmp(argv[1], "y")) uv("sync", NULL, argv + 2);
-        if (argc > 1 && !strcmp(argv[1], "m")) uv("python", NULL, argv + 2);
         if (argc > 1 && !strcmp(argv[1], "k"))
                 uv("lock", "--upgrade", argv + 2);
         if (argc > 1 && !strcmp(argv[1], "kp"))
                 uv("lock", "--upgrade-package", argv + 2);
         if (argc > 1 && !strcmp(argv[1], "v")) serve(argv + 2);
-        if (argc > 1 && !strcmp(argv[1], "r")) python(NULL, argv + 2, NULL);
+        if (argc > 1 && !strcmp(argv[1], "e")) python(NULL, argv + 2, NULL);
         if (argc == 2 && !strcmp(argv[1], "c")) new_del();
         if (argc > 1 && !strcmp(argv[1], "c")) python("-c", argv + 2, NULL);
         if (argc > 1 && !strcmp(argv[1], "t")) uv("run", "pytest", argv + 2);

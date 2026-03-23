@@ -30,7 +30,8 @@ __nonnull() __wur static bool print_escaped(const char ch) {
         }
 }
 
-__nonnull() static void print_arg(const_str arg, const bool no_escape) {
+__wur __nonnull() static bool print_arg(const_str arg, const bool no_escape) {
+        bool has_escapes = false;
         bool escaped = false;
 
         for (const char *ptr = arg; *ptr; ++ptr) {
@@ -41,6 +42,7 @@ __nonnull() static void print_arg(const_str arg, const bool no_escape) {
                                        arg);
                         }
                         escaped = false;
+                        has_escapes = true;
                         continue;
                 }
                 if (*ptr == '%' && !no_escape)
@@ -48,6 +50,7 @@ __nonnull() static void print_arg(const_str arg, const bool no_escape) {
                 else
                         printf("%c", *ptr);
         }
+        return has_escapes;
 }
 
 int main(const int argc, Args argv) {
@@ -58,13 +61,21 @@ int main(const int argc, Args argv) {
                 return 0;
         }
 
+        bool equals = !strcmp(argv[0], "la");
+
+        if (equals) { printf("\x1b[33m===== "); }
+
         bool no_new_line = !strcmp(argv[0], "lw");
         bool no_escape = !strcmp(argv[0], "lr");
+        bool has_escapes = false;
 
         for (int i = 1; i < argc; ++i) {
                 if (i >= 2) printf(" ");
-                print_arg(argv[i], no_escape);
+                has_escapes = print_arg(argv[i], no_escape) || has_escapes;
         }
+
+        if (equals) { printf(" \x1b[33m====="); }
+        if (has_escapes || equals) printf("\x1b[0m");
 
         if (!no_new_line) printf("\n");
 }

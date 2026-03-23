@@ -453,6 +453,8 @@ int main(void) {
         tst("1y36d", "1d+35d1y");
         tst("43d", "1d+35d1w");
 
+        tst(20 / 12 / 2025 / +1w);
+
         printf("dc tests passed\n");
 }
 #endif

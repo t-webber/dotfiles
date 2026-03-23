@@ -1,3 +1,5 @@
 #!/bin/sh
 
-exec "$BUN_INSTALL/bin/bun" x prettier "$@"
+set -euo pipefail
+
+exec "$BUN_INSTALL/bin/bun" x prettier --write "$1"

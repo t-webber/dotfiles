@@ -1,4 +1,4 @@
-LINKS := v rr mc mg nd rc cn cs lw lc lr
+LINKS := v rr mc mg nd rc cn cs lw lc lr la
 
 C ?= gcc
 
@@ -73,7 +73,7 @@ $B/v: $B/s
 $B/rr: $B/r
 	ln -sf $< $@
 
-$B/lw $B/lr $B/lc: $B/l
+$B/lw $B/la $B/lr $B/lc: $B/l
 	ln -sf $< $@
 
 $B/nd: $B/n
