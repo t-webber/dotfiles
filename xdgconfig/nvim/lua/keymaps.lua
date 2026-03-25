@@ -104,6 +104,7 @@ setk(n, ',o', function()
 end, 'open link')
 
 setk(nv, 'ça', 'gg^vG$<CR>')
+setk(nv, 'çy', 'gg^vG$y<CR>')
 setk(nv, 'çs', '<Esc>:silent :w<CR>', 'save')
 setk(niv, 'çx', '<Esc>:w<CR>:so<CR>', 'save and execute')
 setk(niv, 'çd', function()

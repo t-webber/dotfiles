@@ -206,7 +206,7 @@ if [ -f '/etc/arch-release' ] || [ -f '/etc/artix-release' ]; then
         _al Qdtq -p "$p" -Qdtq
         _al Rcns -p "$p" -Rcns
         _al Rdd -p "$p" -Rdd
-        _al U "$p -Syyuu --devel --noconfirm && $p --devel --gendb -Y" 'update packages and completions'
+        _al U "$p -Syyuu --devel --noconfirm && $p --devel --gendb -Y && $(_wi sudo) pkgfile --update" update
         _al F -p "$p" -F
         _al Fy -p "$p" -Fy
         _al C "$p -Rcns \$($p -Qdtq) --noconfirm && yes | $p -Scc" 'remove unused + clear cache'
@@ -438,7 +438,7 @@ _al ig git-graph
 _sep
 
 _al hv 'h pv || h rv'
-_al hw 'h pvw || h rvw || o github.com'
+_al hw 'h pvw 2>/dev/null || h rvw 2>/dev/null || o github.com/t-webber'
 _al hiinit 'nd .github/workflows && rsync -a $OCFG/github-actions/* .github/workflows/'
 _al hicmp 'diff .github/workflows/ $OCFG/github-actions/'
 _al hiapply 'r $OCFG/github-actions/* && rsync -a .github/workflows/* $OCFG/github-actions/'
