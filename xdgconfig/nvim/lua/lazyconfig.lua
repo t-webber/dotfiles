@@ -314,13 +314,7 @@ local spec = {
 		build = ':TSUpdate',
 		config = function()
 			require('nvim-treesitter').install({
-				'c',
-				'lua',
-				'vim',
-				'vimdoc',
-				'query',
-				'rust',
-				'python',
+-- 				'vimdoc',
 			})
 
 			require('nvim-treesitter').setup({

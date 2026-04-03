@@ -6,11 +6,11 @@ local files = {
 	'lsp',
 	'fold',
 	'settings',
-	'functions',
 	'statusline',
 	'lazyconfig',
 	'syntax',
 	'keymaps',
+	'functions',
 }
 
 for _, file in ipairs(files) do

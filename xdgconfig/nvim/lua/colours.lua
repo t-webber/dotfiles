@@ -4,6 +4,7 @@ local c = {
 	rust = { '#a52a2a', 'u' },
 	cyan = { '#77bbcc', 'c' },
 	grey = { '#5c6350', 'e' },
+	darkgrey = { '#4c3330', 'e' },
 	yellow = { '#e5c07b', 'y' },
 	magenta = { '#c678dd', 'm' },
 	orange = { '#ff9955', 'o' },

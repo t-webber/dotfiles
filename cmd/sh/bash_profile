@@ -15,3 +15,4 @@ if [ -z "$TMUX" ]; then
         fi
 fi
 . "/home/b/.files/.data/cargo/env"
+. "/home/b/.local/share/bob/env/env.sh"

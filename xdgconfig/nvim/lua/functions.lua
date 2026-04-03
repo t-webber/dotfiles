@@ -115,36 +115,57 @@ vim.api.nvim_create_autocmd({ 'BufLeave', 'BufWinLeave' }, {
 	end,
 })
 
+-------------------
+--- Tree sitter ---
+-------------------
+
+local available = {}
+local ts = require('nvim-treesitter')
+for _, i in ipairs({ 1, 2 }) do
+	for _, p in ipairs(ts.get_available(i)) do
+		available[p] = true
+	end
+end
+
+local function get_installed()
+	local installed = {}
+	for _, p in ipairs(ts.get_installed('parsers')) do
+		installed[p] = true
+	end
+	return installed
+end
+
+function UninstallAll()
+	for _, p in ipairs(ts.get_installed('parsers')) do
+		ts.uninstall(p)
+	end
+end
+
+local installed = get_installed()
+
+local function check_installed(p)
+	local co = coroutine.create(function()
+		local condition = true
+		while condition ~= true do
+			condition = get_installed()[p]
+		end
+	end)
+	coroutine.resume(co)
+end
+
 vim.api.nvim_create_autocmd('FileType', {
 	pattern = { '*' },
 	callback = function(args)
-		local exclude = {
-			'flash_prompt',
-			'lazy',
-			'lazy_backdrop',
-			'oil_preview',
-			'oil',
-			'registers',
-			'spectre_panel',
-			'TelescopePrompt',
-			'TelescopeResults',
-			'trouble',
-		}
-		if not vim.tbl_contains(exclude, args.match) then
+		local p = args.match
+		if installed[p] == true then
 			vim.treesitter.start()
 			vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 			vim.wo[0][0].foldmethod = 'expr'
+			return
+		end
+		if installed[p] == nil and available[p] == true then
+			ts.install(p)
+			check_installed(p)
 		end
 	end,
 })
-
--- nvim 0.12 only
--- vim.api.nvim_create_autocmd('LspAttach', {
--- 	callback = function(args)
--- 		local client = vim.lsp.get_client_by_id(args.data.client_id)
---
--- 		if client:supports_method('textDocument/documentColor') then
--- 			vim.lsp.document_color.enable(false, args.buf)
--- 		end
--- 	end,
--- })
