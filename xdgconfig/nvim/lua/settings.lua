@@ -38,9 +38,9 @@ local options = {
 	-- 	spell = true,
 	-- 	spelllang = { "en_gb" },
 	winborder = 'single',
-        foldopen="all",
-        foldclose="all",
-        foldlevel = 0
+	foldopen = 'all',
+	foldclose = 'all',
+	foldlevel = 0,
 }
 
 local globals = {

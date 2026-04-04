@@ -1,12 +1,29 @@
--------------------------
---- Lualine functions ---
--------------------------
+------------------------
+--- Global functions ---
+------------------------
 
-vim.api.nvim_clear_autocmds({})
+function TSUninstallAll()
+	local ts = require('nvim-treesitter')
+	for _, p in ipairs(ts.get_installed('parsers')) do
+		ts.uninstall(p)
+	end
+end
+
+function TSStart()
+	vim.treesitter.start()
+	vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+	vim.wo[0][0].foldmethod = 'expr'
+end
+
+function D(x) print(vim.inspect(x)) end
+function R(x) require(x) end
+
+--------------
+--- Notify ---
+--------------
 
 local v = require('globals')
 local statusline_notif = v.statusline_notif
-local statusline_reg = v.statusline_reg
 
 vim.g[statusline_notif] = ''
 local core_notify = vim.notify
@@ -51,121 +68,3 @@ vim.notify = function(msg, ...)
 	end
 	core_notify('core notif: ' .. msg, ...)
 end
-
-vim.api.nvim_create_autocmd({ 'RecordingEnter' }, {
-	callback = function()
-		local reg = vim.fn.reg_recording()
-		if reg == '' then
-			vim.g[statusline_reg] = ''
-		else
-			vim.g[statusline_reg] = reg
-		end
-	end,
-})
-
-vim.api.nvim_create_autocmd({ 'RecordingLeave' }, {
-	callback = function() vim.g[statusline_reg] = '' end,
-})
-
------------------------
---- Other functions ---
------------------------
-
-local better_prisma_format = os.getenv('CMD') .. '/sh/paff'
-
-vim.api.nvim_create_autocmd('BufWritePost', {
-	pattern = '*.prisma',
-	callback = function()
-		local start = vim.loop.hrtime()
-
-		os.execute(better_prisma_format)
-
-		local paff = vim.loop.hrtime()
-
-		local path = vim.api.nvim_buf_get_name(0)
-		vim.cmd('bdelete!')
-		vim.cmd('edit ' .. vim.fn.fnameescape(path))
-		vim.cmd('filetype detect')
-
-		local crazy_stuff = vim.loop.hrtime()
-
-		local paff_time = math.floor((paff - start) / 1e6)
-		local crazy_stuff_time = math.floor((crazy_stuff - paff) / 1e6)
-		vim.g[statusline_notif] = paff_time .. ' & ' .. crazy_stuff_time
-	end,
-})
-
-vim.api.nvim_create_autocmd('TextYankPost', {
-	callback = function() vim.hl.on_yank() end,
-})
-
-vim.api.nvim_create_user_command('GitBlameLine', function()
-	local line_number = vim.fn.line('.') -- Get the current line number. See `:h line()`
-	local filename = vim.api.nvim_buf_get_name(0)
-	print(
-		vim.fn.system({ 'git', 'blame', '-L', line_number .. ',+1', filename })
-	)
-end, {})
-
-vim.api.nvim_create_autocmd({ 'BufLeave', 'BufWinLeave' }, {
-	callback = function(event)
-		if vim.bo[event.buf].filetype == 'TelescopePrompt' then
-			vim.o.laststatus = 2
-		end
-	end,
-})
-
--------------------
---- Tree sitter ---
--------------------
-
-local available = {}
-local ts = require('nvim-treesitter')
-for _, i in ipairs({ 1, 2 }) do
-	for _, p in ipairs(ts.get_available(i)) do
-		available[p] = true
-	end
-end
-
-local function get_installed()
-	local installed = {}
-	for _, p in ipairs(ts.get_installed('parsers')) do
-		installed[p] = true
-	end
-	return installed
-end
-
-function UninstallAll()
-	for _, p in ipairs(ts.get_installed('parsers')) do
-		ts.uninstall(p)
-	end
-end
-
-local installed = get_installed()
-
-local function check_installed(p)
-	local co = coroutine.create(function()
-		local condition = true
-		while condition ~= true do
-			condition = get_installed()[p]
-		end
-	end)
-	coroutine.resume(co)
-end
-
-vim.api.nvim_create_autocmd('FileType', {
-	pattern = { '*' },
-	callback = function(args)
-		local p = args.match
-		if installed[p] == true then
-			vim.treesitter.start()
-			vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-			vim.wo[0][0].foldmethod = 'expr'
-			return
-		end
-		if installed[p] == nil and available[p] == true then
-			ts.install(p)
-			check_installed(p)
-		end
-	end,
-})

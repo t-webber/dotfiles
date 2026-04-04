@@ -147,5 +147,5 @@ int main(const int argc, Args argv) {
 
         if (argc > 2 && !strcmp(argv[1], "a")) uv("add", NULL, argv + 2);
 
-        uv("add", NULL, argv + 2);
+        uv("add", NULL, argv + 1);
 }

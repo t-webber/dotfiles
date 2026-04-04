@@ -25,3 +25,7 @@
 	autoSetupRemote = true
 [clean]
 	requireForce = true
+[url "https://github.com/"]
+	insteadOf = gh:
+[url "https://github.com/t-webber/"]
+	insteadOf = t:

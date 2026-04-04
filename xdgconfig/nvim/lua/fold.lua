@@ -19,7 +19,7 @@ function CustomFoldText()
 	end
 
 	table.insert(chunks, { ' (' .. count .. ' lines) ', '@comment' })
-	table.insert(chunks, { string.rep('─', 160), '@comment' })
+	table.insert(chunks, { string.rep('─', 500), '@comment' })
 
 	return chunks
 end

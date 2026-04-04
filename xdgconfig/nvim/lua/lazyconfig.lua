@@ -314,7 +314,7 @@ local spec = {
 		build = ':TSUpdate',
 		config = function()
 			require('nvim-treesitter').install({
--- 				'vimdoc',
+				-- 				'vimdoc',
 			})
 
 			require('nvim-treesitter').setup({
@@ -323,6 +323,7 @@ local spec = {
 
 			vim.treesitter.language.register('python', 'sage')
 			vim.treesitter.language.register('bash', 'zsh')
+			vim.treesitter.language.register('bash', 'sh')
 			vim.treesitter.language.register('ruby', 'conf')
 		end,
 	},
@@ -341,6 +342,10 @@ local spec = {
 				},
 			})
 		end,
+	},
+	{
+		'cameron-wags/rainbow_csv.nvim',
+		config = true,
 	},
 	--------------
 	--- Editor ---
@@ -414,7 +419,12 @@ local spec = {
 	},
 	{
 		'karb94/neoscroll.nvim',
-		config = true,
+		config = function()
+			require('neoscroll').setup({
+				easing = 'quadratic',
+				duration_multiplier = 0.5,
+			})
+		end,
 		event = 'VeryLazy',
 	},
 	{ 'm4xshen/hardtime.nvim', config = true, event = 'VeryLazy' },
@@ -440,25 +450,6 @@ local spec = {
 		'chomosuke/term-edit.nvim',
 		event = 'TermOpen',
 		config = function() require('term-edit').setup({ prompt_end = '%$ ' }) end,
-	},
-	-------------
-	--- Slop ----
-	-------------
-	{
-		'dccsillag/magma-nvim',
-		build = ':UpdateRemotePlugins',
-		lazy = false,
-	},
-	{
-		'greggh/claude-code.nvim',
-		dependencies = {
-			'nvim-lua/plenary.nvim',
-		},
-		config = function() require('claude-code').setup() end,
-	},
-	{
-		'cameron-wags/rainbow_csv.nvim',
-		config = true,
 	},
 }
 

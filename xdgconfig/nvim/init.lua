@@ -11,6 +11,7 @@ local files = {
 	'syntax',
 	'keymaps',
 	'functions',
+	'autocmd',
 }
 
 for _, file in ipairs(files) do

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ -z "$1"]; then
+if [ -z "$1" ]; then
         l "%1missing argument"
         exit 6
 fi

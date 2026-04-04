@@ -13,8 +13,8 @@ local function apply_comment_colours()
 	for _, ch in pairs(comment_char) do
 		local ch2 = ch .. ch .. '*'
 		local ch4 = ch .. ch .. ch .. ch .. '*'
-		match('bg-hide-semidark', '^\\s*' .. ch4)
-		match('bg-hide-semidark', ch4 .. '$')
+		match('bg-hide-grey', '^\\s*' .. ch4)
+		match('bg-hide-grey', ch4 .. '$')
 
 		for name, value in pairs(true_colours) do
 			if value[2] ~= 'b' then
@@ -88,18 +88,20 @@ vim.filetype.add({
 
 local todo_group = vim.api.nvim_create_augroup('', { clear = true })
 
-vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile', 'BufWinEnter' }, {
+local events = { 'BufRead', 'BufNewFile', 'BufWinEnter', 'WinEnter', 'WinNew' }
+
+vim.api.nvim_create_autocmd(events, {
 	pattern = '!*.raw',
 	callback = function() y_all() end,
 })
 
-vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile', 'BufWinEnter' }, {
+vim.api.nvim_create_autocmd(events, {
 	group = todo_group,
 	pattern = '*.todo',
 	callback = function() y_todo() end,
 })
 
-vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile', 'BufWinEnter' }, {
+vim.api.nvim_create_autocmd(events, {
 	group = todo_group,
 	pattern = '*.md',
 	callback = function() y_todo() end,
