@@ -48,7 +48,9 @@ __wur bool is_dbg(void);
                                                                                \
         ssize_t nbytes = 0;                                                    \
         ssize_t n;                                                             \
-        while ((n = read(fildes[0], buffer + nbytes, buf_size - 1 - (size_t)nbytes))   \
+        while ((n = read(fildes[0],                                            \
+                         buffer + nbytes,                                      \
+                         buf_size - 1 - (size_t)nbytes))                       \
                > 0)                                                            \
                 nbytes += n;                                                   \
                                                                                \
@@ -63,6 +65,9 @@ __wur bool is_dbg(void);
         __read_simple_exl_maker(exldn, buf_size, buffer, __VA_ARGS__)
 #define read_simple_exl1(buf_size, buffer, ...)                                \
         __read_simple_exl_maker(exl1, buf_size, buffer, __VA_ARGS__)
+
+#define read_simple_exvd(buf_size, buffer, cmd)                                \
+        __read_simple_exl_maker(exvd, buf_size, buffer, cmd)
 
 _Noreturn __nonnull() void exvd(Args args);
 __nonnull() void forked_exvd(Args args);
