@@ -40,6 +40,7 @@ const Cmd COMMANDS[] = {
 
     cmd("s", "search", "--limit", ),
 
+    cmd("ti", "tauri", "dev", ),
     cmd("t",
         "test",
         "--all",

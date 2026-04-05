@@ -66,8 +66,8 @@ static const Cmd COMMANDS[] = {
         "-S",
         "--no-edit",
         "--quiet",
-        "=y--allow-empty",
-        "=w--allow-empty-message",
+        "=b--allow-empty",
+        "=g--allow-empty-message",
         "--reset-author", ),
 
     cmd("do", "difftool", "--cached", ),

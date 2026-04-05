@@ -1117,8 +1117,13 @@ _ual l echo
 _al zjdk 'zj ka && zj da'
 _al lcd 'lc && dc && '
 _al wi '. wi'
-_ual od claude
-_al od ". "$NVM_DIR/nvm.sh" && nvm use 24 && $(_wi claude)"
+
+_ual od claude copilot
+if [ "$(uname)" = "Darwin" ]; then
+        _al od ". "$NVM_DIR/nvm.sh" && nvm use 24 && $(_wi claude)"
+else
+        _al od 'copilot --model gpt-5-mini --effort high'
+fi
 _al odr 'od --resume'
 
 _print other
