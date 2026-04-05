@@ -565,7 +565,7 @@ _ual 's or v' cat ls lla llag bat eza ll
 _ual 'l, lw, lc, lr or ret' cls clear eh
 _al ret 'l $?'
 
-_al svv "$(_wi eza) -lA --git --git-ignore"
+_al svv "$(_wi eza) -lA --git --git-ignore --time-style=full-iso"
 
 _al sr 'v README.md || v docs/README.md || v README || v docs/README'
 
@@ -1117,9 +1117,15 @@ _ual l echo
 _al zjdk 'zj ka && zj da'
 _al lcd 'lc && dc && '
 _al wi '. wi'
-_ual od claude
-_al od ". "$NVM_DIR/nvm.sh" && nvm use 24 && $(_wi claude)"
+
+_ual od claude copilot
+if [ "$(uname)" = "Darwin" ]; then
+        _al od ". "$NVM_DIR/nvm.sh" && nvm use 24 && $(_wi claude)"
+else
+        _al od "$(_wi copilot) --model gpt-5-mini --effort high"
+fi
 _al odr 'od --resume'
+_al ctiab "c tiab && apksigner sign --ks $SECRET/apkkey.keystore --ks-key-alias my-key --out $HOME/latest.apk src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-unsigned.apk &&  apksigner verify $HOME/latest.apk && l $HOME/latest.apk built successfully"
 
 _print other
 

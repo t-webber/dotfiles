@@ -21,7 +21,7 @@ cd $DOT >/dev/null 2>&1
 i a.
 
 if [ "$msg" = "a" ]; then
-        i canw
+        i canbg
         i phfq
 else
         i cm "$msg"

@@ -5,8 +5,6 @@ function CustomFoldText()
 
 	-- get treesitter highlights for the first line
 	local chunks = {}
-	local highlights = vim.treesitter.get_captures_at_pos
-	local col = 0
 	for i = 0, #line - 1 do
 		local captures = vim.treesitter.get_captures_at_pos(0, start - 1, i)
 		local hl = captures[#captures] and ('@' .. captures[#captures].capture)

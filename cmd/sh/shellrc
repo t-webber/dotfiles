@@ -140,6 +140,7 @@ if [ "$DEVICE" = "acer" ]; then
         PATH+=":$ANDROID_HOME/emulator"
         PATH+=":$ANDROID_HOME/platform-tools"
         PATH+=":$ANDROID_HOME/cmdline-tools/latest/bin/"
+        PATH+=":$ANDROID_HOME/build-tools/36.0.0/"
 fi
 export PATH
 

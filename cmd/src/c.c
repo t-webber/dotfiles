@@ -40,6 +40,7 @@ const Cmd COMMANDS[] = {
 
     cmd("s", "search", "--limit", ),
 
+    cmd("ti", "tauri", "dev", "android", "build", "=oicon", "init", ),
     cmd("t",
         "test",
         "--all",
