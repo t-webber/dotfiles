@@ -67,7 +67,10 @@ int main(const int argc, Args argv) {
 
         bool no_new_line = !strcmp(argv[0], "lw");
         bool no_escape = !strcmp(argv[0], "lr");
-        bool has_escapes = false;
+        bool error = !strcmp(argv[0], "le");
+        bool has_escapes = error;
+
+        if (error) { printf("\x1b[31m"); }
 
         for (int i = 1; i < argc; ++i) {
                 if (i >= 2) printf(" ");
@@ -78,4 +81,6 @@ int main(const int argc, Args argv) {
         if (has_escapes || equals) printf("\x1b[0m");
 
         if (!no_new_line) printf("\n");
+
+        return error ? 1 : 0;
 }

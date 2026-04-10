@@ -1,6 +1,9 @@
 #include "lib.h"
 #include "libos.h"
 
+/// TODO: p og: expands to master, and pogfolder expands to p o g folder without
+/// needing slash
+
 #include <sys/stat.h>
 
 #define c(scope, res)                                                          \

@@ -10,6 +10,8 @@
 #include <time.h>
 #include <unistd.h>
 
+/// TODO: if folder is branch name, then display the parent with trailing <
+
 #define SHORT(path, alias, condition)                                          \
         if (condition) {                                                       \
                 stpcpy(path, alias);                                           \

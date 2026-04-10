@@ -1117,17 +1117,16 @@ _ual l echo
 _al zjdk 'zj ka && zj da'
 _al lcd 'lc && dc && '
 _al wi '. wi'
+_al jj 'join -j 9999999 '
 
 _ual od claude copilot
-if [ "$(uname)" = "Darwin" ]; then
-        _al od ". "$NVM_DIR/nvm.sh" && nvm use 24 && $(_wi claude)"
-else
-        _al od "$(_wi copilot) --model gpt-5-mini --effort high"
-fi
-_al odr 'od --resume'
+_al od '. od'
+_al odr '. od resume'
 _al ctiab "c tiab && apksigner sign --ks $SECRET/apkkey.keystore --ks-key-alias my-key --out $HOME/latest.apk src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-unsigned.apk &&  apksigner verify $HOME/latest.apk && l $HOME/latest.apk built successfully"
 
 _print other
+
+chkpqt() { y c "from pandas import read_parquet as r; d = r('$1'); print(d)"; }
 
 #####################################
 

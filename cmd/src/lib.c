@@ -13,7 +13,7 @@
 
 __nonnull() void print_inline_array(const char *const *const array) {
         for (const char *const *arg = array; *arg; ++arg) {
-                printf("%s ", *arg);
+                printf("'%s' ", *arg);
         }
         printf("\n");
 }
@@ -23,7 +23,7 @@ void print_inline_variadic(const_str first, ...) {
         const char *current = first;
         va_start(args, first);
         while (current != NULL) {
-                printf("%s ", current);
+                printf("'%s' ", current);
                 current = va_arg(args, const char *);
         }
         printf("\n");

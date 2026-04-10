@@ -144,7 +144,8 @@ __nonnull() static void handle_char(Vec *const cmd,
 
         if (ch == '$') {
                 if (state->raw_mode == NULL) {
-                        state->raw_mode = NULL; // TODO: NEW_STRING("");
+                        /// TODO: NEW_STRING("");
+                        state->raw_mode = NULL;
                 } else {
                         push(cmd, state->raw_mode);
                         state->raw_mode = NULL;
@@ -153,7 +154,7 @@ __nonnull() static void handle_char(Vec *const cmd,
         }
 
         if (state->raw_mode != NULL) {
-                // TODO: push char into string
+                /// TODO: push char into string
                 return;
         }
 

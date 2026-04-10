@@ -15,4 +15,6 @@ make_single("f",
             "=L--follow",
             "=..",
             "-E",
-            "=x--exclude", )
+            "=x--exclude",
+            "f",
+            "d", )

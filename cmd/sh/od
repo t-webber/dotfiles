@@ -1,0 +1,21 @@
+#!/bin/sh
+
+if [ "$(uname)" = "Darwin" ]; then
+        command -v nvm >/dev/null || {
+                . $NVM_DIR/nvm.sh
+                nvm use 24
+        }
+        p=$(_wi claude)
+        nb=$($p mcp list | g _ Connected$ | cnt | tr -d ' \n')
+        if [ "$nb" != "4" ]; then
+                le Mcp not connected
+        fi
+else
+        p=$(_wi copilot)
+fi
+
+if [ "$1" = "resume" ]; then
+        $p --resume $2
+else
+        $p
+fi

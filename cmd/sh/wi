@@ -2,7 +2,7 @@
 
 if [ -z "$1" ]; then
         l "%1missing argument"
-        exit 6
+        return 6
 fi
 
 ty=$(type $1 2>/dev/null || file "$1" 2>&1 || true)

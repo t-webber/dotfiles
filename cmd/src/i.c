@@ -1,16 +1,14 @@
 #include "libcmd.h"
 
-/// Git improvement ideas:
-///
-/// - add $$ support for in-first-arg params
-/// - add a iorb to rebase edit on one commit only w/o editor
-/// - on git rebase conflicts, display the list of CONFLICTS only (and put the
-/// full log in a file in del?)
-/// - same for git merge
-/// - interactive git add that let's me select files to add.
+/// TODO: add $$ support for in-first-arg params
+/// TODO: add a iorb to rebase edit on one commit only w/o editor
+/// TODO: on git rebase conflicts, display the list of CONFLICTS only (and put
+/// the full log in a file in del?)
+/// TODO: same for git merge
+/// TODO: interactive git add that let's me select files to add.
 
 static const Cmd COMMANDS[] = {
-    cmd("a", "add", "-p", ".", "--intent-to-add", "-e", ),
+    cmd("a", "add", "-p", ".", "--intent-to-add", "-e", "--all", ),
 
     cmd("br",
         "branch",

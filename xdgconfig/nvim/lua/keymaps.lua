@@ -913,7 +913,7 @@ timer:start(
 	20 * 1000,
 	vim.schedule_wrap(function()
 		math.randomseed(os.time())
-		local idx = math.random(0, #keymap_display)
+		local idx = math.random(0, #keymap_display - 1)
 		vim.g[msg] = fmt_keymap(keymap_display[idx], true)
 	end)
 )

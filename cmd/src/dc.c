@@ -6,15 +6,13 @@
 #include <stdlib.h>
 #include <time.h>
 
-// dcalc 14h30m - 6h
-// dcalc 10h30m - 11h
-// dcalc 23/2/ - 11h
-
 typedef enum { Amount, Absolute, NotKnown, Meaningless } AmountType;
 
-static AmountType combine_amount(const AmountType a, const AmountType b) {
+static AmountType
+combine_amount(const AmountType a, const AmountType b, const bool plus) {
         if (a == Meaningless || b == Meaningless)
                 upanic("Tried to combine meaningless amounts");
+        if (!plus && a == Absolute && b == Absolute) return Amount;
         if (a == Absolute || b == Absolute) return Absolute;
         return Amount;
 }
@@ -171,13 +169,21 @@ __nonnull() static void print_dt_absolute(const DT *const dt,
 __nonnull() static void print_dt(const DT *const dt,
                                  const DT *const mask,
                                  char *buf) {
+        *buf = '\0';
+
         if (dt->amount == Absolute) {
                 print_dt_absolute(dt, mask, buf);
                 return;
         }
 
+        const_str start = buf;
+        bool some = false;
+
 #define p(x, c)                                                                \
-        if (mask->x) { s("%d%s", dt->x, #c); }
+        if (mask->x) {                                                         \
+                if (dt->x) some = true;                                        \
+                if (some) s("%d%s", dt->x, #c);                                \
+        }
 
         p(year, y);
         p(month, t);
@@ -189,6 +195,8 @@ __nonnull() static void print_dt(const DT *const dt,
 
         p(min, m);
         p(sec, s);
+
+        if (buf == start) s("0");
 }
 
 __nonnull() static void print_dbg(const DT *const dt) {
@@ -196,7 +204,7 @@ __nonnull() static void print_dbg(const DT *const dt) {
                 char m[64];
                 print_dt(dt, &MASK_ALL, m);
                 const AmountType a = dt->amount;
-                printf(a == Amount        ? "amount"
+                printf(a == Amount        ? "Amount"
                        : a == Absolute    ? "Absolute"
                        : a == Meaningless ? "Meaningless"
                                           : "NotKnown");
@@ -255,7 +263,7 @@ __nonnull((2)) static void plus(const_str arg1, const_str arg2, char *buf) {
                   dt1.hour + dt2.hour,
                   dt1.min + dt2.min,
                   dt1.sec + dt2.sec,
-                  combine_amount(dt1.amount, dt2.amount)};
+                  combine_amount(dt1.amount, dt2.amount, true)};
 
         carry(sec, min, 60);
         carry(min, hour, 60);
@@ -287,9 +295,14 @@ __nonnull((2)) static void plus(const_str arg1, const_str arg2, char *buf) {
 }
 
 #define carrysub(this, higher, modulo)                                         \
+        if (sum.higher < 0 && sum.this > 0) {                                  \
+                sum.this += sum.higher * modulo;                               \
+                sum.higher = 0;                                                \
+        }                                                                      \
         carry(this, higher, modulo);                                           \
         if (sum.this < 0) {                                                    \
                 sum.higher -= 1;                                               \
+                mask.higher = 1;                                               \
                 sum.this += modulo;                                            \
         }
 
@@ -303,20 +316,56 @@ __nonnull((2)) static void minus(const_str arg1, const_str arg2, char *buf) {
                   dt1.hour - dt2.hour,
                   dt1.min - dt2.min,
                   dt1.sec - dt2.sec,
-                  combine_amount(dt1.amount, dt2.amount)};
+                  combine_amount(dt1.amount, dt2.amount, false)};
+
+        bool no_date = sum.year + sum.month + sum.day == 0
+                       || mask.year + mask.month + mask.day == 0;
+        if (no_date) {
+                mask.year = 0;
+                mask.month = 0;
+                mask.day = 0;
+                if (mask.amount == NotKnown) mask.amount = Amount;
+        }
 
         carrysub(sec, min, 60);
-        carrysub(min, hour, 60);
-        carrysub(hour, day, 24);
+
+        if (sum.hour < 0 && sum.min > 0) {
+                sum.min += sum.hour * 60;
+                sum.hour = 0;
+                if (getenv("DEBUG")) {
+                        printf("t1: ");
+                        print_dbg(&sum);
+                }
+        }
+        if (sum.min / 60) {
+                mask.hour = 1;
+                sum.hour += sum.min / 60;
+                sum.min %= 60;
+                if (getenv("DEBUG")) {
+                        printf("t2: ");
+                        print_dbg(&sum);
+                }
+        };
+        if (sum.min < 0) {
+                sum.hour -= 1;
+                mask.hour = 1;
+                sum.min += 60;
+                if (getenv("DEBUG")) {
+                        printf("t2: ");
+                        print_dbg(&sum);
+                }
+        };
+
+        if (sum.amount == Absolute || !no_date) { carrysub(hour, day, 24); }
         carrysub(month, year, 12);
 
-        if (sum.month == 0) {
+        if (sum.month == 0 && sum.amount == Absolute) {
                 sum.year -= 1;
                 sum.month = 12;
                 mask.year = mask.month = 1;
         }
 
-        while (sum.day <= 0) {
+        while (sum.day <= 0 && sum.amount == Absolute) {
                 if (sum.month == 1) {
                         sum.month = 12;
                         sum.year -= 1;
@@ -329,7 +378,22 @@ __nonnull((2)) static void minus(const_str arg1, const_str arg2, char *buf) {
                 sum.day += nb_days;
         }
 
-        if (mask.year != 0 || mask.month != 0) { fix_days(&sum, &mask); }
+        if ((mask.year != 0 || mask.month != 0) && sum.amount == Absolute) {
+                fix_days(&sum, &mask);
+        }
+
+        if (getenv("DEBUG")) {
+                printf("1 ");
+                print_dbg(&dt1);
+                printf("2 ");
+                print_dbg(&dt2);
+                printf("------------\n");
+                printf("mask ");
+                print_dbg(&mask);
+                printf("sum ");
+                print_dbg(&sum);
+                printf("========================\n");
+        }
 
         print_dt(&sum, &mask, buf);
 }
@@ -386,7 +450,10 @@ int main(const int argc, Args argv) {
                      out);                                                     \
         if (getenv("DEBUG")) printf("out %s\n", out);                          \
         if (strcmp(expected, out))                                             \
-                upanic("(expected) '%s' != '%s' (output)", expected, out);
+                upanic("(expected) '%s' != '%s' (output) at line %d",          \
+                       expected,                                               \
+                       out,                                                    \
+                       __LINE__);
 
 int main(void) {
         char out[64];
@@ -453,8 +520,6 @@ int main(void) {
         tst("1y36d", "1d+35d1y");
         tst("43d", "1d+35d1w");
 
-        tst(20 / 12 / 2025 / +1w);
-
         /// relative minus
 
         tst("25/02/2021 11h42m37s", );
@@ -475,9 +540,9 @@ int main(void) {
         tst("24/02 10h42m", "-25h");
 
         tst("24/02", "-1d");
-        tst("14/03", "-10d");
-        tst("13/03", "-1w1d");
-        tst("13/03", "-1d1w");
+        tst("15/02", "-10d");
+        tst("17/02", "-1w1d");
+        tst("17/02", "-1d1w");
 
         /// absolute plus
 
@@ -488,35 +553,44 @@ int main(void) {
 
         // precision
 
-        tst("11h41m1s", "11h41m-1s");
-        tst("11h41m1s", "11h41m", "-", "1s");
-        tst("28/02 11h41m01s", "28/02/11h41m-1s");
-        tst("28/02/2026 0h00m01s", "28/02/2026/-1s");
-        tst("28/02/2026 0h01m", "28/02/2026/-1m");
-        tst("28/02/2026 1h00m", "28/02/2026/-1h");
+        tst("11h40m59s", "11h41m-1s");
+        tst("11h40m59s", "11h41m", "-", "1s");
+        tst("28/02 11h40m59s", "28/02/11h41m-1s");
+        tst("27/02/2026 23h59m59s", "28/02/2026/-1s");
+        tst("27/02/2026 23h59m", "28/02/2026/-1m");
+        tst("27/02/2026 23h00m", "28/02/2026/-1h");
 
-        tst("28/02/2027", "28/02/2026/-1y");
-        tst("28/03/2027", "28/02/2026/-1y1t");
-        tst("28/03/2027", "28/02/2026/-1t1y");
+        tst("28/02/2025", "28/02/2026/-1y");
+        tst("28/01/2025", "28/02/2026/-1y1t");
+        tst("28/01/2025", "28/02/2026/-1t1y");
 
         // leap years
 
-        tst("01/03/2026", "28/02/2026/-1d");
-        tst("29/02/2020", "28/02/2020/-1d");
-        tst("01/03/1900", "28/02/1900/-1d");
-        tst("29/02/2000", "28/02/2000/-1d");
+        tst("28/02/2026", "01/03/2026/-1d");
+        tst("29/02/2020", "01/03/2020/-1d");
+        tst("28/02/1900", "01/03/1900/-1d");
+        tst("29/02/2000", "01/03/2000/-1d");
 
-        /// amount plus
+        /// amount minus
 
-        tst("2d", "1d-1d");
-        tst("2d 1h", "1d-1d1h");
-        tst("3d 1h", "1d-1d25h");
-        tst("36d", "1d-35d");
-        tst("1t36d", "1d-35d1t");
+        tst("0", "1d-1d");
+        tst("-1h", "1d-1d1h");
+        tst("1h", "1d1h-1d");
+        tst("-25h", "1d-1d25h");
+        tst("-34d", "1d-35d");
+        tst("1t34d", "35d1t-1d");
 
-        tst("1d 1h3s", "1h3s-1d");
-        tst("1y36d", "1d-35d1y");
-        tst("43d", "1d-35d1w");
+        tst("-1d 1h3s", "1h3s-1d");
+        tst("-1y-34d", "1d-35d1y");
+        tst("-41d", "1d-35d1w");
+        tst("22/02 13h00m", "23/2/-11h");
+
+        tst("2t1d", "02/03/-01/01/");
+
+        tst("12h", "21h-9h");
+        tst("8h30m", "14h30m-6h");
+        tst("30m", "11h-10h30m");
+        tst("-30m", "10h30m-11h"); /// TODO: fix this
 
         printf("dc tests passed\n");
 }

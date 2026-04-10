@@ -297,3 +297,5 @@ if [ "$(uname)" = "Darwin" ]; then
                 ;;
         esac
 fi
+
+alias claude-mem='bun "/Users/twebber/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
