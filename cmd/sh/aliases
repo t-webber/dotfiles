@@ -206,7 +206,7 @@ if [ -f '/etc/arch-release' ] || [ -f '/etc/artix-release' ]; then
         _al Qdtq -p "$p" -Qdtq
         _al Rcns -p "$p" -Rcns
         _al Rdd -p "$p" -Rdd
-        _al U "$p -Syyuu --devel --noconfirm && $p --devel --gendb -Y && $(_wi sudo) pkgfile --update" update
+        _al U "PATH=/bin:$CMD/bin $p -Syyuu --devel --noconfirm && $p --devel --gendb -Y && $(_wi sudo) pkgfile --update" update
         _al F -p "$p" -F
         _al Fy -p "$p" -Fy
         _al C "$p -Rcns \$($p -Qdtq) --noconfirm && yes | $p -Scc" 'remove unused + clear cache'

@@ -162,7 +162,7 @@ static const Cmd COMMANDS[] = {
         "--cache", ),
     cmd("sw", "switch", "-C", "-c", ),
     cmd("so", "show", "--stat", ),
-    cmd("s", "status", ),
+    cmd("s", "status", "--ignored", ),
 
     cmd("t", "tag", "-d", ),
 

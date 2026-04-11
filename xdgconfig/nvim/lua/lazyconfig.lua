@@ -292,7 +292,7 @@ local spec = {
 				},
 				formatters_by_ft = fmt,
 				formatters = {
-					pret = {
+					_prettier = {
 						command = 'pret',
 						args = { '$FILENAME' },
 						stdin = false,

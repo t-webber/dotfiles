@@ -12,6 +12,8 @@ return {
 	go = { 'gofmt' },
 	kdl = { 'kdlfmt' },
 	zig = { 'zigfmt' },
+	xml = { 'xmllint' },
+	kotlin = { 'ktlint' },
 
 	-------------
 	--- Shell ---
@@ -25,15 +27,16 @@ return {
 	--- Prettier ---
 	----------------
 
-	javascript = { 'pret' },
-	javascriptreact = { 'pret' },
-	typescript = { 'pret' },
-	typescriptreact = { 'pret' },
-	html = { 'pret' },
-	css = { 'pret' },
-	json = { 'pret' },
-	jsonc = { 'pret' },
-	markdown = { 'pret' },
+	javascript = { '_prettier' },
+	javascriptreact = { '_prettier' },
+	typescript = { '_prettier' },
+	typescriptreact = { '_prettier' },
+	html = { '_prettier' },
+	css = { '_prettier' },
+	json = { '_prettier' },
+	jsonc = { '_prettier' },
+	markdown = { '_prettier' },
+	yaml = { '_prettier' },
 
 	--------------------
 	--- Clang Format ---

@@ -11,7 +11,7 @@ if [ "$(uname)" = "Darwin" ]; then
                 le Mcp not connected
         fi
 else
-        p=$(_wi copilot)
+        p="$(_wi copilot) --model gpt-5-mini --effort high"
 fi
 
 if [ "$1" = "resume" ]; then

@@ -87,9 +87,7 @@ export GOTOOLDIR="$DATA/go/tooldir"
 export GOHOME="$DATA/go/home"
 export GOPATH="$DATA/go/path"
 
-export ANDROID_HOME="$DATA/android/sdk"
-export NDK_HOME="$ANDROID_HOME/ndk/29.0.14206865/"
-export ANDROID_AVD_HOME="$ANDROID_HOME/avd"
+export ANDROID_HOME=/opt/android-sdk/
 
 ########################
 ### global variables ###
