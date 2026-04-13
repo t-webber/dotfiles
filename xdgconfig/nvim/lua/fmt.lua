@@ -12,7 +12,7 @@ return {
 	go = { 'gofmt' },
 	kdl = { 'kdlfmt' },
 	zig = { 'zigfmt' },
-	xml = { 'xmllint' },
+	xml = { 'tidy' },
 	kotlin = { 'ktlint' },
 
 	-------------

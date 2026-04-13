@@ -914,7 +914,14 @@ timer:start(
 	vim.schedule_wrap(function()
 		math.randomseed(os.time())
 		local idx = math.random(0, #keymap_display - 1)
-		vim.g[msg] = fmt_keymap(keymap_display[idx], true)
+		local keymap = keymap_display[idx]
+		if keymap == nil then
+			timer:stop()
+			timer:close()
+			vim.g[msg] = 'invalid idx ' .. idx .. ' for len ' .. #keymap_display
+		else
+			vim.g[msg] = fmt_keymap(keymap, true)
+		end
 	end)
 )
 

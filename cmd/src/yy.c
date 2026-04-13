@@ -133,7 +133,7 @@ int main(const int argc, Args argv) {
 
         if (argc > 1 && !strcmp(argv[1], "n")) uv("venv", NULL, argv + 2);
         if (argc > 1 && !strcmp(argv[1], "i")) uv("init", NULL, argv + 2);
-        if (argc > 1 && !strcmp(argv[1], "r")) uv("rm", NULL, argv + 2);
+        if (argc > 1 && !strcmp(argv[1], "r")) uv("remove", NULL, argv + 2);
         if (argc > 1 && !strcmp(argv[1], "y")) uv("sync", NULL, argv + 2);
         if (argc == 2 && !strcmp(argv[1], "k"))
                 uv("lock", "--upgrade", argv + 2);

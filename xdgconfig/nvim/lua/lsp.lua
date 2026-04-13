@@ -1,7 +1,16 @@
-local root = vim.fs.root(0, { 'pyproject.toml', '.git', 'venv' })
-	or vim.fn.getcwd()
-
 local lsps = {
+
+	kt = {
+		cmd = { 'kotlin-lsp' },
+		filetypes = { 'kotlin' },
+		root_markers = {
+			'settings.gradle.kts',
+			'settings.gradle',
+			'build.gradle',
+			'build.gradle.kts',
+		},
+		single_file_support = true,
+	},
 
 	zig = { cmd = { 'zls' }, filetypes = { 'zig' } },
 
@@ -17,12 +26,12 @@ local lsps = {
 					autoSearchPaths = true,
 					useLibraryCodeForTypes = true,
 					reportMissingTypeStubs = false,
-					-- 					diagnosticSeverityOverrides = python.diagnostics,
-					-- 					extraPaths = python.extraPaths,
+					-- diagnosticSeverityOverrides = python.diagnostics,
+					-- extraPaths = python.extraPaths,
 				},
 			},
-			-- 			venvPath = python.venvPath,
-			-- 			venv = python.venv,
+			-- venvPath = python.venvPath,
+			-- venv = python.venv,
 		},
 	},
 
@@ -93,7 +102,7 @@ local lsps = {
 for name, config in pairs(lsps) do
 	vim.lsp.enable(name)
 	if config['root_markers'] == nil then config['root_markers'] = {} end
-	for _, markers in ipairs({ '.git', '.' }) do
+	for _, marker in ipairs({ '.git', '.' }) do
 		table.insert(config['root_markers'], marker)
 	end
 	vim.lsp.config(name, config)
@@ -119,5 +128,3 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 		end
 	end,
 })
-
-return python

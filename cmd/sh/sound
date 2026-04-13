@@ -5,7 +5,10 @@ set -eo pipefail
 l="$LOGS/sound-"
 
 if [ "$1" = "logs" ]; then
-        bat $l*
+        for f in $l*; do
+                la $f
+                v $f
+        done
         exit 0
 fi
 
@@ -29,7 +32,8 @@ if [ -n "$1" ]; then
 fi
 
 for f in $l*; do
-        mv $f $f.old
+        [ -f $f ] &&
+                mv $f $f.old
 done
 
 pipewire >"$l-1" 2>"$l-2" &
