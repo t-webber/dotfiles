@@ -20,14 +20,14 @@ __nonnull() static void parse_python_opts(Vec *cmd, const_str opts) {
         for (const char *ch = opts; *ch != '\0'; ++ch) {
                 switch (*ch) {
                 case 'u':
-                        push(cmd, "-u");
+                        push_v(cmd, "-u");
                         break;
                 case '!':
                         printf("\033c");
                         fflush(stdout);
                         break;
                 case 'i':
-                        push(cmd, "-i");
+                        push_v(cmd, "-i");
                         break;
                 default:
                         usage("Invalid option char: " GREEN "%c" RED ".", *ch);
@@ -47,15 +47,15 @@ __wur static const char *get_python(void) {
 __nonnull((2)) _Noreturn static void python(const_str file,
                                             Args argv,
                                             const_str opts) {
-        Vec cmd = new_vec();
-        push(&cmd, get_python());
+        Vec cmd = new_v();
+        push_v(&cmd, get_python());
 
         if (opts) { parse_python_opts(&cmd, opts); }
 
-        if (file) push(&cmd, file);
+        if (file) push_v(&cmd, file);
         for (const char *const *arg = argv; *arg != NULL; ++arg)
-                push(&cmd, *arg);
-        push(&cmd, NULL);
+                push_v(&cmd, *arg);
+        push_v(&cmd, NULL);
 
         exvd(cmd.data);
 }
@@ -63,21 +63,21 @@ __nonnull((2)) _Noreturn static void python(const_str file,
 _Noreturn __nonnull((1, 3)) static void uv(const_str command,
                                            const_str opt,
                                            Args args) {
-        Vec cmd = new_vec();
-        push(&cmd, "uv");
-        push(&cmd, command);
-        if (opt != NULL) { push(&cmd, opt); }
+        Vec cmd = new_v();
+        push_v(&cmd, "uv");
+        push_v(&cmd, command);
+        if (opt != NULL) { push_v(&cmd, opt); }
         for (const char *const *arg = args; *arg != NULL; ++arg)
-                push(&cmd, *arg);
+                push_v(&cmd, *arg);
 
         exvd(cmd.data);
 }
 
 _Noreturn __nonnull() static void serve(Args args) {
-        Vec cmd = new_vec();
-        push(&cmd, get_python());
-        push(&cmd, "-m");
-        push(&cmd, "http.server");
+        Vec cmd = new_v();
+        push_v(&cmd, get_python());
+        push_v(&cmd, "-m");
+        push_v(&cmd, "http.server");
         for (const char *const *arg = args; *arg != NULL; ++arg) {
                 bool isnum = true;
                 for (const char *ch = *arg; *ch; ++ch) {
@@ -87,13 +87,13 @@ _Noreturn __nonnull() static void serve(Args args) {
                         };
                 }
                 if (isnum) {
-                        push(&cmd, *arg);
+                        push_v(&cmd, *arg);
                 } else {
-                        push(&cmd, "-b");
-                        push(&cmd, *arg);
+                        push_v(&cmd, "-b");
+                        push_v(&cmd, *arg);
                 }
         }
-        push(&cmd, NULL);
+        push_v(&cmd, NULL);
 
         exvd(cmd.data);
 }

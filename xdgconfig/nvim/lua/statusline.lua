@@ -172,19 +172,19 @@ local function sl_acer_battery()
 	return sl_sep() .. hg .. string.format('%s', level)
 end
 
-local level = ''
+local level = nil
 local status = ''
 
 local function sl_mac_battery()
 	vim.system({ 'pwmcharge' }, { text = true }, function(o1)
-		level = o1.stdout
+		level = tonumber(o1.stdout)
 		vim.system({ 'pwmstatus' }, { text = true }, function(o2)
 			if o2.stdout == 'Yes\n' then
 				status = 'Charging'
 			else
 				status = 'Discharging'
 			end
-			if tonumber(level) < 20 and status == 'Discharging' then
+			if level < 20 and status == 'Discharging' then
 				vim.system({
 					'osascript',
 					'-e',
@@ -193,7 +193,7 @@ local function sl_mac_battery()
 						.. ')" with title "nvim"',
 				})
 			end
-			if tonumber(level) == 100 and status == 'Charging' then
+			if level == 100 and status == 'Charging' then
 				vim.system({
 					'osascript',
 					'-e',
@@ -203,7 +203,8 @@ local function sl_mac_battery()
 		end)
 	end)
 	local hg = make_hg('CustomStatusLineBattery' .. status)
-	return sl_sep() .. hg .. string.format('%s', level)
+	if level == nil then return '' end
+	return sl_sep() .. hg .. tostring(level)
 end
 
 local function sl_battery()

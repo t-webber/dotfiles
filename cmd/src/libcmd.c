@@ -1,6 +1,7 @@
 #include "libcmd.h"
 #include "lib.h"
 #include "libexec.h"
+#include "libterm.h"
 #include "libvec.h"
 #include <ctype.h> // IWYU pragma: keep
 #include <stdio.h>
@@ -62,7 +63,7 @@ __nonnull() static void print_help(const CliSettings *const settings) {
 ---\n\
 !  clear\n\
 @  print command\n\
-$  toggle raw mode for in-arg-values\n\
+_  toggle raw mode for in-arg-values\n\
 =  no pager\n\
 /  add / between 2-word arg\n\
 :  add : between 2-word arg\n\
@@ -99,7 +100,7 @@ __nonnull() __wur static bool take_two(Vec *const cmd,
                 const char *last = strrchr(opts[i] + 2, '-');
                 if (!last || !*++last || *last != second) continue;
 
-                push(cmd, opts[i]);
+                push_v(cmd, opts[i]);
                 return true;
         }
 
@@ -112,11 +113,11 @@ __nonnull() __wur
                 const char *first = opts[i];
                 for (; *first == '-'; ++first);
                 if (*first == c) {
-                        push(cmd, opts[i]);
+                        push_v(cmd, opts[i]);
                         return true;
                 }
                 if (*first == '=' && *++first == c) {
-                        push(cmd, opts[i] + 2);
+                        push_v(cmd, opts[i] + 2);
                         return true;
                 }
         }
@@ -128,42 +129,45 @@ struct CharParsingState {
         char prev_sep;
         char sep;
         bool less;
-        char *raw_mode;
+        String raw_mode;
+        bool israw;
 };
 
 __nonnull() static void handle_char(Vec *const cmd,
                                     const Manual *const expansions,
                                     const size_t nb_expansions,
                                     const_str arg,
-                                    Args opts,
+                                    const Cmd *const current,
                                     size_t *const i,
                                     const size_t end,
                                     struct CharParsingState *const state) {
 
         const char ch = arg[*i];
 
-        if (ch == '$') {
-                if (state->raw_mode == NULL) {
-                        /// TODO: NEW_STRING("");
-                        state->raw_mode = NULL;
+        if (ch == '_') {
+                if (state->israw) {
+                        const size_t len = (state->raw_mode.len + 1);
+                        char *raw_arg = malloc(sizeof(char) * len);
+                        stpcpy(raw_arg, state->raw_mode.data);
+                        push_v(cmd, raw_arg);
+                        state->raw_mode.len = 0;
+                        state->israw = false;
                 } else {
-                        push(cmd, state->raw_mode);
-                        state->raw_mode = NULL;
+                        state->israw = true;
                 }
                 return;
         }
 
-        if (state->raw_mode != NULL) {
-                /// TODO: push char into string
+        if (state->israw) {
+                push_s(&state->raw_mode, ch);
                 return;
         }
 
         if (isdigit(ch)) {
                 size_t len = 0;
                 for (; isdigit(*(arg + *i + len)); ++len);
-                char *const head_arg = malloc((len + 1 + 5) * sizeof(char));
-                sprintf(head_arg, "HEAD~%d", atoi(arg + *i));
-                push(cmd, head_arg);
+                const_str value = current->cmd_num(atoi(arg + *i));
+                push_v(cmd, value);
                 *i += len - 1;
                 return;
         }
@@ -172,8 +176,6 @@ __nonnull() static void handle_char(Vec *const cmd,
                 clear();
                 return;
         }
-
-        if (ch == '_') return;
 
         if (ch == '=') {
                 setenv_checked("PAGER", "");
@@ -196,13 +198,13 @@ __nonnull() static void handle_char(Vec *const cmd,
                 return;
         }
 
-        if (*i + 1 != end && take_two(cmd, opts, ch, arg[*i + 1])) {
+        if (*i + 1 != end && take_two(cmd, current->options, ch, arg[*i + 1])) {
                 ++*i;
-        } else if (take_one(cmd, opts, ch)) {
+        } else if (take_one(cmd, current->options, ch)) {
         } else {
                 for (size_t m_idx = 0; m_idx < nb_expansions; ++m_idx) {
                         if (ch == expansions[m_idx].origin) {
-                                push(cmd, expansions[m_idx].replace);
+                                push_v(cmd, expansions[m_idx].replace);
                                 return;
                         }
                 }
@@ -233,10 +235,13 @@ __nonnull() static void parse_alias(const CliSettings *const settings,
 
         const Cmd current = settings->cmd[cmd_id];
 
-        push(cmd, current.expanded);
+        push_v(cmd, current.expanded);
 
-        struct CharParsingState state
-            = {.sep = '\0', .prev_sep = '\0', .less = false, .raw_mode = NULL};
+        struct CharParsingState state = {.sep = '\0',
+                                         .prev_sep = '\0',
+                                         .less = false,
+                                         .raw_mode = new_s(),
+                                         .israw = false};
 
         for (size_t i = start; i < end; ++i) {
                 if (arg[i] == ',') {
@@ -248,13 +253,13 @@ __nonnull() static void parse_alias(const CliSettings *const settings,
                             settings->manual,
                             settings->manual_len,
                             arg,
-                            current.options,
+                            &current,
                             &i,
                             end,
                             &state);
                 if (state.prev_sep != '\0') {
-                        const_str post_slash = pop(cmd);
-                        const_str pre_slash = pop(cmd);
+                        const_str post_slash = pop_v(cmd);
+                        const_str pre_slash = pop_v(cmd);
                         const size_t len
                             = strlen(pre_slash) + strlen(post_slash) + 1;
                         char *const merged = malloc(sizeof(char) * (len + 1));
@@ -263,7 +268,7 @@ __nonnull() static void parse_alias(const CliSettings *const settings,
                                 pre_slash,
                                 state.prev_sep,
                                 post_slash);
-                        push(cmd, merged);
+                        push_v(cmd, merged);
                         state.prev_sep = '\0';
                 }
                 if (state.sep != '\0') {
@@ -291,15 +296,15 @@ __wur __nonnull() static bool push_others(Vec *const cmd,
                                           Args argv) {
         bool debug = false;
 
-        reserve(cmd, (size_t)(argc - 2));
+        reserve_v(cmd, (size_t)(argc - 2));
         for (size_t i = 2; i < argc; ++i) {
                 if (!strcmp(argv[i], "@")) {
                         debug = true;
                 } else
-                        push(cmd, argv[i]);
+                        push_v(cmd, argv[i]);
         }
 
-        push(cmd, NULL);
+        push_v(cmd, NULL);
 
         return debug;
 }
@@ -323,10 +328,36 @@ __nonnull() _Noreturn void run_cli(const size_t argc,
         print_exit_or_exec(cmd, debug);
 }
 
+__nonnull() static void try_exec_no_args(const size_t argc,
+                                         Args argv,
+                                         const Cmd *const command) {
+
+        const_str alias = command->alias;
+        char verbose[64];
+        char *end = stpcpy(verbose, alias);
+        *end++ = alias[strlen(alias) - 1];
+        *end = '\0';
+
+        if (!is_verbose(argv[0], alias, verbose)) return;
+
+        Vec cmd = new_v();
+        push_v(&cmd, command->expanded);
+        bool debug = false;
+        for (size_t i = 1; i < argc; ++i)
+                if (!strcmp(argv[i], "@"))
+                        debug = true;
+                else
+                        push_v(&cmd, argv[i]);
+
+        print_exit_or_exec(&cmd, debug);
+}
+
 __nonnull() _Noreturn void run_cli_single(const size_t argc,
                                           Args argv,
                                           const Cmd *const command) {
         store_usage(argv[0], argv[1] ? argv[1] : "", false);
+        try_exec_no_args(argc, argv, command);
+
         bool should_clear = false, help = false;
 
         for (size_t idx = 1; idx < argc; ++idx) {
@@ -341,7 +372,7 @@ __nonnull() _Noreturn void run_cli_single(const size_t argc,
                 exit(0);
         }
 
-        Vec cmd = new_vec();
+        Vec cmd = new_v();
 
 #define len 1
         const Manual manual[len] = {{'?', "--help"}};
@@ -359,7 +390,7 @@ __nonnull() _Noreturn void run_cli_single(const size_t argc,
                 if (strcmp(argv[1], "_")) {
                         parse_alias(&settings, &cmd, argv[1], strlen(argv[1]));
                 } else {
-                        push(&cmd, command->expanded);
+                        push_v(&cmd, command->expanded);
                 }
 
                 debug = push_others(&cmd, argc, argv);
@@ -375,4 +406,15 @@ __nonnull() void print_vec(Vec *vec) {
                 printf("%s ", vec->data[idx]);
         }
         printf("\n");
+}
+
+__attribute_malloc__ __wur char *cmd_head_num(const int number) {
+        char *ret = malloc(64);
+        sprintf(ret, "HEAD~%d", number);
+        return ret;
+}
+__attribute_malloc__ __wur char *cmd_plain_num(const int number) {
+        char *ret = malloc(64);
+        sprintf(ret, "%d", number);
+        return ret;
 }

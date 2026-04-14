@@ -16,7 +16,7 @@ __nonnull() __wur static size_t
         const char *line = strtok_r(buffer, "\n", &line_state);
 
         for (; line; line = strtok_r(NULL, "\n", &line_state)) {
-                push(lines, line);
+                push_v(lines, line);
 
                 size_t i = 0;
                 while (line[i] != ' ') ++i;
@@ -85,7 +85,7 @@ __nonnull() static void display(const Vec *const lines,
 int main(void) {
         store_usage("iwl", "", false);
         read_simple_exldn((1 << 12), buffer, "git", "worktree", "list");
-        Vec lines = new_vec();
+        Vec lines = new_v();
         const size_t lengths = get_max_lengths(buffer, &lines);
         const size_t max_sha_len = lengths >> 16;
         const size_t max_branch_len = lengths - (max_sha_len << 16);

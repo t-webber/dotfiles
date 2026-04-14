@@ -1,4 +1,4 @@
-LINKS := ht=h v=s rr=r rc=r mg=m mc=m cn=c cs=c lw=l la=l lr=l lc=l nd=n le=l
+LINKS := ht=h v=s rr=r rc=r mg=m mc=m cn=c cs=c lw=l la=l lr=l lc=l nd=n le=l gg=g ff=f rll=rl
 
 C ?= gcc
 
@@ -24,7 +24,7 @@ CFLAGS += -Wdouble-promotion -Wformat-signedness -Wformat-overflow=2 -Wformat-tr
 CFLAGS += -Woverflow -Wstrict-overflow=5 -Wsign-conversion -Wsign-compare -Wshift-overflow=2 -Wshift-negative-value
 CFLAGS += -Wdangling-pointer -Wpointer-to-int-cast -Warray-bounds=2 -Wrestrict
 CFLAGS += -Wlogical-op -Wduplicated-cond -Wduplicated-branches -Wmisleading-indentation -Werror=implicit-fallthrough -Waggressive-loop-optimizations -Wunused-but-set-variable 
-CFLAGS += -Wno-common -Wstrict-aliasing -Wunused-value 
+CFLAGS += -Wstrict-aliasing -Wunused-value 
 CFLAGS += -Wsuggest-attribute=const -Wsuggest-attribute=pure -Wsuggest-attribute=noreturn
 CFLAGS += -Werror -Wfatal-errors
 
@@ -35,6 +35,7 @@ RELEASE_FLAGS := -O3 -ffast-math -flto
 
 ifeq ($(shell uname),Linux)
 RELEASE_FLAGS += -march=native -mtune=native
+CFLAGS += -Wno-common
 else
 #RELEASE_FLAGS += -mcpu=apple-m4
 CFLAGS += -Wno-error=suggest-attribute=pure

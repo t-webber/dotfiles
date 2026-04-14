@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 sxhkd & #>/home/b/.files/.data/logs/sxhkd.log 2>&1 &
 

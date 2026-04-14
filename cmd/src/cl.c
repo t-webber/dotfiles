@@ -11,21 +11,21 @@ int main(const int argc, Args argv) {
 
         if (!strcmp(argv[1], "v")) { exldn("clang++", "--version"); }
 
-        Vec cmd = new_vec();
-        push(&cmd, "clang++");
+        Vec cmd = new_v();
+        push_v(&cmd, "clang++");
         int start = 1;
 
         if (!strcmp(argv[1], "ast")) {
                 start = 2;
 
-                push(&cmd, "-fsyntax-only");
-                push(&cmd, "-Xclang");
-                push(&cmd, "-ast-dump");
+                push_v(&cmd, "-fsyntax-only");
+                push_v(&cmd, "-Xclang");
+                push_v(&cmd, "-ast-dump");
         }
 
-        for (int i = start; i < argc; ++i) { push(&cmd, argv[i]); }
+        for (int i = start; i < argc; ++i) { push_v(&cmd, argv[i]); }
 
-        push(&cmd, NULL);
+        push_v(&cmd, NULL);
 
         exvd(cmd.data);
 }

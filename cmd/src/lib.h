@@ -25,11 +25,6 @@ typedef const_str *const Args;
 
 #define NEW_STRING(str) {str, sizeof(str) - 1}
 
-typedef struct {
-        const_str value;
-        const size_t length;
-} String;
-
 #ifdef __nonnull
 #undef __nonnull
 #endif
@@ -49,8 +44,6 @@ typedef struct {
 #undef __attribute_malloc__
 #endif
 #define __attribute_malloc__ A(__malloc__)
-
-__wur __nonnull() String get_env_subpath(const String subpath, const_str var);
 
 #define starts_with_const(var, rodata)                                         \
         (!strncmp(var, rodata, sizeof(rodata) - 1))

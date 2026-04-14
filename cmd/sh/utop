@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 _inner() {
         ps -eo user,pcpu --no-headers | awk '{u[$1]+=$2} END { for(i in u)

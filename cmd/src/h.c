@@ -44,7 +44,7 @@ int main(const int argc, Args argv) {
         if (different_git)
                 setenv_checked("GH_HOST", getenv_checked("GH_PREFERED_HOST"));
 
-        Vec cmd = new_vec();
-        push(&cmd, "gh");
+        Vec cmd = new_v();
+        push_v(&cmd, "gh");
         run_cli((size_t)argc, argv, &SETTINGS, &cmd);
 }

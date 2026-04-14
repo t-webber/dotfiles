@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 pkgs="android-sdk android-sdk-platform-tools android-sdk-build-tools android-sdk-cmdline-tools-latest"
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 makecmd() {
         make -C "$CMD/src" --no-print-directory $1 -j 50

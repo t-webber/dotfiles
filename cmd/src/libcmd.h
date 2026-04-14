@@ -4,17 +4,23 @@
 #include "libvec.h"
 #include <stddef.h>
 
+#define cmdfunc(alias_v, expanded_v, func, ...)                                \
+        {.alias = alias_v,                                                     \
+         .expanded = expanded_v,                                               \
+         .options = (const char *[]){__VA_ARGS__ NULL},                        \
+         .cmd_num = func}
+
 #define cmd(alias, expanded, ...)                                              \
-        {                                                                      \
-                alias, expanded, (const char *[]) {                            \
-                        __VA_ARGS__ NULL                                       \
-                }                                                              \
-        }
+        cmdfunc(alias, expanded, cmd_plain_num, __VA_ARGS__)
+
+#define headcmd(alias, expanded, ...)                                          \
+        cmdfunc(alias, expanded, cmd_head_num, __VA_ARGS__)
 
 typedef struct {
         const char *alias;
         const char *expanded;
         const char **options;
+        char *(*cmd_num)(int);
 } Cmd;
 
 typedef struct {
@@ -46,8 +52,8 @@ __nonnull() _Noreturn void run_cli_single(const size_t argc,
 
 #define make_main(SETTINGS, COMMAND)                                           \
         int main(const int argc, Args argv) {                                  \
-                Vec cmd = new_vec();                                           \
-                push(&cmd, COMMAND);                                           \
+                Vec cmd = new_v();                                             \
+                push_v(&cmd, COMMAND);                                         \
                 run_cli((size_t)argc, argv, &SETTINGS, &cmd);                  \
         }
 
@@ -58,3 +64,6 @@ __nonnull() _Noreturn void run_cli_single(const size_t argc,
         }
 
 __nonnull() void print_vec(Vec *vec);
+
+__attribute_malloc__ __wur char *cmd_head_num(const int number);
+__attribute_malloc__ __wur char *cmd_plain_num(const int number);

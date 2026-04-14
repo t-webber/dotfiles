@@ -98,14 +98,14 @@ const Manual MANUAL[] = {
 make_settings(SETTINGS, COMMANDS, MANUAL);
 
 int main(const int argc, Args argv) {
-        Vec cmd = new_vec();
-        push(&cmd, "cargo");
+        Vec cmd = new_v();
+        push_v(&cmd, "cargo");
 
         if (!strcmp(argv[0], "c")) {
         } else if (!strcmp(argv[0], "cn")) {
-                push(&cmd, "+nightly");
+                push_v(&cmd, "+nightly");
         } else if (!strcmp(argv[0], "cs")) {
-                push(&cmd, "+stable");
+                push_v(&cmd, "+stable");
         } else {
                 upanic("Invalid arg0: %s", argv[0]);
         }

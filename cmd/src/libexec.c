@@ -4,8 +4,10 @@
 
 #include <sys/wait.h>
 
-__wur bool is_dbg(void) {
-        return getenv("DEBUG") != NULL;
+__wur int getdbg(void) {
+        const_str dbg = getenv("DEBUG");
+        if (dbg == NULL) return 0;
+        return atoi(getenv("DEBUG"));
 }
 
 __wur pid_t fork_checked(void) {
@@ -15,7 +17,7 @@ __wur pid_t fork_checked(void) {
         return pid;
 }
 
-__wur bool fork_and_wait(void) {
+__wur pid_t fork_and_wait(void) {
         pid_t pid = fork_checked();
         if (pid != 0) fork_wait(pid);
         return pid;
@@ -38,7 +40,11 @@ _Noreturn void exvd(Args args) {
 #pragma GCC diagnostic ignored "-Wcast-qual"
         str *const non_const_args = (str *const)args;
 #pragma GCC diagnostic pop
-        if (is_dbg()) { print_inline_array(args); }
+        const int dbg = getdbg();
+        if (dbg) {
+                print_inline_array(args);
+                if (dbg == 2) upanic("exited for debug");
+        }
         int res = execvp(args[0], non_const_args);
         epanic("Failed to execute %s: exicted with code %d", args[0], res);
 }

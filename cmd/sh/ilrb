@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 firstedit=$(i lo | fzf --no-sort | awk '{print $1}')
 rebase=$(i lo | rg $firstedit -A1 | tail -1 | awk '{print $1}')

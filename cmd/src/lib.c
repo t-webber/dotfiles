@@ -29,20 +29,6 @@ void print_inline_variadic(const_str first, ...) {
         printf("\n");
 }
 
-__nonnull() __wur String get_env_subpath(const String subpath, const_str var) {
-        const_str cmd_path = getenv_checked(var);
-
-        const size_t cmd_path_len = strlen(cmd_path);
-        const size_t fullpath_len = cmd_path_len + subpath.length;
-
-        str fullpath = malloc(sizeof(char) * fullpath_len);
-        char *end = stpcpy(fullpath, cmd_path);
-        strcpy(end, subpath.value);
-
-        const String fullpath_str = {.value = fullpath, .length = fullpath_len};
-        return fullpath_str;
-}
-
 __nonnull() __wur bool is_verbose(const_str program_name,
                                   const_str normal_name,
                                   const_str verbose_name) {

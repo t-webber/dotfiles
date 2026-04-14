@@ -3,18 +3,26 @@
 #include "lib.h"
 #include <stddef.h>
 
-typedef struct {
-        const char **data;
-        size_t len;
-        size_t cap;
-} Vec;
+#define make_vec_header(name, suffix, ty)                                      \
+                                                                               \
+        typedef struct {                                                       \
+                ty *data;                                                      \
+                size_t len;                                                    \
+                size_t cap;                                                    \
+        } name;                                                                \
+                                                                               \
+        __wur name new_##suffix(void);                                         \
+                                                                               \
+        __nonnull((1)) void push_##suffix(name *const vec, ty val);            \
+                                                                               \
+        __nonnull() __wur ty pop_##suffix(name *const vec);                    \
+                                                                               \
+        __nonnull() void reserve_##suffix(name *const vec,                     \
+                                          const size_t additional);            \
+                                                                               \
+        __nonnull() void extend_##suffix(name *const vec,                      \
+                                         ty *other,                            \
+                                         const size_t len)
 
-__wur Vec new_vec(void);
-
-__nonnull((1)) void push(Vec *const vec, const_str val);
-
-__nonnull() __wur const_var_str pop(Vec *const vec);
-
-__nonnull() void reserve(Vec *const vec, const size_t additional);
-
-__nonnull() void extend(Vec *const vec, Args other, const size_t len);
+make_vec_header(Vec, v, const char *);
+make_vec_header(String, s, char);

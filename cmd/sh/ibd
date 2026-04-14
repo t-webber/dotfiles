@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 git branch -D "$1"
 git branch -D "origin/$1" --remote

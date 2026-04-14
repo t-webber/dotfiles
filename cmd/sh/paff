@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 bunx prisma format >/dev/null 2>/home/b/b
 

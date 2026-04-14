@@ -14,10 +14,10 @@ __nonnull() static void install_gh_s(void) {
 }
 
 _Noreturn __nonnull() static void run_gh_s(const int argc, Args argv) {
-        Vec cmd = new_vec();
-        push(&cmd, "gh");
-        push(&cmd, "s");
-        for (int i = 1; i < argc; ++i) push(&cmd, argv[i]);
+        Vec cmd = new_v();
+        push_v(&cmd, "gh");
+        push_v(&cmd, "s");
+        for (int i = 1; i < argc; ++i) push_v(&cmd, argv[i]);
         read_simple_exvd(512, buf, cmd.data);
         buf[strlen(buf) - 1] = '\0';
         exldn("git", "clone", buf);

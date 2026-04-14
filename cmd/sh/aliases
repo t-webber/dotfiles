@@ -589,22 +589,15 @@ _al resize "alacritty msg config 'font.size = 6'"
 
 ########## OPEN
 
-_ual o xdg-open
-
-if [ $(uname) = "Darwin" ]; then
-        _al o open
-else
-        _ual o open
-fi
-
+_ual o xdg-open open
 _al ok '. drop o'
 _al ducl 'dunstctl close-all'
 
 ######## XCLIP
 
-_ual x xclip pbpaste pbcopy
-_al x "$XCOPY"
-_al xo "$XPASTE"
+_ual xy xclip pbpaste pbcopy
+_al xy "$XCOPY"
+_al xp "$XPASTE"
 _al clipm clipcat-menu
 
 ######## CODIUM
@@ -970,7 +963,7 @@ _al psg pgrep
 
 _al kbg 'pkill -u "$USER" -x bash -P 1'
 
-_print kill
+_print kills
 
 ##########################
 ########## TMUX ##########
@@ -1116,6 +1109,7 @@ _al usenvm '. "$NVM_DIR/nvm.sh"'
 _ual l echo
 _al zjdk 'zj ka && zj da'
 _al lcd 'lc && dc && '
+_al lca 'lc && '
 _al wi '. wi'
 _al jj 'join -j 9999999 '
 
@@ -1123,6 +1117,7 @@ _ual od claude copilot
 _al od '. od'
 _al odr '. od resume'
 _al ctiab "c tiab && apksigner sign --ks $SECRET/apkkey.keystore --ks-key-alias my-key --out $HOME/latest.apk src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-unsigned.apk &&  apksigner verify $HOME/latest.apk && l $HOME/latest.apk built successfully"
+_al wea 'rll wttr.in'
 
 _print other
 

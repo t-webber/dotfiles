@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 age=$(($(date +%s) - $(stat -c %W /)))
 

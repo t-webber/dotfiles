@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 deps() {
 	paru -Sii "$1" | grep 'Depends On' | awk -F':' '{print $2}' | tr ' ' '\n' | grep -v ^$ | wc -l

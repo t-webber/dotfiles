@@ -6,15 +6,17 @@
 
 pid_t fork_checked(void);
 void fork_wait(pid_t pid);
-__wur bool is_dbg(void);
+__wur int getdbg(void);
 
 #define exl(first, ...)                                                        \
         {                                                                      \
-                if (is_dbg()) print_inline_variadic(__VA_ARGS__);              \
-                int res = execlp(first, __VA_ARGS__);                          \
+                if (getdbg()) {                                                \
+                        print_inline_variadic(__VA_ARGS__);                    \
+                        if (getdbg() == 2) upanic("exited for debug");         \
+                }                                                              \
                 epanic("Failed to execute %s: exited with code %d",            \
                        first,                                                  \
-                       res)                                                    \
+                       execlp(first, __VA_ARGS__))                             \
         }
 
 #define exl1(cmd) exl(cmd, cmd, NULL);
@@ -24,7 +26,7 @@ __wur bool is_dbg(void);
 #define exldn(cmd, ...) exl(cmd, cmd, __VA_ARGS__, NULL);
 
 #define forked_exldn(cmd, ...)                                                 \
-        if (!fork_and_wait()) exldn(cmd, __VA_ARGS__);
+        if (fork_and_wait() == 0) exldn(cmd, __VA_ARGS__);
 
 #define __read_simple_exl_maker(__exl_func, buf_size, buffer, ...)             \
         int fildes[2];                                                         \
@@ -83,4 +85,4 @@ _Noreturn __nonnull() void exl_notif(const_str message);
 
 _Noreturn __nonnull() void exl_err_notif(const_str msg);
 
-__wur bool fork_and_wait(void);
+__wur pid_t fork_and_wait(void);

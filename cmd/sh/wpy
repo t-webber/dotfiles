@@ -1,5 +1,0 @@
-#!/bin/sh
-
-set -euo pipefail
-
-echo "$1" | entr cpy "$1"
