@@ -8,7 +8,7 @@
 
 typedef enum { Amount, Absolute, NotKnown, Meaningless } AmountType;
 
-static AmountType
+__wur static AmountType
 combine_amount(const AmountType a, const AmountType b, const bool plus) {
         if (a == Meaningless || b == Meaningless)
                 upanic("Tried to combine meaningless amounts");
@@ -29,15 +29,15 @@ typedef struct {
 
 const DT MASK_ALL = {1, 1, 1, 1, 1, 1, Meaningless};
 
-__wur static DT new_dt(void) {
+__attribute_const__ __wur static DT new_dt(void) {
         return (DT){0, 0, 0, 0, 0, 0, NotKnown};
 }
 
-__wur static bool has_date(const DT *const mask) {
+__attribute_pure__ __wur static bool has_date(const DT *const mask) {
         return (mask->year || mask->month || mask->day);
 }
 
-__wur static bool has_time(const DT *const mask) {
+__attribute_pure__ __wur static bool has_time(const DT *const mask) {
         return mask->hour || mask->min || mask->sec;
 }
 
@@ -222,11 +222,12 @@ __nonnull() static void print_dbg(const DT *const dt) {
 
 #define mod(x) (year % x == 0)
 
-__wur static bool leap_year(const int year) {
+__attribute_const__ __wur static bool leap_year(const int year) {
         return mod(4) && (!mod(100) || (mod(400)));
 }
 
-__wur static int days_per_month(const int month, const int year) {
+__attribute_pure__ __wur static int days_per_month(const int month,
+                                                   const int year) {
         static const int list[12]
             = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 

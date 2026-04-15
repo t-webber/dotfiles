@@ -9,6 +9,8 @@ lsblk
 
 "$ETC/link.sh"
 
+r "$LOGS/*.old"
+
 exec plogd --resetdb >"$SLOGS/plog.log" 2>&1 &
 
 while ! ping -c1 -W1 1.1.1.1; do
