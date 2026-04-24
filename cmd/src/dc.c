@@ -253,6 +253,7 @@ static void fix_days(DT *const dt, DT *const mask) {
         } while (1);
 }
 
+A(__noinline__)
 __nonnull((2)) static void plus(const_str arg1, const_str arg2, char *buf) {
         DT mask = new_dt();
         const DT dt1 = parse_dt(arg1, &mask);
@@ -307,6 +308,7 @@ __nonnull((2)) static void plus(const_str arg1, const_str arg2, char *buf) {
                 sum.this += modulo;                                            \
         }
 
+A(__noinline__)
 __nonnull((2)) static void minus(const_str arg1, const_str arg2, char *buf) {
         DT mask = new_dt();
         const DT dt1 = parse_dt(arg1, &mask);
@@ -401,7 +403,7 @@ __nonnull((2)) static void minus(const_str arg1, const_str arg2, char *buf) {
 
 #define usage upanic("Usage: %s [[<datetime>](+|-)<datetime>]", argv[0])
 
-static void process_args(const int argc, Args argv, char *buf) {
+__nonnull() static void process_args(const size_t argc, Args argv, char *buf) {
         if (argc == 1) {
                 const DT dt = now();
                 print_dt(&dt, &MASK_ALL, buf);
@@ -410,16 +412,12 @@ static void process_args(const int argc, Args argv, char *buf) {
 
         char arg[128];
         char *ptr = arg;
-        for (int i = 1; i < argc; ++i) { ptr = stpcpy(ptr, argv[i]); }
+        for (size_t i = 1; i < argc; ++i) { ptr = stpcpy(ptr, argv[i]); }
 
         char *arg1 = NULL, *arg2 = NULL;
-        char *r = arg;
+        char *r = strpbrk(arg, "+-");
 
-        for (; *r; ++r) {
-                if (*r == '+' || *r == '-') break;
-        }
-
-        if (*r == '\0' || *(r + 1) == '\0') usage;
+        if (r == NULL || *(r + 1) == '\0') usage;
 
         const bool is_plus = *r == '+';
         *r = '\0';
@@ -439,7 +437,7 @@ static void process_args(const int argc, Args argv, char *buf) {
 int main(const int argc, Args argv) {
         store_usage(argv[0], "", false);
         char buf[64];
-        process_args(argc, argv, buf);
+        process_args((size_t)argc, argv, buf);
         puts(buf);
 }
 #else

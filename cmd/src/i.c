@@ -1,16 +1,38 @@
+#include "lib.h"
 #include "libcmd.h"
 
-/// TODO: a number after ilon should be integer not HEAD
-/// TODO: add a iorb to rebase edit on one commit only w/o editor
-/// TODO: on git rebase conflicts, display the list of CONFLICTS only (and put
-/// the full log in a file in del?)
-/// TODO: same for git merge
-/// TODO: interactive git add that let's me select files to add.
+__attribute_malloc__ __wur static char *cmd_head_num(const int value) {
+        char *ret = malloc(64);
+        sprintf(ret, "HEAD~%d", value);
+        return ret;
+}
 
-static const Cmd COMMANDS[] = {
-    headcmd("a", "add", "-p", ".", "--intent-to-add", "-e", "--all", ),
+#define cmd_num(name, alias)                                                   \
+        __attribute_malloc__ __wur static char *cmd_##name##_num(              \
+            const int value) {                                                 \
+                if (strcmp(get_last_pushed(), #alias))                         \
+                        return cmd_head_num(value);                            \
+                char *const num = malloc(64);                                  \
+                sprintf(num, "%d", value);                                     \
+                return num;                                                    \
+        }
 
-    headcmd("br",
+cmd_num(l, n) cmd_num(cl, d)
+
+#undef cmd
+#define cmd(alias, expanded, ...)                                              \
+        cmdfunc(alias, expanded, cmd_head_num, __VA_ARGS__)
+
+    /// TODO: add a iorb to rebase edit on one commit only w/o editor
+    /// TODO: on git rebase conflicts, display the list of CONFLICTS only (and
+    /// put the full log i*constn a file in del?)
+    /// TODO: same for git merge
+    /// TODO: interactive git add that let's me select files to add.
+
+    static const Cmd COMMANDS[] = {
+        cmd("a", "add", "-p", ".", "--intent-to-add", "-e", "--all", ),
+
+        cmd("br",
             "branch",
             "-a",
             "-d",
@@ -22,7 +44,7 @@ static const Cmd COMMANDS[] = {
             "-u",
             "--contains",
             "--show-current", ),
-    headcmd("bi",
+        cmd("bi",
             "bisect",
             "start",
             "bad",
@@ -32,10 +54,10 @@ static const Cmd COMMANDS[] = {
             "visualize",
             "=a--stat", ),
 
-    headcmd("cl", "clone", "--depth", ),
-    headcmd("ck", "checkout", "-t", "--orphan", "-b", ),
-    headcmd("cp", "cherry-pick", "--abort", "--continue", ),
-    headcmd("cg",
+        cmdfunc("cl", "clone", cmd_cl_num, "--depth", ),
+        cmd("ck", "checkout", "-t", "--orphan", "-b", ),
+        cmd("cp", "cherry-pick", "--abort", "--continue", ),
+        cmd("cg",
             "config",
             "--add",
             "credential.helper",
@@ -56,7 +78,7 @@ static const Cmd COMMANDS[] = {
             "=upush.autoSetupRemote",
             "=vnvimdiff",
             "=wurl.\"https://github.com/t-webber/\".insteadOf", ),
-    headcmd("c",
+        cmd("c",
             "commit",
             "-m",
             "--amend",
@@ -68,49 +90,51 @@ static const Cmd COMMANDS[] = {
             "=g--allow-empty-message",
             "--reset-author", ),
 
-    headcmd("do", "difftool", "--cached", ),
-    headcmd("d", "diff", "--shortstat", "--cached", "--exclude", ),
+        cmd("do", "difftool", "--cached", ),
+        cmd("d", "diff", "--shortstat", "--cached", "--exclude", ),
 
-    headcmd("e", "fetch", "--all", "--unshallow", "--prune", "--tags", ),
+        cmd("e", "fetch", "--all", "--unshallow", "--prune", "--tags", ),
 
-    headcmd("f", "fsck", "--no-reflogs", "--lost-found", ),
+        cmd("f", "fsck", "--no-reflogs", "--lost-found", ),
 
-    headcmd("gc", "gc", "--prune=now", "--aggressive", ),
-    headcmd("g", "grep", "-F", "--all-match", "-n", ),
+        cmd("gc", "gc", "--prune=now", "--aggressive", ),
+        cmd("g", "grep", "-F", "--all-match", "-n", ),
 
-    headcmd("help", "status", ),
+        cmd("help", "status", ),
 
-    headcmd("i", "init", ),
+        cmd("i", "init", ),
 
-    headcmd("ls", "ls-files", ),
-    headcmd("lr",
-            "reflog",
-            "--graph",
-            "-n",
-            "expire",
-            "=w--expire=now",
-            "--all",
-            "-p",
-            "=a--name-status", ),
-    headcmd("l",
-            "log",
-            "--oneline",
-            "--graph",
-            "-n",
-            "-p",
-            "=a--name-status",
-            "--stat", ),
+        cmd("ls", "ls-files", ),
+        cmdfunc("lr",
+                "reflog",
+                cmd_l_num,
+                "--graph",
+                "-n",
+                "expire",
+                "=w--expire=now",
+                "--all",
+                "-p",
+                "=a--name-status", ),
+        cmdfunc("l",
+                "log",
+                cmd_l_num,
+                "--oneline",
+                "--graph",
+                "-n",
+                "-p",
+                "=a--name-status",
+                "--stat", ),
 
-    headcmd("mv", "move", ),
-    headcmd("m",
+        cmd("mv", "move", ),
+        cmd("m",
             "merge",
             "=w--allow-unrelated-histories",
             "--abort",
             "--continue", ),
 
-    headcmd("n", "clean", "-f", "-f", "-d", "-x", "--recurse-submodules", ),
+        cmd("n", "clean", "-f", "-f", "-d", "-x", "--recurse-submodules", ),
 
-    headcmd("ph",
+        cmd("ph",
             "push",
             "=F--force",
             "=f--force-with-lease",
@@ -120,9 +144,9 @@ static const Cmd COMMANDS[] = {
             "--tags",
             "=gHEAD:refs/for/master",
             "=GHEAD:refs/for/main", ),
-    headcmd("pl", "pull", "-a", "-f", "--quiet", ),
+        cmd("pl", "pull", "-a", "-f", "--quiet", ),
 
-    headcmd("rb",
+        cmd("rb",
             "rebase",
             "--abort",
             "--continue",
@@ -130,15 +154,15 @@ static const Cmd COMMANDS[] = {
             "--quit",
             "-i",
             "--root", ),
-    headcmd("rm", "rm", "-f", "-r", "--cached", ),
-    headcmd("ro", "restore", "-S", "-W", "--staged", ".", ),
-    headcmd("rs", "reset", "--hard", "--soft", ".", ),
-    headcmd("rt", "remote", "-v", "set-url", "add", "=wshow", "remove", ),
-    headcmd("rp", "rev-parse", "--show-toplevel", "--git-common-dir", ),
-    headcmd("rl", "rev-list", "--all", ),
-    headcmd("rw", "review", "-d", ),
+        cmd("rm", "rm", "-f", "-r", "--cached", ),
+        cmd("ro", "restore", "-S", "-W", "--staged", ".", ),
+        cmd("rs", "reset", "--hard", "--soft", ".", ),
+        cmd("rt", "remote", "-v", "set-url", "add", "=wshow", "remove", ),
+        cmd("rp", "rev-parse", "--show-toplevel", "--git-common-dir", ),
+        cmd("rl", "rev-list", "--all", ),
+        cmd("rw", "review", "-d", ),
 
-    headcmd("sh",
+        cmd("sh",
             "stash",
             "pop",
             "drop",
@@ -150,7 +174,7 @@ static const Cmd COMMANDS[] = {
             "--keep-index",
             "=w--all",
             "=S--staged", ),
-    headcmd("sm",
+        cmd("sm",
             "submodule",
             "update",
             "--init",
@@ -160,17 +184,17 @@ static const Cmd COMMANDS[] = {
             "-f",
             "-all",
             "--cache", ),
-    headcmd("sw", "switch", "-C", "-c", ),
-    headcmd("so", "show", "--stat", ),
-    headcmd("s", "status", "--ignored", ),
+        cmd("sw", "switch", "-C", "-c", ),
+        cmd("so", "show", "--stat", ),
+        cmd("s", "status", "--ignored", ),
 
-    headcmd("t", "tag", "-d", ),
+        cmd("t", "tag", "-d", ),
 
-    headcmd("v", "version", ),
+        cmd("v", "version", ),
 
-    headcmd("w", "worktree", "add", "remove", "move", "list", "-f", ),
+        cmd("w", "worktree", "add", "remove", "move", "list", "-f", ),
 
-    headcmd("y",
+        cmd("y",
             "apply",
             "-R",
             "=s--ignore-space-change",

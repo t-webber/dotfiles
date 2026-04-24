@@ -663,7 +663,7 @@ _al kkkkk 'k && k && k && k && k'
 _al src 'p src'
 
 _gt() {
-        _al "$1" "l && p $2 && v"
+        _al "$1" "p $2 && v"
 }
 
 _ual 'ocf or xcf' cf
@@ -849,13 +849,9 @@ _flush
 
 _ual g rg
 _ual f fd
-_ual xg xargs
-_al xg "$(_wi xargs)"
+_ual x xargs xg
 _al cnt 'wc -l'
-_al xcnt 'xg wc -l'
-_al xgi 'xg -I'
-_al xgid 'xg -I.'
-_al xgib 'xg -I{}'
+_al xcnt "$(_wi xargs) wc -l"
 
 _ual hd head
 _al hd "$(_wi head)"
@@ -1089,8 +1085,13 @@ _al ds "$(_wi dust)"
 _al dsx 'ds -X .snapshot'
 _al ds1 'ds -d 1'
 _dal ob objdump T
+
 _al zj 'zellij --config $XDG_CONFIG_HOME/zellij/config.kdl'
+_al zjn 'yes | zj ka; yes | zj da; zjm'
+_al zja 'zjm'
 _al zjm 'zj -s m || zj a m'
+_al zjc 'zj ka && zj da'
+
 _al gitignore "l '*' > .gitignore"
 _al loop '. loop '
 _al wpad "$_s wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf"
@@ -1107,15 +1108,21 @@ _al pload 'p $(<$LOGS/saved_location)'
 _al caff 'killapp caffeinate; for x in i s d m; do caffeinate -$x & done'
 _al usenvm '. "$NVM_DIR/nvm.sh"'
 _ual l echo
-_al zjdk 'zj ka && zj da'
 _al lcd 'lc && dc && '
 _al lca 'lc && '
 _al wi '. wi'
 _al jj 'join -j 9999999 '
 
 _ual od claude copilot
-_al od '. od'
-_al odr '. od resume'
+if [ "$(uname)" = "Darwin" ]; then
+        _al od "$(_wi claude)"
+        _al odg 'e ~/.claude/settings.json'
+        _al odl 'e .claude/settings.local.json'
+        _al odm 'e ~/.claude/CLAUDE.md'
+else
+        _al od "$(_wi copilot)"
+fi
+_al odr 'od --resume'
 _al ctiab "c tiab && apksigner sign --ks $SECRET/apkkey.keystore --ks-key-alias my-key --out $HOME/latest.apk src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-unsigned.apk &&  apksigner verify $HOME/latest.apk && l $HOME/latest.apk built successfully"
 _al wea 'rll wttr.in'
 

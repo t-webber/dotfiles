@@ -21,7 +21,3 @@ function CustomFoldText()
 
 	return chunks
 end
-
-vim.o.foldtext = 'v:lua.CustomFoldText()'
-vim.o.fillchars = ''
-vim.o.foldnestmax = 1

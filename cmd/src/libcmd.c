@@ -7,6 +7,18 @@
 #include <stdio.h>
 #include <string.h>
 
+static char LAST[2] = "\0";
+#define push0(value) push2(value, '\0', '\0');
+#define push1(value, first) push2(value, first, '\0')
+#define push2(value, first, second)                                            \
+        push_v(cmd, value);                                                    \
+        LAST[0] = first;                                                       \
+        LAST[1] = second;
+
+__attribute_const__ __wur const char *get_last_pushed(void) {
+        return LAST;
+}
+
 __nonnull() static void print_manual(const Manual *const manual) {
         printf("%c  %s\n", manual->origin, manual->replace);
 }
@@ -100,7 +112,7 @@ __nonnull() __wur static bool take_two(Vec *const cmd,
                 const char *last = strrchr(opts[i] + 2, '-');
                 if (!last || !*++last || *last != second) continue;
 
-                push_v(cmd, opts[i]);
+                push2(opts[i], first, second);
                 return true;
         }
 
@@ -113,11 +125,11 @@ __nonnull() __wur
                 const char *first = opts[i];
                 for (; *first == '-'; ++first);
                 if (*first == c) {
-                        push_v(cmd, opts[i]);
+                        push1(opts[i], c);
                         return true;
                 }
                 if (*first == '=' && *++first == c) {
-                        push_v(cmd, opts[i] + 2);
+                        push1(opts[i] + 2, c);
                         return true;
                 }
         }
@@ -149,7 +161,7 @@ __nonnull() static void handle_char(Vec *const cmd,
                         const size_t len = (state->raw_mode.len + 1);
                         char *raw_arg = malloc(sizeof(char) * len);
                         stpcpy(raw_arg, state->raw_mode.data);
-                        push_v(cmd, raw_arg);
+                        push0(raw_arg);
                         state->raw_mode.len = 0;
                         state->israw = false;
                 } else {
@@ -167,7 +179,7 @@ __nonnull() static void handle_char(Vec *const cmd,
                 size_t len = 0;
                 for (; isdigit(*(arg + *i + len)); ++len);
                 const_str value = current->cmd_num(atoi(arg + *i));
-                push_v(cmd, value);
+                push0(value);
                 *i += len - 1;
                 return;
         }
@@ -194,7 +206,7 @@ __nonnull() static void handle_char(Vec *const cmd,
         }
 
         if (ch == '%') {
-                state->less = true;
+                state->less = true; // TODO: implement it
                 return;
         }
 
@@ -204,7 +216,7 @@ __nonnull() static void handle_char(Vec *const cmd,
         } else {
                 for (size_t m_idx = 0; m_idx < nb_expansions; ++m_idx) {
                         if (ch == expansions[m_idx].origin) {
-                                push_v(cmd, expansions[m_idx].replace);
+                                push1(expansions[m_idx].replace, ch);
                                 return;
                         }
                 }
@@ -408,13 +420,8 @@ __nonnull() void print_vec(Vec *vec) {
         printf("\n");
 }
 
-__attribute_malloc__ __wur char *cmd_head_num(const int number) {
+__attribute_malloc__ __wur char *cmd_plain_num(const int value) {
         char *ret = malloc(64);
-        sprintf(ret, "HEAD~%d", number);
-        return ret;
-}
-__attribute_malloc__ __wur char *cmd_plain_num(const int number) {
-        char *ret = malloc(64);
-        sprintf(ret, "%d", number);
+        sprintf(ret, "%d", value);
         return ret;
 }

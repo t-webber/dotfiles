@@ -3,6 +3,7 @@
 
 /// TODO: p og: expands to master, and pogfolder expands to p o g folder without
 /// needing slash
+/// TODO: display rules on argv=1
 
 #include <sys/stat.h>
 

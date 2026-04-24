@@ -33,6 +33,10 @@ case "$ty" in
         path="$(readlink -f $path)"
         l "$path"
         ;;
+"$1: directory")
+        path="$(readlink -f $1)"
+        l "$path"
+        ;;
 "$1: "*)
         ft=${ty#"$1: "}
         l $ft

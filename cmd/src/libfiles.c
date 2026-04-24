@@ -123,8 +123,6 @@ _Noreturn __nonnull() void exec_open_file(const_str filename,
 
                 if (sxiv_supported(extension)) exldn("sxiv", filename);
 
-                if (!strcmp(extension, "html")) exldn("brave", filename);
-
                 exldn("nvim", filename);
         }
 

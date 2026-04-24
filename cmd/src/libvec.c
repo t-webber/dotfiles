@@ -53,6 +53,11 @@
                 for (size_t i = 0; i < len; ++i) {                             \
                         push_##suffix(vec, other[i]);                          \
                 }                                                              \
+        }                                                                      \
+                                                                               \
+        __wur ty last_##suffix(name *const vec) {                              \
+                if (vec->len == 0) return empty;                               \
+                return vec->data[vec->len - 1];                                \
         }
 
 // clang-format off

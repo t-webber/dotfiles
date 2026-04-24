@@ -25,13 +25,13 @@ CFLAGS += -Woverflow -Wstrict-overflow=5 -Wsign-conversion -Wsign-compare -Wshif
 CFLAGS += -Wdangling-pointer -Wpointer-to-int-cast -Warray-bounds=2 -Wrestrict
 CFLAGS += -Wlogical-op -Wduplicated-cond -Wduplicated-branches -Wmisleading-indentation -Werror=implicit-fallthrough -Waggressive-loop-optimizations -Wunused-but-set-variable 
 CFLAGS += -Wstrict-aliasing -Wunused-value 
-CFLAGS += -Wsuggest-attribute=const -Wsuggest-attribute=pure -Wsuggest-attribute=noreturn
+CFLAGS += -Wsuggest-attribute=const -Wsuggest-attribute=noreturn
 CFLAGS += -Werror -Wfatal-errors
 
 BINARIES := $(patsubst %.c, $B/%, $(SRCS))
 
 DEBUG_FLAGS := -O0 -g
-RELEASE_FLAGS := -O3 -ffast-math -flto 
+RELEASE_FLAGS := -O3 -ffast-math -flto=auto
 
 ifeq ($(shell uname),Linux)
 RELEASE_FLAGS += -march=native -mtune=native

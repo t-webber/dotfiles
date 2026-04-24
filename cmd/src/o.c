@@ -27,9 +27,9 @@ int main(const int argc, const_str *const argv) {
         struct stat st;
         int x = stat(filename, &st);
 
-        if (x != 0) {
+        if (x != 0 || !strcmp(get_filename_extension(filename), "html")) {
                 char url[256];
-                if (starts_with_const(filename, "http")) {
+                if (starts_with_const(filename, "http") || x == 0) {
                         stpcpy(url, filename);
                 } else if (strchr(filename, '.') != NULL) {
                         stpcpy(stpcpy(url, "http://"), filename);

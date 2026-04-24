@@ -22,7 +22,9 @@
                                                                                \
         __nonnull() void extend_##suffix(name *const vec,                      \
                                          ty *other,                            \
-                                         const size_t len)
+                                         const size_t len);                    \
+                                                                               \
+        __wur ty last_##suffix(name *const vec)
 
 make_vec_header(Vec, v, const char *);
 make_vec_header(String, s, char);

@@ -120,11 +120,11 @@ PATH+=":$CMD/old"
 PATH+=":$CMD/sh"
 if [ "$DEVICE" = "mac" ]; then
         PATH+=":/opt/homebrew/bin"
-        PATH+=":/opt/homebrew/sbin"
+        #         PATH+=":/opt/homebrew/sbin"
         PATH+=":/usr/sbin"
         PATH+=":/usr/bin"
         PATH+=":/sbin"
-        PATH+=":/Applications/Docker.app/Contents/Resources/bin"
+        #         PATH+=":/Applications/Docker.app/Contents/Resources/bin"
 fi
 PATH+=":/bin"
 PATH+=":$XDG_DATA_HOME/../bin"
@@ -284,6 +284,7 @@ fi
 # so I need to respawn the terminal after running it
 
 if [ "$(uname)" = "Darwin" ]; then
+
         case $- in
         *i*)
                 if [ -z "$ALACRITTY_LOG" ]; then
@@ -293,9 +294,20 @@ if [ "$(uname)" = "Darwin" ]; then
                         exit
                 else
                         alacritty msg config "font.size = 15"
+
                 fi
                 ;;
         esac
-fi
 
-alias claude-mem='bun "/Users/twebber/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
+        [ -n "$ZZZELLIJ" ] && {
+                alias claude-mem='bun "/Users/twebber/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
+                . "$NVM_DIR/nvm.sh"
+                nvm use 24
+                l ===
+                for f in $(declare -F | $(_wi awk) '{print $3}' | $(_wi grep) ^nvm_); do
+                        export -f $f
+                done
+                l $PATH
+                export PATH
+        }
+fi

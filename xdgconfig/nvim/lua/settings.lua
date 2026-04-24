@@ -18,7 +18,6 @@ local options = {
 	cmdheight = 0,
 	mouse = '', -- disable mouse
 	showmode = false, -- hide `--INSERT--` in command line
-	fillchars = { eob = ' ' },
 	ignorecase = true, -- ignore case in search...
 	smartcase = true, -- ... except if \C or capitals present
 	list = true, -- show Tab and trailing spaces
@@ -41,6 +40,9 @@ local options = {
 	foldopen = 'all',
 	foldclose = 'all',
 	foldlevel = 0,
+	foldtext = 'v:lua.CustomFoldText()',
+	fillchars = { eob = ' ' },
+	foldnestmax = 1,
 }
 
 local globals = {

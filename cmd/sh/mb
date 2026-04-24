@@ -27,7 +27,7 @@ t)
         done
         ;;
 "")
-        makecmd debug
+        makecmd release
         ;;
 *)
         echo "Usage: $0 [cr,cd,d] (default: release, cr: clean release, cd: clean debug, d: debug)"

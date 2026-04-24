@@ -13,9 +13,6 @@
 #define cmd(alias, expanded, ...)                                              \
         cmdfunc(alias, expanded, cmd_plain_num, __VA_ARGS__)
 
-#define headcmd(alias, expanded, ...)                                          \
-        cmdfunc(alias, expanded, cmd_head_num, __VA_ARGS__)
-
 typedef struct {
         const char *alias;
         const char *expanded;
@@ -65,5 +62,6 @@ __nonnull() _Noreturn void run_cli_single(const size_t argc,
 
 __nonnull() void print_vec(Vec *vec);
 
-__attribute_malloc__ __wur char *cmd_head_num(const int number);
-__attribute_malloc__ __wur char *cmd_plain_num(const int number);
+__attribute_malloc__ __wur char *cmd_plain_num(const int value);
+
+__wur const char *get_last_pushed(void);

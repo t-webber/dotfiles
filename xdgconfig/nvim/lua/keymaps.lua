@@ -162,6 +162,7 @@ setk(i, '<D-(>', '[')
 setk(i, '<D-)>', ']')
 setk(i, '<D-é>', '~')
 setk(i, '<D-">', '#')
+setk(i, '<D-_>', '─')
 
 ---------------
 --- Harpoon ---
@@ -752,15 +753,10 @@ setk(n, 'àp', function()
 	end
 end, 'Print active lsp clients')
 
---> meta programming <--
-
-setk(n, 'àc', [[:%s/.*#line.*\n//<CR>]])
-
 ------------
 --- Case ---
 ------------
 
--- press ~ to toggle a letter between lower case and capitals
 setk(nv, ',cc', ':TtCamel<CR>', '🐪 camel')
 setk(nv, ',cp', ':TtPascal<CR>', '🐪 pascal')
 setk(nv, ',ck', ':TtKebab<CR>', '🐪 kebab')
@@ -837,8 +833,18 @@ vim.api.nvim_set_keymap(
 --- Tree sitter ---
 -------------------
 
-local function rts(scope)
-	return require('nvim-treesitter-textobjects.' .. scope)
+local function rts(func)
+	local scope, _ = func:match('^([^_]*)_')
+	local function missingarg(arg)
+		local function callback()
+			return require('nvim-treesitter-textobjects.' .. scope)[func](
+				arg,
+				'textobjects'
+			)
+		end
+		return callback
+	end
+	return missingarg
 end
 
 for _, k in ipairs({ '(', '[', ']', ')' }) do
@@ -852,7 +858,7 @@ for key, scope in pairs({
 	k = '@call',
 	c = '@class',
 	h = '@comment',
-	i = '@conditional',
+	z = '@conditional',
 	o = '@function',
 	l = '@loop',
 	n = '@number',
@@ -862,29 +868,34 @@ for key, scope in pairs({
 	f = '@scopename',
 	s = '@statement',
 }) do
-	for l, suffix in pairs({ a = '.outer', i = '.inner' }) do
-		for prefix, func in pairs({
-			[''] = rts('select').select_textobject,
-			[')'] = rts('move').goto_next_start,
-			[']'] = rts('move').goto_next_end,
-			['('] = rts('move').goto_previous_start,
-			['['] = rts('move').goto_previous_end,
-			['{'] = rts('move').goto_next,
-			['}'] = rts('move').goto_previous,
-		}) do
-			local modes
-			if prefix == '' then
-				modes = xo
-			else
-				modes = nxo
-			end
-			setk(
-				modes,
-				prefix .. l .. key,
-				function() func(scope .. suffix, 'textobjects') end,
-				tsoicon .. scope .. suffix
-			)
+	for prefix, func in pairs({
+		[''] = rts('select_textobject'),
+		[')'] = rts('move_next_start'),
+		[']'] = rts('move_next_end'),
+		['('] = rts('move_previous_start'),
+		['['] = rts('move_previous_end'),
+		['{'] = rts('move_next'),
+		['}'] = rts('move_previous'),
+		['>'] = rts('swap_next'),
+		['<'] = rts('swap_previous'),
+	}) do
+		local s = scope:sub(2)
+		if vim.tbl_contains({ '<', '>' }, prefix) then
+			setk(n, prefix .. key, func(scope .. '.inner'), tsoicon .. s)
+			goto continue
 		end
+
+		local modes
+		if prefix == '' then
+			modes = xo
+		else
+			modes = nxo
+		end
+		for l, suffix in pairs({ i = '.inner', a = '.outer' }) do
+			local d = tsoicon .. s .. '.' .. l
+			setk(modes, prefix .. l .. key, func(scope .. suffix), d)
+		end
+		::continue::
 	end
 end
 

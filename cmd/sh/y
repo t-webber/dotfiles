@@ -7,14 +7,13 @@ fi
 
 if [ -d ".venv" ]; then
         . .venv/bin/activate
+        uv sync
 else if [ -d "venv" ]; then
         . venv/bin/activate
 else
         yy @
         return 0
 fi; fi
-
-uv sync
 
 if [ -d ".complete" ]; then
         for f in .complete/*; do
