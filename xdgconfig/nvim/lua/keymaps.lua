@@ -78,6 +78,7 @@ local t = { 't' }
 local it = { 'i', 't' }
 
 local troubleicon = '🚨 '
+local fixicon = '🔧 '
 local winicon = '🌄 '
 local telescopeicon = '🔭 '
 local giticon = '🦑 '
@@ -221,8 +222,8 @@ for letter, vars in pairs({
 	-- for display, only first is read, except if name key exists
 	a = { { 'laststatus', 2, 0, true, 'statusline' } },
 	-- b tabs
-	d = { { 'filepath', 'dir' } },
 	e = { { 'full_treesitter', 'active' } },
+	d = { { 'filepath', 'dir' } },
 	f = { { 'filepath', 'file' } },
 	-- h hints
 	i = { { 'time', 'active' } },
@@ -243,43 +244,52 @@ for letter, vars in pairs({
 	setglobs(letter, vars, name, 'd', 'del', false)
 end
 
-setk(
-	n,
-	'ùyb',
-	function() vim.opt.listchars = require('data').listchars end,
-	globalicon .. 'display tabs and spaces'
-)
-setk(
-	n,
-	'ùdb',
-	function() vim.opt.listchars = { space = ' ', tab = '  ' } end,
-	globalicon .. 'display tabs and spaces'
-)
-
-setk(
-	n,
-	'ùy$',
-	function() vim.cmd('Copilot enable') end,
-	globalicon .. 'add copilot'
-)
-setk(
-	n,
-	'ùd$',
-	function() vim.cmd('Copilot disable') end,
-	globalicon .. 'del copilot'
-)
-setk(
-	n,
-	'ùyh',
-	function() vim.lsp.inlay_hint.enable(true) end,
-	lspicon .. 'add inlay hint'
-)
-setk(
-	n,
-	'ùdh',
-	function() vim.lsp.inlay_hint.enable(false) end,
-	lspicon .. 'del inlay hint'
-)
+for k, v in pairs({
+	['@'] = {
+		function(x) vim.g[require('globals').pyfmt] = x end,
+		'',
+		'active',
+		'ruff',
+		fixicon,
+	},
+	o = {
+		function(x) require('conform').formatters_by_ft = x end,
+		require('fmt'),
+		{},
+		'formatting',
+		fixicon,
+	},
+	z = {
+		function(x) vim.wo[0][0].foldmethod = x end,
+		'expr',
+		'manual',
+		'automatic folding',
+	},
+	b = {
+		function(x) vim.opt.listchars = x end,
+		require('data').listchars,
+		{ space = ' ', tab = ' ' },
+		'tabs and spaces',
+	},
+	['$'] = {
+		function(x) vim.cmd('Copilot ' .. x) end,
+		'enable',
+		'disable',
+		'copilot',
+		'',
+	},
+	h = {
+		function(x) vim.lsp.inlay_hint.enable(x) end,
+		true,
+		false,
+		'inlay hints',
+		lspicon,
+	},
+}) do
+	local ic = v[5] or globalicon
+	setk(n, 'ùy' .. k, function() v[1](v[2]) end, ic .. 'enable ' .. v[4])
+	setk(n, 'ùd' .. k, function() v[1](v[3]) end, ic .. 'disable ' .. v[4])
+end
 
 -------------------------
 --- Window navigation ---
@@ -639,31 +649,6 @@ setk(n, 'èj', function()
 	local path = vim.fn.expand('<cfile>')
 	require('oil').open(path)
 end, oilicon .. 'open file')
-
-------------------
---- Formatting ---
-------------------
-
-local v = require('globals')
-local pyfmt = v.pyfmt
-
-setk(n, 'ùd@', function() vim.g[pyfmt] = '' end, '🔧 Disable ruff')
-
-setk(n, 'ùy@', function() vim.g[pyfmt] = 'active' end, '🔧 Enable ruff')
-
-setk(
-	n,
-	'ùdo',
-	function() require('conform').formatters_by_ft = {} end,
-	'🔧 Disable formatting'
-)
-
-setk(
-	n,
-	'ùyo',
-	function() require('conform').formatters_by_ft = require('fmt') end,
-	'🔧 Enable formatting'
-)
 
 -----------
 --- LSP ---
