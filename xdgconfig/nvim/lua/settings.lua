@@ -39,10 +39,10 @@ local options = {
 	winborder = 'single',
 	foldopen = 'all',
 	foldclose = 'all',
-	foldlevel = 0,
+	-- 	foldlevel = 0,
 	foldtext = 'v:lua.CustomFoldText()',
 	fillchars = { eob = ' ' },
-	foldnestmax = 1,
+	-- 	foldnestmax = 1,
 }
 
 local globals = {

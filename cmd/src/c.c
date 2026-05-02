@@ -3,11 +3,11 @@
 #include "libvec.h"
 
 const Cmd COMMANDS[] = {
-    cmd("a", "add", "--dev", "--build", "--build", ),
+    cmd("a", "add", "--dev", "--build", "--build", "-p", ),
 
     cmd("bi", "binstall", "-y", "--git", ),
     cmd("be", "bench", ),
-    cmd("b", "build", "-r", "-p", ),
+    cmd("b", "build", "-r", "-p", "-j", ),
 
     cmd("ee", "tree", ),
     cmd("e", "expand", ),
@@ -34,7 +34,7 @@ const Cmd COMMANDS[] = {
     cmd("ph", "publish", ),
     cmd("p", "tarpaulin", "=hHtml", "--doc", "--tests", "--fail-under", "-o", ),
 
-    cmd("rm", "remove", "--dev", "--build", ),
+    cmd("rm", "remove", "--dev", "--build", "-p", ),
     cmd("ro", "report", "future-incompat", ),
     cmd("r", "run", "-r", "--example", "-p", ),
 

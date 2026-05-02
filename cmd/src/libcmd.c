@@ -145,6 +145,17 @@ struct CharParsingState {
         bool israw;
 };
 
+__nonnull() static void push_raw(struct CharParsingState *const state,
+                                 Vec *const cmd) {
+
+        const size_t len = (state->raw_mode.len + 1);
+        char *raw_arg = malloc(sizeof(char) * len);
+        stpcpy(raw_arg, state->raw_mode.data);
+        push0(raw_arg);
+        state->raw_mode.len = 0;
+        state->israw = false;
+}
+
 __nonnull() static void handle_char(Vec *const cmd,
                                     const Manual *const expansions,
                                     const size_t nb_expansions,
@@ -158,12 +169,7 @@ __nonnull() static void handle_char(Vec *const cmd,
 
         if (ch == '_') {
                 if (state->israw) {
-                        const size_t len = (state->raw_mode.len + 1);
-                        char *raw_arg = malloc(sizeof(char) * len);
-                        stpcpy(raw_arg, state->raw_mode.data);
-                        push0(raw_arg);
-                        state->raw_mode.len = 0;
-                        state->israw = false;
+                        push_raw(state, cmd);
                 } else {
                         state->israw = true;
                 }
@@ -172,6 +178,10 @@ __nonnull() static void handle_char(Vec *const cmd,
 
         if (state->israw) {
                 push_s(&state->raw_mode, ch);
+                printf(":%c:%s:%zu:\n",
+                       ch,
+                       state->raw_mode.data,
+                       state->raw_mode.len);
                 return;
         }
 
@@ -194,11 +204,6 @@ __nonnull() static void handle_char(Vec *const cmd,
                 return;
         }
 
-        if (ch == 'R') {
-                setenv_checked("RUST_BACKTRACE", "1");
-                return;
-        }
-
         if (ch == '/' || ch == ':') {
                 if (state->sep != '\0') upanic("Found 2 consecutive %c", ch);
                 state->sep = ch;
@@ -207,6 +212,27 @@ __nonnull() static void handle_char(Vec *const cmd,
 
         if (ch == '%') {
                 state->less = true; // TODO: implement it
+                return;
+        }
+
+        if (ch == 'R') { // TODO: this is hardcoded
+                setenv_checked("RUST_BACKTRACE", "1");
+                return;
+        }
+
+        if (ch == 'X') { // TODO: this is hardcoded
+                if (state->raw_mode.len) upanic("unreachable: missing ");
+                if (state->israw) upanic("unreachable: X should be catched");
+
+#define estr ":(exclude)"
+                printf("|%zu|\n", sizeof(str));
+                extend_s(&state->raw_mode, estr, sizeof(estr));
+                state->israw = true;
+
+                printf(":%c:%s:%zu:\n",
+                       ch,
+                       state->raw_mode.data,
+                       state->raw_mode.len);
                 return;
         }
 
@@ -288,6 +314,8 @@ __nonnull() static void parse_alias(const CliSettings *const settings,
                         state.sep = '\0';
                 };
         }
+
+        if (state.israw) push_raw(&state, cmd);
 }
 
 __nonnull() _Noreturn static void print_exit_or_exec(const Vec *const cmd,

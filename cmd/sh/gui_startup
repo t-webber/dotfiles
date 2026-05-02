@@ -13,4 +13,4 @@ xsetwacom set 12 Button 1 "key +Control_L +z -z"
 dunst &    #>/home/b/.files/.data/logs/dunst.log 2>&1 &
 clipcatd & # >/home/b/.files/.data/logs/clipcatd.log 2>&1 &
 
-lht set 50
+lht set 150

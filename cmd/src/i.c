@@ -91,7 +91,7 @@ cmd_num(l, n) cmd_num(cl, d)
             "--reset-author", ),
 
         cmd("do", "difftool", "--cached", ),
-        cmd("d", "diff", "--shortstat", "--cached", "--exclude", ),
+        cmd("d", "diff", "--shortstat", "--cached", ),
 
         cmd("e", "fetch", "--all", "--unshallow", "--prune", "--tags", ),
 

@@ -913,7 +913,7 @@ _al asum 'a asum'
 _al aanoh "'NR > 1'"
 _al anoh 'a aanoh'
 
-_print awk
+_print awwk
 
 ###########################
 ########## POWER ##########

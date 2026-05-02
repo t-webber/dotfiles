@@ -116,8 +116,7 @@ super + {t,n,v,c}
 	bspc desktop -f {term,edit,browser,com}
 
 super + ctrl + {t,n,v,c}
-	bspc node -d {term,edit,browser,com} && \
-	bspc desktop -f {term,edit,browser,com}
+	bspc node -d {term,edit,browser,com} && bspc desktop -f {term,edit,browser,com}
 
 ############
 # software #

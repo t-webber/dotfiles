@@ -21,7 +21,7 @@
                                           const size_t additional);            \
                                                                                \
         __nonnull() void extend_##suffix(name *const vec,                      \
-                                         ty *other,                            \
+                                         ty const *other,                      \
                                          const size_t len);                    \
                                                                                \
         __wur ty last_##suffix(name *const vec)

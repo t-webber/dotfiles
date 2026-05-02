@@ -47,7 +47,7 @@
         }                                                                      \
                                                                                \
         __nonnull() void extend_##suffix(name *const vec,                      \
-                                         ty *other,                            \
+                                         ty const *other,                      \
                                          const size_t len) {                   \
                 reserve_##suffix(vec, len);                                    \
                 for (size_t i = 0; i < len; ++i) {                             \
