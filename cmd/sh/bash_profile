@@ -4,8 +4,10 @@
 
 . ~/.bashrc
 
+la BASH_PROFILE
+
 if [ -z "$TMUX" ]; then
-        if [ "$XDG_VTNR" = "1" ]; then
+        if [ "$(tty | tr -c '1' '.' | tr -d '.')" = "1" ]; then
                 wpad &>>/tmp/log &
                 sudo dhcpcd &>>/tmp/log &
                 exec startx

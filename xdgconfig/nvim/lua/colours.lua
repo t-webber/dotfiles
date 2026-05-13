@@ -215,7 +215,7 @@ local colours = {
 	['@diff.delta'] = h(c.yellow), -- changed text (for diff files)
 
 	DiffAdd = h(nil, '#002200'),
-	DiffDelete = h('#440000', '#220000'),
+	DiffDelete = h(c.red, '#330000'),
 	DiffChange = h(nil, '#332200'),
 	DiffText = h(nil, '#551144'),
 

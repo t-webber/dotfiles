@@ -14,6 +14,8 @@ return {
 	zig = { 'zigfmt' },
 	xml = { 'tidy' },
 	kotlin = { 'ktlint' },
+	bibtex = { 'bibtex-tidy' },
+	typst = { 'typstyle' },
 
 	-------------
 	--- Shell ---

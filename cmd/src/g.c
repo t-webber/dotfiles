@@ -28,4 +28,5 @@ make_single("g",
             "--binary",
             "=H--with-filename",
             "-l",
-            "=C--color=always", )
+            "=C--color=always",
+            "--glob", )

@@ -323,6 +323,7 @@ local spec = {
 
 			vim.treesitter.language.register('python', 'sage')
 			vim.treesitter.language.register('bash', 'zsh')
+			vim.treesitter.language.register('bibtex', 'bib')
 			vim.treesitter.language.register('bash', 'sh')
 			vim.treesitter.language.register('ruby', 'conf')
 		end,
@@ -438,7 +439,7 @@ local spec = {
 		event = 'VeryLazy',
 	},
 	{
-		'tversteeg/registers.nvim',
+		'https://codeberg.org/fosk/registers.nvim',
 		dependencies = { 'MunifTanjim/nui.nvim' },
 		config = function() require('registers').setup() end,
 		event = 'VeryLazy',

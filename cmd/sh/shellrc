@@ -53,6 +53,12 @@ export XDG_CONFIG_HOME="$XCFG"
 export XDG_DATA_HOME="$DATA/local/share"
 export XDG_CACHE_HOME="$DATA/local/cache"
 export XDG_STATE_HOME="$DATA/local/state"
+[ -f "/etc/artix-release" ] && {
+        export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+        sudo chmod ugoa+rwx /run/user
+        /bin/mkdir -p $XDG_RUNTIME_DIR
+        sudo chown $USER:$USER $XDG_RUNTIME_DIR
+}
 
 ###############################
 ### apps location variables ###

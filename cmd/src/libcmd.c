@@ -1,4 +1,5 @@
 #include "libcmd.h"
+#include "assert.h"
 #include "lib.h"
 #include "libexec.h"
 #include "libterm.h"
@@ -178,10 +179,6 @@ __nonnull() static void handle_char(Vec *const cmd,
 
         if (state->israw) {
                 push_s(&state->raw_mode, ch);
-                printf(":%c:%s:%zu:\n",
-                       ch,
-                       state->raw_mode.data,
-                       state->raw_mode.len);
                 return;
         }
 
@@ -225,14 +222,9 @@ __nonnull() static void handle_char(Vec *const cmd,
                 if (state->israw) upanic("unreachable: X should be catched");
 
 #define estr ":(exclude)"
-                printf("|%zu|\n", sizeof(str));
-                extend_s(&state->raw_mode, estr, sizeof(estr));
+                assert(state->raw_mode.len == 0);
+                extend_s(&state->raw_mode, estr, sizeof(estr) - 1);
                 state->israw = true;
-
-                printf(":%c:%s:%zu:\n",
-                       ch,
-                       state->raw_mode.data,
-                       state->raw_mode.len);
                 return;
         }
 
@@ -248,6 +240,15 @@ __nonnull() static void handle_char(Vec *const cmd,
                 }
                 upanic("Invalid letter: %c.", ch);
         }
+}
+
+static void merge_sep(Vec *const cmd, const char sep) {
+        const_str post_slash = pop_v(cmd);
+        const_str pre_slash = pop_v(cmd);
+        const size_t len = strlen(pre_slash) + strlen(post_slash) + 1;
+        char *const merged = malloc(sizeof(char) * (len + 1));
+        sprintf(merged, "%s%c%s", pre_slash, sep, post_slash);
+        push_v(cmd, merged);
 }
 
 __nonnull() static void parse_alias(const CliSettings *const settings,
@@ -295,27 +296,19 @@ __nonnull() static void parse_alias(const CliSettings *const settings,
                             &i,
                             end,
                             &state);
-                if (state.prev_sep != '\0') {
-                        const_str post_slash = pop_v(cmd);
-                        const_str pre_slash = pop_v(cmd);
-                        const size_t len
-                            = strlen(pre_slash) + strlen(post_slash) + 1;
-                        char *const merged = malloc(sizeof(char) * (len + 1));
-                        sprintf(merged,
-                                "%s%c%s",
-                                pre_slash,
-                                state.prev_sep,
-                                post_slash);
-                        push_v(cmd, merged);
+
+                if (state.prev_sep && !state.israw) {
+                        merge_sep(cmd, state.prev_sep);
                         state.prev_sep = '\0';
                 }
-                if (state.sep != '\0') {
+                if (state.sep) {
                         state.prev_sep = state.sep;
                         state.sep = '\0';
                 };
         }
 
         if (state.israw) push_raw(&state, cmd);
+        if (state.prev_sep) merge_sep(cmd, state.prev_sep);
 }
 
 __nonnull() _Noreturn static void print_exit_or_exec(const Vec *const cmd,

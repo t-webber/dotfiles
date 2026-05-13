@@ -3,7 +3,7 @@
 #include "libvec.h"
 
 const Cmd COMMANDS[] = {
-    cmd("a", "add", "--dev", "--build", "--build", "-p", ),
+    cmd("a", "add", "--dev", "--build", "--build", "-p", "--git", ),
 
     cmd("bi", "binstall", "-y", "--git", ),
     cmd("be", "bench", ),

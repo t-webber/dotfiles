@@ -84,6 +84,12 @@ __nonnull((1, 2)) static void run_file(const_str file,
                 exvd(args);
         }
 
+        if (!strcmp(ext, "typ")) {
+                if (!fork_checked())
+                        forked_exldn("typst", "watch", file, "/tmp/out.pdf");
+                exldn("o", "/tmp/out.pdf");
+        };
+
         const_str prog = single_work_file_runner(file, ext);
         if (prog == NULL) return;
 

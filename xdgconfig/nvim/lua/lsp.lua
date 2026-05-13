@@ -1,5 +1,15 @@
 local lsps = {
 
+	typ = {
+		cmd = { 'tinymist' },
+		filetypes = { 'typst' },
+		settings = {
+			formatterMode = 'typstyle',
+			exportPdf = 'onType',
+			semanticTokens = 'disable',
+		},
+	},
+
 	kt = {
 		cmd = { 'kotlin-lsp' },
 		filetypes = { 'kotlin' },
@@ -66,7 +76,7 @@ local lsps = {
 		filetypes = { 'rust' },
 		settings = {
 			['rust-analyzer'] = {
-				cargo = { features = 'all' },
+				-- 				cargo = { features = 'all' },
 				check = { command = 'clippy' },
 				diagnostics = { styleLints = { enable = true } },
 				imports = {

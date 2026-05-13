@@ -108,6 +108,9 @@ F9
 Print
 	maim -s | xclip -selection c -t image/png
 
+shift + Print
+        screencast
+
 ############
 # desktops #
 ############

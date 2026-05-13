@@ -54,13 +54,14 @@ local function toggle_checked()
 end
 
 local function checkbox_letters()
-	match('TodoChecked', '^- \\[x\\].*$')
-	match('TodoPartial', '^- \\[\\.\\].*$')
-	match('TodoHold', '^- \\[-\\].*$')
-	match('TodoUnchecked', '^- \\[ \\].*$')
+	local function p(c) return '^\\s*- \\[' .. c .. '\\].*$' end
+	match('TodoChecked', p('x'))
+	match('TodoPartial', p('\\.'))
+	match('TodoHold', p('-'))
+	match('TodoUnchecked', p(' '))
 
-	for name, value in pairs(true_colours) do
-		match(name, '^- \\[' .. value[2] .. '\\].*$')
+	for name, values in pairs(true_colours) do
+		match(name, p(values[2]))
 	end
 end
 

@@ -9,6 +9,12 @@ if os.getenv('DEVICE') ~= 'v' then
 	vim.schedule(function() vim.o.clipboard = 'unnamedplus' end)
 end
 
+vim.filetype.add({
+	extension = {
+		bib = 'bibtex',
+	},
+})
+
 local options = {
 	laststatus = 2,
 	relativenumber = false,

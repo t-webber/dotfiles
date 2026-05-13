@@ -88,7 +88,8 @@ cmd_num(l, n) cmd_num(cl, d)
             "--quiet",
             "=b--allow-empty",
             "=g--allow-empty-message",
-            "--reset-author", ),
+            "--reset-author",
+            "=w--date=now", ),
 
         cmd("do", "difftool", "--cached", ),
         cmd("d", "diff", "--shortstat", "--cached", ),
@@ -123,7 +124,8 @@ cmd_num(l, n) cmd_num(cl, d)
                 "-n",
                 "-p",
                 "=a--name-status",
-                "--stat", ),
+                "--stat",
+                "=f--pretty=format", ),
 
         cmd("mv", "move", ),
         cmd("m",
