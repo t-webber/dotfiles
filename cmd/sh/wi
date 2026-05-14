@@ -1,15 +1,43 @@
 #!/bin/bash
 
 if [ -z "$1" ]; then
-        l "%1missing argument"
-        return 6
+        pwd
+        return
+fi
+if [ -n "$2" ]; then
+        for p in $@; do
+                lw "%6$p: "
+                wi $p
+        done
+        return
 fi
 
 ty=$(type $1 2>/dev/null || file "$1" 2>&1 || true)
 
+findin() {
+        if [ -z "$3" ]; then
+                path=$(ff . "$1" | gg "/$2$" | g v "$DOT/cmd/src/zlib")
+        else
+                path=$(ff . "$1" | gg "$2" | g v "$DOT/cmd/src/zlib")
+        fi
+        if [ -n "$path" ]; then
+                l "$path"
+                return 0
+        else
+                return 1
+        fi
+
+}
+
 case "$ty" in
 *"No such file or directory"*)
-        l "unknown"
+        paths="$DOT/cmd $DOT /etc"
+        for p in $paths; do
+                findin "$p" "$1" && return
+        done
+        for p in $paths; do
+                findin "$p" "$1" f && return
+        done
         ;;
 "$1 is a shell builtin")
         l "builtin"

@@ -560,7 +560,7 @@ _print systemd
 
 _flush
 
-_ual 's or v' cat ls lla llag bat eza ll
+_ual 's or v' cat lla llag bat eza ll
 
 _ual 'l, lw, lc, lr or ret' cls clear eh
 _al ret 'l $?'

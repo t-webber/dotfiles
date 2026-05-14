@@ -1,16 +1,16 @@
 #include "lib.h"
-#include "libos.h"
 
 #define ca(ch, str)                                                            \
         case ch:                                                               \
-                printf(str);                                                   \
+                fprintf(out, str);                                             \
                 return (ch >= '0' && ch <= '9') ? iscolour : otherescape;
 
 #define co(ch, num) ca(ch, "\033[3" #num "m")
 
 enum colour { invalid, iscolour, otherescape };
 
-__nonnull() __wur static enum colour print_escaped(const char ch) {
+__nonnull() __wur static enum colour print_escaped(FILE *out, const char ch) {
+
         switch (ch) {
                 co('0', 0);
                 co('1', 1);
@@ -32,13 +32,15 @@ __nonnull() __wur static enum colour print_escaped(const char ch) {
         }
 }
 
-__wur __nonnull() static bool print_arg(const_str arg, const bool no_escape) {
+__wur __nonnull() static bool print_arg(FILE *out,
+                                        const_str arg,
+                                        const bool no_escape) {
         bool has_colours = false;
         bool escaped = false;
 
         for (const char *ptr = arg; *ptr; ++ptr) {
                 if (escaped) {
-                        enum colour iscol = print_escaped(*ptr);
+                        enum colour iscol = print_escaped(out, *ptr);
                         if (iscol == invalid)
                                 upanic("Invalid escape character '%c' in '%s'",
                                        *ptr,
@@ -50,13 +52,24 @@ __wur __nonnull() static bool print_arg(const_str arg, const bool no_escape) {
                 if (*ptr == '%' && !no_escape)
                         escaped = true;
                 else
-                        printf("%c", *ptr);
+                        fprintf(out, "%c", *ptr);
         }
         return has_colours;
 }
 
 int main(const int argc, Args argv) {
         store_usage(argv[0], "", false);
+
+        if (!strcmp(argv[0], "lh")) {
+                printf("l: echo <default behaviour>\n"
+                       "lh: help\n"
+                       "la: wrap <=== $@ ===>\n"
+                       "le: error <l %%1$@>\n"
+                       "ls: \\n between each arg <ls *>\n"
+                       "lw: no  trailing \\n\n"
+                       "lr: no escape\n");
+                return 1;
+        }
 
         if (!strcmp(argv[0], "lc")) {
                 clear();
@@ -70,19 +83,22 @@ int main(const int argc, Args argv) {
         bool no_new_line = !strcmp(argv[0], "lw");
         bool no_escape = !strcmp(argv[0], "lr");
         bool error = !strcmp(argv[0], "le");
+        bool new_line_sep = !strcmp(argv[0], "ls");
         bool has_colours = error;
 
-        if (error) { printf("\x1b[31m"); }
+        FILE *out = error ? stderr : stdout;
+
+        if (error) { fprintf(out, "\x1b[31m"); }
 
         for (int i = 1; i < argc; ++i) {
-                if (i >= 2) printf(" ");
-                has_colours = print_arg(argv[i], no_escape) || has_colours;
+                if (i >= 2) fprintf(out, new_line_sep ? "\n" : " ");
+                has_colours = print_arg(out, argv[i], no_escape) || has_colours;
         }
 
-        if (equals) { printf(" \x1b[33m====="); }
-        if (has_colours || equals) printf("\x1b[0m");
+        if (equals) { fprintf(out, " \x1b[33m====="); }
+        if (has_colours || equals) fprintf(out, "\x1b[0m");
 
-        if (!no_new_line) printf("\n");
+        if (!no_new_line) fprintf(out, "\n");
 
         return error ? 1 : 0;
 }

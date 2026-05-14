@@ -21,7 +21,7 @@ const Cmd COMMANDS[] = {
     cmd("lo", "login", ),
     cmd("l", "license", "--direct-deps-only", ),
 
-    cmd("n", "clean", ),
+    cmd("n", "clean", "-m", ),
 
     cmd("o",
         "doc",
