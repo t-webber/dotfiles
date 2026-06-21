@@ -46,5 +46,5 @@ int main(const int argc, Args argv) {
 
         Vec cmd = new_v();
         push_v(&cmd, "gh");
-        run_cli((size_t)argc, argv, &SETTINGS, &cmd, "h");
+        run_cli((size_t)argc, argv, &SETTINGS, &cmd, "h", NULL);
 }

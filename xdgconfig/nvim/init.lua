@@ -18,19 +18,6 @@ local files = {
         'keymaps',
 }
 
-local original_set = vim.diagnostic.set
-vim.diagnostic.set = function(namespace, bufnr, diagnostics, opts)
-        -- Check if the target buffer isn't loaded yet
-        if bufnr and not vim.api.nvim_buf_is_loaded(bufnr) then
-                -- Print the file that initiated this call
-                local info = debug.getinfo(2, 'S')
-                if info and info.source then
-                        print('⚠️ SUSPECT CALLING DIAGNOSTICS ON UNLOADED BUF: ' .. info.source)
-                end
-        end
-        return original_set(namespace, bufnr, diagnostics, opts)
-end
-
 for i, file in ipairs(files) do
         if i ~= #files then pcall(require, file) end
 end

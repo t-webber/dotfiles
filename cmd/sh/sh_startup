@@ -19,7 +19,6 @@ bur &>$sl-bun &
 C &
 Fy &>$sl-Fy &
 
-ru &>$sl-ru &
 sudo pkgfile --update &>$sl-pkgfile &
 tldr --update &
 

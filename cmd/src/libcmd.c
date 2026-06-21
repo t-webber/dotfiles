@@ -18,6 +18,7 @@ struct CharParsingState {
         String raw_mode;
         size_t israw;
         size_t closing_raw;
+        bool clear;
 };
 
 static void new_sep(struct CharParsingState *const state, const char new) {
@@ -165,7 +166,7 @@ __nonnull() static void push_raw(struct CharParsingState *const state, Vec *cons
 }
 
 __nonnull() static void handle_char(Vec *const cmd,
-                                    const Manual *const expansions,
+                                    const Manual *const manual,
                                     const size_t nb_expansions,
                                     const_str arg,
                                     const Cmd *const current,
@@ -208,7 +209,7 @@ __nonnull() static void handle_char(Vec *const cmd,
         }
 
         if (ch == '!') {
-                clear();
+                state->clear = true;
                 return;
         }
 
@@ -244,12 +245,13 @@ __nonnull() static void handle_char(Vec *const cmd,
         } else if (take_one(cmd, current->options, ch, state)) {
         } else {
                 for (size_t m_idx = 0; m_idx < nb_expansions; ++m_idx) {
-                        if (ch == expansions[m_idx].origin) {
-                                const char *replace = expansions[m_idx].replace;
-                                bool env = *replace == '_';
+                        if (ch == manual[m_idx].origin) {
+                                const char *replace = manual[m_idx].replace;
+                                bool env = *replace == '_' || *replace == '#';
                                 if (env) {
-                                        ++replace;
                                         new_sep(state, ENV_SEP);
+                                        if (*replace == '#') state->israw = false;
+                                        ++replace;
                                 }
                                 push1(replace, ch);
                                 return;
@@ -275,10 +277,10 @@ static void merge_sep(Vec *const cmd, const char sep) {
         }
 }
 
-__nonnull() static void parse_alias(const CliSettings *const settings,
-                                    Vec *const cmd,
-                                    const_str arg,
-                                    const size_t end) {
+__wur __nonnull() static bool parse_alias(const CliSettings *const settings,
+                                          Vec *const cmd,
+                                          const_str arg,
+                                          const size_t end) {
 
         const bool has_command = settings->cmd_len > 1;
         if (settings->cmd_len == 0)
@@ -303,7 +305,8 @@ __nonnull() static void parse_alias(const CliSettings *const settings,
                                          .less = false,
                                          .raw_mode = new_s(),
                                          .israw = false,
-                                         .closing_raw = 0};
+                                         .closing_raw = 0,
+                                         .clear = false};
 
         for (size_t i = start; i < end; ++i) {
                 if (arg[i] == ',') {
@@ -332,11 +335,20 @@ __nonnull() static void parse_alias(const CliSettings *const settings,
 
         if (state.israw) push_raw(&state, cmd);
         if (state.prev_sep) merge_sep(cmd, state.prev_sep);
+
+        return state.clear;
 }
 
-__nonnull() _Noreturn static void print_exit_or_exec(const Vec *const cmd, const bool debug) {
+__nonnull() _Noreturn static void print_exit_or_exec(const Vec *const cmd,
+                                                     const bool debug,
+                                                     const bool should_clear) {
 
-        if (!debug) exvd(cmd->data);
+        if (!debug) {
+                if (should_clear) clear();
+                exvd(cmd->data);
+        }
+
+        if (should_clear) printf("clear! ");
 
         print_this_env();
 
@@ -365,30 +377,39 @@ __wur __nonnull() static bool push_others(Vec *const cmd,
         return debug;
 }
 
-__nonnull() static void try_exec_no_args(const size_t argc,
-                                         Args argv,
-                                         const_str alias,
-                                         Vec *const cmd) {
+__nonnull((2, 3, 5)) static void try_exec_no_args(const size_t argc,
+                                                  Args argv,
+                                                  const_str alias,
+                                                  const_str verbose,
+                                                  Vec *const cmd) {
+        char *vb = malloc(64);
+        if (verbose) {
+                free(vb);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
+                vb = (char *)verbose;
+#pragma GCC diagnostic pop
+        } else {
+                char *end = stpcpy((char *)vb, alias);
+                *end++ = alias[strlen(alias) - 1];
+                *end = '\0';
+        }
 
-        char verbose[64];
-        char *end = stpcpy(verbose, alias);
-        *end++ = alias[strlen(alias) - 1];
-        *end = '\0';
-
-        if (!is_verbose(argv[0], alias, verbose)) return;
+        if (!is_verbose(argv[0], alias, vb)) return;
 
         bool debug = push_others(cmd, argc, argv, 1);
 
-        print_exit_or_exec(cmd, debug);
+        print_exit_or_exec(cmd, debug, false);
 }
 
 __nonnull((2, 3, 4)) _Noreturn void run_cli(const size_t argc,
                                             Args argv,
                                             const CliSettings *const settings,
                                             Vec *const cmd,
-                                            const_str alias) {
+                                            const_str alias,
+                                            const char *verbose) {
 
-        if (alias != NULL) try_exec_no_args(argc, argv, alias, cmd);
+        if (alias != NULL) try_exec_no_args(argc, argv, alias, verbose, cmd);
 
         if (argc == 1 || (argc == 2 && !strcmp(argv[1], "!"))) {
                 if (argc == 2) clear();
@@ -398,17 +419,17 @@ __nonnull((2, 3, 4)) _Noreturn void run_cli(const size_t argc,
 
         store_usage(argv[0], argv[1], false);
 
-        parse_alias(settings, cmd, argv[1], strlen(argv[1]));
+        const bool should_clear = parse_alias(settings, cmd, argv[1], strlen(argv[1]));
 
-        bool debug = push_others(cmd, argc, argv, 2);
+        const bool debug = push_others(cmd, argc, argv, 2);
 
-        print_exit_or_exec(cmd, debug);
+        print_exit_or_exec(cmd, debug, should_clear);
 }
 
 __nonnull() _Noreturn void run_cli_single(const size_t argc, Args argv, const Cmd *const command) {
         Vec cmd = new_v();
         push_v(&cmd, command->expanded);
-        try_exec_no_args(argc, argv, command->alias, &cmd);
+        try_exec_no_args(argc, argv, command->alias, NULL, &cmd);
         assert(pop_v(&cmd) == command->expanded);
 
         bool should_clear = false, help = false;
@@ -433,13 +454,11 @@ __nonnull() _Noreturn void run_cli_single(const size_t argc, Args argv, const Cm
         const CliSettings settings
             = {.cmd = command, .cmd_len = 1, .manual = manual, .manual_len = manual_len};
 
-        bool debug = false;
-
         if (argc >= 2) {
-                parse_alias(&settings, &cmd, argv[1], strlen(argv[1]));
-                debug = push_others(&cmd, argc, argv, 2);
+                should_clear = parse_alias(&settings, &cmd, argv[1], strlen(argv[1]));
+                const bool debug = push_others(&cmd, argc, argv, 2);
 
-                print_exit_or_exec(&cmd, debug);
+                print_exit_or_exec(&cmd, debug, should_clear);
         } else {
                 exl1(command->expanded);
         }

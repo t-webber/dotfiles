@@ -70,7 +70,7 @@ $B:
 	@mkdir -p $B
 
 links:
-	@cd $B && $(foreach p,$(LINKS),ln -sf $(word 2,$(subst =, ,$(p))) $(word 1,$(subst =, ,$(p))) &&) true
+	cd $B && $(foreach p,$(LINKS),ln -sf $(word 2,$(subst =, ,$(p))) $(word 1,$(subst =, ,$(p))) &&) true
 
 $B/net: net.c $(LIB_OBJS)
 	$(CC) $(CFLAGS) $^ -o $@

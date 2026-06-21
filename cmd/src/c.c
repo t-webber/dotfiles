@@ -4,10 +4,20 @@
 #include "libvec.h"
 
 const Cmd COMMANDS[] = {
-    cmd("a", "add", "--dev", "--build", "--build", "-p", "--git", ),
+    cmd("a", "add", "--dev", "--build", "--build", "-p", "--git", "--no-default-features", ),
 
     cmd("bi", "binstall", "-y", "--git", ),
     cmd("be", "bench", ),
+    cmd("bl",
+        "bless",
+        "--all",
+        "--doc",
+        "--jobs",
+        "=.___",
+        "--release",
+        "=n--no-fail-fast",
+        "=u--no-run",
+        "=c--no-capture", ),
     cmd("b", "build", "-r", "-p", "-j", "--test", ),
 
     cmd("ee", "tree", ),
@@ -78,6 +88,10 @@ const Manual MANUAL[] = {
     {'R', "_RUST_BACKTRACE"},
     {'T', "_RUST_TEST_THREADS"},
     {'D', "debug"},
+    {'I', "--target-dir"},
+    {'O', "target/other"},
+    {'L', "--cap-lints allow"},
+    {'G', "#RUSTFLAGS"},
 };
 
 make_settings(SETTINGS, COMMANDS, MANUAL);
@@ -94,10 +108,9 @@ int main(const int argc, Args argv) {
         } else if (!strcmp(argv[0], "cc")) {
                 for (int i = 1; i < argc; ++i) push_v(&cmd, argv[i]);
                 exvd(cmd.data);
-
-        } else {
+        } else if (strcmp(argv[0], "cw")) {
                 upanic("Invalid arg0: %s", argv[0]);
         }
 
-        run_cli((size_t)argc, argv, &SETTINGS, &cmd, NULL);
+        run_cli((size_t)argc, argv, &SETTINGS, &cmd, "c", "cw");
 }

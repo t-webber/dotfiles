@@ -35,7 +35,8 @@ __nonnull((2, 3, 4)) _Noreturn void run_cli(const size_t argc,
                                             Args argv,
                                             const CliSettings *const settings,
                                             Vec *const cmd,
-                                            const_str alias);
+                                            const_str alias,
+                                            const char *verbose);
 
 __nonnull() _Noreturn void run_cli_single(const size_t argc, Args argv, const Cmd *const cmd);
 
@@ -49,7 +50,7 @@ __nonnull() _Noreturn void run_cli_single(const size_t argc, Args argv, const Cm
         int main(const int argc, Args argv) {                                                      \
                 Vec cmd = new_v();                                                                 \
                 push_v(&cmd, COMMAND);                                                             \
-                run_cli((size_t)argc, argv, &SETTINGS, &cmd, ALIAS);                               \
+                run_cli((size_t)argc, argv, &SETTINGS, &cmd, ALIAS, NULL);                         \
         }
 
 #define make_single(...)                                                                           \
