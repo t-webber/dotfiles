@@ -1,1 +1,1 @@
-alacritty bat cargo-binstall cargo-tarpaulin cargo-update clipcat-menu clipcatctl clipcatd du-dust eza fd-find git-delta hacksaw numbat-cli onefetch ripgrep sccache shotgun stylua taplo-cli tokei tree-sitter-cli typos-cli typst-cli 
+alacritty bat cargo-binstall cargo-tarpaulin cargo-update clipcat-menu clipcatctl clipcatd du-dust eza fd-find flamegraph git-delta hacksaw numbat-cli onefetch ripgrep sccache shotgun stylua taplo-cli tokei tree-sitter-cli typos-cli typst-cli 

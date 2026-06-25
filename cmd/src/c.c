@@ -23,7 +23,7 @@ const Cmd COMMANDS[] = {
     cmd("ee", "tree", ),
     cmd("e", "expand", ),
 
-    cmd("f", "fmt", "--all", "--unstable-features", "--error-on-unformatted", ),
+    cmd("f", "fmt", "--all", "--unstable-features", "--error-on-unformatted", "--check", ),
 
     cmd("ii", "init", ),
     cmd("iu", "install-update", "-a", "-g", "--jobs", ),

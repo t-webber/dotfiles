@@ -395,7 +395,7 @@ __nonnull((2, 3, 5)) static void try_exec_no_args(const size_t argc,
                 *end = '\0';
         }
 
-        if (!is_verbose(argv[0], alias, vb)) return;
+        if (strcmp(argv[0], vb)) return;
 
         bool debug = push_others(cmd, argc, argv, 1);
 

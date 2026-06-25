@@ -155,7 +155,6 @@ export RUSTC_WRAPPER=$(/usr/bin/which sccache)
 export RUST_SRC="$CARGO_HOME/registry/src/"
 export RUSTDOCFLAGS="-D warnings"
 export CARGO_PROFILE_DEV_BUILD_OVERRIDE_DEBUG=true
-export RUST_TEST_THREADS=1
 
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
