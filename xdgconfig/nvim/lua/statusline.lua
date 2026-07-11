@@ -103,9 +103,8 @@ local function sl_acer_battery()
         local status = read_unchecked('/sys/class/power_supply/BAT1/status')
         if tonumber(level) < 20 and status ~= 'Charging' and os.getenv('NO_DUNST') == nil then
                 vim.system({
-                        '/bin/notify-send',
-                        '-u',
-                        'critical',
+                        'herbe',
+                        'br:#ff6600',
                         'low battery (nvim) (' .. level .. '%)',
                 })
         end

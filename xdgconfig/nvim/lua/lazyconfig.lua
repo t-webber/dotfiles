@@ -272,9 +272,11 @@ local spec = {
                 ---@type blink.cmp.Config
                 opts = {
                         keymap = {
-                                preset = 'super-tab',
+                                preset = 'enter',
                                 ['<C-j>'] = { 'snippet_backward', 'fallback' },
                                 ['<C-k>'] = { 'snippet_forward', 'fallback' },
+                                ['<Tab>'] = { 'select_next', 'fallback' },
+                                ['<S-Tab>'] = { 'select_prev', 'fallback' },
                         },
                         completion = {
                                 documentation = {

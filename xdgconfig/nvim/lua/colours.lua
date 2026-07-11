@@ -210,6 +210,7 @@ local colours = {
         ['@markup.list'] = title, -- list markers
         --["@markup.list.checked"] = none, -- checked todo-style list markers
         --["@markup.list.unchecked"] = none, -- unchecked todo-style list markers
+        ['@markup.raw.markdown_inline'] = h(c.yellow),
 
         --- Diff ---
         ['@diff.plus'] = h(c.green), -- added text (for diff files)
