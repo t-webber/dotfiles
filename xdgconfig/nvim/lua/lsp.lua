@@ -1,3 +1,5 @@
+local plugin_dir = vim.fn.expand(os.getenv('XDG_DATA_HOME') .. '/nvim/lazy')
+
 local lsps = {
 
         verilog = { cmd = { 'verible-verilog-ls' }, filetypes = { 'v', 'verilog' } },
@@ -76,6 +78,16 @@ local lsps = {
                         Lua = {
                                 runtime = { version = 'LuaJIT' },
                                 diagnostics = { globals = { 'vim' } },
+                                library = vim.api.nvim_get_runtime_file('', true),
+                                workspace = {
+                                        library = vim.tbl_extend(
+                                                'force',
+                                                vim.api.nvim_get_runtime_file('', true),
+                                                { plugin_dir }
+                                        ),
+                                        checkThirdParty = false,
+                                        ignoreDir = { plugin_dir },
+                                },
                         },
                 },
         },

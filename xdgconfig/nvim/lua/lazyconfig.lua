@@ -265,10 +265,34 @@ local spec = {
         --- Language support ---
         ------------------------
         {
-                'ms-jpq/coq_nvim',
-                dependencies = { 'ms-jpq/coq.artifacts', 'ms-jpq/coq.thirdparty' },
-                config = function() vim.cmd('COQnow --shut-up') end,
-                event = 'VeryLazy',
+                'saghen/blink.cmp',
+                dependencies = { 'rafamadriz/friendly-snippets' },
+                version = '1.*',
+                ---@module 'blink.cmp'
+                ---@type blink.cmp.Config
+                opts = {
+                        keymap = {
+                                preset = 'super-tab',
+                                ['<C-j>'] = { 'snippet_backward', 'fallback' },
+                                ['<C-k>'] = { 'snippet_forward', 'fallback' },
+                        },
+                        completion = {
+                                documentation = {
+                                        auto_show = true,
+                                        window = {
+                                                border = 'none',
+                                        },
+                                },
+                                menu = {
+                                        border = 'none',
+                                        draw = { treesitter = { 'lsp' } },
+                                },
+                        },
+                        sources = {
+                                default = { 'lsp', 'path', 'snippets', 'buffer' },
+                        },
+                },
+                opts_extend = { 'sources.default' },
         },
         { 's3rvac/vim-syntax-jira', event = 'VeryLazy' },
         {

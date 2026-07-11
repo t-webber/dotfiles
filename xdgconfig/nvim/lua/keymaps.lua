@@ -846,20 +846,18 @@ for key, scope in pairs({
         }) do
                 if vim.tbl_contains({ '<', '>' }, prefix) then
                         setknod(n, prefix .. key, func(scope .. '.inner'), desc)
-                        goto continue
-                end
-
-                local modes
-                if prefix == '' then
-                        modes = xo
                 else
-                        modes = nxo
+                        local modes
+                        if prefix == '' then
+                                modes = xo
+                        else
+                                modes = nxo
+                        end
+                        for l, suffix in pairs({ i = '.inner', a = '.outer' }) do
+                                local d = desc .. l
+                                setknod(modes, prefix .. l .. key, func(scope .. suffix), d)
+                        end
                 end
-                for l, suffix in pairs({ i = '.inner', a = '.outer' }) do
-                        local d = desc .. l
-                        setknod(modes, prefix .. l .. key, func(scope .. suffix), d)
-                end
-                ::continue::
         end
 end
 
@@ -885,22 +883,26 @@ local v = require('globals')
 local msg = v.statusline_notif
 
 local timer = vim.loop.new_timer()
-timer:start(
-        0,
-        20 * 1000,
-        vim.schedule_wrap(function()
-                math.randomseed(os.time())
-                local idx = math.random(0, #keymap_display - 1)
-                local keymap = keymap_display[idx]
-                if keymap == nil then
-                        timer:stop()
-                        timer:close()
-                        vim.g[msg] = 'invalid idx ' .. idx .. ' for len ' .. #keymap_display
-                else
-                        vim.g[msg] = fmt_keymap(keymap, true)
-                end
-        end)
-)
+if timer ~= nil then
+        timer:start(
+                0,
+                20 * 1000,
+                vim.schedule_wrap(function()
+                        math.randomseed(os.time())
+                        local idx = math.random(0, #keymap_display - 1)
+                        local keymap = keymap_display[idx]
+                        if keymap == nil then
+                                timer:stop()
+                                timer:close()
+                                vim.g[msg] = 'invalid idx ' .. idx .. ' for len ' .. #keymap_display
+                        else
+                                vim.g[msg] = fmt_keymap(keymap, true)
+                        end
+                end)
+        )
+else
+        vim.g[msg] = 'failed to create timer'
+end
 
 local function load_lines(width)
         local lines = {
@@ -915,6 +917,8 @@ local function load_lines(width)
                 'zc\t n\t close fold',
                 'zR\t n\t unfold all',
                 'zM\t n\t fold all',
+                '<C-F>\t n\t scroll complet° doc',
+                '<C-B>\t n\t scroll complet° doc',
                 string.rep('─', width),
         }
 

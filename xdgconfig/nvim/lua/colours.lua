@@ -57,6 +57,8 @@ local title = h(c.magenta, c.black, b)
 
 local colours = {
 
+        None = none,
+
         --------------
         --- Window ---
         --------------
@@ -355,6 +357,8 @@ local colours = {
         CustomStatusLineBatteryCharging = h(c.green),
         CustomStatusLineBatteryDischarging = h(c.red),
 
+        FunctionItalic = h(c.green, nil, i),
+
         ----------------
         --- DevIcons ---
         ----------------
@@ -407,9 +411,13 @@ local colours = {
         TodoHold = h(c.darkcyan),
         Hide = h(c.semidark, c.black),
 
-        CommentBg = h(c.semidark, c.semidark),
-        None = none,
-        FunctionItalic = h(c.green, nil, i),
+        -------------
+        --- Pmenu ---
+        -------------
+
+        PmenuSel = h(nil, c.semidark),
+        Pmenu = h(nil, c.dark),
+        PmenuKind = h(c.yellow),
 }
 
 for name, value in pairs(c) do
