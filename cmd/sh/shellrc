@@ -25,6 +25,7 @@ else
 
 fi
 
+
 #################################
 ### custom location variables ###
 #################################
@@ -48,6 +49,8 @@ export BIN="$FILES/.bin"
 export BLOB="$FILES/.blob"
 export WORK="$FILES/.work"
 
+/bin/mkdir -p $DATA $WASTE $SLOGS $SECRET $STUDY $BIN $BLOB $WORK
+
 #################################
 ### global location variables ###
 #################################
@@ -60,6 +63,8 @@ export XDG_STATE_HOME="$DATA/local/state"
         export XDG_RUNTIME_DIR="$DATA/rt"
         /bin/mkdir -p $XDG_RUNTIME_DIR
 }
+
+mkdir -p "$DATA/local/{share,state,cache}" 
 
 ###############################
 ### apps location variables ###
@@ -95,6 +100,8 @@ export GOHOME="$DATA/go/home"
 export GOPATH="$DATA/go/path"
 
 export ANDROID_HOME=/opt/android-sdk/
+
+mkdir -p $GNUPGHOME
 
 ########################
 ### global variables ###
