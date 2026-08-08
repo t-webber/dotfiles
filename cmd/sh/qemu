@@ -1,0 +1,111 @@
+#!/bin/sh
+
+lc
+f=fakefs
+usr=b
+psk=b
+
+cd $FILES/.temp
+
+start() {
+        qemu-system-x86_64 -enable-kvm -cpu host -m 1G \
+                -nic user,model=virtio-net-pci,hostfwd=tcp::2222-:22 \
+                -no-reboot -kernel "$f-linuz" -initrd "$f-ramfs" \
+                -drive file=$f.img,format=raw,if=virtio \
+                -device virtio-vga,xres=820,yres=1280 -display gtk -serial mon:stdio \
+                -monitor unix:/tmp/qemu.sock,server,nowait \
+                -append "root=/dev/vda rw init=/bin/init console=tty1 video=Virtual-1:720x1280"
+}
+
+if [ "$1" = "edit" ]; then
+        sudo artix-chroot $f
+        exit 0
+else if [ "$1" = "clean" ]; then
+        sudo pkill -f qemu-system-x86_64
+        sudo pkill -f socat
+        for g in $f/*; do findmnt -rn -o TARGET $g | tac | while read h; do sudo umount -l $h; done; done
+        for g in $f*; do sudo umount -R $g; done
+        sudo rm -rf $f*
+        exit 0
+else if [ "$1" = "mount" ]; then
+        rm -f $f-dirty
+        mkdir -p $f-dirty
+        sudo mount -o loop,ro,noload "$f.img" "$f-dirty"
+        exit 0
+fi; fi; fi
+
+sudo pkill -f qemu-system-x86_64
+sudo pkill -f socat
+
+sd=/del/.dot/suckless/sinit/
+sb=/del/.dot/cmd/bin/
+
+la installing qemu
+
+yay -S qemu-desktop --needed
+
+la pacstrapping and linux image
+
+sudo umount "$f.img.dirty"
+sudo umount -R "$f"
+
+modules="runit-rc base base-devel elogind-runit runit xorg-server xorg-xinit bspwm less libxft alacritty dbus vi pacman brightnessctl ttf-hack-nerd xorg-xinput sxhkd btop"
+if [ ! -d "$f" ]; then
+        rm $f-*
+        l "see pacstrap for logs"
+        mkdir -p $f && sudo pacstrap -c -K $f $modules &>$f-pacstrap
+fi
+[ -f "$f-linuz" ] || cp /boot/vmlinuz-linux "$f-linuz"
+[ -f "$f-ramfs" ] || cp /boot/initramfs-linux.img "$f-ramfs"
+
+la setting up user
+
+sudo artix-chroot $f useradd -m $usr
+echo "$usr ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee $f/etc/sudoers.d/0-$usr
+for g in audio input video tty; do sudo artix-chroot $f usermod -aG $g $usr 2>&1 | g v "$f is not a mountpoint"; done
+echo "$usr:$psk" | sudo artix-chroot $f chpasswd
+echo "root:$psk" | sudo artix-chroot $f chpasswd
+
+la copying local files
+
+mb
+sudo artix-chroot $f chown root:root /
+sudo mkdir -p $f/del/.data/logs
+sudo mkdir -p $f/run/dbus/
+
+for file in /del/.dot/{suckless,rs/bin,cmd}/ /etc/{udev/rules.d/99-perm.rules,X11/Xwrapper.config,vconsole.conf}; do
+        sudo rsync -a --mkpath $file $f$file
+        sudo artix-chroot $f chmod 755 -R $file
+done
+
+wait
+
+sudo mkdir -p $f/usr/lib/modules
+sudo cp -a /usr/lib/modules/$(uname -r) $f/usr/lib/modules/
+
+sudo artix-chroot "$f" chmod ugoa+rwx -R /del /usr /etc/bash /run/dbus
+sudo artix-chroot "$f" chmod ugoa+rwx /etc/profile /etc
+
+sudo artix-chroot "$f" chmod 755 "$sb/slock"
+sudo artix-chroot "$f" chmod u+s "$sb/slock"
+
+sudo cp /del/.dot/rs/bin/init $f/bin/init
+
+for g in $f/*; do findmnt -rn -o TARGET $g | tac | while read f; do sudo umount -l $f; done; done
+
+sudo du -sh "$f"
+
+r $f.img
+truncate -s 4G $f.img
+yes | sudo mke2fs -t ext4 -d "$f" -L "$f" "$f.img"
+
+la booting
+
+start &
+
+sudo pacman -S --needed socat
+
+while [ ! -e /tmp/qemu.sock ]; do sleep 1; done
+
+la sendkey ctrl-alt-f2
+socat - UNIX-CONNECT:/tmp/qemu.sock

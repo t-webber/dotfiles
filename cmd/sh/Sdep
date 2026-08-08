@@ -1,0 +1,23 @@
+#!/bin/bash
+
+case $1 in
+
+t)
+
+        if [ -z "$2" ]; then
+                yay -Qtq | x . sh -c 'pactree -u . | wc -l | tr -d "\n" && l "%t."' | sort -n
+        else
+                pactree -u $2
+        fi
+        ;;
+d)
+        if [ -z "$2" ]; then
+                yay -Qdq | x . sh -c 'pactree -r . | g o "[a-zA-Z0-9-_]*" | sort -n | uniq | wc -l | tr -d "\n" && l "%t."' | sort -nr
+        else
+                pactree -r $2
+        fi
+        ;;
+*)
+        le invalid arg1 $1, expected t or d
+        ;;
+esac

@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set -eo pipefail
+
+if [ -n "$1" ]; then
+        sudo cat "/sys/firmware/efi/efivars/Boot$1-*"
+else
+        for f in /sys/firmware/efi/efivars/Boot*; do
+                number=$(basename "$f" | awk -F'-' '{print $1}')
+                if l $number | g q '[0-9]'; then
+                        la $number
+                        sudo cat $f
+                        l
+                fi
+        done
+fi
