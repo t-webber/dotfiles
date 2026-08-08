@@ -1,0 +1,5 @@
+set debuginfod enabled on
+set startup-quietly on
+layout src
+set pagination off
+set confirm off

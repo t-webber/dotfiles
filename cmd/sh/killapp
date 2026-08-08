@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for x in $@; do
+        la $x
+        ps -ax | grep -i "$x" | grep -v grep | grep -v killapp | awk '{print $1}' | xargs sudo kill -15
+done

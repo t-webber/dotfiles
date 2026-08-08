@@ -1,0 +1,29 @@
+#!/bin/bash
+
+/etc/rc/sysinit/01-sysfs start
+/etc/rc/sysinit/02-procfs start
+/etc/rc/sysinit/03-devfs start
+/etc/rc/sysinit/04-cgroups start
+/etc/rc/sysinit/05-root start
+/etc/rc/sysinit/10-hostname start
+/etc/rc/sysinit/15-hwclock start
+/etc/rc/sysinit/20-kmod-static-nodes start
+/etc/rc/sysinit/25-tmpfiles-dev start
+/etc/rc/sysinit/30-udev start
+/etc/rc/sysinit/31-udev-trigger start
+/etc/rc/sysinit/32-modules start
+/etc/rc/sysinit/33-udev-settle start
+/etc/rc/sysinit/40-console-setup start
+/etc/rc/sysinit/45-net-lo start
+/etc/rc/sysinit/50-misc start
+/etc/rc/sysinit/55-remount-root start
+/etc/rc/sysinit/60-mount-all start
+/etc/rc/sysinit/65-swap start
+/etc/rc/sysinit/70-random-seed start
+/etc/rc/sysinit/75-tmpfiles-setup start
+/etc/rc/sysinit/80-sysusers start
+/etc/rc/sysinit/85-dmesg start
+/etc/rc/sysinit/90-sysctl start
+/etc/rc/sysinit/95-binfmt start
+/etc/rc/sysinit/97-binfmt.d start
+/etc/rc/sysinit/99-cleanup start

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -euo pipefail
+
+yay -S --noconfirm --needed $(pkgfile "$1" | awk -F'/' '{print $NF}' | sort -n | uniq | fzf)

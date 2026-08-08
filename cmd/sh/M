@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -euo pipefail
+
+rm -f $WASTE/artix
+
+if [ -f /etc/artix-release ]; then
+        curl -L https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o $WASTE/artix
+
+        rankmirrors -n 20 $WASTE/artix | sudo tee /etc/pacman.d/artix
+fi
+
+[ -f /bin/reflector ] || sudo pacman -S reflector -y
+
+reflector -n 20 | sudo tee /etc/pacman.d/arch
+
+rm -f $WASTE/artix
+
+sudo pacman -Syyuu

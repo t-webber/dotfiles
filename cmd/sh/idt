@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -euo pipefail
+
+GIT_COMMITTER_DATE="$1" git commit --amend --no-edit --date "$1" --reset-author

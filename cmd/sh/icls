@@ -1,0 +1,3 @@
+#!/bin/bash
+
+gh s "$1" | while read repo; do icl "$repo"; done

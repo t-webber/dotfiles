@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -euo pipefail
+for f in $(tar -tzf "$1" | sort); do
+    echo "=== $f ==="
+    tar -xzf "$1" -O "$f" 2>/dev/null
+done
