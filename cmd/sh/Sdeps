@@ -1,0 +1,13 @@
+#!/bin/bash
+
+deps() {
+        yay -Sii "$1" | grep 'Depends On' | awk -F':' '{print $2}' | tr ' ' '\n' | grep -v ^$ | wc -l
+}
+
+if [ -z "$1" ]; then
+        pacman -Qq | xargs -I. -P20 Sdeps .
+else
+        x=$(deps "$1" | tr -d "\n")
+        l "$x%t$1"
+
+fi

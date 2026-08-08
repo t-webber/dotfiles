@@ -1,0 +1,37 @@
+#!/bin/bash
+
+sl=$SLOGS/gui_startup
+
+setxkbmap fr &
+
+bspc monitor -d term edit browser com
+
+bspc config border_width 1
+bspc config window_gap 0
+
+bspc config split_ratio 0.5
+bspc config borderless_monocle true
+bspc config gapless_monocle true
+
+bspc config normal_border_color \#000000
+bspc config focused_border_color \#440000
+bspc config presel_feedback_color \#000000
+
+bspc config top_padding 0
+bspc config top_monocle_padding 0
+
+xmodmap -e "clear Mod5"
+xmodmap -e "add Mod3 = ISO_Level3_Shift"
+# xrandr --output eDP-1 --scale 1.5x1.5
+
+xsetwacom set 12 Button 1 "key +Control_L +z -z"
+
+clipcatd &
+
+lht set 150
+
+brave --no-startup-window &>$sl-brave &
+vl start &>$sl-vl &
+
+sleep 2
+pkill chrome_crashpad

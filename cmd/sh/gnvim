@@ -1,0 +1,3 @@
+#!/bin/bash
+
+alacritty -e /bin/nvim "$1"

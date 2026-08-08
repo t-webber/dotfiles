@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -euo pipefail
+
+i rla | while read c; do i g=FaCn "$1" $c | rg -v '^$'; done

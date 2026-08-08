@@ -1,0 +1,16 @@
+#!/bin/sh
+
+sl=$SLOGS/bspwm
+
+setxkbmap fr
+
+gui_startup &>$sl-gui-startup &
+
+bspc monitor HDMI-1-0 -d I II III IV V
+bspc monitor eDP-1 -d VI VII VIII IX X
+
+slock && (
+        sxhkd &>$sl-sxhkd &
+        alacritty &>$sl-alacritty &
+
+)

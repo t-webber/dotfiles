@@ -1,0 +1,8 @@
+#!/bin/sh
+
+for f in /etc/rc/sysinit/*; do
+        $f start
+done
+
+agetty --noclear tty1 linux &
+agetty --noclear tty2 linux &
