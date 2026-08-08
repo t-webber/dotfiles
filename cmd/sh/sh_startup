@@ -1,0 +1,28 @@
+#!/bin/bash
+
+sl=$SLOGS/sh-startup
+
+l / >$LOGS/last_location
+
+exec net startup &>$sl-net &
+
+sleep 30
+
+clipcatd &
+
+"$ETC/link.sh" &>$sl-link
+
+while ! ping -c1 -W1 1.1.1.1; do
+        sleep 2
+done
+
+bur &>$sl-bun
+
+C
+Fy &>$sl-Fy
+
+sudo pkgfile --update &>$sl-pkgfile
+tldr --update
+
+sleep 2
+disown

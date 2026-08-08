@@ -1,0 +1,95 @@
+.home {
+  --primary-bg: #111;
+  --color-background-preferences-option-selected: var(--primary-bg);
+  --color-primary: var(--primary-bg);
+
+  --primary-txt: #ffb;
+  --color-on-surface: var(--primary-txt);
+
+  --bg: #000;
+  --left-pane-bg: var(--bg);
+  --color-background-button-secondary: var(--bg);
+  --color-secondary-container: var(--bg);
+  --color-base-gray-10: var(--bg);
+  --color-background-sidebar-opaque: var(--bg);
+  --color-background-grouped-weak: var(--bg);
+
+  --color-base-white: var(--primary-txt);
+  --color-text-neutrals: var(--primary-txt);
+  --color-on-primary: var(--primary-txt);
+
+  --color-tertiary-container: var(--primary-bg);
+
+  --color-text-translucent: #dda;
+  color: var(--primary-txt);
+}
+
+.BrandSendButton-module__container:disabled {
+  background: var(--bg);
+}
+
+.AccountFilters-module__wrapper,
+svg,
+.tab-bar-btn button svg,
+.CurrentAccount-module__accountDisplayName {
+  color: var(--primary-txt);
+}
+
+.BrandButton-module__button--19vZt {
+  border: 3px solid var(--primary-bg);
+  background: var(--bg);
+  color: var(--primary-bg);
+  font-weight: 900;
+}
+
+.BrandButton-module__button--19vZt.BrandButton-module__secondary--BqkLa {
+  border-color: var(--primary-bg);
+}
+
+.subview-prefs select {
+  background: var(--bg);
+  border: 2px solid var(--primary-bg);
+}
+
+.message-contents {
+  border: 2px solid var(--primary-bg);
+}
+
+.MembershipGrouper-module__buttonContainer--rs0do {
+  color: var(--primary-txt);
+  border: none;
+}
+
+label {
+  background: var(--primary-bg);
+}
+
+div.prefs-action-group {
+  background: var(--primary-bg);
+  display: flex;
+  justify-content: space-around;
+}
+
+.switch.on {
+  background: var(--bg);
+}
+
+option {
+  background: var(--bg) !important;
+}
+
+button.btn-solid-secondary {
+  border: none;
+}
+
+.prefs-left-pane {
+  border: none;
+}
+
+.BrandSendButton-module__container--KVnOh:disabled {
+  background: var(--bg);
+}
+
+.LinkedMessage-module__linkedMessage--c--N-:after {
+  background: var(--primary-bg);
+}

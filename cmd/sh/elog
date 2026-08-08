@@ -1,0 +1,8 @@
+#!/bin/sh
+
+set -euo pipefail
+
+for f in /Users/twebber/.files/.data/local/state/nvim/lsp.log /Users/twebber/.files/.data/local/state/nvim/conform.log; do
+        la $f
+        v $f
+done

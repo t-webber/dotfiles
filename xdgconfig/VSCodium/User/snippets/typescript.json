@@ -1,0 +1,15 @@
+{
+  "Action": {
+    "prefix": ["action"],
+    "body": [
+      "",
+      "export async function $1($2) {",
+      "    try {",
+      "        $3",
+      "    } catch (e) {",
+      "        console.error(`[$1] \\${e}`);",
+      "    }",
+      "}"
+    ]
+  }
+}
