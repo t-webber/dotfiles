@@ -1,7 +1,7 @@
 use std::fs::File;
 use std::thread::spawn;
 
-use rs::{envg, slp, spawn};
+use rs::{Ti, envg, spawn};
 
 macro_rules! conf {
     ($($a:ident $b:expr;)*) => {
@@ -47,7 +47,7 @@ fn main() {
         // apps
         spawn!("alacritty"; both: File::create(envg!(LOGS "alacritty")).unwrap(); discard: 1);
         spawn!("brave", "--no-startup-window"; both: File::create(envg!(LOGS "brave")).unwrap(); discard: 1);
-        slp(10000);
+        Ti::MIN.mul(10).slp();
         spawn!("pkill", "chrome_crashpad");
     });
     spawn!("setxkbmap", "fr");

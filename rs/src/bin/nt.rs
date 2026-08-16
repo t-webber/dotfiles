@@ -8,6 +8,24 @@ use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
 use std::thread::spawn;
 
+macro_rules! checker {
+    ($upd:ident $($name:ident $do:expr;)*) => {
+        $(
+            let $name = State::atom();
+            let this_upd = $upd.clone();
+            let this_val = $name.clone();
+            spawn(move || {
+                loop {
+                    let state = $do;
+                    this_val.store(state as u8, Release);
+                    this_upd.store(true, Release);
+                    Ti::SEC.mul(1).slp();
+                }
+            });
+        )*
+    };
+}
+
 #[derive(Debug)]
 #[repr(u8)]
 enum State {
@@ -41,8 +59,8 @@ impl Display for State {
 }
 
 macro_rules! fmt {
-    ($name:ident) => {
-        print!(" {}:{}", stringify!($name), State::ALL[$name.load(Acquire) as usize])
+    ($($name:ident)*) => {
+        $(print!(" {}:{}", stringify!($name), State::ALL[$name.load(Acquire) as usize]);)*
     };
 }
 
@@ -55,84 +73,28 @@ rs::cli! {
     dns => dns()
     chk => {
         let updated = Arc::from(AtomicBool::default());
-        let wlan = State::atom();
-        let w_updated = updated.clone();
-        let w_wlan = wlan.clone();
-        spawn(move || loop {
-            let state = match spawn!("sudo", "ip", "addr"; output: true)
-                                .lines()
-                                .find(|l|l.contains(" wlan0: ")) {
+        checker!(updated
+            wlan match spawn!("sudo", "ip", "addr"; output: true).lines().find(|l|l.contains(" wlan0: ")) {
                 Some(l) if l.contains(" UP ") =>  State::Up,
                 Some(l) if l.contains(" DOWN ") => State::Down,
                 Some(l) if l.contains(" DORMANT ") => State::Dormant,
                 Some(l) => upanic!("\n\x1b[31mwlan0: invalid state: {l}\n"),
-                None => State::None
-            };
-            w_wlan.store(state as u8, Release);
-            w_updated.store(true, Release);
-            slp(2000);
-        });
-        let ping = State::atom();
-        let p_updated = updated.clone();
-        let p_ping = ping.clone();
-        spawn(move || loop {
-            let state = chkcmd(spawn!("ping", "-c", 1, "1.1.1.1"
-                    ; out: Stdio::null(); err: Stdio::null();  ret: 1));
-            p_ping.store(state as u8, Release);
-            p_updated.store(true, Release);
-            slp(2000);
-        });
-        let dhcp = State::atom();
-        let d_updated = updated.clone();
-        let d_dhcp = dhcp.clone();
-        spawn(move || loop {
-            let state = chkcmd(spawn!("getent", "ahosts", "1.1.1.1"; out: Stdio::null(); ret: 1));
-            d_dhcp.store(state as u8, Release);
-            d_updated.store(true, Release);
-            slp(2000);
-        });
-        let lock = State::atom();
-        let l_updated = updated.clone();
-        let l_lock = lock.clone();
-        spawn(move || loop {
-            let lsattr = spawn!("lsattr", "/etc/resolv.conf"; output: 1);
-            let state = if lsattr.contains("i") { State::Up } else { State::Down };
-            l_lock.store(state as u8, Release);
-            l_updated.store(true, Release);
-            slp(2000);
-        });
-        let dns = State::atom();
-        let n_updated = updated.clone();
-        let n_dns = dns.clone();
-        spawn(move || loop {
-            let state = chkcmd(spawn!("getent", "hosts", "std.rs"; out: Stdio::null(); ret: 1));
-            n_dns.store(state as u8, Release);
-            n_updated.store(true, Release);
-            slp(2000);
-        });
-        let vpn = State::atom();
-        let v_updated = updated.clone();
-        let v_vpn = vpn.clone();
-        spawn(move || loop {
-            let state = chkcmd(!spawn!("wg", "show", "interfaces"; output: 1).trim().is_empty());
-            v_vpn.store(state as u8, Release);
-            v_updated.store(true, Release);
-            slp(2000);
-        });
+                None => State::None };
+            ping chkcmd(spawn!("ping", "-c", 1, "1.1.1.1" ; out: Stdio::null(); err: Stdio::null();  ret: 1));
+            dhcp chkcmd(spawn!("getent", "ahosts", "1.1.1.1"; out: Stdio::null(); ret: 1));
+            lock if spawn!("lsattr", "/etc/resolv.conf"; output: 1).contains("i") { State::Up } else { State::Down };
+            dns chkcmd(spawn!("getent", "hosts", "std.rs"; out: Stdio::null(); ret: 1));
+            vpn chkcmd(!spawn!("wg", "show", "interfaces"; output: 1).trim().is_empty());
+        );
         let mut i = 0;
         loop {
             if updated.swap(false, Acquire) {
                 print!("\x1b[2K\r{i}");
-                fmt!(wlan);
-                fmt!(ping);
-                fmt!(dhcp);
-                fmt!(dns);
-                fmt!(vpn);
-                fmt!(lock);
+                fmt!(wlan ping dhcp dns vpn lock);
                 stdout().flush().unwrap();
                 i += 1;
             }
-            slp(1000);
+            Ti::SEC.slp();
         }
     }
 
@@ -158,12 +120,7 @@ rs::cli! {
     eu => link("/usr/share/zoneinfo/Europe/Berlin",    "/etc/localtime")
     na => link("/usr/share/zoneinfo/Amercia/New_York", "/etc/localtime")
 
-    u { value: Option<String> } => {
-        if let Some(inner) = value {
-            link(&envg!(SECRET "/vpn-", &inner, ".conf"), &envg!(SECRET "/vpn.conf"));
-        }
-        wg("up");
-    }
+    u => wg("up")
     d  => wg("down")
     du => { wg("down"); wg("up"); }
 

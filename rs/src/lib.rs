@@ -215,8 +215,20 @@ macro_rules! upanic {
     }};
 }
 
-pub fn slp(ms: u64) {
-    sleep(Duration::from_millis(ms));
+pub struct Ti(u64);
+
+impl Ti {
+    pub const MIL: Self = Self(1);
+    pub const MIN: Self = Self::SEC.mul(60);
+    pub const SEC: Self = Self::MIL.mul(1000);
+
+    pub const fn mul(self, factor: u64) -> Self {
+        Self(self.0 * factor)
+    }
+
+    pub fn slp(self) {
+        sleep(Duration::from_millis(self.0));
+    }
 }
 
 pub fn map<F: for<'a> Fn(&'a String) -> Option<&'a String>>(f: F) -> F {

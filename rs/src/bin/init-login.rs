@@ -4,7 +4,7 @@ use std::fs::read_to_string;
 use std::io::{Write, stdin, stdout};
 use std::process;
 
-use rs::{issue, setfont, slp, spawn, upanic};
+use rs::{Ti, issue, setfont, spawn, upanic};
 
 #[link(name = "crypt")]
 unsafe extern "C" {
@@ -47,7 +47,7 @@ fn login() {
         .trim()
         .to_owned();
     for i in 0.. {
-        slp(1000 * i * i);
+        Ti::SEC.mul(i * i).slp();
         let pass = readline();
         if verify(pass.trim(), &hash) {
             break;
@@ -65,6 +65,6 @@ fn main() {
         println!("{}", issue());
         login();
         spawn!("runuser", "-u", "b", "--", "bash", "-i");
-        slp(2000);
+        Ti::SEC.mul(2).slp();
     }
 }

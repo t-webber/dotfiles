@@ -17,7 +17,7 @@ rs::cli! {
         for cmd in ["pipewire", "pipewire-pulse", "wireplumber"] {
             spawn!("setsid", "-f", cmd; both: out);
         }
-        loop { slp(1000); if on() { set_vol("40"); break; } }
+        loop { Ti::SEC.slp(); if on() { set_vol("40"); break; } }
         spawn!("echo", "=".repeat(50); both: out);
         brave_audio();
     }

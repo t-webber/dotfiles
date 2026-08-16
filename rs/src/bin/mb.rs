@@ -81,7 +81,6 @@ rs::cli! {
          spawn!("cargo", "-Z", "unstable-options", "-C", envg!(DOT "/rs/"), "clean"
              ; out: Stdio::null(); ignore: 1);
          remove_dir_all(rsbin!("")).ok();
-         slp(1000);
     }
 
 }

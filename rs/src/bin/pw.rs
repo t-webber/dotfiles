@@ -11,7 +11,19 @@ rs::cli! {
     => if args().count() == 1 { println!("{}{} {}\x1b[0m", dec().0, dec().1, lvl()); exit(0); };
     notif => notif(Show::Time)
     check => notif(Show::Low)
-    activeloop => loop { notif(Show::Value); slp(5 * 60 * 1000); }
+    activeloop => loop {
+        if stat() == "Discharging" && lvl() <= 10 {
+            spawn!("sudo", "zzz");
+        } else if spawn!("date", "+%H"; output: 1).trim().parse::<u32>().unwrap() >= 21 {
+            spawn!("herbe", "br:#ff0000", "Time is up, shutting down in 2 minutes");
+            Ti::MIN.slp();
+            spawn!("herbe", "br:#ff0000", "Time is up, shutting down in 1 minutes");
+            Ti::MIN.slp();
+            spawn!("sudo", "kill", "-USR1", "1");
+        }
+        notif(Show::Value);
+        Ti::MIN.mul(5).slp();
+    }
     daemon => spawn!("setsid", "-f", args().next().unwrap(), "activeloop")
     ;
     lvl: u32 => fs::read_to_string("/sys/class/power_supply/BAT1/capacity")
