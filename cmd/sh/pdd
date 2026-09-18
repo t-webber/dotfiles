@@ -1,0 +1,11 @@
+#!/bin/bash
+
+cnt=$(pd "$@" | cnt)
+
+if [ $cnt = 1 ]; then
+        path=$(pd "$@") && pushd "$path" >/dev/null && v
+else if [ $cnt = 0 ]; then
+        le "No such directory: $@"
+else
+        path=$(pd "$@" | fzf) && pushd "$path" >/dev/null && v
+fi; fi

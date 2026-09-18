@@ -1,0 +1,8 @@
+[unstable]
+unstable-options = true
+
+[build]
+artifact-dir = "bin"
+
+[alias]
+rb = "build --release --bins"

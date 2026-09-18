@@ -1,0 +1,5 @@
+#!/bin/bash
+
+. /del/.dot/cmd/sh/shellrc
+
+frr

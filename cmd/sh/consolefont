@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -euo pipefail
+
+s /usr/share/kbd/consolefonts/ | gg '\.gz$' | fzf | x . setfont .
