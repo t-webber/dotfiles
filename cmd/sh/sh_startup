@@ -4,7 +4,7 @@ sl=$SLOGS/sh-startup
 
 l / >$LOGS/last_location
 
-exec net startup &>$sl-net &
+net startup &>$sl-net &
 
 sleep 30
 
@@ -12,9 +12,11 @@ clipcatd &
 
 "$ETC/link.sh" &>$sl-link
 
-while ! ping -c1 -W1 1.1.1.1; do
-        sleep 2
+while ! getent hosts example.com; do
+        sleep 3
 done
+
+sudo pkill udhcpc
 
 bur &>$sl-bun
 
@@ -24,5 +26,4 @@ Fy &>$sl-Fy
 sudo pkgfile --update &>$sl-pkgfile
 tldr --update
 
-sleep 2
 disown

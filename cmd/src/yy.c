@@ -59,7 +59,7 @@ __wur static char *find_file(const char *const name) {
 #pragma GCC diagnostic ignored "-Wcast-qual"
         if (is_file(name)) return (char *)name;
 #pragma GCC diagnostic pop
-        read_simple_exldn(64, buf, "ffile", name);
+        read_simple_exldn(64, buf, "file", name);
         if (buf == NULL || buf[0] == '\0') usage("File %s not found", name);
         return buf;
 }
@@ -147,6 +147,14 @@ _Noreturn static void new_del(void) {
         exldn(python, path);
 }
 
+static const char *repl(void) {
+#define im(name) "import " #name "; "
+#define as(name, alias) "try:\n    import " #name " as " #alias "\nexcept:\n    pass\n"
+        return as(pandas, pd) as(polars, pl) as(os.environ, env) as(numpy, np)
+            as(matplotlib.pyplot, plt) im(math) im(os) im(sys);
+#undef as
+}
+
 #define NL "\n" CYAN " - "
 
 // clang-format off
@@ -185,18 +193,14 @@ int main(const int argc, Args argv) {
         if (argc > 1 && !strcmp(argv[1], "r")) uv("remove");
         if (argc > 1 && !strcmp(argv[1], "y")) uv("sync");
         if (argc > 1 && !strcmp(argv[1], "v")) serve(argv + 2);
-        if (argc > 1 && !strcmp(argv[1], "e"))
-                exm(2,
-                    py,
-                    "-ic",
-                    "import pandas as pd; import polars as pl; from os import "
-                    "environ as env; import sys; import os");
+        if (argc > 1 && !strcmp(argv[1], "e")) exm(2, py, "-ic", repl());
         if (argc > 1 && !strcmp(argv[1], "c")) exm(2, py, "-c");
         if (argc > 1 && !strcmp(argv[1], "t")) uv("run", "pytest");
         if (argc > 1 && !strcmp(argv[1], "a")) uv("add");
         if (argc > 1 && !strcmp(argv[1], "m")) exm(2, py, "-m");
         if (argc > 1 && !strcmp(argv[1], "f")) uv("run", "ruff", "check");
         if (argc > 1 && !strcmp(argv[1], "l")) uv("run", "ty", "check");
+        if (argc > 1 && !strcmp(argv[1], "d")) uv("add", "--dev");
 
         uv("add");
 }

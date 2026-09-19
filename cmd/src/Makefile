@@ -1,4 +1,4 @@
-LINKS := ht=h v=s rr=r rc=r mg=m mc=m cn=c cs=c lw=l la=l lr=l lc=l nd=n le=l gg=g ff=f rll=rl ls=l lh=l xx=x cw=c rpp=rp
+LINKS := ht=h v=s rr=r rc=r mg=m mc=m cn=c cs=c lw=l la=l lr=l lc=l nd=n le=l gg=g ff=f rll=rl ls=l lh=l xx=x cw=c rpp=rp nn=n lhtq=lht
 
 C ?= gcc
 
@@ -53,7 +53,7 @@ ZFLAGS := $(filter-out $(addprefix -W, $(OUT_NO)),$(CFLAGS)) $(addprefix -Wno-,$
 
 .PRECIOUS: %.o
 
-default: release
+default: release suckless
 
 debug: CFLAGS += $(DEBUG_FLAGS)
 debug: ZFLAGS += $(DEBUG_FLAGS)
@@ -90,6 +90,10 @@ m.o: m.c
 
 $B/%.test: %.c $(LIB_OBJS)
 	$(CC) -DTEST $(CFLAGS) $(DEBUG_FLAGS) $^ -o $@
+
+suckless:
+	$(foreach p,$(wildcard $(DOT)/suckless/*/),make -C $(p) &&) true
+
 
 clean:
 	rm -f *.o *.a zlib/*.o zlib/*.a

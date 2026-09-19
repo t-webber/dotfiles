@@ -118,7 +118,7 @@ cmd_num(l, n) cmd_num(cl, d)
                 "=y--pretty=format",
                 "=w--follow",
                 "--diff-filter",
-                "--format=fuller", ),
+                "=t--format=fuller", ),
 
         cmd("mv", "move", ),
         cmd("m", "merge", "=w--allow-unrelated-histories", "--abort", "--continue", ),

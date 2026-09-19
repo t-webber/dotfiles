@@ -1,4 +1,5 @@
 #include "lib.h"
+#include "libexec.h"
 #include "libos.h"
 
 #include <sys/stat.h>
@@ -11,9 +12,7 @@ static void mkdir_checked(const_str foldername) {
                        "exists with same name")
         }
 
-        if (mkdir(foldername, 0755)) {
-                epanic("Failed to create folder %s", foldername);
-        }
+        if (mkdir(foldername, 0755)) { epanic("Failed to create folder %s", foldername); }
 }
 
 static void create_file(char *const filename, bool are_all_dir) {
@@ -40,7 +39,7 @@ static void create_file(char *const filename, bool are_all_dir) {
 }
 
 int main(int argc, char *const *argv) {
-        bool are_all_dir = is_verbose(argv[0], "n", "nd");
+        bool are_all_dir = !strcmp(argv[0], "nd");
         if (argc == 1) upanic("Missing arguments...");
 
         for (int i = 1; i < argc; ++i) {
@@ -51,5 +50,6 @@ int main(int argc, char *const *argv) {
                         create_file(argv[i], are_all_dir);
                 }
         }
+        if (argc == 2 && !strcmp(argv[0], "n")) exldn("nvim", argv[1]);
         return 0;
 }

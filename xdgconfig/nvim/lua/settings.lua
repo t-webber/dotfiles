@@ -52,9 +52,17 @@ local options = {
 local globals = {
         c_syntax_for_h = 1, -- consider .h files as .c files
         mapleader = ',', -- leader key
+        molten_image_provider = 'wezterm',
+        molten_auto_open_output = false,
+        molten_auto_image_popup = false,
+        molten_virt_text_output = false,
+        --         molten_output_win_max_height = 12,
+        --         molten_virt_text_output = true,
+        --         molten_wrap_output = true,
         loaded_node_provider = 0,
         loaded_perl_provider = 0,
-        -- 	loaded_python3_provider = 1,
+        --         loaded_python3_provider = 1,
+        --         python3_host_prog = vim.fn.getcwd() .. '/.venv/bin/python',
         loaded_ruby_provider = 0,
 }
 

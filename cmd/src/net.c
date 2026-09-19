@@ -2,6 +2,7 @@
 #include "libexec.h"
 #include "libvec.h"
 #include <assert.h>
+#include <stdio.h>
 #include <unistd.h>
 
 #define log(x) printf("\x1b[32m>>> %s:\x1b[0m\n", x)
@@ -18,7 +19,7 @@ static void change_vpn_coutry(const_str secret,
         forked_exldn("ln", "-sf", new_conf.data, vpn_conf);
 }
 
-#define change_localtime(town)                                                                     \
+#define ex_change_localtime(town)                                                                  \
         {                                                                                          \
                 String dest = new_s();                                                             \
                 extend_const(&dest, "/usr/share/zoneinfo/");                                       \
@@ -48,13 +49,11 @@ static void kill(const_str vpn_conf) {
         forked_exldn("sudo", "wg-quick", "down", vpn_conf);
 }
 
-#define usage "Usage: %s [start|kill|nl|ca|up|ca]"
-
-#define NB_EVENTS 12
+#define NB_EVENTS 15
 
 #define EVENTS                                                                                     \
-        x(startup) x(start) x(kill) x(restart) x(restartup) x(up) x(down) x(list) x(ca) x(nl)      \
-            x(edit) x(help)
+        x(startup) x(start) x(kill) x(restart) x(restartup) x(list) x(up) x(down) x(resolv) x(ca)  \
+            x(nl) x(edit) x(lock) x(unlock) x(help)
 
 #define x(name) A##name,
 enum Action { EVENTS };
@@ -75,8 +74,20 @@ __wur __attribute_const__ static enum Action parse(const_str arg) {
         return Ahelp;
 }
 
+_Noreturn static void usage(const_str prog) {
+        String help = new_s();
+        extend_s(&help, prog, strlen(prog));
+        extend_const(&help, " [");
+        for (int i = 0; i < NB_EVENTS; ++i) {
+                extend_s(&help, ACTIONS[i], strlen(ACTIONS[i]));
+                if (i + 1 < NB_EVENTS) extend_const(&help, "|");
+        }
+        fprintf(stderr, RED "Usage: %s]\n" RESET, help.data);
+        exit(1);
+}
+
 int main(const int argc, Args argv) {
-        if (argc != 2) upanic(usage, argv[0]);
+        if (argc != 2) usage(argv[0]);
 
         const_str secret = getenv_checked("SECRET");
         var_prefix(wpa_conf, secret, "/wpa.conf");
@@ -112,15 +123,21 @@ int main(const int argc, Args argv) {
                 exldn("sudo", "wpa_cli", "list_networks");
         case Aca:
                 change_vpn_coutry(secret, "ca", 2, vpn_conf);
-                change_localtime("America/New_York");
+                ex_change_localtime("America/New_York");
         case Anl:
                 change_vpn_coutry(secret, "nl", 2, vpn_conf);
-                change_localtime("Europe/Berlin");
+                ex_change_localtime("Europe/Berlin");
         case Aedit:
                 forked_exldn("sudo", "chmod", "ugoa+rwx", wpa_conf);
                 exldn("nvim", wpa_conf);
+        case Aresolv:
+                exldn("sudo", "cat", "/etc/resolv.conf");
+        case Alock:
+                exldn("sudo", "chattr", "+i", "/etc/resolv.conf");
+        case Aunlock:
+                exldn("sudo", "chattr", "-i", "/etc/resolv.conf");
         case Ahelp:
         default:
-                upanic(usage, argv[0]);
+                usage(argv[0]);
         }
 }

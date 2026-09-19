@@ -361,7 +361,6 @@ local colours = {
         CustomStatusLineBatteryCharging = h(c.green),
         CustomStatusLineBatteryDischarging = h(c.red),
 
-
         ----------------
         --- DevIcons ---
         ----------------
@@ -421,7 +420,6 @@ local colours = {
         PmenuSel = h(nil, c.semidark),
         Pmenu = h(nil, c.dark),
         PmenuKind = h(c.yellow),
-
 }
 
 for name, value in pairs(c) do

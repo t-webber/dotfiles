@@ -1,17 +1,69 @@
-#!/bin/bash
+#!/bin/sh
 
-set -eo pipefail
+in="$1"
 
-if [ -z "$2" ] && [ -e "${1:-.}" ]; then
-        $EDITOR ${1:-.}
-        exit 0
+set -euo pipefail
+
+edi() {
+        exec $EDITOR "$1"
+}
+export -f edi
+
+last() {
+        l "$1" | tr '/' '\n' | rg -v '$\s*^' | tail -1
+}
+
+### NO ARGUMENT ###
+
+if [ -z $in ]; then
+        edi .
 fi
 
-q="/$1 $(l "$*" | sed "s/\([^ ]*\)/'\1/g")"
+### A FILE HERE ###
 
-x=$({
-        ff . $DOT -E $CMD/src/zlib
-        ff . /etc -E /etc/ssl/certs
-} | fzf --no-sort --query "$q" -1 --cycle)
+if [ -f "$in" ]; then
+        edi "$in"
+fi
 
-$EDITOR $x
+### SEARCH FOR A FILE ###
+
+case $in in
+*/*) : ;;
+*)
+        if [ "$PWD" = "/" ]; then
+                here="/var/empty"
+        else
+                here="."
+        fi
+        for folder in "$here" $CMD/src $CMD $DOT $HOME /etc /; do
+                count=$(f E etc "$in" $folder | wc -l)
+                if [ "$count" = 1 ]; then
+                        edi "$(f E etc "$in" $folder)"
+                fi
+                if [ "$count" != 0 ]; then
+                        f E etc "$in" $folder | fzf | x .n1 bash -c 'edi "."'
+                        exit 0
+                fi
+        done
+        ;;
+esac
+
+### A PATH ###
+
+path=""
+oldIFS=$IFS
+IFS=/
+for part in $in; do
+        path="$path.*$part.*/"
+done
+IFS=$oldIFS
+path="${path%?}"
+count="$(f Hf "$path" | wc -l)"
+if [ "$count" = 0 ]; then
+        le $path: no such file or directory
+        exit 1
+fi
+if [ "$count" = 1 ]; then
+        edi "$(f | gg "$path")"
+fi
+f Hf "$path" | fzf --tac --query "$in" | x .n1 bash -c 'edi "."'

@@ -31,7 +31,7 @@ static void set_lht_level(const char *amount, const function f) {
 }
 
 int main(int argc, Args argv) {
-        store_usage(argv[0], "", false);
+        bool quiet = !strcmp(argv[0], "lhtq");
         if (argc == 1) {
                 print_level();
                 return 0;
@@ -49,5 +49,5 @@ int main(int argc, Args argv) {
                 exl_corenotif("Invalid lht command %s.", argv[1]);
 
         set_lht_level(argv[2], f);
-        exl_notif_level();
+        if (!quiet) exl_notif_level();
 }

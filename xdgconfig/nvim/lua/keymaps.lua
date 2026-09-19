@@ -47,12 +47,14 @@ local function add_keymap_to_doc(modes, keymap, action, description)
         })
 end
 
-local function setknod(modes, keymap, action, description)
-        set_keymap_for_all_modes(modes, keymap, action, { desc = description })
+local function setknod(modes, keymap, action, description, opts)
+        if opts == nil then opts = {} end
+        opts['desc'] = description
+        set_keymap_for_all_modes(modes, keymap, action, opts)
 end
 
-local function setk(modes, keymap, action, description)
-        setknod(modes, keymap, action, description)
+local function setk(modes, keymap, action, description, opts)
+        setknod(modes, keymap, action, description, opts)
         add_keymap_to_doc(modes, keymap, action, description)
 end
 
@@ -143,6 +145,9 @@ end, 'Reload sxhkd')
 
 setk(n, ',i', ':NvimWebDeviconsHiTest<CR>')
 setk(n, ',p', ':PasteImage<CR>', 'paste clipboard image')
+setk(n, '²', ':q<CR>', 'exit')
+setk(ni, '<C-s>', ':w<CR>', 'save')
+setk(ni, '<C-S-s>', ':wq<CR>', 'save and exit')
 
 -------------
 --- MacOS ---
@@ -158,6 +163,19 @@ setk(i, '<D-)>', ']')
 setk(i, '<D-é>', '~')
 setk(i, '<D-">', '#')
 setk(i, '<D-_>', '─')
+
+--------------
+--- Tables ---
+--------------
+
+setk(n, '<Tab>', function()
+        local keys = require('neovim-tables').motion.cell_next()
+        return keys .. 'l'
+end, 'focus next cell', { expr = true })
+setk(n, '<S-Tab>', function()
+        local keys = require('neovim-tables').motion.cell_prev()
+        return keys .. 'l'
+end, 'focus next cell', { expr = true })
 
 ---------------
 --- Harpoon ---
@@ -235,6 +253,8 @@ for letter, vars in pairs({
         setglobs(letter, vars, name, 'd', 'del', false)
 end
 
+setk(nivt, 'ù@', function() vim.cmd('!ruff check --fix %') end, 'fix all ruff lints')
+
 for k, v in pairs({
         ['@'] = {
                 function(x) vim.g[require('globals').pyfmt] = x end,
@@ -259,7 +279,7 @@ for k, v in pairs({
         b = {
                 function(x) vim.opt.listchars = x end,
                 require('data').listchars,
-                { space = ' ', tab = ' ' },
+                { space = ' ', tab = '  ' },
                 'tabs and spaces',
         },
         ['$'] = {
@@ -764,6 +784,28 @@ setk(n, '<C-!>', function()
         vim.cmd('normal! j')
 end, 'Comment/Uncomment line')
 
+--------------
+--- Molten ---
+--------------
+
+for key, action in pairs({
+        j = 'Next',
+        k = 'Previous',
+        g = 'Goto',
+        l = 'EvaluateLine',
+        v = 'EvaluateVisual',
+        c = 'ReevaluateCell',
+        a = 'ReevaluateAll',
+        e = 'EvaluateOperator',
+        q = 'Interrupt',
+        d = 'Deinit',
+        i = 'Init',
+        os = 'ShowOutput',
+        oh = 'HideOutput',
+}) do
+        setk(n, '\\' .. key, ':<C-u>Molten' .. action .. '<CR>')
+end
+
 ----------------------
 --- Random strings ---
 ----------------------
@@ -799,12 +841,29 @@ vim.api.nvim_set_keymap(
         { silent = true, script = true, expr = true }
 )
 
+------------
+--- Todo ---
+------------
+
+setk(n, '!', function()
+        local l = vim.api.nvim_get_current_line()
+        if l:match('^%- %[x%]') then
+                l = l:gsub('^%- %[x%]', '- [ ]')
+        elseif l:match('^%- %[%s%]') then
+                l = l:gsub('^%- %[%s%]', '- [x]')
+        end
+        vim.api.nvim_set_current_line(l)
+        vim.cmd('normal! j')
+end, 'todo: toggle checked/unchecked')
+setk(ni, '<C-:>', '<Esc>o- [ ] ', 'todo: add new checkbox')
+
 -------------------
 --- Tree sitter ---
 -------------------
 
 local function rts(func)
         local scope, _ = func:match('^([^_]*)_')
+        if scope == 'goto' then scope = 'move' end
         local function missingarg(arg)
                 local function callback()
                         return require('nvim-treesitter-textobjects.' .. scope)[func](
@@ -842,12 +901,12 @@ for key, scope in pairs({
         add_keymap_to_doc(nxo, '.[ia]' .. key, nil, desc)
         for prefix, func in pairs({
                 [''] = rts('select_textobject'),
-                [')'] = rts('move_next_start'),
-                [']'] = rts('move_next_end'),
-                ['('] = rts('move_previous_start'),
-                ['['] = rts('move_previous_end'),
-                ['{'] = rts('move_next'),
-                ['}'] = rts('move_previous'),
+                [')'] = rts('goto_next_start'),
+                [']'] = rts('goto_next_end'),
+                ['('] = rts('goto_previous_start'),
+                ['['] = rts('goto_previous_end'),
+                ['{'] = rts('goto_next'),
+                ['}'] = rts('goto_previous'),
                 ['>'] = rts('swap_next'),
                 ['<'] = rts('swap_previous'),
         }) do
@@ -959,9 +1018,7 @@ function OpenKeyUi()
                 border = 'rounded',
         }
 
-        local win = vim.api.nvim_open_win(buf, true, opts)
-        vim.api.nvim_win_set_option(win, 'winhl', 'Normal:Normal')
-
+        vim.api.nvim_open_win(buf, true, opts)
         vim.api.nvim_buf_set_keymap(buf, 'n', 'q', ':close<CR>', { noremap = true, silent = true })
 end
 

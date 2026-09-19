@@ -2,7 +2,11 @@
 
 sl=$SLOGS/gui_startup
 
+lhtq set 150 &
 setxkbmap fr &
+
+bspc monitor HDMI-1-0 -d I II III IV V
+bspc monitor eDP-1 -d VI VII VIII IX X
 
 bspc monitor -d term edit browser com
 
@@ -20,22 +24,26 @@ bspc config presel_feedback_color \#000000
 bspc config top_padding 0
 bspc config top_monocle_padding 0
 
-xmodmap -e "clear Mod5"
-xmodmap -e "add Mod3 = ISO_Level3_Shift"
+# bspc rule -a "Google-chrome" --one-shot desktop='browser' follow=off focus=off
+# bspc config ignore_ewmh_focus true
+
+# xmodmap -e "clear Mod5"
+# xmodmap -e "add Mod3 = ISO_Level3_Shift"
+
 # xrandr --output eDP-1 --scale 1.5x1.5
 
-xsetwacom set 12 Button 1 "key +Control_L +z -z"
+# xsetwacom set 12 Button 1 "key +Control_L +z -z"
 
 clipcatd &
-
-lht set 150
 
 brave --no-startup-window &>$sl-brave &
 vl start &>$sl-vl &
 
-wait
-pw daemon &
-disown
+alacritty &>$sl-alacritty &
 
-sleep 2
+pw daemon &
+
+sleep 5
 pkill chrome_crashpad
+
+disown

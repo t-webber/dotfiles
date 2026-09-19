@@ -115,6 +115,7 @@ local lsps = {
 
         Ruff = {
                 cmd = { 'ruff', 'server' },
+                settings = { lint = { unfixable = { 'F401' } } },
                 filetypes = { 'python' },
         },
 }

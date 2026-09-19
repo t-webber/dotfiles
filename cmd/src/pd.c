@@ -7,8 +7,8 @@
 
 #include <sys/stat.h>
 
-#define c(scope, res)                                                          \
-        case scope:                                                            \
+#define c(scope, res)                                                                              \
+        case scope:                                                                                \
                 return res
 
 #define e(scope, var) c(scope, getenv_checked(var))
@@ -29,6 +29,7 @@ static const char *__wur get_scope(const char scope) {
                 e('t', "DATA");
                 e('w', "WASTE");
                 e('x', "XDG_CONFIG_HOME");
+                e('y', "STUDY");
                 e('.', "DOT");
 
                 c('e', "/etc");

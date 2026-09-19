@@ -40,9 +40,9 @@ extensions(timg,"jpg","jpeg","png","gif","tiff","tif","bmp","webp","jp2","jpx","
 extensions(mpv,"mp4","mkv","avi","mov","wmv","flv","webm","mpeg","mpg","3gp","m4v","vob","rm","rmvb","ogv","mts","m2ts","divx","xvid","f4v","mxf","y4m","mp3","aac","wav","flac","ogg","opus","m4a","alac","wma","ac3","eac3","dts","dtsma","truehd","amr","ra","ape","srt","ass","ssa","vtt","sub","idx","mpl")
 
 extensions(sxiv,"bmp","jpg","jpeg","png","gif","tiff","tif","xpm","pcx","tga","pbm","pgm","ppm","webp","ico","heif","heic","psd","hdr","exr")
-    // clang-format on
 
-    static void send_alacritty_config(const_str font_size) {
+static void send_alacritty_config(const_str font_size) {
+        // clang-format on
         forked_exldn("alacritty", "msg", "config", font_size);
 }
 
@@ -96,6 +96,8 @@ _Noreturn __nonnull() static void display_todo_file(const_str filename) {
                 if (starts_with_const(line, "- [x] ")) { colour = "\033[32m"; }
                 if (starts_with_const(line, "- [ ] ")) { colour = "\033[31m"; }
                 if (starts_with_const(line, "- [.] ")) { colour = "\033[33m"; }
+                if (starts_with_const(line, "- [g] ")) { colour = "\033[35m"; }
+                if (starts_with_const(line, "- [c] ")) { colour = "\033[36m"; }
                 if (starts_with_const(line, "#")) { colour = "\033[35m"; }
 
                 printf("%s%s", colour, line);
@@ -119,12 +121,23 @@ _Noreturn __nonnull() void exec_open_file(const_str filename, const display_type
         if (ty == DISPLAY_OPEN) {
                 if (!strcmp(extension, "pdf")) {
                         if (is_file("/usr/bin/zathura")) exldn("zathura", filename);
+                        if (is_file("/usr/bin/sioyek")) {
+                                if (!fork_checked()) exldn("sioyek", "--new-window", filename);
+                                exit(0);
+                        };
                         exldn("brave", filename);
                 };
 
-                if (mpv_supported(extension)) exldn("mpv", filename);
+                if (mpv_supported(extension)) {
+                        if (is_file("/usr/bin/mpv")) exldn("mpv", filename);
+                        if (is_file("/usr/bin/ffplay")) exldn("ffplay", filename);
+                        exldn("brave", filename);
+                }
 
-                if (sxiv_supported(extension)) exldn("sxiv", filename);
+                if (sxiv_supported(extension)) {
+                        if (is_file("/usr/bin/sxiv")) exldn("sxiv", filename);
+                        exldn("brave", filename);
+                };
 
                 exldn("nvim", filename);
         }

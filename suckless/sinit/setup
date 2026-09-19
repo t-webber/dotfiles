@@ -1,8 +1,21 @@
-#!/bin/sh
+#!/bin/bash
 
-for f in /etc/rc/sysinit/*; do
-        $f start
+print() { echo -e "\x1b[33m==== Setup:$1\x1b[0m"; }
+
+here=$(dirname $0)
+
+print stage1
+
+"$here/setup.stage1.sh"
+
+print ttys
+
+for x in 2; do
+        agetty --noclear "tty$x" linux &
 done
 
-agetty --noclear tty1 linux &
-agetty --noclear tty2 linux &
+print user
+
+runuser -u b -- "$here/setup.user.sh" &
+
+disown

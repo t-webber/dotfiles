@@ -111,12 +111,7 @@ local spec = {
                         sign_priority = 8, -- sign priority
                         -- keywords recognized as todo comments
                         keywords = {
-                                FIX = {
-                                        icon = ' ',
-                                        color = 'fix',
-                                        alt = { 'BUG' },
-                                        -- signs = false, -- configure signs for some keywords individually
-                                },
+                                FIX = { icon = ' ', color = 'fix', alt = { 'BUG' } },
                                 TODO = { icon = ' ', color = 'todo' },
                                 HACK = { icon = ' ', color = 'hack' },
                                 WARN = { icon = ' ', color = 'warn' },
@@ -265,6 +260,20 @@ local spec = {
         --- Language support ---
         ------------------------
         {
+                'saecki/crates.nvim',
+                event = { 'BufRead Cargo.toml' },
+                config = function()
+                        require('crates').setup({
+                                lsp = {
+                                        enabled = true,
+                                        actions = true,
+                                        completion = true,
+                                        hover = true,
+                                },
+                        })
+                end,
+        },
+        {
                 'saghen/blink.cmp',
                 dependencies = { 'rafamadriz/friendly-snippets' },
                 version = '1.*',
@@ -309,6 +318,18 @@ local spec = {
                                 },
                                 formatters_by_ft = fmt,
                                 formatters = {
+                                        ruff_fix = {
+                                                args = {
+                                                        'check',
+                                                        '--fix',
+                                                        '--ignore',
+                                                        'F401',
+                                                        '--force-exclude',
+                                                        '--stdin-filename',
+                                                        '$FILENAME',
+                                                        '-',
+                                                },
+                                        },
                                         pret = {
                                                 command = 'pret',
                                                 args = { '$FILENAME' },
@@ -361,7 +382,7 @@ local spec = {
                 'nvim-treesitter/nvim-treesitter-textobjects',
                 branch = 'main',
                 config = function()
-                        require('nvim-treesitter').setup({
+                        require('nvim-treesitter-textobjects').setup({
                                 select = {
                                         enable = true,
                                         lookahead = false,
@@ -380,6 +401,20 @@ local spec = {
         --------------
         --- Editor ---
         --------------
+        {
+                --                 dir = '/del/.dev/tablers/neovim-tables',
+                't-webber/neovim-tables',
+                name = 'neovim-tables',
+                config = function() require('neovim-tables').setup() end,
+        },
+        {
+
+                'benlubas/molten-nvim',
+                dependencies = { 'willothy/wezterm.nvim' },
+                version = '^1.0.0',
+                build = ':UpdateRemotePlugins',
+                init = function() end,
+        },
         {
                 'HakonHarnes/img-clip.nvim',
                 cmd = 'PasteImage',

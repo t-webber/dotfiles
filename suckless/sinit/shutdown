@@ -1,19 +1,54 @@
 #!/bin/sh
 
+start=$(date +%s%N)
+
+rm /shutting
+
+print() {
+        local end=$(date +%s%N)
+        local elapsed=$((end - start))
+        echo " -> took $((elapsed / 1000000)) ms" | tee -a /shutting
+        echo "$1..." | tee -a /shutting
+        start=$(date +%s%N)
+}
+
+######################
+print "Gently killing"
+######################
+
 kill -15 -1
 
-for i in $(seq 1 20); do
-        if ! pgrep -v -x "init|sh|rc.shutdown|systemd|kthreadd" >/dev/null; then
+for i in $(seq 1 100); do
+        echo "=== $i ===" >>/shutting
+        procs=$(pgrep -a -v -x 'init|sh|shutdown' | grep -v '\[.*\]')
+        echo "$procs" | awk '{print $2}' | sort -n | uniq -c >>/shutting
+        if ! pgrep -a -v -x 'init|sh|shutdown' | grep -vq '\[.*\]'; then
                 break
         fi
         sleep 0.1
 done
 
+######################
+print "Hardly killing"
+######################
+
 kill -9 -1
+
+######################
+print "Synching disks"
+######################
 
 sync
 
+######################
+print "Remounting FSs"
+######################
+
 echo u >/proc/sysrq-trigger
+
+######################
+print "Shutting down!"
+######################
 
 if [ "$1" = "reboot" ]; then
         echo b >/proc/sysrq-trigger

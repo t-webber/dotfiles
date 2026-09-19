@@ -85,10 +85,10 @@ super + {Left,Down,Up,Right}
 ##################
 
 XF86Audio{Lower,Raise}Volume
-	vl {down, up}
+	vl {down 1, up 1}
 
 {F2,F3}
-        vl {down 1, up 1}
+        vl {down, up}
 
 XF86AudioMute
 	vl mute
@@ -135,6 +135,9 @@ super + shift + y
 super + b
 	bspc desktop -f term && alacritty -e btop
 
+super + y
+        sioyek
+
 # com
 
 super + p
@@ -168,25 +171,25 @@ super + e; g
 # clipboard #
 #############
 
-super + y; h
+super + x; h
 	echo " site:github.com " | xclip -selection c
 
-super + y; t
+super + x; t
 	echo " site:telecom-paris.fr " | xclip -selection c
 
-super + y; r
+super + x; r
 	echo " site:reddit.com " | xclip -selection c
 
-super + y; g
+super + x; g
         echo 'https://github.com/t-webber' | xclip -selection c
 
-super + y; l
+super + x; l
         echo 'https://www.linkedin.com/in/t-webber' | xclip -selection c
 
-super + y; w
+super + x; w
         echo 'https://twebber.fr' | xclip -selection c
 
-super + y; question
+super + x; question
 	ft -e "$CARGO_HOME/bin/clipcat-menu"
 
 ###########
@@ -198,9 +201,6 @@ mod3 + y
 
 super + shift + a
 	ft
-
-super + x
-	ft -e ex1
 
 ctrl + s
         printf "1" | xclip -selection c

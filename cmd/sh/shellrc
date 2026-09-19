@@ -65,7 +65,7 @@ export XDG_STATE_HOME="$DATA/local/state"
         /bin/mkdir -p $XDG_RUNTIME_DIR
 }
 
-/bin/mkdir -p "$DATA/local/{share,state,cache}" 
+/bin/mkdir -p "$DATA/local/{share,state,cache}"
 
 ###############################
 ### apps location variables ###
@@ -112,13 +112,12 @@ export OLLAMA_MODELS="$DATA/llama/models"
 ########################
 
 [ -f "$SECRET/vars" ] && . "$SECRET/vars" >/dev/null
-export EDITOR="$(/usr/bin/which nvim)"
 
 if [ -f "/etc/arch-release" ]; then
         export DEBUGINFOD_URLS='https://debuginfod.archlinux.org/'
 fi
 
-export GPG_TTY="$(tty)"
+[ -n "$DISPLAY" ] && export GPG_TTY="$(tty)"
 export VCPKG_ROOT="$APPS/vcpkg"
 export HOMEBREW_NO_ENV_HINTS=1
 
@@ -159,6 +158,9 @@ if [ "$DEVICE" = "acer" ]; then
         PATH+=":$ANDROID_HOME/build-tools/36.0.0/"
 fi
 export PATH
+export SHELL
+
+export EDITOR="$(/usr/bin/which nvim)"
 
 export RUSTUP_HOME="$DATA/rustup"
 export SCCACHE_DIR=$DATA/sccache
@@ -240,6 +242,8 @@ else
         eval "$($FZF --zsh)"
 fi
 
+export FZF_DEFAULT_OPTS='--cycle'
+
 ###############
 ### history ###
 ###############
@@ -262,7 +266,7 @@ fi
 ############################
 
 export LAST_LOCATION_FILE="$LOGS/last_location"
-n "$LAST_LOCATION_FILE"
+nn "$LAST_LOCATION_FILE"
 builtin pushd "$(<$LAST_LOCATION_FILE)" >/dev/null
 
 ################

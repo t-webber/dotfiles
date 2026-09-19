@@ -72,7 +72,7 @@ static void print_display(void) {
 }
 
 static char *unwrap_or(const char *amount, const bool up) {
-        if (!amount) { amount = "20"; }
+        if (!amount) { amount = "13"; }
         char *full_diff = malloc(sizeof(char) * 16);
         sprintf(full_diff, "%s%s%%", up ? "+" : "-", amount);
         return full_diff;
@@ -98,6 +98,10 @@ static void edit_volume(Args argv) {
         free(diff);
 }
 
+_Noreturn static void brave_audio(void) {
+        exldn("pkill", "-f", "brave.*--type=utility.*--utility-sub-type=audio.mojom.AudioService");
+}
+
 int main(const int argc, Args argv) {
         store_usage(argv[1], "", true);
         if (argc == 1) {
@@ -115,12 +119,13 @@ int main(const int argc, Args argv) {
                 if (!fork()) exl1("pipewire-pulse");
                 sleep(1);
                 if (!fork()) exl1("wireplumber");
-                return 0;
+                brave_audio();
         }
         if (argc == 2 && !strcmp(argv[1], "kill")) {
                 forked_exldn("pkill", "pipewire");
                 forked_exldn("pkill", "pipewire-pulse");
-                exldn("pkill", "wireplumber");
+                forked_exldn("pkill", "wireplumber");
+                brave_audio();
         }
         if (argc == 2 && !strcmp(argv[1], "status")) {
                 if (fork_and_wait() == 0) exldn("pactl", "list");

@@ -45,16 +45,6 @@ local function y_all()
         apply_comment_colours()
 end
 
-local function toggle_checked()
-        local l = vim.api.nvim_get_current_line()
-        if l:match('^%- %[x%]') then
-                l = l:gsub('^%- %[x%]', '- [ ]')
-        elseif l:match('^%- %[%s%]') then
-                l = l:gsub('^%- %[%s%]', '- [x]')
-        end
-        vim.api.nvim_set_current_line(l)
-end
-
 local function checkbox_letters()
         local function p(c) return '^\\s*- \\[' .. c .. '\\].*$' end
         match('TodoChecked', p('x'))
@@ -68,15 +58,11 @@ local function checkbox_letters()
 end
 
 local function y_todo()
-        vim.cmd('set spell')
-
         vim.fn.clearmatches()
 
         checkbox_letters()
         apply_comment_colours()
         match('Title', '^#.*$')
-
-        vim.keymap.set('n', '!', function() toggle_checked() end)
 end
 
 ----------------------------

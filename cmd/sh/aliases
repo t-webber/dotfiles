@@ -186,7 +186,7 @@ _al raw "PS1='$ ' && PROMPT_COMMAND='' && uz"
 ########## PACMAN ##########
 ############################
 
-if [ -f '/etc/arch-release' ] || [ -f '/etc/artix-release' ]; then
+if [ -f "/etc/null-release" ]; then
         _flush
 
         p="$(_wi yay)"
@@ -448,9 +448,9 @@ _ual th hibernate
 _ual tu suspend
 _ual tw shutdown
 
-if [ -f "/etc/artix-release" ]; then
+if [ -f "/etc/null-release" ]; then
         _al th "l disk | sudo tee /sys/power/state"
-        _al tu "l mem  | sudo tee /sys/power/state"
+        _al tu "slock & sleep 1 && l mem  | sudo tee /sys/power/state"
         _al tw "sudo kill -USR1 1"
         _al tb "sudo kill -INT 1"
 else
@@ -536,7 +536,8 @@ _al wb '. drop wb'
 _al ws 'wb https://synapses.telecom-paris.fr/login?type=Shib'
 _al we 'wb https://ecampus.paris-saclay.fr/my/'
 
-_al pi 'while :; do ping -c 3 std.rs; sleep 1; done'
+_al pi 'while ! getent hosts std.rs; do l no network; sleep 1; done'
+_al pil 'while :; do getent hosts std.rs || l no network; sleep 1; done'
 _al pii 'while :; do ping -c 3 1.1.1.1; sleep 1; done'
 
 _al rpi "ssh $_RPI"
@@ -639,7 +640,7 @@ _al hx helix
 
 _ual e vim nvim
 _ual ew bsp bspwmrc
-_ual eX sxhkdrc
+_ual ex sxhkdrc
 
 _al se "$_s $EDITOR"
 _al rx 'pkill -USR1 -x sxhkd'
@@ -654,7 +655,8 @@ _ge() {
 }
 
 _ge s saved.txt
-_ge a aliases
+_ge a 'aliases$'
+_ge e '^e$'
 _ge k keymaps
 _ge f functions
 _ge sl statusline
@@ -667,7 +669,7 @@ _ge lsp lsp
 _ge x sxhkdrc
 _ge w bspwmrc
 
-_ual n touch
+_ual nn touch
 
 _al eb 'e ~/.bashrc'
 _al rb '. ~/.bashrc'
@@ -857,8 +859,9 @@ _kal y python
 
 _al bt btop
 
-_al close 'for x in brave beeper alacritty; do pkill $x; done'
-_al bare 'for x in xclip pw gpg-agent; do pkill $x; done; net kill; vl kill; close'
+_al close 'killapp dbus; killapp chrome; for x in brave beeper alacritty xclip gpg-agent; do pkill $x; done'
+_al bare 'net kill; vl kill; close'
+_al nobash 'killapp bash'
 
 _al bgd 'bg && disown'
 _al psg pgrep
@@ -1041,6 +1044,8 @@ _al meeting 'l please speak && tstmic && tstvid'
 _al slogs 'lca for f in  $SLOGS/*; do la $f; s $f; done'
 _al rf 'readlink -f'
 _al isbs "delta -s --line-numbers-left-format='' --line-numbers-right-format=''"
+_al orand 'o $(ls * | shuf | h1)'
+_al hh "$(_wi gh)"
 
 _print other
 

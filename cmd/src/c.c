@@ -41,7 +41,7 @@ const Cmd COMMANDS[] = {
 
     cmd("rm", "remove", "--dev", "--build", "-p", ),
     cmd("ro", "report", "future-incompat", ),
-    cmd("r", "run", "-r", "--example", "-p", ),
+    cmd("r", "run", "-r", "--example", "-p", "-j", ),
 
     cmd("s", "search", "--limit", ),
 
@@ -68,7 +68,9 @@ const Cmd COMMANDS[] = {
 
     cmd("y",
         "clippy",
+        "--release",
         "--all",
+        "-j",
         "--examples",
         "--fix",
         "=u--future-incompat-report",
