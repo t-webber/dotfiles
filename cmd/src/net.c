@@ -33,7 +33,8 @@ _Noreturn static void start(const_str wpa_conf) {
         log("WPA");
         forked_exldn("sudo", "wpa_supplicant", "-i", "wlan0", "-B", "-c", wpa_conf);
         log("DHCP");
-        exldn("sudo", "udhcpc", "-i", "wlan0", "-x", "hostname:GreyBob", "-f");
+        if (!fork_checked()) exldn("sudo", "udhcpc", "-i", "wlan0", "-x", "hostname:GreyBob", "-f");
+        exit(0);
 }
 
 static void vpn(const_str action, const_str vpn_conf) {
@@ -49,11 +50,11 @@ static void kill(const_str vpn_conf) {
         forked_exldn("sudo", "wg-quick", "down", vpn_conf);
 }
 
-#define NB_EVENTS 15
+#define NB_EVENTS 16
 
 #define EVENTS                                                                                     \
         x(startup) x(start) x(kill) x(restart) x(restartup) x(list) x(up) x(down) x(resolv) x(ca)  \
-            x(nl) x(edit) x(lock) x(unlock) x(help)
+            x(nl) x(edit) x(lock) x(unlock) x(getlock) x(help)
 
 #define x(name) A##name,
 enum Action { EVENTS };
@@ -136,6 +137,8 @@ int main(const int argc, Args argv) {
                 exldn("sudo", "chattr", "+i", "/etc/resolv.conf");
         case Aunlock:
                 exldn("sudo", "chattr", "-i", "/etc/resolv.conf");
+        case Agetlock:
+                exldn("lsattr", "/etc/resolv.conf");
         case Ahelp:
         default:
                 usage(argv[0]);

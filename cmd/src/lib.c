@@ -55,12 +55,9 @@ __nonnull() __wur __attribute_pure__
 }
 
 __nonnull() void store_usage(const_str prog_name, const_str arg, const bool is_alias) {
-        const_str logs = getenv_checked("LOGS");
-        char path[512];
-        sprintf(path, "%s/aliases.log", logs);
-        FILE *fd = fopen_checked(path, "a");
-        fprintf(fd, "%s %s %d\n", prog_name, arg, is_alias);
-        fclose(fd);
+        (void)prog_name;
+        (void)arg;
+        (void)is_alias;
 }
 
 __attribute_pure__ __wur __nonnull() size_t utf8_strlen(const_str s) {

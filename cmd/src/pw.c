@@ -26,6 +26,7 @@ _Noreturn static void notif(void) {
         const battery_decorations bat = get_battery_decorations(stat);
         const char *level = get_battery_level();
         if (!level) level = "???";
+        if (atoi(level) < 10 && stat == BATTERY_STATUS_DISCHARGING) exldn("sudo", "zzz");
         exl_corenotif("%s%s", bat.emoji, level);
 }
 
@@ -52,10 +53,11 @@ int main(const int argc, Args argv) {
                 }
 
         } else if (!strcmp(argv[1], "daemon")) {
-                while (1) {
-                        if (!fork_and_wait()) notif();
-                        sleep(300);
-                }
+                if (!fork_checked())
+                        while (1) {
+                                if (!fork_and_wait()) notif();
+                                sleep(300);
+                        }
 
         } else {
                 upanic("Invalid argument")

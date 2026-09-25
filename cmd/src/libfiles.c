@@ -119,7 +119,7 @@ _Noreturn __nonnull() void exec_open_file(const_str filename, const display_type
         }
 
         if (ty == DISPLAY_OPEN) {
-                if (!strcmp(extension, "pdf")) {
+                if (!strcmp(extension, "pdf") || !strcmp(extension, "html")) {
                         if (is_file("/usr/bin/zathura")) exldn("zathura", filename);
                         if (is_file("/usr/bin/sioyek")) {
                                 if (!fork_checked()) exldn("sioyek", "--new-window", filename);

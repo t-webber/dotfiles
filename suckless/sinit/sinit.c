@@ -1,26 +1,18 @@
-#include <sys/types.h>
-#include <sys/wait.h>
-
 #include <signal.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
 #define folder "/del/.dot/suckless/sinit/"
-
 #define LEN(x) (sizeof(x) / sizeof *(x))
 #define TIMEO 30
 
 static sigset_t set;
-static bool debug;
 
 static void spawn(char *const argv[]) {
-        if (debug) {
-                for (int i = 0; argv[i]; ++i) printf("%s ", argv[i]);
-                printf("\n");
-                return;
-        }
         switch (fork()) {
         case 0:
                 sigprocmask(SIG_UNBLOCK, &set, NULL);
@@ -58,24 +50,18 @@ static struct {
 
 int main(void) {
         int sig;
-        size_t i;
-
-        debug = getpid() != 1;
-
         chdir("/");
         sigfillset(&set);
         sigprocmask(SIG_BLOCK, &set, NULL);
-        spawn((char *[]){folder "setup", NULL});
+        spawn((char *[]){folder "setup.sh", NULL});
         while (1) {
                 alarm(TIMEO);
                 sigwait(&set, &sig);
-                for (i = 0; i < LEN(sigmap); i++) {
+                for (size_t i = 0; i < LEN(sigmap); ++i)
                         if (sigmap[i].sig == sig) {
                                 sigmap[i].handler();
                                 break;
                         }
-                }
         }
-        /* not reachable */
         return 0;
 }

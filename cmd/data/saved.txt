@@ -77,3 +77,5 @@ def die(): traceback.print_stack(); traceback.print_exc(); sys.stderr.flush(); o
 set_network 9 key_mgmt NONE
 
 printf '\e[38;2;%d;%d;%dmdflskjd\e[0m' "251" "34" "0"
+sudo ip link set eth0 up
+

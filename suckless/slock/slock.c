@@ -1,13 +1,17 @@
 /* See LICENSE file for license details. */
 #define _DEFAULT_SOURCE 1
 
+#include <X11/Xft/Xft.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/extensions/Xrandr.h>
+#include <X11/extensions/dpms.h>
 #include <X11/keysym.h>
 #include <ctype.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <grp.h>
+#include <linux/oom.h>
 #include <pwd.h>
 #include <shadow.h>
 #include <spawn.h>
@@ -25,6 +29,10 @@ struct lock {
         Window root, win;
         Pixmap pmap;
         unsigned long colors[NUMCOLS];
+        XftDraw *draw;
+        XftFont *font;
+        XftColor fg;
+        XftColor bg;
 };
 
 struct xrandr {
@@ -33,20 +41,13 @@ struct xrandr {
         int errbase;
 };
 
-static void die(const char *errstr, ...) {
-        va_list ap;
-
-        va_start(ap, errstr);
-        vfprintf(stderr, errstr, ap);
-        va_end(ap);
-        exit(1);
-}
+static char **ascii_lines;
+static size_t ascii_nlines;
 
 //////////////// CONFIG
 
-/* user and group to drop privileges to */
-static const char *user = "nobody";
-static const char *group = "nobody";
+static const char *user = "nobody";  /* user to drop privileges to */
+static const char *group = "nobody"; /* group to drop privileges to */
 
 static const char *colorname[NUMCOLS] = {
     [INIT] = "#000000",   /* after initialization */
@@ -54,18 +55,80 @@ static const char *colorname[NUMCOLS] = {
     [FAILED] = "#000000", /* wrong password */
 };
 
-/* treat a cleared input like a wrong password (color) */
-static const int failonclear = 1;
+const char *prefix
+    = "                                                                             "
+      "                                                                             ";
+const int padding = 50;
 
-//////////////// CONFIG
+static const int failonclear = 1; /* treat a cleared input like a wrong password (color) */
 
-#include <fcntl.h>
-#include <linux/oom.h>
+//////////////// HELPERS
+
+static void die(const char *errstr, ...) {
+        va_list ap;
+        va_start(ap, errstr);
+        vfprintf(stderr, errstr, ap);
+        va_end(ap);
+        exit(1);
+}
+
+static void readascii(void) {
+        FILE *f;
+        char *line = NULL;
+        size_t size = 0;
+        ssize_t len;
+
+        for (int i = 0; i < padding; i++) {
+                ascii_lines = realloc(ascii_lines, (ascii_nlines + 1) * sizeof(*ascii_lines));
+                if (!ascii_lines) die("slock: realloc: %s\n", strerror(errno));
+                ascii_lines[ascii_nlines++] = strdup("");
+        }
+
+        f = fopen("/del/.dot/suckless/sinit/ascii.current", "r");
+        if (!f) die("slock: fopen ascii: %s\n", strerror(errno));
+
+        while ((len = getline(&line, &size, f)) != -1) {
+                if (len > 0 && line[len - 1] == '\n') line[--len] = '\0';
+
+                ascii_lines = realloc(ascii_lines, (ascii_nlines + 1) * sizeof(*ascii_lines));
+
+                if (!ascii_lines) die("slock: realloc: %s\n", strerror(errno));
+
+                size_t prefix_len = strlen(prefix);
+                ascii_lines[ascii_nlines] = malloc(prefix_len + len + 1);
+                if (!ascii_lines[ascii_nlines]) die("slock: malloc: %s\n", strerror(errno));
+                memcpy(ascii_lines[ascii_nlines], prefix, prefix_len);
+                memcpy(ascii_lines[ascii_nlines] + prefix_len, line, len + 1);
+                ascii_nlines++;
+
+                if (!ascii_lines[ascii_nlines - 1]) die("slock: strdup: %s\n", strerror(errno));
+        }
+
+        free(line);
+        fclose(f);
+}
+
+static void drawscreen(Display *dpy, struct lock *lock) {
+        size_t i;
+        int y = 100;
+        int lineheight = lock->font->ascent + lock->font->descent;
+        XClearWindow(dpy, lock->win);
+        for (i = 0; i < ascii_nlines; i++) {
+                XftDrawStringUtf8(lock->draw,
+                                  &lock->fg,
+                                  lock->font,
+                                  100,
+                                  y,
+                                  (const FcChar8 *)ascii_lines[i],
+                                  strlen(ascii_lines[i]));
+
+                y += lineheight;
+        }
+}
 
 static void dontkillme(void) {
         FILE *f;
         const char oomfile[] = "/proc/self/oom_score_adj";
-
         if (!(f = fopen(oomfile, "w"))) {
                 if (errno == ENOENT) return;
                 die("slock: fopen %s: %s\n", oomfile, strerror(errno));
@@ -83,8 +146,6 @@ static void dontkillme(void) {
 static const char *gethash(void) {
         const char *hash;
         struct passwd *pw;
-
-        /* Check if the current user has a password entry */
         errno = 0;
         if (!(pw = getpwuid(getuid()))) {
                 if (errno)
@@ -93,7 +154,6 @@ static const char *gethash(void) {
                         die("slock: cannot retrieve password entry\n");
         }
         hash = pw->pw_passwd;
-
         if (!strcmp(hash, "x")) {
                 struct spwd *sp;
                 if (!(sp = getspnam(pw->pw_name)))
@@ -101,9 +161,10 @@ static const char *gethash(void) {
                             "Make sure to suid or sgid slock.\n");
                 hash = sp->sp_pwdp;
         }
-
         return hash;
 }
+
+///////////////// X
 
 static void
 readpw(Display *dpy, struct xrandr *rr, struct lock **locks, int nscreens, const char *hash) {
@@ -163,12 +224,9 @@ readpw(Display *dpy, struct xrandr *rr, struct lock **locks, int nscreens, const
                         }
                         color = len ? INPUT : ((failure || failonclear) ? FAILED : INIT);
                         if (running && oldc != color) {
-                                for (screen = 0; screen < nscreens; screen++) {
-                                        XSetWindowBackground(dpy,
-                                                             locks[screen]->win,
-                                                             locks[screen]->colors[color]);
-                                        XClearWindow(dpy, locks[screen]->win);
-                                }
+                                for (screen = 0; screen < nscreens; screen++)
+                                        drawscreen(dpy, locks[screen]);
+
                                 oldc = color;
                         }
                 } else if (rr->active && ev.type == rr->evbase + RRScreenChangeNotify) {
@@ -190,6 +248,9 @@ readpw(Display *dpy, struct xrandr *rr, struct lock **locks, int nscreens, const
                                         break;
                                 }
                         }
+                } else if (ev.type == Expose) {
+                        for (screen = 0; screen < nscreens; screen++)
+                                drawscreen(dpy, locks[screen]);
                 } else {
                         for (screen = 0; screen < nscreens; screen++)
                                 XRaiseWindow(dpy, locks[screen]->win);
@@ -234,6 +295,27 @@ static struct lock *lockscreen(Display *dpy, struct xrandr *rr, int screen) {
                                   DefaultVisual(dpy, lock->screen),
                                   CWOverrideRedirect | CWBackPixel,
                                   &wa);
+
+        lock->draw = XftDrawCreate(dpy,
+                                   lock->win,
+                                   DefaultVisual(dpy, lock->screen),
+                                   DefaultColormap(dpy, lock->screen));
+
+        XSelectInput(dpy, lock->win, ExposureMask);
+
+        if (!lock->draw) die("slock: XftDrawCreate failed\n");
+
+        lock->font = XftFontOpenName(dpy, lock->screen, "monospace:size=8");
+
+        if (!lock->font) die("slock: XftFontOpenName failed\n");
+
+        if (!XftColorAllocName(dpy,
+                               DefaultVisual(dpy, lock->screen),
+                               DefaultColormap(dpy, lock->screen),
+                               "#aa5500",
+                               &lock->fg))
+                die("slock: XftColorAllocName failed\n");
+
         lock->pmap = XCreateBitmapFromData(dpy, lock->win, curs, 8, 8);
         invisible = XCreatePixmapCursor(dpy, lock->pmap, lock->pmap, &color, &color, 0, 0);
         XDefineCursor(dpy, lock->win, invisible);
@@ -265,6 +347,9 @@ static struct lock *lockscreen(Display *dpy, struct xrandr *rr, int screen) {
                 /* input is grabbed: we can lock the screen */
                 if (ptgrab == GrabSuccess && kbgrab == GrabSuccess) {
                         XMapRaised(dpy, lock->win);
+                        XSetScreenSaver(dpy, 0, 0, DontPreferBlanking, AllowExposures);
+                        DPMSDisable(dpy);
+                        drawscreen(dpy, lock);
                         if (rr->active) XRRSelectInput(dpy, lock->win, RRScreenChangeNotifyMask);
 
                         XSelectInput(dpy, lock->root, SubstructureNotifyMask);
@@ -297,6 +382,8 @@ int main(void) {
         const char *hash;
         Display *dpy;
         int s, nlocks, nscreens;
+
+        readascii();
 
         /* validate drop-user and -group */
         errno = 0;

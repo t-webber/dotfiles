@@ -13,8 +13,6 @@ if [ "$(uname)" = "Darwin" ]; then
 
 else
 
-        export O=$((2 / 2))
-        export T=$((6 / 2))
         export CC=/bin/gcc
         export XCOPY='/bin/xclip -selection c'
         export XPASTE="$XCOPY -o"
@@ -265,7 +263,7 @@ fi
 ### reload last location ###
 ############################
 
-export LAST_LOCATION_FILE="$LOGS/last_location"
+export LAST_LOCATION_FILE="$LOGS/l-lwd"
 nn "$LAST_LOCATION_FILE"
 builtin pushd "$(<$LAST_LOCATION_FILE)" >/dev/null
 

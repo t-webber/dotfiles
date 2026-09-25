@@ -1,28 +1,48 @@
 #!/bin/bash
 
-print() { echo -e "\x1b[33m==== User:$1\x1b[0m"; }
+print() { echo -e "\x1b[33m├─── WebberOS:$1\x1b[0m"; }
+here=$(dirname $0)
 
-print shellrc
+#####
+print startup
+#####
 
-. /del/.dot/cmd/sh/shellrc
+startup() {
+        l / >$LOGS/l-lwd
 
-print logs
+        net startup &>$LOGS/l-net &
 
-[ -d $LOGS ] && r $LOGS
-nd $SLOGS
-date >$SLOGS/date
-sl=$SLOGS/profile
+        sleep 30
 
-print sh-startup
+        "$ETC/link.sh" &>$LOGS/l-link
 
-. sh_startup &>$sl-sh-startup &
+        while ! getent hosts example.com &>>$LOGS/l-net; do
+                sleep 3
+        done
 
+        sudo pkill udhcpc
+
+        # tldr --update
+        # clipcat
+        # bur
+
+        # yay -Rcns $(yay -Qdtq) --noconfirm &>"$LOGS/l-pacman"
+        # yay -Fy &>>$LOGS/l-pacman
+        # sudo pkgfile --update &>>$LOGS/l-pacman
+}
+
+startup | tee $LOGS/l-startup &
+
+#####
 print fix-tty
+#####
 
 sudo chmod ugoa+rwx /dev/tty*
 
-print X
+#####
+print xserver
+#####
 
-xinit $OCFG/xinitrc &>$sl-xi &
+xinit $here/setup.xinit.sh -- -logfile "$LOGS/x-xorg" &>$LOGS/x-xinit &
 
 disown

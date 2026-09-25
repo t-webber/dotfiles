@@ -401,12 +401,12 @@ local spec = {
         --------------
         --- Editor ---
         --------------
-        {
-                --                 dir = '/del/.dev/tablers/neovim-tables',
-                't-webber/neovim-tables',
-                name = 'neovim-tables',
-                config = function() require('neovim-tables').setup() end,
-        },
+        --         {
+        --                 dir = '/del/.dev/tablers/neovim-tables',
+        --                 't-webber/neovim-tables',
+        --                 name = 'neovim-tables',
+        --                 config = function() require('neovim-tables').setup() end,
+        --         },
         {
 
                 'benlubas/molten-nvim',

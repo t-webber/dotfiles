@@ -21,7 +21,7 @@ fi
 
 ### A FILE HERE ###
 
-if [ -f "$in" ]; then
+if [ -e "$in" ]; then
         edi "$in"
 fi
 
@@ -58,6 +58,7 @@ for part in $in; do
 done
 IFS=$oldIFS
 path="${path%?}"
+la $path
 count="$(f Hf "$path" | wc -l)"
 if [ "$count" = 0 ]; then
         le $path: no such file or directory

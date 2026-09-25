@@ -1,3 +1,0 @@
-#!/bin/bash
-
-curl "https://man.archlinux.org/man/$1.en.txt" --fail | less

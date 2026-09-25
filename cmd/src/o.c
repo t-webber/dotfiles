@@ -16,9 +16,8 @@ const_str browsers[browsers_len] = {
 _Noreturn static void open_file(const char *filename) {
         struct stat st;
         int x = stat(filename, &st);
-        const_str ext = get_filename_extension(filename);
 
-        if (x != 0 || !strcmp(ext, "html")) {
+        if (x != 0) {
 
                 char new[64];
                 if (starts_with_const(filename, "l:")) {

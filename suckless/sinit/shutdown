@@ -2,53 +2,76 @@
 
 start=$(date +%s%N)
 
-rm /shutting
+f=/del/.waste/init-shut
+mv $f $f.old
 
 print() {
         local end=$(date +%s%N)
         local elapsed=$((end - start))
-        echo " -> took $((elapsed / 1000000)) ms" | tee -a /shutting
-        echo "$1..." | tee -a /shutting
+        echo "  (took $((elapsed / 1000000)) ms)" >>$f
+        echo "$1..." >>$f
+        echo -e "\x1b[33m├─── WebberOS:$1\x1B[0m"
         start=$(date +%s%N)
 }
 
-######################
-print "Gently killing"
-######################
+err() {
+        echo -e "\x1b[31m├─── WebberOS:[$1]"
+        export DISPLAY=:0
+        /del/.bin/herbe br:#f00 fg:#f00 "!!! $1 !!! "
+        exit 1
+}
+
+##################
+print "$1"
+##################
+
+[ ! -f /bin/init ] && {
+        err "no init"
+}
+
+[ ! -f /boot/vmlinuz-linux ] ||
+        [ ! -f /boot/intel-ucode.img ] ||
+        [ ! -f /boot/initramfs-linux.img ] && {
+        err "missing boot files"
+}
+
+##################
+print "stopping"
+##################
 
 kill -15 -1
 
 for i in $(seq 1 100); do
-        echo "=== $i ===" >>/shutting
+        echo "=== $i ===" >>$f
         procs=$(pgrep -a -v -x 'init|sh|shutdown' | grep -v '\[.*\]')
-        echo "$procs" | awk '{print $2}' | sort -n | uniq -c >>/shutting
+        echo "$procs" | awk '{print $2}' | sort -n | uniq -c >>$f
         if ! pgrep -a -v -x 'init|sh|shutdown' | grep -vq '\[.*\]'; then
                 break
         fi
         sleep 0.1
 done
 
-######################
-print "Hardly killing"
-######################
+##################
+print "killing"
+##################
 
 kill -9 -1
 
-######################
-print "Synching disks"
-######################
+##################
+print "synchronising"
+##################
 
 sync
 
-######################
-print "Remounting FSs"
-######################
+##################
+print "remounting"
+##################
 
 echo u >/proc/sysrq-trigger
 
-######################
-print "Shutting down!"
-######################
+##################
+print "unreachable"
+###################
 
 if [ "$1" = "reboot" ]; then
         echo b >/proc/sysrq-trigger

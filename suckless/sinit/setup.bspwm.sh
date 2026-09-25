@@ -1,0 +1,1 @@
+/del/.dot/xdgconfig/bspwm/bspwmrc

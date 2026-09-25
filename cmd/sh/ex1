@@ -1,6 +1,0 @@
-#!/bin/bash
-
-. /etc/bash.bashrc
-
-read -r x
-eval "$x"

@@ -1,2 +1,0 @@
-# Disable system sleep entirely (prevents sleep even on lid close)
-sudo pmset -a disablesleep 1

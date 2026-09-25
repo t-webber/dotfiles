@@ -680,6 +680,8 @@ _al wq q
 _al :wq q
 _al :q q
 
+_al logs "p $LOGS"
+
 _print edit
 
 ###########################
@@ -1046,6 +1048,7 @@ _al rf 'readlink -f'
 _al isbs "delta -s --line-numbers-left-format='' --line-numbers-right-format=''"
 _al orand 'o $(ls * | shuf | h1)'
 _al hh "$(_wi gh)"
+_al lk lsblk
 
 _print other
 

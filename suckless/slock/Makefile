@@ -1,8 +1,10 @@
-INCS = -I. -I/usr/include
-LIBS = -L/usr/lib -lc -lcrypt -lX11 -lXext -lXrandr
+INCS  = -I. -I/usr/include 
+INCS += $(shell pkg-config --cflags xft)
+LIBS  = -L/usr/lib -lc -lcrypt -lX11 -lXext -lXrandr
+LIBS += $(shell pkg-config --libs xft)
 
 CFLAGS = -std=c99 -pedantic -Wall
-CFLAGS += $(INCLUDE) $(LIBS)
+CFLAGS += $(INCS) $(LIBS)
 CFLAGS += -s -Ofast -march=native -mtune=native -flto
 
 TARGET := $(BIN)/slock

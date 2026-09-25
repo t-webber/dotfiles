@@ -151,7 +151,7 @@ static const char *repl(void) {
 #define im(name) "import " #name "; "
 #define as(name, alias) "try:\n    import " #name " as " #alias "\nexcept:\n    pass\n"
         return as(pandas, pd) as(polars, pl) as(os.environ, env) as(numpy, np)
-            as(matplotlib.pyplot, plt) im(math) im(os) im(sys);
+            as(matplotlib.pyplot, plt) im(math) im(os) im(sys) im(time);
 #undef as
 }
 
