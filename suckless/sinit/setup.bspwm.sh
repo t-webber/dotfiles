@@ -4,7 +4,7 @@ setup() {
         #         bspc monitor HDMI-1-0 -d I II III IV V
         #         bspc monitor eDP-1 -d VI VII VIII IX X
 
-        bspc monitor -d term edit browser com
+        bspc monitor -d term edit browser com agents
 
         bspc config border_width 1
         bspc config window_gap 0

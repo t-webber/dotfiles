@@ -1,4 +1,4 @@
-LINKS := ht=h v=s rr=r rc=r mg=m mc=m cn=c cs=c lw=l la=l lr=l lc=l nd=n le=l gg=g ff=f rll=rl ls=l lh=l xx=x cw=c rpp=rp nn=n lhtq=lht
+LINKS := ht=h v=s rr=r rc=r mg=m mc=m cn=c cs=c lw=l la=l lr=l lc=l nd=n le=l gg=g ff=f rll=rl ls=l lh=l xx=x cw=c rpp=rp nn=n lhtq=lht cg=c
 
 C ?= gcc
 

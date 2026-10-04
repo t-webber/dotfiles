@@ -155,6 +155,7 @@ if [ "$DEVICE" = "acer" ]; then
         PATH+=":$ANDROID_HOME/cmdline-tools/latest/bin/"
         PATH+=":$ANDROID_HOME/build-tools/36.0.0/"
 fi
+PATH+=":$DOT/rs/bin"
 export PATH
 export SHELL
 
@@ -327,3 +328,7 @@ if [ "$(uname)" = "Darwin" ]; then
                 ;;
         esac
 fi
+
+# >>> Codex installer >>>
+export PATH="/home/b/.local/bin:$PATH"
+# <<< Codex installer <<<

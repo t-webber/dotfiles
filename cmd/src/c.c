@@ -107,7 +107,7 @@ int main(const int argc, Args argv) {
                 push_v(&cmd, "+nightly");
         } else if (!strcmp(argv[0], "cs")) {
                 push_v(&cmd, "+stable");
-        } else if (!strcmp(argv[0], "cc")) {
+        } else if (!strcmp(argv[0], "cg")) {
                 for (int i = 1; i < argc; ++i) push_v(&cmd, argv[i]);
                 exvd(cmd.data);
         } else if (strcmp(argv[0], "cw")) {

@@ -113,11 +113,11 @@ Print
 # desktops #
 ############
 
-super + {t,n,v,c}
-	bspc desktop -f {term,edit,browser,com}
+super + {t,n,v,c,g}
+	bspc desktop -f {term,edit,browser,com,agents}
 
-super + ctrl + {t,n,v,c}
-	bspc node -d {term,edit,browser,com} && bspc desktop -f {term,edit,browser,com}
+super + ctrl + {t,n,v,c,g}
+	bspc node -d {term,edit,browser,com,agents} && bspc desktop -f {term,edit,browser,com,agents}
 
 ############
 # software #
