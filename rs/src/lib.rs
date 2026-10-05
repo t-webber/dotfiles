@@ -9,7 +9,8 @@ macro_rules! cli {
         $($name:ident $($arg:ident: $argty:ty),* $(: $ret:ty)? => $expr:expr)*
     )?
 ) => {
-    use std::env;
+    use std::env::args;
+    use std::process::exit;
     use clap::Parser;
     use rs::{envg, spawn, sspawn};
 
@@ -31,9 +32,9 @@ macro_rules! cli {
             .get_subcommands()
             .map(|s| s.get_name().to_string())
             .collect();
-        let usage = format!("{} [{}] [--help]", env::args().next().unwrap(), names.join("|"));
+        let usage = format!("{} [{}] [--help]", args().next().unwrap(), names.join("|"));
 
-        match env::args().nth(1) {
+        match args().nth(1) {
             Some(first) if names.contains(&first) || first != "--help"  => (),
             _ =>  { $($other)? }
         }
@@ -64,7 +65,7 @@ macro_rules! spawn { (
     $(; stdin: $in:expr)? $(; out: $out:expr)? $(; err: $err:expr)?
     $(; ignore: $ignore:expr)?
 ) => {{
-        let dbg: u32 = env::var("DEBUG").unwrap_or("0".into()).parse().unwrap();
+        let dbg: u32 = std::env::var("DEBUG").unwrap_or("0".into()).parse().unwrap();
         let prog = $prog;
         let mut args = vec![];
         $( args.push($arg.to_string()); )*
@@ -97,6 +98,6 @@ macro_rules! sspawn {
 #[macro_export]
 macro_rules! envg {
     ($env:ident $($val:expr),*) => {
-        env::var(stringify!($env)).unwrap() $( + $val )*
+        std::env::var(stringify!($env)).unwrap() $( + $val )*
     };
 }

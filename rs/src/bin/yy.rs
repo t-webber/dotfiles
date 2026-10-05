@@ -3,14 +3,8 @@ macro_rules! repl { ( $($v:expr);* ) => {
 }}
 
 rs::cli! {
-    =>  {
-        if env::args().count() == 2 {
-            spawn!("uv", "run", "python", env::args().nth(1).unwrap());
-            std::process::exit(0);
-        }
-    },
+    =>  if args().count() == 2 { spawn!("uv", "run", "python", args().nth(1).unwrap()); exit(0); },
     a { #[arg(required = true)] names: Vec<String> } => spawn!("uv", "add"         ; vec: names),
-
     d { #[arg(required = true)] names: Vec<String> } => spawn!("uv", "add", "--dev"; vec: names),
     r { #[arg(required = true)] names: Vec<String> } => spawn!("uv", "remove"      ; vec: names),
     k { name: Option<String> } => if let Some(inner) = name { spawn!("uv", "lock", "--upgrade-package", inner) } else { spawn!("uv", "lock", "--upgrade") },

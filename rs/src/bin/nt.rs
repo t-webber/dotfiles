@@ -7,7 +7,7 @@ rs::cli! {
 
     en { id_or_all: Option<String> } => sspawn!("enable_network", id_or_all.unwrap_or("all".into())),
     di { id: String } => sspawn!("disable_network", id),
-    e   => sspawn!(env::var("EDITOR").unwrap(), envg!(SECRET "/wpa.confg")),
+    e   => sspawn!(envg!(EDITOR), envg!(SECRET "/wpa.confg")),
     l   => sspawn!("wpa_cli", "list_networks"),
     sc  => sspawn!("wpa_cli", "scan"),
     scr => sspawn!("wpa_cli", "scan_results"),
@@ -29,17 +29,13 @@ rs::cli! {
         }
         wg("up");
     },
-    d   => wg("down"),
-        du => { wg("down"); wg("up"); },
+    d  => wg("down"),
+    du => { wg("down"); wg("up"); },
 
     :
-
     wg action: &str => sspawn!("wg-quick", action, envg!(SECRET "/vpn.conf"))
     link from: &str, to: &str => sspawn!("ln", "-sf", from, to)
-    stop => {
-        sspawn!("pkill", "wpa_supplicant");
-        sspawn!("pkill", "udhcpc"); wg("down");
-    }
+    stop => { sspawn!("pkill", "wpa_supplicant"); sspawn!("pkill", "udhcpc"); wg("down"); }
     start => {
         sspawn!("rfkill", "unblock", "wlan");
         sspawn!("wpa_supplicant", "-i", "wlan0", "-B", "-c", envg!(SECRET "/wpa.conf"));
