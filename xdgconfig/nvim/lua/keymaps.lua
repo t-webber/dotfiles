@@ -168,14 +168,14 @@ setk(i, '<D-_>', '─')
 --- Tables ---
 --------------
 
-setk(n, '<Tab>', function()
-        local keys = require('neovim-tables').motion.cell_next()
-        return keys .. 'l'
-end, 'focus next cell', { expr = true })
-setk(n, '<S-Tab>', function()
-        local keys = require('neovim-tables').motion.cell_prev()
-        return keys .. 'l'
-end, 'focus next cell', { expr = true })
+-- setk(n, '<Tab>', function()
+--         local keys = require('neovim-tables').motion.cell_next()
+--         return keys .. 'l'
+-- end, 'focus next cell', { expr = true })
+-- setk(n, '<S-Tab>', function()
+--         local keys = require('neovim-tables').motion.cell_prev()
+--         return keys .. 'l'
+-- end, 'focus next cell', { expr = true })
 
 ---------------
 --- Harpoon ---
