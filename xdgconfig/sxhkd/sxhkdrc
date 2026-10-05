@@ -94,10 +94,10 @@ XF86AudioMute
 	vl mute; vl notif
 
 XF86MonBrightness{Down,Up}
-	lht {down, up} >/dev/null
+	lht {down, up} && lht notif
 
 {F5, F6}
-	lht {down 1, up 1} >/dev/null
+	lht {down 1, up 1} && lht notif
 
 F11
 	pw notif

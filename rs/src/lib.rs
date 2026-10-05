@@ -76,7 +76,7 @@ macro_rules! spawn { (
             let mut cmd = std::process::Command::new(&prog);
             cmd.args(args);
             $(cmd.stdin($in);)?
-            $(cmd.stdout($in);)?
+            $(cmd.stdout($out);)?
             $(cmd.stderr($err);)?
             let ret = cmd.spawn().unwrap().wait().unwrap();
             let mut ignore = false;
