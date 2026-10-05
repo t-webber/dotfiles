@@ -33,10 +33,9 @@ macro_rules! cli {
             .collect();
         let usage = format!("{} [{}] [--help]", env::args().next().unwrap(), names.join("|"));
 
-        if let Some(first) = env::args().nth(1) && !names.contains(&first) && first != "--help" {
-            $(
-                $other
-            )?
+        match env::args().nth(1) {
+            Some(first) if names.contains(&first) || first != "--help"  => (),
+            _ =>  { $($other)? }
         }
 
         let cmd = cmd
@@ -60,8 +59,11 @@ macro_rules! cli {
 }
 
 #[macro_export]
-macro_rules! spawn {
-    ($prog:expr $(, $arg:expr)* $(; vec: $vec:expr)?) => {{
+macro_rules! spawn { (
+    $prog:expr $(, $arg:expr)* $(; vec: $vec:expr)?
+    $(; stdin: $in:expr)? $(; out: $out:expr)? $(; err: $err:expr)?
+    $(; ignore: $ignore:expr)?
+) => {{
         let dbg: u32 = env::var("DEBUG").unwrap_or("0".into()).parse().unwrap();
         let prog = $prog;
         let mut args = vec![];
@@ -71,8 +73,15 @@ macro_rules! spawn {
             println!("\x1b[35m{prog}: {args:?}\x1b[0m");
         }
         if dbg != 2 {
-            let ret = std::process::Command::new(&prog).args(args).spawn().unwrap().wait().unwrap();
-            if !ret.success() { eprintln!("\x1b[36m{prog}\x1b[31m: {ret:?}\x1b[0m"); std::process::exit(13); }
+            let mut cmd = std::process::Command::new(&prog);
+            cmd.args(args);
+            $(cmd.stdin($in);)?
+            $(cmd.stdout($in);)?
+            $(cmd.stderr($err);)?
+            let ret = cmd.spawn().unwrap().wait().unwrap();
+            let mut ignore = false;
+            $( ignore = $ignore;)?
+            if !ret.success() && !ignore { eprintln!("\x1b[36m{prog}\x1b[31m: {ret:?}\x1b[0m"); std::process::exit(13); }
         }
     }};
 }

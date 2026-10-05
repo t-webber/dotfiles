@@ -85,13 +85,13 @@ super + {Left,Down,Up,Right}
 ##################
 
 XF86Audio{Lower,Raise}Volume
-	vl {down 1, up 1}
+	vl {down 1, up 1}; vl notif
 
 {F2,F3}
-        vl {down, up}
+        vl {down, up}; vl notif
 
 XF86AudioMute
-	vl mute
+	vl mute; vl notif
 
 XF86MonBrightness{Down,Up}
 	lht {down, up} >/dev/null
