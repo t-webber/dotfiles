@@ -1,5 +1,3 @@
-use std::process::Command;
-
 const STEP: u32 = 9;
 
 rs::cli! {
@@ -9,6 +7,6 @@ rs::cli! {
     up { step: Option<u32> } => set(format!("{}+", step.unwrap_or(STEP))),
     down { step: Option<u32> } => set(format!("{}-", step.unwrap_or(STEP))),
     :
-    get: String => String::from_utf8_lossy_owned(Command::new("sudo").args(["brightnessctl", "g"]).output().unwrap().stdout)
+    get: String => spawn!("sudo", "brightnessctl", "g"; output: true).to_string()
     set val: String => spawn!("sudo", "brightnessctl", "s", val; out: Stdio::null())
 }

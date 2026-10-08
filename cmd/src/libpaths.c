@@ -159,7 +159,6 @@ static __wur Vec resolve_first_folder(const_str folder, const bool last) {
 
 /* If don't know yet where, do a resolve_first_folder.
  * Else, search current dir for a folder that matches the wanted folder.
- * TODO: partial matches and move rest of string to the next path
  * TODO: including 0 match for subdirectories */
 static __wur Vec resolve_one_folder(const_str parent, const_str folder, const bool last) {
 #define ret                                                                                       \

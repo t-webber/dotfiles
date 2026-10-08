@@ -24,6 +24,29 @@ local lsps = {
                 },
         },
 
+        lang = {
+                cmd = { 'ltex-ls-plus' },
+                filetypes = { 'typst' },
+                settings = {
+                        ltex = {
+                                language = 'fr-CA',
+                                disabledRules = {
+                                        ['fr-CA'] = {
+                                                'FRENCH_WHITESPACE',
+                                                'WHITESPACE_RULE',
+                                                'FR_SPELLING_RULE',
+                                                'TIRET',
+                                                'DOUBLES_ESPACES',
+                                                'FLECHES',
+                                                'PARENTHESES',
+                                                'COMMA_PARENTHESIS_WHITESPACE',
+                                        },
+                                },
+                        },
+                },
+                disable = true,
+        },
+
         kt = {
                 cmd = { 'kotlin-lsp' },
                 filetypes = { 'kotlin' },
@@ -123,7 +146,7 @@ local lsps = {
 }
 
 for name, config in pairs(lsps) do
-        vim.lsp.enable(name)
+        vim.lsp.enable(name, not config['disable'])
         if config['root_markers'] == nil then config['root_markers'] = {} end
         for _, marker in ipairs({ '.git', '.' }) do
                 table.insert(config['root_markers'], marker)

@@ -1,5 +1,4 @@
 use std::fs::OpenOptions;
-use std::process::Command;
 
 const STEP: u32 = 13;
 const SINK: &str = "@DEFAULT_SINK@";
@@ -36,7 +35,7 @@ rs::cli! {
     :
     brave_audio => spawn!("pkill", "-f", "brave.*--type=utility.*--utility-sub-type=audio.mojom.AudioService"; ignore: 1)
     pactl cmd: &str, action: &str => spawn!("pactl", cmd, SINK, action; err: Stdio::null(); ignore: 1)
-    read cmd: &str : String => String::from_utf8_lossy_owned(Command::new("pactl").args([cmd, SINK]).stderr(Stdio::null()).output().unwrap().stdout)
+    read cmd: &str : String => spawn!("pactl", cmd, SINK; err: Stdio::null(); output: 1)
     get term: bool: Option<String> => {
         let mute = read("get-sink-mute");
         if mute.is_empty() {

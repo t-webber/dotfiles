@@ -508,7 +508,7 @@ _al wb '. drop wb'
 _al ws 'wb https://synapses.telecom-paris.fr/login?type=Shib'
 _al we 'wb https://ecampus.paris-saclay.fr/my/'
 
-_al pi 'while ! getent hosts std.rs; do l no network; sleep 1; done'
+_al pi 'x=0; while ! getent hosts std.rs; do lw no network $x%r; sleep 1; x=$((x+1)); done'
 _al pil 'while :; do getent hosts std.rs || l no network; sleep 1; done'
 _al pii 'while :; do ping -c 3 1.1.1.1; sleep 1; done'
 
@@ -831,7 +831,7 @@ _kal a adb
 _kal p paru
 _kal y python
 
-_al bt btop
+_al bt 'exec btop'
 
 _al close 'killapp dbus; killapp chrome; for x in brave beeper alacritty xclip gpg-agent; do pkill $x; done'
 _al bare 'net o; vl kill; killapp agetty udev; pkill -x pw; close'

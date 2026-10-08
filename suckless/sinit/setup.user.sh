@@ -10,7 +10,7 @@ print startup
 startup() {
         l / >$LOGS/l-lwd
 
-        net au &>$LOGS/l-net &
+        nt au &>$LOGS/l-net &
 
         sleep 30
 

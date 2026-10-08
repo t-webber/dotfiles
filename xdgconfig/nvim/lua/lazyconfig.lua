@@ -260,6 +260,15 @@ local spec = {
         --- Language support ---
         ------------------------
         {
+                'chomosuke/typst-preview.nvim',
+                ft = 'typst',
+                version = '1.*',
+                opts = {
+                        invert_colors = 'always',
+                        open_cmd = 'brave --disable-extensions --single-process --app=%s',
+                },
+        },
+        {
                 'saecki/crates.nvim',
                 event = { 'BufRead Cargo.toml' },
                 config = function()
