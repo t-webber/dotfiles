@@ -688,6 +688,7 @@ dependencies = [
  "clap",
  "flate2",
  "lopdf",
+ "rayon",
 ]
 
 [[package]]

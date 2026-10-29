@@ -2,7 +2,7 @@ use std::fs::{self, File, create_dir_all, read_dir, remove_dir_all, rename, writ
 use std::io::{Write, stdout};
 use std::time::Instant;
 
-use rs::{CollectVec, envg, issue, rsbin, setenv, setfont, spawn};
+use rs::{envg, issue, rsbin, setenv, setfont, spawn};
 
 macro_rules! wrap {
     ($msg:ident => $code:expr) => {
@@ -115,34 +115,27 @@ wrap!(logs => {
 });
 
 wrap!(stage1 out => {
-    let mut files: Vec<_> = read_dir("/etc/rc/sysinit/").unwrap().filter_map(|e| e.ok())
-        .filter(|e| e.file_type().is_ok_and(|t| t.is_symlink()))
-        .map(|e| e.path().into_string().unwrap()).collect();
-    files.sort();
-    for f in files {
-        spawn!(f, "start"; both: out; ignore: 1);
-    }
-});
-
-wrap!(agetty => {
-    create_dir_all(envg!(TMP)).unwrap();
-    let issue = issue();
-    let stripped_issue = issue.replace("\x1b[33m", "").replace("\x1b[0m", "").trim()
-        .lines().map(|l| l.trim().to_owned()).colvec().join("\n");
-    write(&envg!(TMP "issue-lock"), stripped_issue).unwrap();
-    let f = envg!(TMP "issue");
-    write(&f, issue).unwrap();
-    for x in [2, 3] {
-        spawn!("agetty", "--noclear", format!("tty{x}"), "-f", f, "linux"; nowait: 1);
-    }
+     let mut files: Vec<_> = read_dir("/etc/rc/sysinit/").unwrap().filter_map(|e| e.ok())
+         .filter(|e| e.file_type().is_ok_and(|t| t.is_symlink()))
+         .map(|e| e.path().into_string().unwrap()).collect();
+     files.sort();
+     for f in files {
+         spawn!(f, "start"; both: out; ignore: 1);
+     }
 });
 
 wrap!(net out => spawn!("nt", "au"; both: out; discard: 1));
 
-wrap!(tty => fs::read_dir("/dev/").unwrap()
-                .map(|f| f.unwrap().path().to_str().unwrap().to_string())
-                .filter(|p| p.starts_with("/dev/tty"))
-                .for_each(|p| spawn!("chmod", 777, p)));
+wrap!(tty => {
+    fs::read_dir("/dev/").unwrap()
+        .map(|f| f.unwrap().path().to_str().unwrap().to_string())
+        .filter(|p| p.starts_with("/dev/tty"))
+        .for_each(|p| spawn!("chmod", 777, p));
+    for x in [2, 3] {
+        spawn!("init-tty", x);
+    }
+
+});
 
 wrap!(xinit out => {
     println!("\x1b[0m");
@@ -161,6 +154,5 @@ fn main() {
     stage1();
     net();
     tty();
-    agetty();
     xinit();
 }

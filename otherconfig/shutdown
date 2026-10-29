@@ -25,16 +25,16 @@ err() {
 print "$1"
 ##################
 
-init=$(cat /proc/cmdline | /bin/grep -o '=\S*init ' | tr -d '= ')
-[ ! -f "$init" ] || [ ! -f "$init.old" ] && {
-        err "no $init or $init.old"
-}
-
-[ ! -f /boot/vmlinuz-linux ] ||
-        [ ! -f /boot/intel-ucode.img ] ||
-        [ ! -f /boot/initramfs-linux.img ] && {
-        err "missing boot files"
-}
+#init=$(cat /proc/cmdline | /bin/grep -o '=\S*init ' | tr -d '= ')
+#[ ! -f "$init" ] || [ ! -f "$init.old" ] && {
+#        err "no $init or $init.old"
+#}
+#
+#[ ! -f /boot/vmlinuz-linux ] ||
+#        [ ! -f /boot/intel-ucode.img ] ||
+#        [ ! -f /boot/initramfs-linux.img ] && {
+#        err "missing boot files"
+#}
 
 ##################
 print "stopping"

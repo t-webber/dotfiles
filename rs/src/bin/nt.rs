@@ -3,7 +3,7 @@ use core::sync::atomic::AtomicU8;
 use core::sync::atomic::Ordering::{Acquire, Release};
 use std::fs::read_dir;
 use std::io::{Write as _, stdout};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
 use std::thread::spawn;
@@ -126,7 +126,7 @@ rs::cli! {
 
     ;
     list_vpn: String => {
-        let current = get_vpn();
+        let current = PathBuf::from(get_vpn()); // needed for comparing w/ // in path
         let mut v: Vec<String> = read_dir(envg!(SECRET "/vpn")).unwrap()
             .filter_map(|e| e.ok())
             .map(|e| e.path())
