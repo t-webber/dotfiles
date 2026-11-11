@@ -7,12 +7,12 @@ __attribute_malloc__ __wur static char *cmd_head_num(const int value) {
         return ret;
 }
 
-#define cmd_num(name, alias)                                                                       \
-        __attribute_malloc__ __wur static char *cmd_##name##_num(const int value) {                \
-                if (strcmp(get_last_pushed(), #alias)) return cmd_head_num(value);                 \
-                char *const num = malloc(64);                                                      \
-                sprintf(num, "%d", value);                                                         \
-                return num;                                                                        \
+#define cmd_num(name, alias)                                                        \
+        __attribute_malloc__ __wur static char *cmd_##name##_num(const int value) { \
+                if (strcmp(get_last_pushed(), #alias)) return cmd_head_num(value);  \
+                char *const num = malloc(64);                                       \
+                sprintf(num, "%d", value);                                          \
+                return num;                                                         \
         }
 
 cmd_num(l, n) cmd_num(cl, d)
@@ -27,7 +27,7 @@ cmd_num(l, n) cmd_num(cl, d)
     /// TODO: interactive git add that let's me select files to add.
 
     static const Cmd COMMANDS[] = {
-        cmd("a", "add", "-p", ".", "--intent-to-add", "-e", "--all", ),
+        cmd("a", "add", "-p", ".", "--intent-to-add", "-e", "--all", "-f", ),
 
         cmd("br",
             "branch",

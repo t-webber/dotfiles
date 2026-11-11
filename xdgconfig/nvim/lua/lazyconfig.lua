@@ -345,6 +345,11 @@ local spec = {
                                                 stdin = false,
                                                 tmp_file_ext = '.md',
                                         },
+                                        speja = {
+                                                command = 'speja',
+                                                args = { '$FILENAME', '--fix' },
+                                                stdin = false,
+                                        },
                                         mbake = {
                                                 command = 'mbake',
                                                 args = { 'format', '$FILENAME' },

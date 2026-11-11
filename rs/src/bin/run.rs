@@ -1,11 +1,13 @@
 use std::env;
-use std::fs::{read_dir, read_to_string};
+use std::fs::{create_dir_all, exists, read_dir, read_to_string};
 use std::process::exit;
 
 use rs::{CollectVec as _, spawn, upanic};
 
 fn main() {
-    let mut args = env::args().skip(1).colvec();
+    let mut args = env::args();
+    let prog = args.next().unwrap();
+    let mut args = args.colvec();
 
     if let Some(index) = args.iter().position(|x| x.split("/").last().unwrap().contains(".")) {
         let file = args.remove(index);
@@ -25,15 +27,32 @@ fn main() {
         };
         match ext {
             "typ" => {
-                if args.len() >= 2 || release {
-                    upanic!("typst runner can only take input and output")
+                if release {
+                    upanic!("no release flag for typst")
                 }
-                let out = if args.is_empty() {
-                    format!("target/{}.pdf", stem)
-                } else {
-                    args.pop().unwrap()
-                };
-                spawn!("typst", "compile", file, out);
+                let (mut typ, others): (Vec<String>, Vec<String>) =
+                    args.into_iter().partition(|name| name.ends_with("typ"));
+                typ.insert(0, file);
+                let (mut pdf, others): (Vec<String>, Vec<String>) =
+                    others.into_iter().partition(|name| name.ends_with("pdf"));
+                if let Some(invalid) = others.first() {
+                    upanic!("invalid arg for typst: {invalid}")
+                }
+                if pdf.is_empty() {
+                    if !exists("target").unwrap() {
+                        create_dir_all("target").unwrap();
+                    }
+                    pdf = typ
+                        .iter()
+                        .map(|typ| format!("target/{}.pdf", typ.rsplit_once(".").unwrap().0))
+                        .colvec();
+                }
+                if pdf.len() != typ.len() {
+                    upanic!("typst requires either no pdf, or the same count of pdf than inputs")
+                }
+                for (typ, pdf) in typ.iter().zip(pdf) {
+                    spawn!("typst", "compile", typ, pdf);
+                }
                 exit(0);
             }
             "c" | "cpp" | "cc" | "C" => {
@@ -108,4 +127,6 @@ fn main() {
         spawn!("bun", "run"; vec: args);
         exit(0);
     }
+
+    upanic!("Nothing found to run, to run a file: \x1b[33m{prog} <file> [-r]")
 }

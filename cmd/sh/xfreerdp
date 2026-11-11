@@ -1,0 +1,18 @@
+#!/bin/bash
+args=()
+export KRB5_CONFIG=/dev/null
+echo "Running rdp $@"
+
+for a in "$@"; do
+        case "$a" in
+        -sec-nla) args+=("/sec:tls" "/cert:ignore") ;;
+        -grab-keyboard) args+=("/grab-keyboard") ;;
+        /drive:*) ;; # ignore the broken drive option
+        /w:*) args+=("/w:1280") ;;
+        /h:*) args+=("/h:720") ;;
+        /bpp:*) args+=("/bpp:32") ;;
+        *) args+=("$a") ;;
+        esac
+done
+echo "Final args: ${args[@]}" >>/share/rdp
+exec /usr/bin/xfreerdp3 "${args[@]}" /drive:share,/share

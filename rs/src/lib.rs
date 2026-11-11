@@ -50,7 +50,6 @@ macro_rules! upanic {
 macro_rules! debug {
     ($($arg:tt)*) => {{
         if std::env::var("DEBUG").is_ok() {
-            $crate::Ti::MIL.mul(500).slp();
             eprint!("\x1b[35m");
             eprint!($($arg)*);
             eprintln!("\x1b[0m");
@@ -80,6 +79,10 @@ pub fn map<F: for<'a> Fn(&'a String) -> Option<&'a String>>(f: F) -> F {
 
 pub fn link(from: &str, to: &str) {
     spawn!("sudo", "ln", "-sf", from, to)
+}
+
+pub fn err_notif(msg: &str) {
+    spawn!("herbe", "br:#ff0000", msg);
 }
 
 pub trait CollectVec<T>: Iterator<Item = T> + Sized {

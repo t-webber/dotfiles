@@ -212,7 +212,7 @@ if [ -f "/etc/null-release" ]; then
         _al Qdtq -p "$p" -Qdtq
         _al Rcns -p "$p" -Rcns
         _al Rdd -p "$p" -Rdd
-        _al U "PATH=/bin:$CMD/bin $p -Syyuu --devel --noconfirm && $p --devel --gendb -Y && $(_wi sudo) pkgfile --update && setxkbmap fr" update
+        _al U "PATH=/bin:$CMD/bin $p -Syyuu --devel --noconfirm && $p --devel --gendb -Y && $(_wi sudo) pkgfile --update && /bin/setxkbmap fr" update
         _al F -p "$p" -F
         _al Fy -p "$p" -Fy
         _al C "$p -Rcns \$($p -Qdtq) --noconfirm" 'remove unused'
@@ -343,6 +343,9 @@ _print cargo
 
 _flush
 
+_al gitiall "l '*' > .gitignore"
+_al giti "n .gitignore"
+_al gitm "n .gitignore"
 _al ififo 'export GIT_ASKPASS=read-fifo'
 _al ilon 'i lo=n'
 _al ifom 'i phfOH:M'
@@ -483,10 +486,9 @@ _al clipm clipcat-menu
 ######## CODIUM
 
 _al vscodium 'l what is the difference with codium?'
-_al uimm "$(_wi codium) --extensions-dir='$CODE_EXTS_PATH'"
-_ual uimm codium
+_al uim "$(_wi codium) --extensions-dir='$CODE_EXTS_PATH'"
+_ual uim codium
 _al code "$(_wi code) --extensions-dir='$CODE_EXTS_PATH'"
-_al uim 'bspc desktop -f neovim && uimm .'
 
 ######## XRANDR
 
@@ -497,28 +499,6 @@ _al zoom 'xr0 --scale 0.8x0.8'
 _al dezoom 'xr0 --scale 1.5x1.5'
 
 _print gui
-
-#############################
-########## NETWORK ##########
-#############################
-
-_flush
-
-_al wb '. drop wb'
-_al ws 'wb https://synapses.telecom-paris.fr/login?type=Shib'
-_al we 'wb https://ecampus.paris-saclay.fr/my/'
-
-_al rpi "ssh $_RPI"
-_al mssh "ssh mad@mad-ssh.rezel.net -J twebber-23@ssh.enst.fr"
-_ual tesh tessh
-_al tesh "ssh jet@137.194.13.203 -J twebber-23@ssh.enst.fr"
-_al pssh 'ssh twebber-23@perso-twebber-23.lxc.enst.fr -J twebber-23@ssh.enst.fr'
-_al gssh "s ~/.ssh/id_ed25519.pub | x && s ~/.ssh/id_ed25519.pub"
-_al enst 'ssh twebber-23@ssh.enst.fr'
-
-_ual rl curl
-
-_print network
 
 ###########################
 ########## PUSHD ##########
@@ -537,66 +517,6 @@ _al kk 'k && k'
 _al kkk 'k && k && k'
 _al kkkk 'k && k && k && k'
 _al kkkkk 'k && k && k && k && k'
-
-_al src 'p src'
-
-_gt() {
-        _al "$1" "p $2"
-}
-
-_ual 'ocf or xcf' cf
-_gt ap "$APPS"
-_gt ocf "$OCFG"
-_gt xcf "$XDG_CONFIG_HOME"
-_gt cmd "$CMD"
-_gt data "$DATA"
-_gt log "$LOGS"
-_gt dot "$DOT"
-_gt del "$WASTE"
-_gt etc "$ETC"
-_gt pf "$FILES"
-_gt ph "$HOME"
-_gt work "$WORK"
-_gt build "$WORK"
-_gt good "$BUILD/good"
-_gt auto "$BUILD/good/auto-build"
-_gt rt "$BUILD/good/runtime"
-_gt dw "$FILES/.down"
-_gt tmp "$FILES/.temp"
-
-_ual st cours
-_gt st "$STUDY"
-
-_gt blob "$BLOB"
-_gt down "$FILES/.down"
-_gt sav "$BLOB/save"
-
-_gtd() {
-        _gt "$1" "$DEV/$2"
-}
-
-_gtd dev
-_gtd pemail email
-_gtd phtml html-filter
-_gtd prdj random-json
-_gtd prda random-data
-_gtd jc jet-centre
-_gtd crs crs
-_gtd crsu 'crs/crs-tui'
-_gtd crsb 'crs/crs-backend'
-_gtd crss 'crs/server'
-_gtd pmail mailbox
-_gtd mdv md-viewer
-_gtd pars c-parser
-_gtd perso personal-website
-_gtd sw showcase-website
-_gtd vsh vimsh
-_gtd words words
-
-for l in c r y g; do
-        _gtd "pdel$l" ".$l"/
-        _al "del$l" "pdel$l && e ."
-done
 
 _print cd
 
@@ -815,7 +735,7 @@ _kal() {
 
 _kal e beeper
 _kal v brave
-_kal d dunst
+_kal d "dbus dbus"
 _kal D Discord
 _kal c clipcat
 _kal r reflector
@@ -831,7 +751,7 @@ _kal y python
 
 _al bt 'exec btop'
 
-_al close 'killapp dbus; killapp chrome; for x in brave beeper alacritty xclip gpg-agent; do pkill $x; done'
+_al close 'kd; kv; ke; killapp chrome; for x in sioyek alacritty xclip gpg-agent; do pkill $x; done'
 _al bare 'net o; vl kill; killapp agetty udev; pkill -x pw; close'
 _al nobash 'killapp bash'
 
@@ -890,7 +810,7 @@ _al mboot 'm /dev/nvme0n1p1 /boot'
 _ual mkcp mkinitcpio
 _al mkcp "$_s $(_wi mkinitcpio) -P"
 
-_ual m mnt mount make man mn
+# _ual m mnt mount make man mn
 _al mls "make -qp | awk -F':' '/^[a-zA-Z0-9][^$#\/\t=]*:([^=]|$)/ {split(\$1,A,/ /);for(i in A)print A[i]}' | sort -u"
 
 _flush
@@ -972,14 +892,12 @@ _al zja 'zjm'
 _al zjm 'zj -s m || zj a m'
 _al zjc 'zj ka && zj da'
 
-_al gitignore "l '*' > .gitignore"
 _al loop '. loop '
 _al wpad "$_s wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf"
 _al rnf 'fd --type d | xgid -P 50 rm -rf . &>/dev/null'
 _al np '. np'
 _al w while
 _al wt 'w :; '
-_al whereami "$(_wi curl) ipinfo.io"
 _al dbg 'export DEBUG=1'
 _al nodbg 'unset DEBUG'
 _al y '. y'
@@ -994,18 +912,6 @@ _al lca 'lc && '
 _al wi '. wi'
 _al jj 'join -j 9999999 '
 
-_ual od claude copilot
-if [ "$(uname)" = "Darwin" ]; then
-        _al od "$(_wi claude)"
-        _al odg 'e ~/.claude/settings.json'
-        _al odl 'e .claude/settings.local.json'
-        _al odm 'e ~/.claude/CLAUDE.md'
-        _al ok "GROK=1 $(_wi grok)"
-        _ual ok grok
-else
-        _al od "$(_wi copilot)"
-fi
-_al odr 'od --resume'
 _al ctiab "c tiab && apksigner sign --ks $SECRET/apkkey.keystore --ks-key-alias my-key --out $HOME/latest.apk src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-unsigned.apk &&  apksigner verify $HOME/latest.apk && l $HOME/latest.apk built successfully"
 _al wea 'rll wttr.in'
 _al barplot "son | uc | arev | gnuplot -p -e \"set terminal dumb; plot '-' with impulses notitle\""
@@ -1016,6 +922,11 @@ _al orand 'o $(ls * | shuf | h1)'
 _al hh "$(_wi gh)"
 _al lk lsblk
 _al acm 'w :; do lca sudo /bin/ls -lha /dev/ttyACM0; lsblk; sleep 1; done'
+_al wingiglrdp 'PATH="$CMD/sh:$PATH" vmware-view --protocol=RDP --rdpclient=xfreerdp --xfreerdpOptions="/drive:share,/share" --usbAutoConnectOnInsert=TRUE --usbAutoConnectAtStartUp=TRUE --serverURL=cerberus.gigl.polymtl.ca --userName="$_GIGL_USR" --desktopName="$_GIGL_PC" --nonInteractive  --hideClientAfterLaunchSession --password="$_GIGL_PSK" & disown'
+_al wingigl 'vmware-view --serverURL=cerberus.gigl.polymtl.ca --userName="$_GIGL_USR" --desktopName="$_GIGL_PC" --nonInteractive  --hideClientAfterLaunchSession --password="$_GIGL_PSK" & disown'
+_al zip "zip -r"
+_al mw 'GDK_DPI_SCALE=1.5 make open'
+_al dot 'p $DOT'
 
 _print other
 

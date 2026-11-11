@@ -73,5 +73,5 @@ fn add(names: Vec<String>, dev: bool) {
     if dev {
         remainder.push("--dev".to_owned());
     }
-    uv!(add,"--dev"; vec: remainder);
+    uv!(add; vec: remainder);
 }

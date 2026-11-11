@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -euo pipefail
+
+for desktop in $(bspc query -D); do
+        l "%5$(bspc query -D -d "$desktop" --names)"
+        for win in $(bspc query -N -d "$desktop" -n .window); do
+                l " %3$(xprop -id "$win" WM_CLASS | cut -d'"' -f4)"
+        done
+done

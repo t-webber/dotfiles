@@ -23,12 +23,13 @@ set -euo pipefail
 
 "#;
 
-fn new(folder: &str, file: &str, content: &str) {
+fn new(folder: &str, file: &str, content: &str) -> String {
     let path = format!("{}/{folder}/{file}", envg!(DOT));
     if !fs::exists(&path).unwrap() {
         fs::write(&path, content).unwrap();
     }
     spawn!(envg!(EDITOR), path);
+    path
 }
 
 fn main() {
@@ -43,6 +44,7 @@ fn main() {
     } else if fname.ends_with(".rs") {
         new("rs/src/bin", &fname, PROG_RS);
     } else {
-        new("cmd/sh", &fname, PROG_SH);
+        let path = new("cmd/sh", &fname, PROG_SH);
+        spawn!("chmod", 755, path);
     }
 }

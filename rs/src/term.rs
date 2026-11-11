@@ -1,14 +1,6 @@
 use crate::spawn;
 
-const ISSUE: &str = r#"
-oooooooooo.             .o8         .oooooo.    .oooooo..o
-`888'   `Y8b           "888        d8P'  `Y8b  d8P'    `Y8
- 888     888  .ooooo.   888oooo.  888      888 Y88bo.     
- 888oooo888' d88' `88b  d88' `88b 888      888  `"Y8888o. 
- 888    `88b 888   888  888   888 888      888      `"Y88b
- 888    .88P 888   888  888   888 `88b    d88' oo     .d8P
-o888bood8P'  `Y8bod8P'  `Y8bod8P'  `Y8bood8P'  8""88888P' 
-"#;
+const ISSUE: &str = include_str!(concat!(env!("OCFG"), "/issue"));
 
 pub fn issue() -> String {
     let issue = ISSUE.trim_start();

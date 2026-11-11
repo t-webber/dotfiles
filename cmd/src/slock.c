@@ -32,6 +32,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include "lib.h"
 #include "libexec.h"
+#include "libvec.h"
 #include <X11/Xft/Xft.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -84,11 +85,8 @@ static const char *colourname[NUMCOLS] = {
     [FAILED] = "#000000", /* wrong password */
 };
 
-#define prefix                                                                                     \
-        "                                                                                        " \
-        "                  "
-const int VPAD = 40;
-const_str ASCII_FILE = "/del/.temp/issue-lock";
+const size_t HPAD = 70;
+const size_t VPAD = 20;
 
 static const int failonclear = 1; /* treat a cleared input like a wrong password (colour) */
 
@@ -100,13 +98,15 @@ static void readascii(void) {
         size_t size = 0;
         ssize_t len;
 
-        for (int i = 0; i < VPAD; i++) {
+        var_prefix(ascii_file, getenv_checked("OCFG"), "/issue-lock");
+
+        for (size_t i = 0; i < VPAD; i++) {
                 ascii_lines = realloc(ascii_lines, (ascii_nlines + 1) * sizeof(*ascii_lines));
                 if (!ascii_lines) epanic("slock: realloc\n");
                 ascii_lines[ascii_nlines++] = strdup("");
         }
 
-        f = fopen(ASCII_FILE, "r");
+        f = fopen(ascii_file, "r");
         if (!f) epanic("slock: fopen ascii");
 
         while ((len = getline(&line, &size, f)) != -1) {
@@ -116,11 +116,12 @@ static void readascii(void) {
 
                 if (!ascii_lines) epanic("slock: realloc");
 
-                size_t prefix_len = strlen(prefix);
-                ascii_lines[ascii_nlines] = malloc(prefix_len + (size_t)len + 1);
+                ascii_lines[ascii_nlines] = malloc(HPAD + (size_t)len + 1);
                 if (!ascii_lines[ascii_nlines]) epanic("slock: malloc");
-                memcpy(ascii_lines[ascii_nlines], prefix, prefix_len);
-                memcpy(ascii_lines[ascii_nlines] + prefix_len, line, (size_t)len + 1);
+
+                char *wrt = ascii_lines[ascii_nlines];
+                for (size_t i = 0; i < HPAD; ++i) *wrt++ = ' ';
+                stpcpy(wrt, line);
                 ascii_nlines++;
 
                 if (!ascii_lines[ascii_nlines - 1]) epanic("slock: strdup");
@@ -327,7 +328,7 @@ static struct lock *lockscreen(Display *dpy, struct xrandr *rr, int screen) {
 
         if (!lock->draw) upanic("slock: XftDrawCreate failed");
 
-        lock->font = XftFontOpenName(dpy, lock->screen, "monospace:size=10:weight=bold");
+        lock->font = XftFontOpenName(dpy, lock->screen, "monospace:size=6:weight=bold");
 
         if (!lock->font) upanic("slock: XftFontOpenName failed");
 
@@ -395,8 +396,9 @@ static struct lock *lockscreen(Display *dpy, struct xrandr *rr, int screen) {
 }
 
 int main(const int argc, Args argv) {
-        if (argc > 3 || (argc == 2 && strcmp(argv[1], "sleep"))) upanic("usage: slock [sleep]");
-        const bool sleep = argc == 2;
+        const bool zzz = argc == 2 && !strcmp(argv[1], "sleep");
+        const bool check = argc == 2 && !strcmp(argv[1], "check");
+        if (argc > 3 || (argc == 2 && !zzz && !check)) upanic("usage: slock [sleep]");
 
         struct xrandr rr;
         struct lock **locks;
@@ -433,8 +435,12 @@ int main(const int argc, Args argv) {
         if (nlocks != nscreens) upanic("failed to lock some screens");
 
         /* everything is now blank. Wait for the correct password */
-        if (sleep) forked_exldn("sudo", "zzz");
-        readpw(dpy, &rr, locks, nscreens, hash);
+        if (zzz) forked_exldn("sudo", "zzz");
+        if (check)
+                sleep(1);
+        else
+                readpw(dpy, &rr, locks, nscreens, hash);
+
         set_lht_level("100", BRIGHTNESS_SET);
 
         return 0;

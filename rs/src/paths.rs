@@ -21,9 +21,11 @@ fn char_to_dir(ch: char) -> Option<String> {
         'k' => envg!(DOT),
         'l' => envg!(LOGS),
         'm' => envg!(CMD),
+        'n' => envg!(DOWN),
         'o' => envg!(WORK),
-        'p' => "/tmp".to_owned(),
+        'p' => envg!(TEMPORAL),
 
+        'r' => envg!(DOT "rs"),
         's' => envg!(SECRET),
         't' => envg!(DATA),
 
@@ -39,7 +41,7 @@ fn char_to_dir(ch: char) -> Option<String> {
     })
 }
 
-fn match_segments<F>(dir: &str, func: F) -> Vec<String>
+fn match_segments<F>(dir: &str, empty: bool, func: F) -> Vec<String>
 where
     F: Fn(String, bool) -> Vec<String>,
     F: Sync + Send,
@@ -51,6 +53,10 @@ where
     {
         return vec![];
     }
+    if empty {
+        return vec![dir.to_string()];
+    }
+
     match read_dir(dir) {
         Ok(files) => files
             .par_bridge()
@@ -67,8 +73,8 @@ where
 }
 
 fn match_exact_segments(dir: &str, name: &str) -> Vec<String> {
-    let res = match_segments(dir, |segment, isdir| {
-        debug!("   - :{segment}:");
+    let res = match_segments(dir, name.is_empty(), |segment, isdir| {
+        //         debug!("   - :{segment}:");
         if name == segment {
             vec![format!("{dir}/{segment}")]
         } else if name.starts_with(&segment) && isdir {
@@ -82,7 +88,7 @@ fn match_exact_segments(dir: &str, name: &str) -> Vec<String> {
 }
 
 fn match_partial_segments(dir: &str, name: &str) -> Vec<String> {
-    let res = match_segments(dir, |segment, isdir| {
+    let res = match_segments(dir, name.is_empty(), |segment, isdir| {
         debug!("   - :{segment}:");
         if name == segment {
             return vec![format!("{dir}/{segment}")];
@@ -111,8 +117,8 @@ fn match_partial_segments(dir: &str, name: &str) -> Vec<String> {
 }
 
 fn match_no_segments(dir: &str, name: &str) -> Vec<String> {
-    let res = match_segments(dir, |segment, isdir| {
-        debug!("   - :{segment}:");
+    let res = match_segments(dir, name.is_empty(), |segment, isdir| {
+        //         debug!("   - :{segment}:");
         if name == segment {
             return vec![name.to_owned()];
         };

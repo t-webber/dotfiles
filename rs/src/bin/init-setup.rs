@@ -2,7 +2,7 @@ use std::fs::{self, File, create_dir_all, read_dir, remove_dir_all, rename, writ
 use std::io::{Write, stdout};
 use std::time::Instant;
 
-use rs::{envg, issue, rsbin, setenv, setfont, spawn};
+use rs::{CollectVec, envg, issue, rsbin, setenv, setfont, spawn};
 
 macro_rules! wrap {
     ($msg:ident => $code:expr) => {
@@ -33,13 +33,12 @@ fn logfile(name: &str) -> File {
 }
 
 wrap!(env => {
-    // depth 1
+    // files
     setenv!(FILES "/del/");
-    // depth 2
     setenv!(DOT FILES ".dot");
     setenv!(DEV FILES ".dev");
+    setenv!(DOWN FILES ".down");
     setenv!(BIN FILES ".bin");
-    setenv!(TMP FILES ".temp");
     setenv!(BLOB FILES ".blob");
     setenv!(WORK FILES ".work");
     setenv!(APPS FILES ".apps");
@@ -47,20 +46,22 @@ wrap!(env => {
     setenv!(WASTE FILES ".waste");
     setenv!(STUDY FILES ".study");
     setenv!(SECRET FILES ".secret");
-    // depth 3
+    setenv!(TEMPORAL FILES ".temp");
+    // dot
     setenv!(CMD DOT "cmd");
     setenv!(CMD_SRC CMD "src");
     setenv!(XCFG DOT "xdgconfig");
     setenv!(OCFG DOT "otherconfig");
     setenv!(ETC DOT "etc");
-    setenv!(LOGS DATA "logs");
-    setenv!(OLOGS DATA "ologs");
     setenv!(XDG_CONFIG_HOME {envg!(XCFG)});
+    // data
     setenv!(XDG_DATA_HOME DATA ".shared");
     setenv!(XDG_CACHE_HOME DATA ".cache");
     setenv!(XDG_STATE_HOME DATA ".state");
     setenv!(XDG_RUNTIME_DIR DATA ".rt");
-    // apps
+    setenv!(LOGS DATA "logs");
+    setenv!(OLOGS DATA "ologs");
+    setenv!(TMP DATA ".temp");
     setenv!(RUSTUP_HOME DATA "rustup");
     setenv!(CARGO_HOME DATA "cargo");
     setenv!(BUN_INSTALL DATA "bun");
@@ -68,7 +69,6 @@ wrap!(env => {
     // needed
     setenv!(SHELL "/bin/bash");
     setenv!(EDITOR "/bin/nvim");
-    setenv!(DEVICE "/bin/nvim");
     // x
     setenv!(GTK_THEME "Adwaita:dark");
     setenv!(PASSWORD_STORE_BACKEND "plain");
@@ -76,8 +76,7 @@ wrap!(env => {
     setenv!(XCURSOR_THEME "HUD_Machine_Red_Cursors");
     setenv!(XCURSOR_SIZE "50");
     // path
-    let mut path = Vec::new();
-    for arg in [
+    setenv!(PATH [
         "/bin".into(),
         envg!(CMD "sh"),
         envg!(CMD "bin"),
@@ -90,12 +89,7 @@ wrap!(env => {
         envg!(ANDROID_HOME "platform-tools"),
         envg!(ANDROID_HOME "cmdline-tools/latest/bin"),
         envg!(ANDROID_HOME "build-tools/36.0.0"),
-    ] {
-        if std::fs::exists(&arg).unwrap() {
-            path.push(arg)
-        };
-    }
-    setenv!(PATH path.join(":"));
+    ].into_iter().filter(|p|fs::exists(p).unwrap()).colvec().join(":"));
     //
     let out = File::create("/env").unwrap();
     spawn!("env"; both: out);

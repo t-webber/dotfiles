@@ -81,7 +81,13 @@ fn main() {
             sigwait(&set, &mut sig);
         }
         match sig {
-            SIGALRM | SIGCHLD => unsafe { while waitpid(-1, null_mut(), WNOHANG) > 0 {} },
+            SIGALRM | SIGCHLD => unsafe {
+                loop {
+                    if waitpid(-1, null_mut(), WNOHANG) <= 0 {
+                        break;
+                    }
+                }
+            },
             SIGUSR1 => spawn(set, SHUTDOWN, &["poweroff"]),
             SIGINT => spawn(set, SHUTDOWN, &["reboot"]),
             _ => {}

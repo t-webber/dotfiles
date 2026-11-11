@@ -16,7 +16,7 @@ return {
         kotlin = { 'ktlint' },
         bibtex = { 'bibtex-tidy' },
         typst = { 'typstyle' },
-        vhdl = { 'vsg' },
+        vhdl = { 'speja' },
         make = { 'mbake' },
         verilog = { 'verilog' },
 

@@ -71,6 +71,10 @@ rs::cli! {
     oa  => { stop(); start(); }
     oau => { stop(); wg("up"); start(); }
     dns => dns()
+    eth => {
+        spawn!("sudo", "ip", "link", "set", "eth0", "up");
+        spawn!("sudo", "ip", "addr", "add", "192.168.2.1/24", "dev", "eth0");
+    }
     chk => {
         let updated = Arc::from(AtomicBool::default());
         checker!(updated
@@ -158,7 +162,7 @@ rs::cli! {
     wg action: &str => spawn!("sudo", "wg-quick", action, envg!(SECRET "/vpn.conf"); ignore: 1)
     stop => {
         spawn!("sudo" ,"pkill", "wpa_supplicant"; ignore: 1);
-        spawn!("sudo", "pkill", "udhcpc"; ignore: 1);
+        spawn!("sudo", "pkill", "-9", "-x", "udhcpc"; ignore: 1);
         wg("down");
     }
     dns => spawn!("sudo", "udhcpc", "-i", "wlan0", "-f"; discard: 1)

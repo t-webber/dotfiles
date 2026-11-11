@@ -17,11 +17,10 @@ macro_rules! rule {
 
 fn main() {
     spawn(|| {
-        if !(spawn!("vl", "a"; both: File::create(envg!(LOGS "vl")).unwrap(); ret: 1) && spawn!("pw", "daemon"; ret: 1)
-            // xinput
+        if !(spawn!("vl", "a"; both: File::create(envg!(LOGS "vl")).unwrap(); ret: 1)
+            && spawn!("pw", "daemon"; ret: 1)
             && spawn!("xinput", "set-prop", 8, "libinput Tapping Enabled", 1; ret: 1)
             && spawn!("xinput", "set-prop", 8, "libinput Click Method Enabled", 1, 0; ret: 1)
-            // bspc
             && spawn!("bspc", "monitor", "-d", "term", "edit", "browser", "com", "agents"; ret: 1)
             && conf!(
                 border_width 1;
@@ -38,16 +37,16 @@ fn main() {
             && rule!(
                 "Beeper" "desktop=com";
                 "discord" "desktop=com";
+                "Vmware-view" "desktop=agents";
                 "Remote-viewer" "desktop=com" "state=fullscreen";
                 "Qemu-system-x86_64" "desktop=agents" "state=fullscreen";
             ))
         {
             eprintln!("\x1b[31m>>>One or more bspwm setting failed.\x1b[0m");
         }
-        // apps
         spawn!("alacritty"; both: File::create(envg!(LOGS "alacritty")).unwrap(); discard: 1);
         spawn!("brave", "--no-startup-window"; both: File::create(envg!(LOGS "brave")).unwrap(); discard: 1);
-        Ti::MIN.mul(10).slp();
+        Ti::MIN.mul(1).slp();
         spawn!("pkill", "chrome_crashpad");
     });
     spawn!("setxkbmap", "fr");

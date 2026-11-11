@@ -14,17 +14,17 @@ rs::cli! {
     activeloop { sec: u64 } => loop {
         if stat() == "Discharging" && lvl() <= 10 {
             spawn!("sudo", "zzz");
-        } else if spawn!("date", "+%H"; output: 1).trim().parse::<u32>().unwrap() >= 21 {
-            spawn!("herbe", "br:#ff0000", "Time is up, shutting down in 2 minutes");
+        } else if spawn!("date", "+%H"; output: 1).trim().parse::<u32>().unwrap() >= 20 {
+            err_notif("Time is up, shutting down in 2 minutes");
             Ti::MIN.slp();
-            spawn!("herbe", "br:#ff0000", "Time is up, shutting down in 1 minutes");
+            err_notif("Time is up, shutting down in 1 minute");
             Ti::MIN.slp();
             spawn!("sudo", "kill", "-USR1", "1");
         }
         notif(Show::Value);
         Ti::SEC.mul(sec).slp();
     }
-    daemon { sec: u64 = 5000 } => spawn!("setsid", "-f", args().next().unwrap(), "activeloop", sec)
+    daemon { sec: u64 = 300 } => spawn!("setsid", "-f", args().next().unwrap(), "activeloop", sec)
     ;
     lvl: u32 => fs::read_to_string("/sys/class/power_supply/BAT1/capacity")
                     .unwrap().trim().parse().unwrap()
@@ -38,9 +38,9 @@ rs::cli! {
     notif show: Show => if stat().trim() == "Discharging" && lvl() <= 10 {
             spawn!("sudo", "zzz");
         } else if stat().trim() == "Discharging" && lvl() <= 20 {
-            spawn!("herbe", "br:#ff0000", format!("Battery low: {}%", lvl()));
+            err_notif(&format!("Battery low: {}%", lvl()));
         } else if show == Show::Time {
-            spawn!("herbe", format!("{}% ({})", lvl(), spawn!("date", "+%H:%M:%S"; output: 1).trim()))
+            spawn!("herbe", format!("{}% ({})", lvl(), spawn!("date", "+%D %T"; output: 1).trim()))
         } else if show == Show::Value {
             spawn!("herbe", "em:", format!("{}{}", dec().1, lvl()))
         }

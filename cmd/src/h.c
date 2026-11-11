@@ -24,6 +24,7 @@ const Cmd COMMANDS[] = {
         "edit",
         "=i--visibility",
         "=I--accept-visibility-change-consequences",
+        "list",
         "=ncreate",
         "=oclone",
         "--public",

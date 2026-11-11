@@ -17,6 +17,7 @@ local function apply_comment_colours()
                 match('bg-hide-grey', ch4 .. '$')
                 match('bg-hide-grey', 'password=.*$')
                 match('bg-hide-grey', 'psk=.*$')
+                match('bg-hide-grey', 'PSK=.*$')
                 if ch == '"' then goto continue end
 
                 for name, value in pairs(true_colours) do
