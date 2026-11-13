@@ -21,6 +21,7 @@ rs::cli! {
     r { #[arg(required = true)] names: Vec<String> } => uv!(remove; vec: names)
     k { name: Option<String> } => if let Some(inner) = name { uv!(lock, "--upgrade-package", inner) } else { uv!(lock, "--upgrade") }
     y => uv!(sync)
+    ml => add(["torch", "scikit-learn", "pandas", "matplotlib", "numpy", "scipy"].into_iter().map(str::to_owned).collect(), false)
     // run
     m { package: String } => uv!(run python, "-m", package)
     c { code: String } => uv!(run python, "-c", code)
@@ -67,11 +68,14 @@ fn add(names: Vec<String>, dev: bool) {
             if dev {
                 v.push("--dev".to_owned());
             }
-            !spawn!("uv","--offline","--no-sync"; vec:v; err:Stdio::null(); ret:1)
+            !spawn!("uv","add","--offline","--no-sync"; vec:v; err:Stdio::null(); ret:1)
         })
         .collect::<Vec<_>>();
     if dev {
         remainder.push("--dev".to_owned());
     }
-    uv!(add; vec: remainder);
+    if !remainder.is_empty() {
+        uv!(add; vec: remainder);
+    }
+    uv!(sync);
 }
