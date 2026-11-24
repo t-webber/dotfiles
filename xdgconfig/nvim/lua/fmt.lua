@@ -5,6 +5,7 @@ return {
         -----------------
 
         lua = { 'stylua' },
+        scala = { 'scalafmt' },
         rust = { 'rustfmt' },
         sql = { 'sql_formatter' },
         python = { 'ruff_fix', 'ruff_format' },

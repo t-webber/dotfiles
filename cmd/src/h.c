@@ -13,6 +13,7 @@ const Cmd COMMANDS[] = {
         "github.com",
         "-s", ),
     cmd("e", "extension", "browse", "install", "remove", "list", ),
+    cmd("i", "api", "-X", "PUT", "-f", "permission=push", ),
     cmd("o", "actions", "list", ),
     cmd("p", "pr", "=ncreate", "view", "-w", ),
     cmd("r",

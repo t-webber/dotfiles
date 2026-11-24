@@ -85,8 +85,8 @@ static const char *colourname[NUMCOLS] = {
     [FAILED] = "#000000", /* wrong password */
 };
 
-const size_t HPAD = 70;
-const size_t VPAD = 20;
+const size_t HPAD = 0;
+const size_t VPAD = 0;
 
 static const int failonclear = 1; /* treat a cleared input like a wrong password (colour) */
 

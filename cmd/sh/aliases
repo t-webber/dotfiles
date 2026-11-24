@@ -324,6 +324,9 @@ _ual c cargo
 
 _al ck 'l && c yfaw-DR && c b &&  c f &&  c odaD && c t && c pf 100' 'all checks for ci'
 _al cph 'c pdtoh'
+_al cba 'f IH | gg Cargo.toml | x .P20 c bm .'
+_al cbra 'f IH | gg Cargo.toml | x .P20 c brm .'
+_al cfa 'f IH | gg Cargo.toml | x .P20 c fam .'
 
 _al co 'brave tarpaulin-report.html'
 
@@ -752,7 +755,7 @@ _kal y python
 _al bt 'exec btop'
 
 _al close 'kd; kv; ke; killapp chrome; for x in sioyek alacritty xclip gpg-agent; do pkill $x; done'
-_al bare 'net o; vl kill; killapp agetty udev; pkill -x pw; close'
+_al bare 'net o; vl kill; killapp agetty udev gpg init-login grep; pkill -x pw; close'
 _al nobash 'killapp bash'
 
 _al bgd 'bg && disown'

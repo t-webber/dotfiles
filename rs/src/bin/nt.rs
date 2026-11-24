@@ -75,32 +75,8 @@ rs::cli! {
         spawn!("sudo", "ip", "link", "set", "eth0", "up");
         spawn!("sudo", "ip", "addr", "add", "192.168.2.1/24", "dev", "eth0");
     }
-    chk => {
-        let updated = Arc::from(AtomicBool::default());
-        checker!(updated
-            wlan match spawn!("sudo", "ip", "addr"; output: true).lines().find(|l|l.contains(" wlan0: ")) {
-                Some(l) if l.contains(" UP ") =>  State::Up,
-                Some(l) if l.contains(" DOWN ") => State::Down,
-                Some(l) if l.contains(" DORMANT ") => State::Dormant,
-                Some(l) => upanic!("\n\x1b[31mwlan0: invalid state: {l}\n"),
-                None => State::None };
-            ping chkcmd(spawn!("ping", "-c", 1, "1.1.1.1" ; out: Stdio::null(); err: Stdio::null();  ret: 1));
-            dhcp chkcmd(spawn!("getent", "ahosts", "1.1.1.1"; out: Stdio::null(); ret: 1));
-            lock if spawn!("lsattr", "/etc/resolv.conf"; output: 1).contains("i") { State::Up } else { State::Down };
-            dns chkcmd(spawn!("getent", "hosts", "std.rs"; out: Stdio::null(); ret: 1));
-            vpn chkcmd(!spawn!("wg", "show", "interfaces"; output: 1).trim().is_empty());
-        );
-        let mut i = 0;
-        loop {
-            if updated.swap(false, Acquire) {
-                print!("\x1b[2K\r{i}");
-                fmt!(wlan ping dhcp dns vpn lock);
-                stdout().flush().unwrap();
-                i += 1;
-            }
-            Ti::SEC.slp();
-        }
-    }
+    rs => {stop(); wg("up"); start(); check();}
+    chk => check()
 
     en  { id: String = "all" } => wpa("enable_network", vec![id])
     dis { id: String } => wpa("disable_network", vec![id])
@@ -175,6 +151,32 @@ rs::cli! {
         map: map(|l| if l != "Selected interface 'wlan0'" && l != "OK" { Some(l) } else { None }))
     wpa cmd: &str, args: Vec<String> => { wpa_raw(cmd, args); wpa_raw("save_config", vec![]); }
     chkcmd cmd: bool: State => if cmd { State::Up } else { State::Down }
+    check => {
+        let updated = Arc::from(AtomicBool::default());
+        checker!(updated
+            wlan match spawn!("sudo", "ip", "addr"; output: true).lines().find(|l|l.contains(" wlan0: ")) {
+                Some(l) if l.contains(" UP ") =>  State::Up,
+                Some(l) if l.contains(" DOWN ") => State::Down,
+                Some(l) if l.contains(" DORMANT ") => State::Dormant,
+                Some(l) => upanic!("\n\x1b[31mwlan0: invalid state: {l}\n"),
+                None => State::None };
+            ping chkcmd(spawn!("ping", "-c", 1, "1.1.1.1" ; out: Stdio::null(); err: Stdio::null();  ret: 1));
+            dhcp chkcmd(spawn!("getent", "ahosts", "1.1.1.1"; out: Stdio::null(); ret: 1));
+            lock if spawn!("lsattr", "/etc/resolv.conf"; output: 1).contains("i") { State::Up } else { State::Down };
+            dns chkcmd(spawn!("getent", "hosts", "std.rs"; out: Stdio::null(); ret: 1));
+            vpn chkcmd(!spawn!("wg", "show", "interfaces"; output: 1).trim().is_empty());
+        );
+        let mut i = 0;
+        loop {
+            if updated.swap(false, Acquire) {
+                print!("\x1b[2K\r{i}");
+                fmt!(wlan ping dhcp dns vpn lock);
+                stdout().flush().unwrap();
+                i += 1;
+            }
+            Ti::SEC.slp();
+        }
+    }
 }
 
 // To get the password for the private key, your can use this program from

@@ -1,0 +1,61 @@
+#!/bin/sh
+
+qcow=$1
+iso=$2
+
+error() {
+        le "$1"
+        le "Usage: $0 <qcow2> [<iso>]"
+        exit 1
+}
+
+[ -n "$3" ] && error "Too many arguments"
+
+set -euo pipefail
+set -x
+
+storage=64GB
+core=10
+mem=20G
+cpu=host,hv_relaxed,hv_vapic,hv_spinlocks=0x1fff,hv_time,hv_vpindex,hv_runtime,hv_synic,hv_stimer,hv_tlbflush,hv_ipi,hv_frequencies
+virtio=/var/lib/libvirt/images/virtio-win.iso
+
+opt=""
+opt+=" -machine q35,accel=kvm"
+opt+=" -cpu $cpu -smp $core -m $mem -rtc base=localtime,clock=host"
+opt+=" -object iothread,id=io0"
+opt+=" -drive file=$qcow,format=qcow2,if=none,id=d0,cache=none,aio=native,discard=unmap,detect-zeroes=unmap"
+opt+=" -device virtio-blk-pci,drive=d0,iothread=io0,num-queues=$core"
+opt+=" -netdev user,id=n0 -device virtio-net-pci,netdev=n0"
+opt+=" -device qemu-xhci -device usb-tablet"
+opt+=" -vga std -display gtk,zoom-to-fit=on"
+
+yay -S qemu-desktop virtio-win --noconfirm --needed
+sudo modprobe kvm_intel
+sudo usermod -aG kvm $USER
+
+case "$qcow" in
+"") error "Missing qcow2" ;;
+*.qcow2) ;;
+*) error "First file not qcow2" ;;
+esac
+
+if [ -f "$qcow" ]; then
+        [ -n "$iso" ] && error "$qcow exists, no need for iso $iso"
+else
+        case "$iso" in
+        "") error "Missing iso" ;;
+        *.iso) ;;
+        *) error "Second file not iso" ;;
+        esac
+
+        qemu-img create -f qcow2 -o preallocation=metadata,lazy_refcounts=on "$qcow" $storage
+
+        qemu-system-x86_64 $opt \
+                -drive file="$iso",media=cdrom,index=2 \
+                -drive file="$virtio",media=cdrom,index=3 \
+                -boot d
+
+fi
+
+qemu-system-x86_64 $opt

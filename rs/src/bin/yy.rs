@@ -71,10 +71,10 @@ fn add(names: Vec<String>, dev: bool) {
             !spawn!("uv","add","--offline","--no-sync"; vec:v; err:Stdio::null(); ret:1)
         })
         .collect::<Vec<_>>();
-    if dev {
-        remainder.push("--dev".to_owned());
-    }
     if !remainder.is_empty() {
+        if dev {
+            remainder.push("--dev".to_owned());
+        }
         uv!(add; vec: remainder);
     }
     uv!(sync);

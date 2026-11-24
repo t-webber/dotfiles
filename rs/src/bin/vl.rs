@@ -35,11 +35,11 @@ rs::cli! {
     "status" s => if on() { println!("On") } else { println!("Off") }
     "test sound" ts => spawn!("pw-play", "/usr/share/sounds/alsa/Front_Center.wav")
     "test video" tv => {
-        spawn!("sudo", "pacman", "-S", "--needed", "mpv");
+        spawn!("sudo", "pacman", "-S", "--needed", "--noconfirm", "mpv");
         spawn!("mpv", "av://v4l2:/dev/video0", "--demuxer-lavf-o=video_size=1920x1080,pixel_format=mjpeg");
     }
     "test mic" tc => {
-        spawn!("sudo", "pacman", "-S", "--needed", "sox");
+        spawn!("sudo", "pacman", "-S", "--needed", "--confirm", "sox");
         spawn!("rec", "/tmp/test.wav","trim","0", "5");
         spawn!("play", "/tmp/test.wav");
     }

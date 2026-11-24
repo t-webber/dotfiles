@@ -265,7 +265,7 @@ local spec = {
                 version = '1.*',
                 opts = {
                         invert_colors = 'always',
-                        open_cmd = 'brave --disable-extensions --single-process --app=%s',
+                        open_cmd = 'surf -g -m -n %s >/dev/null 2>&1 | g v libenchant-WARNING | g v ^$',
                 },
         },
         {

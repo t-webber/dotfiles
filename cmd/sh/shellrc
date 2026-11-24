@@ -10,6 +10,8 @@ else
         export DEVICE=??
 fi
 
+export PATH=$PATH:/del/.data/.shared/coursier/bin
+
 ###############################
 ### apps location variables ###
 ###############################

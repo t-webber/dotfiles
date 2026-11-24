@@ -2,6 +2,8 @@ local plugin_dir = vim.fn.expand(os.getenv('XDG_DATA_HOME') .. '/nvim/lazy')
 
 local lsps = {
 
+        scala = { cmd = { 'metals' }, filetypes = { 'scala' } },
+
         verilog = { cmd = { 'verible-verilog-ls' }, filetypes = { 'v', 'verilog' } },
 
         make = { filetypes = { 'make' }, cmd = { 'make-ls' }, root_markers = { 'Makefile' } },
@@ -107,7 +109,10 @@ local lsps = {
                 root_markers = { 'Cargo.toml' },
                 settings = {
                         ['rust-analyzer'] = {
-                                --                                 cargo = { features = 'all' },
+                                cargo = {
+                                        features = {},
+                                        allTargets = false,
+                                },
                                 check = { command = 'clippy', allTargets = false },
                                 diagnostics = {
                                         styleLints = { enable = true },

@@ -2,5 +2,6 @@
   "log_level": "dev",
   "show_hidden_events": true,
   "external_platforms": [],
-  "quit_on_close": true
+  "quit_on_close": true,
+  "enable_spellcheck": false
 }

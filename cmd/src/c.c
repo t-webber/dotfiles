@@ -18,12 +18,18 @@ const Cmd COMMANDS[] = {
         "=n--no-fail-fast",
         "=u--no-run",
         "=c--no-capture", ),
-    cmd("b", "build", "-r", "-p", "-j", "--test", "--bin", ),
+    cmd("b", "build", "-r", "-p", "-j", "--test", "--bin", "--manifest-path", ),
 
     cmd("ee", "tree", ),
     cmd("e", "expand", ),
 
-    cmd("f", "fmt", "--all", "--unstable-features", "--error-on-unformatted", "--check", ),
+    cmd("f",
+        "fmt",
+        "--all",
+        "--unstable-features",
+        "--error-on-unformatted",
+        "--check",
+        "--manifest-path", ),
 
     cmd("ii", "init", ),
     cmd("iu", "install-update", "-a", "-g", "--jobs", ),

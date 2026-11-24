@@ -23,7 +23,7 @@ fn main() {
             && spawn!("xinput", "set-prop", 8, "libinput Click Method Enabled", 1, 0; ret: 1)
             && spawn!("bspc", "monitor", "-d", "term", "edit", "browser", "com", "agents"; ret: 1)
             && conf!(
-                border_width 1;
+                border_width 2;
                 window_gap 0;
                 split_ratio 0.5;
                 borderless_monocle true;
@@ -40,6 +40,8 @@ fn main() {
                 "Vmware-view" "desktop=agents";
                 "Remote-viewer" "desktop=com" "state=fullscreen";
                 "Qemu-system-x86_64" "desktop=agents" "state=fullscreen";
+                "qemu-system-x86_64" "desktop=agents" "state=fullscreen";
+                "Surf" "state=tiled";
             ))
         {
             eprintln!("\x1b[31m>>>One or more bspwm setting failed.\x1b[0m");

@@ -81,6 +81,7 @@ fn main() {
             }
             _ => (),
         }
+        args.insert(0, file);
     }
 
     let dir = read_dir(".").unwrap().map(Result::unwrap).colvec();

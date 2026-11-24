@@ -20,6 +20,11 @@
 
   --color-tertiary-container: var(--primary-bg);
 
+  --bubble-out-bg: #210;
+  --bubble-out-quote-fg: #fb7;
+  --color-secondary-container: #120;
+   --chat-view-bubble-radius: #f00;
+
   --color-text-translucent: #dda;
   color: var(--primary-txt);
 }

@@ -128,7 +128,7 @@ wrap!(tty => {
     for x in [2, 3] {
         spawn!("init-tty", x);
     }
-
+    spawn!("rmmod", "pcspkr");
 });
 
 wrap!(xinit out => {
